@@ -4,11 +4,11 @@ import React, { ChangeEvent, PureComponent, SyntheticEvent } from 'react';
 import { LegacyForms } from '@grafana/ui';
 import { QueryEditorProps } from '@grafana/data';
 import { DataSource } from './datasource';
-import { defaultQuery, MyDataSourceOptions, MyQuery } from './types';
+import { defaultQuery, AthenaDataSourceOptions, MyQuery } from './types';
 
 const { FormField, Switch } = LegacyForms;
 
-type Props = QueryEditorProps<DataSource, MyQuery, MyDataSourceOptions>;
+type Props = QueryEditorProps<DataSource, MyQuery, AthenaDataSourceOptions>;
 
 export class QueryEditor extends PureComponent<Props> {
   onQueryTextChange = (event: ChangeEvent<HTMLInputElement>) => {

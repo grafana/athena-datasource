@@ -1,11 +1,12 @@
 import React, { ChangeEvent, PureComponent } from 'react';
-import { LegacyForms } from '@grafana/ui';
+// import { LegacyForms } from '@grafana/ui';
 import { DataSourcePluginOptionsEditorProps } from '@grafana/data';
-import { MyDataSourceOptions, MySecureJsonData } from './types';
+import { AthenaDataSourceOptions, AthenaDataSourceSecureJsonData } from './types';
+import { ConnectionConfig } from '@grafana/aws-sdk';
 
-const { SecretFormField, FormField } = LegacyForms;
+// const { SecretFormField, FormField } = LegacyForms;
 
-interface Props extends DataSourcePluginOptionsEditorProps<MyDataSourceOptions> {}
+type Props = DataSourcePluginOptionsEditorProps<AthenaDataSourceOptions, AthenaDataSourceSecureJsonData>;
 
 interface State {}
 
@@ -25,7 +26,7 @@ export class ConfigEditor extends PureComponent<Props, State> {
     onOptionsChange({
       ...options,
       secureJsonData: {
-        apiKey: event.target.value,
+        // apiKey: event.target.value,
       },
     });
   };
@@ -40,19 +41,20 @@ export class ConfigEditor extends PureComponent<Props, State> {
       },
       secureJsonData: {
         ...options.secureJsonData,
-        apiKey: '',
+        // apiKey: '',
       },
     });
   };
 
   render() {
-    const { options } = this.props;
-    const { jsonData, secureJsonFields } = options;
-    const secureJsonData = (options.secureJsonData || {}) as MySecureJsonData;
+    // const { options } = this.props;
+    // const { jsonData, secureJsonFields } = options;
+    // const secureJsonData = options.secureJsonData || {};
 
     return (
       <div className="gf-form-group">
-        <div className="gf-form">
+        <ConnectionConfig {...this.props} />
+        {/* <div className="gf-form">
           <FormField
             label="Path"
             labelWidth={6}
@@ -75,8 +77,8 @@ export class ConfigEditor extends PureComponent<Props, State> {
               onReset={this.onResetAPIKey}
               onChange={this.onAPIKeyChange}
             />
-          </div>
-        </div>
+          </div> 
+        </div>*/}
       </div>
     );
   }

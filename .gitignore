@@ -28,3 +28,9 @@ e2e-results/
 
 # Editor
 .idea
+
+# End to End tests
+provisioning/
+cypress/report.json
+cypress/screenshots/actual
+cypress/videos/

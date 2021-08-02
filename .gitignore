@@ -34,3 +34,7 @@ provisioning/
 cypress/report.json
 cypress/screenshots/actual
 cypress/videos/
+
+# vscode
+.vscode
+__debug_bin

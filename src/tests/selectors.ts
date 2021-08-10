@@ -8,6 +8,15 @@ export const Components = {
     AccessKey: {
       input: 'Config editor access key input',
     },
+    Catalog: {
+      input: 'data-testid-catalog'
+    },
+    Database: {
+      input: 'data-testid-database'
+    },
+    Workgroup: {
+      input: 'data-testid-workgroup'
+    },
   },
 };
 

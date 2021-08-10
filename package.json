@@ -18,7 +18,7 @@
   "devDependencies": {
     "@grafana/aws-sdk": "^0.0.31",
     "@grafana/data": "8.0.6",
-    "@grafana/e2e": "8.0.6",
+    "@grafana/e2e": "8.1.0",
     "@grafana/runtime": "8.0.6",
     "@grafana/toolkit": "8.0.6",
     "@grafana/ui": "8.0.6",

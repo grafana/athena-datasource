@@ -10,9 +10,9 @@ import (
 
 type AthenaDataSourceSettings struct {
 	awsds.AWSDatasourceSettings
-	ClusterIdentifier string `json:"clusterIdentifier"`
-	Database          string `json:"Database"`
-	DBUser            string `json:"dbUser"`
+	Database					string `json:"Database"`
+	Catalog						string `json:"Catalog"`
+	WorkGroup					string `json:"WorkGroup"`
 }
 
 func (s *AthenaDataSourceSettings) Load(config backend.DataSourceInstanceSettings) error {

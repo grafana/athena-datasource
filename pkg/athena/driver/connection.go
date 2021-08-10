@@ -39,20 +39,18 @@ func (c *conn) QueryContext(ctx context.Context, query string, args []driver.Nam
 		return nil, err
 	}
 	client := athena.New(session)
-
-	// TODO: Where is the (athena) data source configurable?
 	executionResult, err := client.StartQueryExecutionWithContext(ctx, &athena.StartQueryExecutionInput{
 		QueryString: aws.String(query),
 		QueryExecutionContext: &athena.QueryExecutionContext{
-			Database: aws.String(""),
-			// Database: aws.String(c.settings.Database),
+			Database: aws.String(c.settings.Database),
 		},
-		ResultConfiguration: &athena.ResultConfiguration{
-			OutputLocation: aws.String(""),
-			// OutputLocation: aws.String(c.settings.OutputLocation),
-		},
-		WorkGroup: aws.String(""),
-		// WorkGroup: aws.String(c.settings.OutputLocation),
+		WorkGroup: aws.String(c.settings.WorkGroup),
+		// TODO: 
+		// 	consider if we also want output location to be configurable
+		// 	seems like you can specify either work group or output location
+		// ResultConfiguration: &athena.ResultConfiguration{
+		// 	OutputLocation: aws.String(c.settings.OutputLocation),
+		// },
 	})
 	if err != nil {
 		return nil, err

@@ -9,13 +9,13 @@ export const Components = {
       input: 'Config editor access key input',
     },
     Catalog: {
-      input: 'data-testid-catalog'
+      input: 'data-testid-catalog',
     },
     Database: {
-      input: 'data-testid-database'
+      input: 'data-testid-database',
     },
     Workgroup: {
-      input: 'data-testid-workgroup'
+      input: 'data-testid-workgroup',
     },
   },
 };

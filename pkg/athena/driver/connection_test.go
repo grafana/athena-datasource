@@ -32,7 +32,7 @@ func TestConnection_QueryContext(t *testing.T) {
 	assert.Equal(t, failedOutput, nil)
 
 	_, err = c.QueryContext(context.Background(), athenaclientmock.FAKE_SUCCESS)
-	assert.Equal(t, err.Error(), nil)
+	assert.Equal(t, err, nil)
 }
 
 var waitOnQueryTestCases = []struct {

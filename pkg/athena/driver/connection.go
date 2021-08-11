@@ -19,6 +19,7 @@ type conn struct {
 	sessionCache    *awsds.SessionCache
 	settings        *models.AthenaDataSourceSettings
 	backoffInstance backoff.Backoff
+	mockedClient          athenaiface.AthenaAPI
 }
 
 func newConnection(sessionCache *awsds.SessionCache, settings *models.AthenaDataSourceSettings) *conn {
@@ -33,12 +34,24 @@ func newConnection(sessionCache *awsds.SessionCache, settings *models.AthenaData
 	}
 }
 
-func (c *conn) QueryContext(ctx context.Context, query string, args []driver.NamedValue) (driver.Rows, error) {
+func (c *conn) GetAthenaClient() (athenaiface.AthenaAPI, error) {
+	if c.mockedClient != nil {
+		return c.mockedClient, nil
+	}
+
 	session, err := c.sessionCache.GetSession(c.settings.DefaultRegion, c.settings.AWSDatasourceSettings)
 	if err != nil {
 		return nil, err
 	}
 	client := athena.New(session)
+	return client, nil
+}
+
+func (c *conn) QueryContext(ctx context.Context, query string) (driver.Rows, error) {
+	client, err := c.GetAthenaClient()
+	if err != nil {
+		return nil, err
+	}
 	executionResult, err := client.StartQueryExecutionWithContext(ctx, &athena.StartQueryExecutionInput{
 		QueryString: aws.String(query),
 		QueryExecutionContext: &athena.QueryExecutionContext{
@@ -91,7 +104,7 @@ func (c *conn) waitOnQuery(ctx context.Context, client athenaiface.AthenaAPI, qu
 }
 
 func (c *conn) Ping(ctx context.Context) error {
-	rows, err := c.QueryContext(ctx, "SELECT 1", nil)
+	rows, err := c.QueryContext(ctx, "SELECT 1")
 	if err != nil {
 		return err
 	}

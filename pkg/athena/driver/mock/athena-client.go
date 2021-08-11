@@ -1,6 +1,8 @@
 package mock
 
 import (
+	"errors"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/request"
 	"github.com/aws/aws-sdk-go/service/athena"
@@ -14,7 +16,7 @@ const DESCRIBE_STATEMENT_SUCCEEDED = "DESCRIBE_STATEMENT_FINISHED"
 type MockAthenaClient struct {
 	CalledTimesCounter   int
 	CalledTimesCountDown int
-
+	
 	athenaiface.AthenaAPI
 }
 
@@ -46,5 +48,20 @@ func (m *MockAthenaClient) GetQueryExecutionWithContext(ctx aws.Context, input *
 			},
 		}
 	}
+	return output, nil
+}
+
+
+const FAKE_ERROR = "FAKE_ERROR"
+const FAKE_SUCCESS = "FAKE_SUCCESS"
+
+func (m *MockAthenaClient) StartQueryExecutionWithContext(ctx aws.Context, input *athena.StartQueryExecutionInput, opts ...request.Option) (*athena.StartQueryExecutionOutput, error) {
+	output := &athena.StartQueryExecutionOutput{
+		QueryExecutionId: input.QueryString,
+	}
+	if *input.QueryString == FAKE_ERROR {
+		return nil, errors.New(FAKE_ERROR)
+	}
+
 	return output, nil
 }

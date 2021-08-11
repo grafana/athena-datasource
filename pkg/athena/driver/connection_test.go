@@ -7,9 +7,33 @@ import (
 	"time"
 
 	athenaclientmock "github.com/grafana/athena-datasource/pkg/athena/driver/mock"
+	"github.com/grafana/athena-datasource/pkg/athena/models"
 	"github.com/jpillora/backoff"
 	"gotest.tools/assert"
 )
+
+func TestConnection_QueryContext(t *testing.T) {
+	c := &conn{
+		backoffInstance: backoff.Backoff{
+			Min: 1 * time.Millisecond,
+			Max: 1 * time.Millisecond,
+		},
+		mockedClient: &athenaclientmock.MockAthenaClient{
+			CalledTimesCountDown: 1,
+		},
+		settings: &models.AthenaDataSourceSettings{
+			WorkGroup: "test-Workgroup",
+			Database: "test-Database",
+		},
+	}
+
+	failedOutput, err := c.QueryContext(context.Background(), athenaclientmock.FAKE_ERROR)
+	assert.Equal(t, err.Error(), athenaclientmock.FAKE_ERROR)
+	assert.Equal(t, failedOutput, nil)
+
+	_, err = c.QueryContext(context.Background(), athenaclientmock.FAKE_SUCCESS)
+	assert.Equal(t, err.Error(), nil)
+}
 
 var waitOnQueryTestCases = []struct {
 	calledTimesCountDown int

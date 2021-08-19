@@ -23,7 +23,7 @@ func TestConnection_QueryContext(t *testing.T) {
 		},
 		settings: &models.AthenaDataSourceSettings{
 			WorkGroup: "test-Workgroup",
-			Database: "test-Database",
+			Database:  "test-Database",
 		},
 	}
 

@@ -19,7 +19,7 @@ type conn struct {
 	sessionCache    *awsds.SessionCache
 	settings        *models.AthenaDataSourceSettings
 	backoffInstance backoff.Backoff
-	mockedClient          athenaiface.AthenaAPI
+	mockedClient    athenaiface.AthenaAPI
 }
 
 func newConnection(sessionCache *awsds.SessionCache, settings *models.AthenaDataSourceSettings) *conn {
@@ -34,12 +34,12 @@ func newConnection(sessionCache *awsds.SessionCache, settings *models.AthenaData
 	}
 }
 
-func (c *conn) GetAthenaClient() (athenaiface.AthenaAPI, error) {
+func (c *conn) GetAthenaClient(region string) (athenaiface.AthenaAPI, error) {
 	if c.mockedClient != nil {
 		return c.mockedClient, nil
 	}
 
-	session, err := c.sessionCache.GetSession(c.settings.DefaultRegion, c.settings.AWSDatasourceSettings)
+	session, err := c.sessionCache.GetSession(region, c.settings.AWSDatasourceSettings)
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +48,11 @@ func (c *conn) GetAthenaClient() (athenaiface.AthenaAPI, error) {
 }
 
 func (c *conn) QueryContext(ctx context.Context, query string) (driver.Rows, error) {
-	client, err := c.GetAthenaClient()
+	region := c.settings.DefaultRegion
+	if c.settings.Region != "" {
+		region = c.settings.Region
+	}
+	client, err := c.GetAthenaClient(region)
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +62,7 @@ func (c *conn) QueryContext(ctx context.Context, query string) (driver.Rows, err
 			Database: aws.String(c.settings.Database),
 		},
 		WorkGroup: aws.String(c.settings.WorkGroup),
-		// TODO: 
+		// TODO:
 		// 	consider if we also want output location to be configurable
 		// 	seems like you can specify either work group or output location
 		// ResultConfiguration: &athena.ResultConfiguration{

@@ -3,6 +3,7 @@ package athena
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"fmt"
 
 	"github.com/grafana/athena-datasource/pkg/athena/driver"
@@ -13,9 +14,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-type AthenaDatasource struct {
-	db *sql.DB
-}
+type AthenaDatasource struct{}
 
 func (s *AthenaDatasource) FillMode() *data.FillMissing {
 	return &data.FillMissing{
@@ -23,19 +22,38 @@ func (s *AthenaDatasource) FillMode() *data.FillMissing {
 	}
 }
 
-// Connect opens a sql.DB connection using datasource settings
-func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings) (*sql.DB, error) {
+func getSettings(config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (models.AthenaDataSourceSettings, error) {
 	settings := models.AthenaDataSourceSettings{}
 	err := settings.Load(config)
 	if err != nil {
-		return nil, fmt.Errorf("error reading settings: %s", err.Error())
+		return models.AthenaDataSourceSettings{}, fmt.Errorf("error reading settings: %s", err.Error())
+	}
+
+	if queryArgs != nil {
+		args := map[string]string{}
+		err = json.Unmarshal(queryArgs, &args)
+		if err != nil {
+			return models.AthenaDataSourceSettings{}, fmt.Errorf("error reading query params: %s", err.Error())
+		}
+		if reg, ok := args["region"]; ok {
+			settings.Region = reg
+		}
+	}
+
+	return settings, nil
+}
+
+// Connect opens a sql.DB connection using datasource settings
+func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (*sql.DB, error) {
+	settings, err := getSettings(config, queryArgs)
+	if err != nil {
+		return nil, errors.WithMessage(err, "Failed to parse settings")
 	}
 
 	db, err := driver.Open(settings)
 	if err != nil {
 		return nil, errors.WithMessage(err, "Failed to connect to database. Is the hostname and port correct?")
 	}
-	s.db = db
 
 	return db, nil
 }

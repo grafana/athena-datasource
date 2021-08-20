@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"reflect"
 
 	"github.com/grafana/athena-datasource/pkg/athena/driver"
 	"github.com/grafana/athena-datasource/pkg/athena/models"
@@ -41,7 +42,23 @@ func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings) (*
 }
 
 func (s *AthenaDatasource) Converters() (sc []sqlutil.Converter) {
-	return []sqlutil.Converter{}
+	return []sqlutil.Converter{{ // This converter can be removed as soon as it's a part of SQLUtil. See https://github.com/grafana/grafana-plugin-sdk-go/pull/369
+		Name:          "nullable bool converter",
+		InputScanType: reflect.TypeOf(sql.NullBool{}),
+		InputTypeName: "BOOLEAN",
+		FrameConverter: sqlutil.FrameConverter{
+			FieldType: data.FieldTypeNullableBool,
+			ConverterFunc: func(n interface{}) (interface{}, error) {
+				v := n.(*sql.NullBool)
+
+				if !v.Valid {
+					return (*bool)(nil), nil
+				}
+
+				return &v.Bool, nil
+			},
+		},
+	}}
 }
 
 func (s *AthenaDatasource) Schemas(ctx context.Context) ([]string, error) {

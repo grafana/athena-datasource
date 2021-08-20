@@ -1,58 +1,33 @@
 import { defaults } from 'lodash';
 
-import React, { ChangeEvent, PureComponent, SyntheticEvent } from 'react';
-import { LegacyForms } from '@grafana/ui';
+import React from 'react';
 import { QueryEditorProps } from '@grafana/data';
 import { DataSource } from './datasource';
-import { defaultQuery, AthenaDataSourceOptions, MyQuery } from './types';
+import { AthenaDataSourceOptions, AthenaQuery, defaultQuery } from './types';
+import { CodeEditor} from '@grafana/ui';
 
-const { FormField, Switch } = LegacyForms;
+type Props = QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions>;
 
-type Props = QueryEditorProps<DataSource, MyQuery, AthenaDataSourceOptions>;
+export function QueryEditor(props: Props) {
+  const { rawSQL } = defaults(props.query, defaultQuery);
 
-export class QueryEditor extends PureComponent<Props> {
-  onQueryTextChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { onChange, query } = this.props;
-    onChange({ ...query, queryText: event.target.value });
+  const onRawSqlChange = (rawSQL: string) => {
+    props.onChange({
+      ...props.query,
+      rawSQL,
+    });
+    props.onRunQuery();
   };
-
-  onConstantChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { onChange, query, onRunQuery } = this.props;
-    onChange({ ...query, constant: parseFloat(event.target.value) });
-    // executes the query
-    onRunQuery();
-  };
-
-  onWithStreamingChange = (event: SyntheticEvent<HTMLInputElement>) => {
-    const { onChange, query, onRunQuery } = this.props;
-    onChange({ ...query, withStreaming: event.currentTarget.checked });
-    // executes the query
-    onRunQuery();
-  };
-
-  render() {
-    const query = defaults(this.props.query, defaultQuery);
-    const { queryText, constant, withStreaming } = query;
-
-    return (
-      <div className="gf-form">
-        <FormField
-          width={4}
-          value={constant}
-          onChange={this.onConstantChange}
-          label="Constant"
-          type="number"
-          step="0.1"
-        />
-        <FormField
-          labelWidth={8}
-          value={queryText || ''}
-          onChange={this.onQueryTextChange}
-          label="Query Text"
-          tooltip="Not used yet"
-        />
-        <Switch checked={withStreaming || false} label="Enable streaming (v8+)" onChange={this.onWithStreamingChange} />
-      </div>
-    );
-  }
+  return (
+    <CodeEditor
+      height={'250px'}
+      language={'sql'}
+      value={rawSQL}
+      onBlur={onRawSqlChange}
+      onSave={onRawSqlChange}
+      showMiniMap={false}
+      showLineNumbers={true}
+      // getSuggestions={schema.getSuggestions}
+    />
+  );
 }

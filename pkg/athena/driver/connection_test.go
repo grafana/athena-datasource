@@ -2,6 +2,7 @@ package driver
 
 import (
 	"context"
+	"database/sql/driver"
 	"fmt"
 	"testing"
 	"time"
@@ -27,11 +28,11 @@ func TestConnection_QueryContext(t *testing.T) {
 		},
 	}
 
-	failedOutput, err := c.QueryContext(context.Background(), athenaclientmock.FAKE_ERROR)
+	failedOutput, err := c.QueryContext(context.Background(), athenaclientmock.FAKE_ERROR, []driver.NamedValue{})
 	assert.Equal(t, err.Error(), athenaclientmock.FAKE_ERROR)
 	assert.Equal(t, failedOutput, nil)
 
-	_, err = c.QueryContext(context.Background(), athenaclientmock.FAKE_SUCCESS)
+	_, err = c.QueryContext(context.Background(), athenaclientmock.FAKE_SUCCESS, []driver.NamedValue{})
 	assert.Equal(t, err, nil)
 }
 

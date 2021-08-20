@@ -47,7 +47,7 @@ func (c *conn) GetAthenaClient() (athenaiface.AthenaAPI, error) {
 	return client, nil
 }
 
-func (c *conn) QueryContext(ctx context.Context, query string) (driver.Rows, error) {
+func (c *conn) QueryContext(ctx context.Context, query string, args []driver.NamedValue) (driver.Rows, error) {
 	client, err := c.GetAthenaClient()
 	if err != nil {
 		return nil, err
@@ -65,6 +65,7 @@ func (c *conn) QueryContext(ctx context.Context, query string) (driver.Rows, err
 		// 	OutputLocation: aws.String(c.settings.OutputLocation),
 		// },
 	})
+
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +77,7 @@ func (c *conn) QueryContext(ctx context.Context, query string) (driver.Rows, err
 	return newRows(client, *executionResult.QueryExecutionId)
 }
 
-// waitOnQuery polls the redshift api until the query finishes, returning an error if it failed.
+// waitOnQuery polls the athena api until the query finishes, returning an error if it failed.
 func (c *conn) waitOnQuery(ctx context.Context, client athenaiface.AthenaAPI, queryID string) error {
 	for {
 		statusResp, err := client.GetQueryExecutionWithContext(ctx, &athena.GetQueryExecutionInput{
@@ -103,8 +104,9 @@ func (c *conn) waitOnQuery(ctx context.Context, client athenaiface.AthenaAPI, qu
 	}
 }
 
+// called by CheckHealth to determine if auth config is set up properly
 func (c *conn) Ping(ctx context.Context) error {
-	rows, err := c.QueryContext(ctx, "SELECT 1")
+	rows, err := c.QueryContext(ctx, "SELECT 1", []driver.NamedValue{})
 	if err != nil {
 		return err
 	}

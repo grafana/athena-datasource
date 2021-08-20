@@ -16,27 +16,31 @@ import (
 
 type AthenaDatasource struct{}
 
+type ConnectionArgs struct {
+	Region string `json:"region,omitempty"`
+}
+
 func (s *AthenaDatasource) FillMode() *data.FillMissing {
 	return &data.FillMissing{
 		Mode: data.FillModeNull,
 	}
 }
 
-func getSettings(config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (models.AthenaDataSourceSettings, error) {
-	settings := models.AthenaDataSourceSettings{}
+func getSettings(config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (*models.AthenaDataSourceSettings, error) {
+	settings := &models.AthenaDataSourceSettings{}
 	err := settings.Load(config)
 	if err != nil {
-		return models.AthenaDataSourceSettings{}, fmt.Errorf("error reading settings: %s", err.Error())
+		return nil, fmt.Errorf("error reading settings: %s", err.Error())
 	}
 
 	if queryArgs != nil {
-		args := map[string]string{}
-		err = json.Unmarshal(queryArgs, &args)
+		args := &ConnectionArgs{}
+		err = json.Unmarshal(queryArgs, args)
 		if err != nil {
-			return models.AthenaDataSourceSettings{}, fmt.Errorf("error reading query params: %s", err.Error())
+			return nil, fmt.Errorf("error reading query params: %s", err.Error())
 		}
-		if reg, ok := args["region"]; ok {
-			settings.Region = reg
+		if args.Region != "" {
+			settings.Region = args.Region
 		}
 	}
 
@@ -50,7 +54,7 @@ func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings, qu
 		return nil, errors.WithMessage(err, "Failed to parse settings")
 	}
 
-	db, err := driver.Open(settings)
+	db, err := driver.Open(*settings)
 	if err != nil {
 		return nil, errors.WithMessage(err, "Failed to connect to database. Is the hostname and port correct?")
 	}

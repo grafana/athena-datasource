@@ -11,7 +11,7 @@ import (
 	"github.com/grafana/sqlds"
 )
 
-// regions from https://github.com/grafana/grafana-aws-sdk/blob/main/src/regions.ts
+// regions from https://docs.aws.amazon.com/general/latest/gr/athena.html
 var standardRegions = []string{
 	"af-south-1",
 	"ap-east-1",
@@ -22,10 +22,9 @@ var standardRegions = []string{
 	"ap-southeast-1",
 	"ap-southeast-2",
 	"ca-central-1",
-	"cn-north-1",
-	"cn-northwest-1",
 	"eu-central-1",
 	"eu-north-1",
+	"eu-south-1",
 	"eu-west-1",
 	"eu-west-2",
 	"eu-west-3",
@@ -35,8 +34,6 @@ var standardRegions = []string{
 	"us-east-2",
 	"us-gov-east-1",
 	"us-gov-west-1",
-	"us-iso-east-1",
-	"us-isob-east-1",
 	"us-west-1",
 	"us-west-2",
 }
@@ -46,6 +43,7 @@ func main() {
 	s := &athena.AthenaDatasource{}
 	ds := sqlds.NewDatasource(s)
 	ds.Completable = s
+	ds.EnableMultipleConnections = true
 	ds.CustomRoutes = map[string]func(http.ResponseWriter, *http.Request){
 		"/regions": func(rw http.ResponseWriter, r *http.Request) {
 			rw.Header().Add("Content-Type", "application/json")

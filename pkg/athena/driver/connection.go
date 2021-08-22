@@ -19,7 +19,7 @@ type conn struct {
 	sessionCache    *awsds.SessionCache
 	settings        *models.AthenaDataSourceSettings
 	backoffInstance backoff.Backoff
-	mockedClient          athenaiface.AthenaAPI
+	mockedClient    athenaiface.AthenaAPI
 }
 
 func newConnection(sessionCache *awsds.SessionCache, settings *models.AthenaDataSourceSettings) *conn {
@@ -47,7 +47,7 @@ func (c *conn) GetAthenaClient() (athenaiface.AthenaAPI, error) {
 	return client, nil
 }
 
-func (c *conn) QueryContext(ctx context.Context, query string, args []driver.NamedValue) (driver.Rows, error) {
+func (c *conn) QueryContext(ctx context.Context, query string, _ []driver.NamedValue) (driver.Rows, error) {
 	client, err := c.GetAthenaClient()
 	if err != nil {
 		return nil, err
@@ -58,7 +58,7 @@ func (c *conn) QueryContext(ctx context.Context, query string, args []driver.Nam
 			Database: aws.String(c.settings.Database),
 		},
 		WorkGroup: aws.String(c.settings.WorkGroup),
-		// TODO: 
+		// TODO:
 		// 	consider if we also want output location to be configurable
 		// 	seems like you can specify either work group or output location
 		// ResultConfiguration: &athena.ResultConfiguration{

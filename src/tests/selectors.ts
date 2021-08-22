@@ -22,7 +22,7 @@ export const Components = {
     CodeEditor: {
       container: 'Code editor container',
     },
-  }
+  },
 };
 
 export const selectors: { components: E2ESelectors<typeof Components> } = {

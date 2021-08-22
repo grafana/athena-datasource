@@ -6,12 +6,12 @@ import (
 	"io"
 	"reflect"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/athena"
 	"github.com/aws/aws-sdk-go/service/athena/athenaiface"
+	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 )
 
 /*
@@ -20,10 +20,10 @@ import (
 	which they open sourced, you can checkout it out at https://github.dev/uber/athenadriver
 */
 type Rows struct {
-	client  athenaiface.AthenaAPI
-	queryID string
-	result *athena.GetQueryResultsOutput
-	pageCount       int64
+	client      athenaiface.AthenaAPI
+	queryID     string
+	result      *athena.GetQueryResultsOutput
+	pageCount   int64
 	doneLoading bool
 }
 
@@ -36,7 +36,7 @@ func newRows(client athenaiface.AthenaAPI, queryId string) (*Rows, error) {
 	if err := r.fetchNextPage(nil); err != nil {
 		return nil, err
 	}
-	
+
 	return &r, nil
 }
 
@@ -44,7 +44,7 @@ func newRows(client athenaiface.AthenaAPI, queryId string) (*Rows, error) {
 // the provided slice. The provided slice will be the same
 // size as the Columns() are wide. io.EOF should be returned when there are no more rows.
 func (r *Rows) Next(dest []driver.Value) error {
-	// If there are no rows either because 
+	// If there are no rows either because
 	// - it's the first time around and we haven't fetched them yet
 	// - or because we've already converted all of the rows into a format we understand and need the next page
 	if len(r.result.ResultSet.Rows) == 0 {
@@ -101,7 +101,8 @@ func (r *Rows) ColumnTypeScanType(index int) reflect.Type {
 	convertedAthenaData, err := r.convertValueFromAthena(&col, val.VarCharValue)
 	// TODO: is this error handling sufficient?
 	if err != nil {
-		return nil
+		log.DefaultLogger.Error(err.Error())
+		panic(err)
 	}
 	return reflect.TypeOf(convertedAthenaData)
 }
@@ -124,7 +125,7 @@ func (r *Rows) Close() error {
 // FetchNextPage:
 // - gets the query results for the next page of data,
 // - stores that unformatted data on .result
-// - increates the page count
+// - increments the page count
 // - handles filtering out column data from results
 func (r *Rows) fetchNextPage(token *string) error {
 	var err error
@@ -138,8 +139,6 @@ func (r *Rows) fetchNextPage(token *string) error {
 	}
 
 	r.pageCount++
-
-	r.handleColumnCleanup()
 
 	// determine if we're on the first page and we have a column row that we should remove from results
 	var rowOffset = 0
@@ -168,71 +167,11 @@ func (r *Rows) fetchNextPage(token *string) error {
 		return nil
 	}
 
-	// remove the column from the data if it's there (Since it's store elsewhere in column info)
+	// remove the column from the data if it's there
+	// because it is already stored on r.result.ResultSet.ResultSetMetadata.ColumnInfo
 	r.result.ResultSet.Rows = r.result.ResultSet.Rows[rowOffset:]
 
 	return nil
-}
-
-func (r *Rows) handleColumnCleanup() {
-	// The first row of the first page contains header/column info if the query is not DDL.
-	// These are also available in *athenaAPI.Row.ResultSetMetadata.
-	// However sometimes Athena's go API will return row data without corresponding ColumnInfo. 
-	// To circumvent this situation, we choose to name the column as `column` + 0-index-based number 
-	// to match their implementation
-
-	// One example is:
-	//   input:
-	//      MSCK REPAIR TABLE sampledb.elb_logs
-	//   output:
-	//     _col0
-	//     Partitions not in metastore:    elb_logs:2015/01/01     elb_logs:2015/01/02     elb_logs:2015/01/03
-	//       elb_logs:2015/01/04     elb_logs:2015/01/05     elb_logs:2015/01/06     elb_logs:2015/01/07
-	hasColumnInfo := r.result != nil &&
-		r.result.ResultSet.ResultSetMetadata != nil &&
-		r.result.ResultSet.ResultSetMetadata.ColumnInfo != nil
-	if hasColumnInfo {
-		rowLen := len(r.result.ResultSet.Rows)
-		colInfoLen := len(r.result.ResultSet.ResultSetMetadata.ColumnInfo)
-		hasRows := rowLen > 0
-		if hasRows {
-			firstRowDataLen := len(r.result.ResultSet.Rows[0].Data)
-
-			// if missing column info, create new column info from the first row's data
-			hasMissingColumnInfo := colInfoLen < firstRowDataLen 
-			if hasMissingColumnInfo {
-				for i := 0; i < firstRowDataLen-colInfoLen; i++ {
-					colName := "_col" + strconv.Itoa(i+colInfoLen)
-					colType := "string"
-					colInfo := newColumnInfo(colName, colType)
-					r.result.ResultSet.ResultSetMetadata.ColumnInfo = append(r.result.ResultSet.ResultSetMetadata.ColumnInfo,
-						colInfo)
-				}
-			// if we have more column info than we have columns showing, 
-			// then we need to create the data in from the first item in each row
-			} else if colInfoLen > firstRowDataLen && firstRowDataLen == 1 {
-				for k := 0; k < rowLen; k++ {
-					items := strings.Split(*r.result.ResultSet.Rows[k].Data[0].VarCharValue, "\t")
-					if len(items) == colInfoLen {
-						for i, v := range items {
-							items[i] = strings.TrimSpace(v)
-						}
-						r.result.ResultSet.Rows[k] = newRow(colInfoLen, items)
-					}
-				}
-			}
-		} else if rowLen == 0 && colInfoLen == 1 && r.result.UpdateCount != nil {
-			if *r.result.UpdateCount > 0 {
-				if *r.result.ResultSet.ResultSetMetadata.ColumnInfo[0].Name == "rows" {
-					// For DML's INSERT INTO, DDL's CTAS
-					updateCount := strconv.FormatInt(*r.result.UpdateCount, 10)
-					rData := athena.Datum{VarCharValue: &updateCount}
-					aRow := athena.Row{Data: []*athena.Datum{&rData}}
-					r.result.ResultSet.Rows = append(r.result.ResultSet.Rows, &aRow)
-				}
-			}
-		}
-	}
 }
 
 // convertRow is to convert data from Athena type to Golang SQL type and put them into an array of driver.Value.
@@ -324,7 +263,6 @@ func (r *Rows) convertValueFromAthena(columnInfo *athena.ColumnInfo, rawValue *s
 		return nil, fmt.Errorf("unsupported type %s", *columnInfo.Type)
 	}
 }
-
 
 func newColumnInfo(colName string, colType interface{}) *athena.ColumnInfo {
 	caseSensitive := false

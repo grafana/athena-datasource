@@ -4,7 +4,7 @@ import React from 'react';
 import { QueryEditorProps } from '@grafana/data';
 import { DataSource } from './datasource';
 import { AthenaDataSourceOptions, AthenaQuery, defaultQuery } from './types';
-import { CodeEditor} from '@grafana/ui';
+import { CodeEditor } from '@grafana/ui';
 
 type Props = QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions>;
 

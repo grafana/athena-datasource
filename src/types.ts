@@ -6,7 +6,7 @@ export interface AthenaQuery extends DataQuery {
 }
 
 export const defaultQuery: Partial<AthenaQuery> = {
-  rawSQL: "select 1"
+  rawSQL: 'select 1',
 };
 
 /**

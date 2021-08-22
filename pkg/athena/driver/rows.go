@@ -16,8 +16,8 @@ import (
 
 /*
 	A general note regarding this Rows driver:
-	Large pieces of this file were heavily inspired by Uber's Athena Driver implementation
-	which they open sourced, you can checkout it out at https://github.dev/uber/athenadriver
+	This file was heavily inspired by Uber's Athena Driver implementation.
+	Some parts of the code was copied and then edited from https://github.dev/uber/athenadriver
 */
 type Rows struct {
 	client      athenaiface.AthenaAPI
@@ -47,6 +47,7 @@ func (r *Rows) Next(dest []driver.Value) error {
 	// If there are no rows either because
 	// - it's the first time around and we haven't fetched them yet
 	// - or because we've already converted all of the rows into a format we understand and need the next page
+	// then we might need to fetch more rows or mark loading as done
 	if len(r.result.ResultSet.Rows) == 0 {
 		// if nothing more to paginate then we're done
 		if r.result.NextToken == nil || *r.result.NextToken == "" {
@@ -140,7 +141,7 @@ func (r *Rows) fetchNextPage(token *string) error {
 
 	r.pageCount++
 
-	// determine if we're on the first page and we have a column row that we should remove from results
+	// determine if we're on the first page and we have a column row that we should remove from result list
 	var rowOffset = 0
 	if r.pageCount == 1 {
 		rs := r.result.ResultSet
@@ -161,20 +162,20 @@ func (r *Rows) fetchNextPage(token *string) error {
 		}
 	}
 
-	// if there is no rows or just a column row, we are done
+	// if there are no more rows or just a column row left, we are done
 	if len(r.result.ResultSet.Rows) <= rowOffset {
 		r.doneLoading = true
 		return nil
 	}
 
-	// remove the column from the data if it's there
+	// remove the column from the data from the result list if it's there
 	// because it is already stored on r.result.ResultSet.ResultSetMetadata.ColumnInfo
 	r.result.ResultSet.Rows = r.result.ResultSet.Rows[rowOffset:]
 
 	return nil
 }
 
-// convertRow is to convert data from Athena type to Golang SQL type and put them into an array of driver.Value.
+// convertRow converts data from an Athena string to a Golang SQL type and stores the value on driver.Value
 func (r *Rows) convertRow(columns []*athena.ColumnInfo, rdata []*athena.Datum, ret []driver.Value) error {
 	for i, val := range rdata {
 		if val == nil {

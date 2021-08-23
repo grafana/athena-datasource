@@ -100,7 +100,7 @@ func (r *Rows) ColumnTypeScanType(index int) reflect.Type {
 	col := *r.result.ResultSet.ResultSetMetadata.ColumnInfo[index]
 	val := *r.result.ResultSet.Rows[0].Data[index]
 	convertedAthenaData, err := r.convertValueFromAthena(&col, val.VarCharValue)
-	// TODO: is this error handling sufficient?
+	// TODO: remove panic, once we feel confident this is sufficient error handling
 	if err != nil {
 		log.DefaultLogger.Error(err.Error())
 		panic(err)

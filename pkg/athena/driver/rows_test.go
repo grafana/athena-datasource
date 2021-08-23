@@ -49,18 +49,14 @@ func TestRows_Next(t *testing.T) {
 	}
 }
 
-func convertValueTestCases() []struct {
-	columnInfoType string
-	rawValue       string
-	returnedVal    interface{}
-	err            error
-} {
+func TestRows_convertValueFromAthena(t *testing.T) {
+	t.Parallel()
 	timeString := "2001-01-01 01:01:01"
 	parsedTime, parsingErr := time.Parse("2006-01-02 15:04:05", timeString)
 	if parsingErr != nil {
 		panic("parsing error with time test case")
 	}
-	var testCases = []struct {
+	var convertValueTestCases = []struct {
 		columnInfoType string
 		rawValue       string
 		returnedVal    interface{}
@@ -79,14 +75,7 @@ func convertValueTestCases() []struct {
 		{"imaginaryType", "we shouldn't be able to parse this val", nil, fmt.Errorf("unsupported type imaginaryType")},
 	}
 
-	return testCases
-}
-
-func TestRows_convertValueFromAthena(t *testing.T) {
-	t.Parallel()
-	cases := convertValueTestCases()
-
-	for _, tc := range cases {
+	for _, tc := range convertValueTestCases {
 		r, errorMakingNewRows := newRows(&athenaclientmock.MockAthenaClient{}, "queryId")
 		assert.Equal(t, errorMakingNewRows, nil)
 

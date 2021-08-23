@@ -114,7 +114,7 @@ func (r *Rows) ColumnTypeDatabaseTypeName(index int) string {
 	if colInfo.Type != nil {
 		return *colInfo.Type
 	}
-	return ""
+	panic("undefined column type")
 }
 
 // Closes the rows iterator.

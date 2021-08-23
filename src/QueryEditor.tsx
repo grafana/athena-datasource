@@ -27,7 +27,6 @@ export function QueryEditor(props: Props) {
       onSave={onRawSqlChange}
       showMiniMap={false}
       showLineNumbers={true}
-      // getSuggestions={schema.getSuggestions}
     />
   );
 }

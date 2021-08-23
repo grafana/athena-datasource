@@ -16,7 +16,7 @@ const DESCRIBE_STATEMENT_SUCCEEDED = "DESCRIBE_STATEMENT_FINISHED"
 type MockAthenaClient struct {
 	CalledTimesCounter   int
 	CalledTimesCountDown int
-	
+
 	athenaiface.AthenaAPI
 }
 
@@ -51,7 +51,6 @@ func (m *MockAthenaClient) GetQueryExecutionWithContext(ctx aws.Context, input *
 	return output, nil
 }
 
-
 const FAKE_ERROR = "FAKE_ERROR"
 const FAKE_SUCCESS = "FAKE_SUCCESS"
 
@@ -61,6 +60,59 @@ func (m *MockAthenaClient) StartQueryExecutionWithContext(ctx aws.Context, input
 	}
 	if *input.QueryString == FAKE_ERROR {
 		return nil, errors.New(FAKE_ERROR)
+	}
+
+	return output, nil
+}
+
+const EMPTY_ROWS = "EMPTY_ROWS"
+const ROWS_WITH_NEXT = "RowsWithNext"
+
+func (m *MockAthenaClient) GetQueryResults(input *athena.GetQueryResultsInput) (*athena.GetQueryResultsOutput, error) {
+	if *input.QueryExecutionId == FAKE_ERROR {
+		return nil, errors.New(FAKE_ERROR)
+	}
+
+	output := &athena.GetQueryResultsOutput{
+		NextToken: input.NextToken,
+		ResultSet: &athena.ResultSet{
+			ResultSetMetadata: &athena.ResultSetMetadata{
+				ColumnInfo: []*athena.ColumnInfo{},
+			},
+			Rows: []*athena.Row{},
+		},
+	}
+
+	if *input.QueryExecutionId == ROWS_WITH_NEXT {
+		next := "oneMorePage"
+		output.NextToken = &next
+		fakeVarChar := "someString"
+		fakeDatum := athena.Datum{
+			VarCharValue: &fakeVarChar,
+		}
+		fakeColumnName := "_col0"
+		fakeColumn := athena.Datum{
+			VarCharValue: &fakeColumnName,
+		}
+		output.ResultSet.Rows = append(output.ResultSet.Rows,
+			&athena.Row{
+				Data: []*athena.Datum{&fakeColumn},
+			},
+			&athena.Row{
+				Data: []*athena.Datum{&fakeDatum},
+			},
+		)
+		fakeNullable := "NULLABLE"
+		fakePrecision := int64(1)
+		fakeType := "varchar"
+		fakeName := "name"
+		fakeColumnInfo := athena.ColumnInfo{
+			Name:      &fakeName,
+			Nullable:  &fakeNullable,
+			Precision: &fakePrecision,
+			Type:      &fakeType,
+		}
+		output.ResultSet.ResultSetMetadata.ColumnInfo = []*athena.ColumnInfo{&fakeColumnInfo}
 	}
 
 	return output, nil

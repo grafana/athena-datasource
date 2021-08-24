@@ -16,7 +16,7 @@ const DESCRIBE_STATEMENT_SUCCEEDED = "DESCRIBE_STATEMENT_FINISHED"
 type MockAthenaClient struct {
 	CalledTimesCounter   int
 	CalledTimesCountDown int
-	
+
 	athenaiface.AthenaAPI
 }
 
@@ -50,7 +50,6 @@ func (m *MockAthenaClient) GetQueryExecutionWithContext(ctx aws.Context, input *
 	}
 	return output, nil
 }
-
 
 const FAKE_ERROR = "FAKE_ERROR"
 const FAKE_SUCCESS = "FAKE_SUCCESS"

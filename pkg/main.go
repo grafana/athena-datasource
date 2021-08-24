@@ -38,6 +38,13 @@ var standardRegions = []string{
 	"us-west-2",
 }
 
+func write(rw http.ResponseWriter, b []byte) {
+	_, err := rw.Write(b)
+	if err != nil {
+		log.DefaultLogger.Error(err.Error())
+	}
+}
+
 func main() {
 	// Start listening to requests sent from Grafana.
 	s := &athena.AthenaDatasource{}
@@ -51,11 +58,11 @@ func main() {
 			res, err := json.Marshal(standardRegions)
 			if err != nil {
 				log.DefaultLogger.Error(err.Error())
+				rw.WriteHeader(http.StatusInternalServerError)
+				write(rw, []byte(err.Error()))
+				return
 			}
-			_, err = rw.Write(res)
-			if err != nil {
-				log.DefaultLogger.Error(err.Error())
-			}
+			write(rw, res)
 		},
 	}
 

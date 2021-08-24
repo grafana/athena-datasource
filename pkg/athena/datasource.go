@@ -11,6 +11,7 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 	"github.com/grafana/grafana-plugin-sdk-go/data/sqlutil"
+	"github.com/grafana/sqlds"
 	"github.com/pkg/errors"
 )
 
@@ -20,9 +21,11 @@ type ConnectionArgs struct {
 	Region string `json:"region,omitempty"`
 }
 
-func (s *AthenaDatasource) FillMode() *data.FillMissing {
-	return &data.FillMissing{
-		Mode: data.FillModeNull,
+func (s *AthenaDatasource) Settings(_ backend.DataSourceInstanceSettings) sqlds.DriverSettings {
+	return sqlds.DriverSettings{
+		FillMode: &data.FillMissing{
+			Mode: data.FillModeNull,
+		},
 	}
 }
 

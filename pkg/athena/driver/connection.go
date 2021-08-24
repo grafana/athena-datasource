@@ -34,11 +34,15 @@ func newConnection(sessionCache *awsds.SessionCache, settings *models.AthenaData
 	}
 }
 
-func (c *conn) GetAthenaClient(region string) (athenaiface.AthenaAPI, error) {
+func (c *conn) GetAthenaClient() (athenaiface.AthenaAPI, error) {
 	if c.mockedClient != nil {
 		return c.mockedClient, nil
 	}
 
+	region := c.settings.DefaultRegion
+	if c.settings.Region != "" {
+		region = c.settings.Region
+	}
 	session, err := c.sessionCache.GetSession(region, c.settings.AWSDatasourceSettings)
 	if err != nil {
 		return nil, err
@@ -48,11 +52,7 @@ func (c *conn) GetAthenaClient(region string) (athenaiface.AthenaAPI, error) {
 }
 
 func (c *conn) QueryContext(ctx context.Context, query string) (driver.Rows, error) {
-	region := c.settings.DefaultRegion
-	if c.settings.Region != "" {
-		region = c.settings.Region
-	}
-	client, err := c.GetAthenaClient(region)
+	client, err := c.GetAthenaClient()
 	if err != nil {
 		return nil, err
 	}

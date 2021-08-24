@@ -59,6 +59,31 @@ e2e.scenario({
           type: 'athena-datasource',
         });
 
+        e2e.flows.addDashboard({
+          timeRange: {
+            from: '2008-01-01 19:00:00',
+            to: '2008-01-02 19:00:00',
+          },
+        });
+
+        // TODO change this to a time series once $__timeFilter is working
+        e2e.flows.addPanel({
+          matchScreenshot: false,
+          visitDashboardAtStart: false,
+          queriesForm: () => {
+            e2eSelectors.QueryEditor.CodeEditor.container()
+              .click({ force: true })
+              .type(
+                `{selectall} select time as time, bytes as bytes from cloudfront_logs limit 2`
+              );
+            // TODO: we should be able to just pass visualizationName: "Table" to addPanel 
+            // but it doesn't seem to work for some reason, maybe make a ticket in core grafana
+            e2e().get('[aria-label="toggle-viz-picker"]').click({ force: true })
+            e2e().get('[aria-label="Plugin visualization item Table"]').click({ force: true });
+            e2e().wait(3000);
+          },
+        });
+        
       });
   },
 });

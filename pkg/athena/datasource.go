@@ -66,7 +66,7 @@ func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings, qu
 }
 
 func (s *AthenaDatasource) Converters() (sc []sqlutil.Converter) {
-	return []sqlutil.Converter{}
+	return sc
 }
 
 func (s *AthenaDatasource) Schemas(ctx context.Context) ([]string, error) {

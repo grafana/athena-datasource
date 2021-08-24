@@ -19,6 +19,7 @@
     "@grafana/aws-sdk": "^0.0.31",
     "@grafana/data": "8.1.0",
     "@grafana/e2e": "8.1.0",
+    "@grafana/grafana-plugin-sdk-go": "grafana/grafana-plugin-sdk-go#v0.112.0",
     "@grafana/runtime": "8.1.0",
     "@grafana/toolkit": "8.1.0",
     "@grafana/ui": "8.1.0",

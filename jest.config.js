@@ -4,5 +4,10 @@
 
 const standard = require('@grafana/toolkit/src/config/jest.plugin.config');
 
+const config = standard.jestConfig();
+
+// allows us to have our own custom set up test file
+config.setupFilesAfterEnv = ['<rootDir>/src/tests/setupTests.ts'];
+
 // This process will use the same config that `yarn test` is using
-module.exports = standard.jestConfig();
+module.exports = config;

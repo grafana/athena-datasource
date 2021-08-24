@@ -3,6 +3,9 @@ import { DataQuery } from '@grafana/data';
 
 export interface AthenaQuery extends DataQuery {
   rawSQL: string;
+  connectionArgs?: {
+    region?: string;
+  };
 }
 
 export const defaultQuery: Partial<AthenaQuery> = {

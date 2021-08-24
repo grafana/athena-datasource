@@ -3,7 +3,10 @@ import { DataSourceWithBackend } from '@grafana/runtime';
 import { AthenaDataSourceOptions, AthenaQuery } from './types';
 
 export class DataSource extends DataSourceWithBackend<AthenaQuery, AthenaDataSourceOptions> {
+  defaultRegion = '';
+
   constructor(instanceSettings: DataSourceInstanceSettings<AthenaDataSourceOptions>) {
     super(instanceSettings);
+    this.defaultRegion = instanceSettings.jsonData.defaultRegion || '';
   }
 }

@@ -15,7 +15,7 @@ export function QueryEditor(props: Props) {
     value: 'default',
     description: 'Default region set in the data source',
   };
-  const [regionOptions, setRegionOptions] = useState<SelectableValue<string>[]>([defaultRegionOpt]);
+  const [regionOptions, setRegionOptions] = useState<Array<SelectableValue<string>>>([defaultRegionOpt]);
 
   useEffect(() => {
     if (regionOptions.length === 1) {
@@ -24,7 +24,7 @@ export function QueryEditor(props: Props) {
           return;
         }
         // place the default option at the top
-        const options: SelectableValue<string>[] = [defaultRegionOpt];
+        const options: Array<SelectableValue<string>> = [defaultRegionOpt];
         regions.forEach((r) => {
           if (r !== props.datasource.defaultRegion) {
             options.push({ label: r, value: r });
@@ -33,7 +33,7 @@ export function QueryEditor(props: Props) {
         setRegionOptions(options);
       });
     }
-  }, [regionOptions]);
+  }, [defaultRegionOpt, regionOptions, props.datasource]);
 
   const onRawSqlChange = (rawSQL: string) => {
     const query = {

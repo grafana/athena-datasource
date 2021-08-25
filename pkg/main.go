@@ -8,7 +8,7 @@ import (
 	"github.com/grafana/athena-datasource/pkg/athena"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/datasource"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
-	"github.com/grafana/sqlds"
+	"github.com/grafana/sqlds/v2"
 )
 
 // regions from https://docs.aws.amazon.com/general/latest/gr/athena.html

@@ -1,7 +1,7 @@
 package athena
 
 import (
-	"github.com/grafana/sqlds"
+	"github.com/grafana/sqlds/v2"
 )
 
 var macros = map[string]sqlds.MacroFunc{}

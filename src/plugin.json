@@ -5,17 +5,14 @@
   "id": "grafana-athena-datasource",
   "metrics": true,
   "backend": true,
-  "executable": "gpx_athena-datasource",
+  "executable": "gpx_athena",
   "info": {
     "description": "Use Amazon Athena with Grafana",
     "author": {
       "name": "Grafana Labs",
       "url": "https://grafana.com"
     },
-    "keywords": [
-      "datasource",
-      "athena"
-    ],
+    "keywords": ["datasource", "athena"],
     "logos": {
       "small": "img/logo.svg",
       "large": "img/logo.svg"

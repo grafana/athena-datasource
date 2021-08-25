@@ -19,6 +19,7 @@ type conn struct {
 	sessionCache    *awsds.SessionCache
 	settings        *models.AthenaDataSourceSettings
 	backoffInstance backoff.Backoff
+	closed          bool
 	mockedClient    athenaiface.AthenaAPI
 }
 
@@ -39,7 +40,11 @@ func (c *conn) GetAthenaClient() (athenaiface.AthenaAPI, error) {
 		return c.mockedClient, nil
 	}
 
-	session, err := c.sessionCache.GetSession(c.settings.DefaultRegion, c.settings.AWSDatasourceSettings)
+	region := c.settings.DefaultRegion
+	if c.settings.Region != "" {
+		region = c.settings.Region
+	}
+	session, err := c.sessionCache.GetSession(region, c.settings.AWSDatasourceSettings)
 	if err != nil {
 		return nil, err
 	}
@@ -123,5 +128,6 @@ func (c *conn) Prepare(query string) (driver.Stmt, error) {
 }
 
 func (c *conn) Close() error {
+	c.closed = true
 	return nil
 }

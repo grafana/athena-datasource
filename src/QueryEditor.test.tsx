@@ -25,7 +25,7 @@ describe('QueryEditor', () => {
     ds.getResource = jest.fn().mockResolvedValue([ds.defaultRegion, 'foo']);
     render(<QueryEditor {...props} onChange={onChange} />);
 
-    expect(screen.getByText(ds.defaultRegion)).toBeInTheDocument();
+    expect(screen.getByText(`default (${ds.defaultRegion})`)).toBeInTheDocument();
     expect(ds.getResource).toHaveBeenCalledWith('regions');
 
     const selectEl = screen.getByLabelText('Region');

@@ -33,4 +33,4 @@ export const mockDatasource = new DataSource({
   },
 });
 
-export const mockQuery: AthenaQuery = { rawSQL: 'select 1', refId: '' };
+export const mockQuery: AthenaQuery = { rawSQL: 'select 1', refId: '', connectionArgs: { region: '' } };

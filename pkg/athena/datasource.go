@@ -15,13 +15,21 @@ import (
 	"github.com/pkg/errors"
 )
 
+type connection struct {
+	db     *sql.DB
+	driver *driver.Driver
+}
+
 type AthenaDatasource struct {
-	defaultDB     *sql.DB
-	defaultDriver *driver.Driver
+	c map[string]connection
 }
 
 type ConnectionArgs struct {
 	Region string `json:"region,omitempty"`
+}
+
+func New() *AthenaDatasource {
+	return &AthenaDatasource{c: map[string]connection{}}
 }
 
 func (s *AthenaDatasource) Settings(_ backend.DataSourceInstanceSettings) sqlds.DriverSettings {
@@ -57,8 +65,11 @@ func getSettings(config backend.DataSourceInstanceSettings, queryArgs json.RawMe
 	return settings, nil
 }
 
-func isDefault(settings *models.AthenaDataSourceSettings) bool {
-	return settings.Region == "" || settings.Region == settings.DefaultRegion
+func getRegionKey(settings *models.AthenaDataSourceSettings) string {
+	if settings.Region == "" || settings.Region == "default" || settings.Region == settings.DefaultRegion {
+		return "default"
+	}
+	return settings.Region
 }
 
 // Connect opens a sql.DB connection using datasource settings
@@ -69,19 +80,17 @@ func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings, qu
 	}
 
 	// avoid to create a new connection if the arguments have not changed
-	if s.defaultDB != nil && isDefault(settings) && !s.defaultDriver.Closed() {
-		return s.defaultDB, nil
+	key := getRegionKey(settings)
+	c, exists := s.c[key]
+	if exists && !c.driver.Closed() {
+		return c.db, nil
 	}
 
-	driver, db, err := driver.Open(*settings)
+	dr, db, err := driver.Open(*settings)
 	if err != nil {
 		return nil, errors.WithMessage(err, "Failed to connect to database. Is the hostname and port correct?")
 	}
-
-	if isDefault(settings) {
-		s.defaultDB = db
-		s.defaultDriver = driver
-	}
+	s.c[key] = connection{driver: dr, db: db}
 	return db, nil
 }
 
@@ -102,4 +111,12 @@ func (s *AthenaDatasource) Tables(ctx context.Context, schema string) ([]string,
 func (s *AthenaDatasource) Columns(ctx context.Context, table string) ([]string, error) {
 	// TBD
 	return []string{}, nil
+}
+
+func (s *AthenaDatasource) DataCatalogs(ctx context.Context, region string) ([]string, error) {
+	c, exists := s.c[region]
+	if !exists {
+		return nil, fmt.Errorf("missing connection")
+	}
+	return c.driver.ListDataCatalogsWithContext(ctx)
 }

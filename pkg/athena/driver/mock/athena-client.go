@@ -16,6 +16,7 @@ const DESCRIBE_STATEMENT_SUCCEEDED = "DESCRIBE_STATEMENT_FINISHED"
 type MockAthenaClient struct {
 	CalledTimesCounter   int
 	CalledTimesCountDown int
+	Catalogs             []string
 
 	athenaiface.AthenaAPI
 }
@@ -116,4 +117,12 @@ func (m *MockAthenaClient) GetQueryResults(input *athena.GetQueryResultsInput) (
 	}
 
 	return output, nil
+}
+
+func (m *MockAthenaClient) ListDataCatalogsWithContext(ctx aws.Context, input *athena.ListDataCatalogsInput, opts ...request.Option) (*athena.ListDataCatalogsOutput, error) {
+	r := &athena.ListDataCatalogsOutput{}
+	for _, c := range m.Catalogs {
+		r.DataCatalogsSummary = append(r.DataCatalogsSummary, &athena.DataCatalogSummary{CatalogName: aws.String(c)})
+	}
+	return r, nil
 }

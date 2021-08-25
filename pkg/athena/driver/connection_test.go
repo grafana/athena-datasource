@@ -7,6 +7,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/go-cmp/cmp"
 	athenaclientmock "github.com/grafana/athena-datasource/pkg/athena/driver/mock"
 	"github.com/grafana/athena-datasource/pkg/athena/models"
 	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
@@ -69,5 +70,17 @@ func TestConnection_waitOnQuery(t *testing.T) {
 			assert.Equal(t, tc.err.Error(), err.Error())
 		}
 		assert.Equal(t, tc.calledTimesCountDown, athenaClient.CalledTimesCounter)
+	}
+}
+
+func TestConnection_ListDataCatalogs(t *testing.T) {
+	expectedCatalogs := []string{"foo"}
+	c := &conn{mockedClient: &athenaclientmock.MockAthenaClient{Catalogs: expectedCatalogs}}
+	catalogs, err := c.ListDataCatalogs(context.TODO())
+	if err != nil {
+		t.Fatalf("unexpected error %v", err)
+	}
+	if !cmp.Equal(expectedCatalogs, catalogs) {
+		t.Errorf("unexpected result: %v", cmp.Diff(expectedCatalogs, catalogs))
 	}
 }

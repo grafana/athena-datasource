@@ -55,16 +55,25 @@ func TestConnection_Connect(t *testing.T) {
 	}
 }
 
-func TestConnection_isDefault(t *testing.T) {
+func TestConnection_getRegionKey(t *testing.T) {
 	tests := []struct {
 		description string
 		settings    *models.AthenaDataSourceSettings
-		expected    bool
+		expected    string
 	}{
 		{
 			"undefined region",
-			&models.AthenaDataSourceSettings{},
-			true,
+			&models.AthenaDataSourceSettings{AWSDatasourceSettings: awsds.AWSDatasourceSettings{}},
+			"default",
+		},
+		{
+			"default region",
+			&models.AthenaDataSourceSettings{
+				AWSDatasourceSettings: awsds.AWSDatasourceSettings{
+					Region: "default",
+				},
+			},
+			"default",
 		},
 		{
 			"same region",
@@ -74,22 +83,21 @@ func TestConnection_isDefault(t *testing.T) {
 					DefaultRegion: "foo",
 				},
 			},
-			true,
+			"default",
 		},
 		{
 			"different region",
 			&models.AthenaDataSourceSettings{
 				AWSDatasourceSettings: awsds.AWSDatasourceSettings{
-					Region:        "foo",
-					DefaultRegion: "bar",
+					Region: "foo",
 				},
 			},
-			false,
+			"foo",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.description, func(t *testing.T) {
-			if res := isDefault(tt.settings); res != tt.expected {
+			if res := getRegionKey(tt.settings); res != tt.expected {
 				t.Errorf("unexpected result %v", res)
 			}
 		})

@@ -131,3 +131,23 @@ func (c *conn) Close() error {
 	c.closed = true
 	return nil
 }
+
+func (c *conn) ListDataCatalogs(ctx context.Context) ([]string, error) {
+	client, err := c.GetAthenaClient()
+	if err != nil {
+		return nil, err
+	}
+	res := []string{}
+	nextToken := aws.String("")
+	for nextToken != nil {
+		out, err := client.ListDataCatalogsWithContext(ctx, &athena.ListDataCatalogsInput{})
+		if err != nil {
+			return nil, err
+		}
+		nextToken = out.NextToken
+		for _, cat := range out.DataCatalogsSummary {
+			res = append(res, *cat.CatalogName)
+		}
+	}
+	return res, nil
+}

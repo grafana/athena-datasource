@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"os"
 
@@ -38,6 +39,10 @@ var standardRegions = []string{
 	"us-west-2",
 }
 
+type catalogReqBody struct {
+	Region string `json:"region"`
+}
+
 func write(rw http.ResponseWriter, b []byte) {
 	_, err := rw.Write(b)
 	if err != nil {
@@ -47,7 +52,7 @@ func write(rw http.ResponseWriter, b []byte) {
 
 func main() {
 	// Start listening to requests sent from Grafana.
-	s := &athena.AthenaDatasource{}
+	s := athena.New()
 	ds := sqlds.NewDatasource(s)
 	ds.Completable = s
 	ds.EnableMultipleConnections = true
@@ -63,6 +68,36 @@ func main() {
 				return
 			}
 			write(rw, res)
+		},
+		"/catalogs": func(rw http.ResponseWriter, r *http.Request) {
+			b, err := ioutil.ReadAll(r.Body)
+			if err != nil {
+				rw.WriteHeader(http.StatusBadRequest)
+				write(rw, []byte(err.Error()))
+				return
+			}
+			regReq := catalogReqBody{}
+			err = json.Unmarshal(b, &regReq)
+			if err != nil {
+				rw.WriteHeader(http.StatusBadRequest)
+				write(rw, []byte(err.Error()))
+				return
+			}
+			res, err := s.DataCatalogs(r.Context(), regReq.Region)
+			if err != nil {
+				rw.WriteHeader(http.StatusBadRequest)
+				write(rw, []byte(err.Error()))
+				return
+			}
+			bytes, err := json.Marshal(res)
+			if err != nil {
+				log.DefaultLogger.Error(err.Error())
+				rw.WriteHeader(http.StatusInternalServerError)
+				write(rw, []byte(err.Error()))
+				return
+			}
+			rw.Header().Add("Content-Type", "application/json")
+			write(rw, bytes)
 		},
 	}
 

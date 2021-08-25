@@ -19,6 +19,7 @@ type conn struct {
 	sessionCache    *awsds.SessionCache
 	settings        *models.AthenaDataSourceSettings
 	backoffInstance backoff.Backoff
+	closed          bool
 	mockedClient    athenaiface.AthenaAPI
 }
 
@@ -127,5 +128,6 @@ func (c *conn) Prepare(query string) (driver.Stmt, error) {
 }
 
 func (c *conn) Close() error {
+	c.closed = true
 	return nil
 }

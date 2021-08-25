@@ -19,20 +19,28 @@ var (
 
 // Driver is a sql.Driver
 type Driver struct {
-	settings *models.AthenaDataSourceSettings
+	settings   *models.AthenaDataSourceSettings
+	connection *conn
 }
 
 // Open returns a new driver.Conn using already existing settings
 func (d *Driver) Open(_ string) (driver.Conn, error) {
-	return newConnection(awsds.NewSessionCache(), d.settings), nil
+	d.connection = newConnection(awsds.NewSessionCache(), d.settings)
+	return d.connection, nil
+}
+
+func (d *Driver) Closed() bool {
+	return d.connection.closed
 }
 
 // Open registers a new driver with a unique name
-func Open(settings models.AthenaDataSourceSettings) (*sql.DB, error) {
+func Open(settings models.AthenaDataSourceSettings) (*Driver, *sql.DB, error) {
 	openFromSessionMutex.Lock()
 	openFromSessionCount++
 	name := fmt.Sprintf("%s-%d", DriverName, openFromSessionCount)
 	openFromSessionMutex.Unlock()
-	sql.Register(name, &Driver{&settings})
-	return sql.Open(name, "")
+	d := &Driver{&settings, nil}
+	sql.Register(name, d)
+	db, err := sql.Open(name, "")
+	return d, db, err
 }

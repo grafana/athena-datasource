@@ -16,7 +16,8 @@ import (
 )
 
 type AthenaDatasource struct {
-	defaultDB *sql.DB
+	defaultDB     *sql.DB
+	defaultDriver *driver.Driver
 }
 
 type ConnectionArgs struct {
@@ -68,23 +69,18 @@ func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings, qu
 	}
 
 	// avoid to create a new connection if the arguments have not changed
-	if s.defaultDB != nil && isDefault(settings) {
-		err := s.defaultDB.Ping()
-		if err != nil && err.Error() == "sql: database is closed" {
-			// the database has been already closed, reopen it
-			s.defaultDB = nil
-		} else {
-			return s.defaultDB, nil
-		}
+	if s.defaultDB != nil && isDefault(settings) && !s.defaultDriver.Closed() {
+		return s.defaultDB, nil
 	}
 
-	db, err := driver.Open(*settings)
+	driver, db, err := driver.Open(*settings)
 	if err != nil {
 		return nil, errors.WithMessage(err, "Failed to connect to database. Is the hostname and port correct?")
 	}
 
 	if isDefault(settings) {
 		s.defaultDB = db
+		s.defaultDriver = driver
 	}
 	return db, nil
 }

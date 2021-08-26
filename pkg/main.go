@@ -76,14 +76,14 @@ func main() {
 				write(rw, []byte(err.Error()))
 				return
 			}
-			regReq := catalogReqBody{}
-			err = json.Unmarshal(b, &regReq)
+			reqBody := catalogReqBody{}
+			err = json.Unmarshal(b, &reqBody)
 			if err != nil {
 				rw.WriteHeader(http.StatusBadRequest)
 				write(rw, []byte(err.Error()))
 				return
 			}
-			res, err := s.DataCatalogs(r.Context(), regReq.Region)
+			res, err := s.DataCatalogs(r.Context(), reqBody.Region)
 			if err != nil {
 				rw.WriteHeader(http.StatusBadRequest)
 				write(rw, []byte(err.Error()))

@@ -14,14 +14,15 @@ import { getBackendSrv } from '@grafana/runtime';
 type Props = DataSourcePluginOptionsEditorProps<AthenaDataSourceOptions, AthenaDataSourceSecureJsonData>;
 
 export function ConfigEditor(props: Props) {
-  const baseURL = `/api/datasources/${props.options.id}/resources`;
+  const baseURL = `/api/datasources/${props.options.id}`;
+  const resourcesURL = `${baseURL}/resources`;
   const [catalogs, setCatalogs] = useState<string[]>([]);
   const [isLoadingCatalogs, setIsLoadingCatalogs] = useState(false);
   const [catalog, setCatalog] = useState<SelectableValue<string> | null>(null);
 
   const saveOptions = async () => {
     await getBackendSrv()
-      .put(`/api/datasources/${props.options.id}`, props.options)
+      .put(baseURL, props.options)
       .then((result: { datasource: AthenaDataSourceSettings }) => {
         props.onOptionsChange({
           ...props.options,
@@ -37,7 +38,7 @@ export function ConfigEditor(props: Props) {
     await saveOptions();
     setIsLoadingCatalogs(true);
     try {
-      const loadedCatalogs: string[] = await getBackendSrv().post(baseURL + '/catalogs', {
+      const loadedCatalogs: string[] = await getBackendSrv().post(resourcesURL + '/catalogs', {
         region: 'default',
       });
       setCatalogs(loadedCatalogs);

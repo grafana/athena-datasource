@@ -37,39 +37,43 @@ export function QueryEditor(props: Props) {
 
   useEffect(() => {
     if (!regionsFetched) {
-      setRegionsFetched(true);
-      props.datasource.getResource('regions').then((regions: string[]) => {
-        if (!regions.length) {
-          return;
-        }
-        // place the default option at the top
-        const options: Array<SelectableValue<string>> = [defaultRegionOpt];
-        regions.forEach((r) => {
-          if (r !== props.datasource.defaultRegion) {
-            options.push({ label: r, value: r });
+      props.datasource
+        .getResource('regions')
+        .then((regions: string[]) => {
+          if (!regions.length) {
+            return;
           }
-        });
-        setRegionOptions(options);
-      });
+          // place the default option at the top
+          const options: Array<SelectableValue<string>> = [defaultRegionOpt];
+          regions.forEach((r) => {
+            if (r !== props.datasource.defaultRegion) {
+              options.push({ label: r, value: r });
+            }
+          });
+          setRegionOptions(options);
+        })
+        .finally(() => setRegionsFetched(true));
     }
   }, [defaultRegionOpt, regionsFetched, props.datasource]);
 
   useEffect(() => {
     if (!catalogsFetched) {
-      setCatalogsFetched(true);
-      props.datasource.postResource('catalogs', { region }).then((catalogs: string[]) => {
-        if (!catalogs.length) {
-          return;
-        }
-        // place the default option at the top
-        const options: Array<SelectableValue<string>> = [defaultCatalogOpt];
-        catalogs.forEach((r) => {
-          if (r !== props.datasource.defaultCatalog) {
-            options.push({ label: r, value: r });
+      props.datasource
+        .postResource('catalogs', { region })
+        .then((catalogs: string[]) => {
+          if (!catalogs.length) {
+            return;
           }
-        });
-        setCatalogOptions(options);
-      });
+          // place the default option at the top
+          const options: Array<SelectableValue<string>> = [defaultCatalogOpt];
+          catalogs.forEach((r) => {
+            if (r !== props.datasource.defaultCatalog) {
+              options.push({ label: r, value: r });
+            }
+          });
+          setCatalogOptions(options);
+        })
+        .finally(() => setCatalogsFetched(true));
     }
   }, [defaultCatalogOpt, catalogsFetched, props.datasource, region]);
 

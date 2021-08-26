@@ -141,7 +141,9 @@ func (c *conn) ListDataCatalogs(ctx context.Context) ([]string, error) {
 	res := []string{}
 	nextToken := aws.String("")
 	for nextToken != nil {
-		out, err := client.ListDataCatalogsWithContext(ctx, &athena.ListDataCatalogsInput{})
+		out, err := client.ListDataCatalogsWithContext(ctx, &athena.ListDataCatalogsInput{
+			NextToken: nextToken,
+		})
 		if err != nil {
 			return nil, err
 		}

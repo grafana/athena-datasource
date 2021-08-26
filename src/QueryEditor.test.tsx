@@ -17,6 +17,7 @@ const props = {
 
 beforeEach(() => {
   ds.getResource = jest.fn().mockResolvedValue([]);
+  ds.postResource = jest.fn().mockResolvedValue([]);
 });
 
 describe('QueryEditor', () => {

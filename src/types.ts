@@ -5,11 +5,16 @@ export interface AthenaQuery extends DataQuery {
   rawSQL: string;
   connectionArgs: {
     region: string;
+    catalog: string;
   };
 }
 
 export const defaultQuery: Partial<AthenaQuery> = {
   rawSQL: 'select 1',
+  connectionArgs: {
+    region: 'default',
+    catalog: 'default',
+  },
 };
 
 /**

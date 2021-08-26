@@ -42,9 +42,6 @@ func (d *Driver) Closed() bool {
 }
 
 func (d *Driver) ListDataCatalogsWithContext(ctx context.Context) ([]string, error) {
-	if d.connection == nil {
-		return nil, fmt.Errorf("missing connection")
-	}
 	return d.connection.ListDataCatalogs(ctx)
 }
 

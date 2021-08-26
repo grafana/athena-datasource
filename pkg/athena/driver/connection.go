@@ -60,6 +60,7 @@ func (c *conn) QueryContext(ctx context.Context, query string, _ []driver.NamedV
 	executionResult, err := client.StartQueryExecutionWithContext(ctx, &athena.StartQueryExecutionInput{
 		QueryString: aws.String(query),
 		QueryExecutionContext: &athena.QueryExecutionContext{
+			Catalog:  aws.String(c.settings.Catalog),
 			Database: aws.String(c.settings.Database),
 		},
 		WorkGroup: aws.String(c.settings.WorkGroup),

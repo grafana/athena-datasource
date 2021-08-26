@@ -27,7 +27,8 @@ type AthenaDatasource struct {
 }
 
 type ConnectionArgs struct {
-	Region string `json:"region,omitempty"`
+	Region  string `json:"region,omitempty"`
+	Catalog string `json:"catalog,omitempty"`
 }
 
 func (s *AthenaDatasource) Settings(_ backend.DataSourceInstanceSettings) sqlds.DriverSettings {
@@ -38,48 +39,66 @@ func (s *AthenaDatasource) Settings(_ backend.DataSourceInstanceSettings) sqlds.
 	}
 }
 
-func getSettings(config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (*models.AthenaDataSourceSettings, error) {
-	settings := &models.AthenaDataSourceSettings{}
-	err := settings.Load(config)
-	if err != nil {
-		return nil, fmt.Errorf("error reading settings: %s", err.Error())
-	}
-
+func parseConnectionArgs(queryArgs json.RawMessage) (*ConnectionArgs, error) {
+	args := &ConnectionArgs{}
 	if queryArgs != nil {
-		args := &ConnectionArgs{}
-		err = json.Unmarshal(queryArgs, args)
+		err := json.Unmarshal(queryArgs, args)
 		if err != nil {
 			return nil, fmt.Errorf("error reading query params: %s", err.Error())
 		}
-		if args.Region != "" {
-			if args.Region == "default" {
-				settings.Region = settings.DefaultRegion
-			} else {
-				settings.Region = args.Region
-			}
+	}
+	return args, nil
+}
+
+func applySettings(defaultSettings *models.AthenaDataSourceSettings, args *ConnectionArgs) (*models.AthenaDataSourceSettings, error) {
+	settings := *defaultSettings
+	if args.Region != "" {
+		if args.Region == "default" {
+			settings.Region = settings.DefaultRegion
+		} else {
+			settings.Region = args.Region
 		}
 	}
 
-	return settings, nil
+	if args.Catalog != "" && args.Catalog != "default" {
+		settings.Catalog = args.Catalog
+	}
+
+	return &settings, nil
 }
 
-func getRegionKey(settings *models.AthenaDataSourceSettings) string {
-	if settings.Region == "" || settings.Region == "default" || settings.Region == settings.DefaultRegion {
-		return "default"
+func getConnectionKey(defaultSettings *models.AthenaDataSourceSettings, region, catalog string) string {
+	regionKey := "default"
+	catalogKey := "default"
+	if region != "" && region != defaultSettings.DefaultRegion {
+		regionKey = region
 	}
-	return settings.Region
+	if catalog != "" && catalog != defaultSettings.Catalog {
+		catalogKey = catalog
+	}
+	return fmt.Sprintf("%s-%s", regionKey, catalogKey)
 }
 
 // Connect opens a sql.DB connection using datasource settings
 func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (*sql.DB, error) {
 	s.config = config
-	settings, err := getSettings(config, queryArgs)
+	args, err := parseConnectionArgs(queryArgs)
+	if err != nil {
+		return nil, err
+	}
+	defaultSettings := &models.AthenaDataSourceSettings{}
+	err = defaultSettings.Load(s.config)
+	if err != nil {
+		return nil, fmt.Errorf("error reading settings: %s", err.Error())
+	}
+	key := getConnectionKey(defaultSettings, args.Region, args.Catalog)
+
+	settings, err := applySettings(defaultSettings, args)
 	if err != nil {
 		return nil, errors.WithMessage(err, "Failed to parse settings")
 	}
 
 	// avoid to create a new connection if the arguments have not changed
-	key := getRegionKey(settings)
 	c, exists := s.connections.Load(key)
 	if exists {
 		connection := c.(connection)
@@ -116,14 +135,15 @@ func (s *AthenaDatasource) Columns(ctx context.Context, table string) ([]string,
 }
 
 func (s *AthenaDatasource) DataCatalogs(ctx context.Context, region string) ([]string, error) {
-	c, exists := s.connections.Load(region)
+	key := getConnectionKey(&models.AthenaDataSourceSettings{}, region, "")
+	c, exists := s.connections.Load(key)
 	if !exists {
 		// If a connection has not been established for this region, create one
 		_, err := s.Connect(s.config, []byte(fmt.Sprintf(`{"region":"%s"}`, region)))
 		if err != nil {
 			return nil, err
 		}
-		c, exists = s.connections.Load(region)
+		c, exists = s.connections.Load(key)
 		if !exists {
 			return nil, fmt.Errorf("missing connection")
 		}

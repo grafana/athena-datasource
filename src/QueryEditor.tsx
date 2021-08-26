@@ -33,7 +33,7 @@ export function QueryEditor(props: Props) {
   );
   const [catalogOptions, setCatalogOptions] = useState<Array<SelectableValue<string>>>([defaultCatalogOpt]);
   const [catalogsFetched, setCatalogsFetched] = useState(false);
-  const catalog = props.query.connectionArgs?.region || defaultCatalogOpt.value;
+  const catalog = props.query.connectionArgs?.catalog || defaultCatalogOpt.value;
 
   useEffect(() => {
     if (!regionsFetched) {
@@ -96,6 +96,18 @@ export function QueryEditor(props: Props) {
     setCatalogsFetched(false);
   };
 
+  const onCatalogChange = (e: SelectableValue<string>) => {
+    const query = {
+      ...props.query,
+      connectionArgs: {
+        ...props.query.connectionArgs,
+        catalog: e.value || props.datasource.defaultCatalog,
+      },
+    };
+    props.onChange(query);
+    props.onRunQuery();
+  };
+
   return (
     <>
       <CodeEditor
@@ -116,7 +128,7 @@ export function QueryEditor(props: Props) {
             aria-label="Catalog (datasource)"
             options={catalogOptions}
             value={catalog}
-            onChange={onRegionChange}
+            onChange={onCatalogChange}
           />
         </InlineField>
       </InlineSegmentGroup>

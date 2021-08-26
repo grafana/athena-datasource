@@ -15,7 +15,7 @@ type Props = DataSourcePluginOptionsEditorProps<AthenaDataSourceOptions, AthenaD
 
 export function ConfigEditor(props: Props) {
   const baseURL = `/api/datasources/${props.options.id}/resources`;
-  const [catalogs, setCatalogs] = useState<Array<string>>([]);
+  const [catalogs, setCatalogs] = useState<string[]>([]);
   const [isLoadingCatalogs, setIsLoadingCatalogs] = useState(false);
   const [catalog, setCatalog] = useState<SelectableValue<string> | null>(null);
 

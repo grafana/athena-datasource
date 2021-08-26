@@ -52,7 +52,7 @@ func write(rw http.ResponseWriter, b []byte) {
 
 func main() {
 	// Start listening to requests sent from Grafana.
-	s := athena.New()
+	s := &athena.AthenaDatasource{}
 	ds := sqlds.NewDatasource(s)
 	ds.Completable = s
 	ds.EnableMultipleConnections = true

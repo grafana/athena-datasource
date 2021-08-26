@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"sync"
 
 	"github.com/grafana/athena-datasource/pkg/athena/driver"
 	"github.com/grafana/athena-datasource/pkg/athena/models"
@@ -21,15 +22,12 @@ type connection struct {
 }
 
 type AthenaDatasource struct {
-	c map[string]connection
+	connections sync.Map
+	config      backend.DataSourceInstanceSettings
 }
 
 type ConnectionArgs struct {
 	Region string `json:"region,omitempty"`
-}
-
-func New() *AthenaDatasource {
-	return &AthenaDatasource{c: map[string]connection{}}
 }
 
 func (s *AthenaDatasource) Settings(_ backend.DataSourceInstanceSettings) sqlds.DriverSettings {
@@ -74,6 +72,7 @@ func getRegionKey(settings *models.AthenaDataSourceSettings) string {
 
 // Connect opens a sql.DB connection using datasource settings
 func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (*sql.DB, error) {
+	s.config = config
 	settings, err := getSettings(config, queryArgs)
 	if err != nil {
 		return nil, errors.WithMessage(err, "Failed to parse settings")
@@ -81,16 +80,19 @@ func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings, qu
 
 	// avoid to create a new connection if the arguments have not changed
 	key := getRegionKey(settings)
-	c, exists := s.c[key]
-	if exists && !c.driver.Closed() {
-		return c.db, nil
+	c, exists := s.connections.Load(key)
+	if exists {
+		connection := c.(connection)
+		if !connection.driver.Closed() {
+			return connection.db, nil
+		}
 	}
 
 	dr, db, err := driver.Open(*settings)
 	if err != nil {
 		return nil, errors.WithMessage(err, "Failed to connect to database. Is the hostname and port correct?")
 	}
-	s.c[key] = connection{driver: dr, db: db}
+	s.connections.Store(key, connection{driver: dr, db: db})
 	return db, nil
 }
 
@@ -114,9 +116,17 @@ func (s *AthenaDatasource) Columns(ctx context.Context, table string) ([]string,
 }
 
 func (s *AthenaDatasource) DataCatalogs(ctx context.Context, region string) ([]string, error) {
-	c, exists := s.c[region]
+	c, exists := s.connections.Load(region)
 	if !exists {
-		return nil, fmt.Errorf("missing connection")
+		// If a connection has not been established for this region, create one
+		_, err := s.Connect(s.config, []byte(fmt.Sprintf(`{"region":"%s"}`, region)))
+		if err != nil {
+			return nil, err
+		}
+		c, exists = s.connections.Load(region)
+		if !exists {
+			return nil, fmt.Errorf("missing connection")
+		}
 	}
-	return c.driver.ListDataCatalogsWithContext(ctx)
+	return c.(connection).driver.ListDataCatalogsWithContext(ctx)
 }

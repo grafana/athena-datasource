@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/grafana/athena-datasource/pkg/athena"
+	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/datasource"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"github.com/grafana/sqlds/v2"
@@ -52,7 +53,7 @@ func write(rw http.ResponseWriter, b []byte) {
 
 func main() {
 	// Start listening to requests sent from Grafana.
-	s := &athena.AthenaDatasource{}
+	s := &athena.AthenaDatasource{SessionCache: awsds.NewSessionCache()}
 	ds := sqlds.NewDatasource(s)
 	ds.Completable = s
 	ds.EnableMultipleConnections = true

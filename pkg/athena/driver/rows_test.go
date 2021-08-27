@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go/service/athena"
-	athenaclientmock "github.com/grafana/athena-datasource/pkg/athena/driver/mock"
+	athenaclientmock "github.com/grafana/athena-datasource/pkg/athena/api/mock"
 	"gotest.tools/assert"
 )
 

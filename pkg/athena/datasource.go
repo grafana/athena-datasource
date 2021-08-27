@@ -7,8 +7,10 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/grafana/athena-datasource/pkg/athena/api"
 	"github.com/grafana/athena-datasource/pkg/athena/driver"
 	"github.com/grafana/athena-datasource/pkg/athena/models"
+	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 	"github.com/grafana/grafana-plugin-sdk-go/data/sqlutil"
@@ -19,11 +21,15 @@ import (
 type connection struct {
 	db     *sql.DB
 	driver *driver.Driver
+	api    *api.API
 }
 
 type AthenaDatasource struct {
+	SessionCache *awsds.SessionCache
+
 	connections sync.Map
 	config      backend.DataSourceInstanceSettings
+	athenaAPI   *api.API
 }
 
 type ConnectionArgs struct {
@@ -107,11 +113,15 @@ func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings, qu
 		}
 	}
 
-	dr, db, err := driver.Open(*settings)
+	api, err := api.New(s.SessionCache, settings)
+	if err != nil {
+		return nil, errors.WithMessage(err, "Failed to create athena client")
+	}
+	dr, db, err := driver.Open(settings, api.Client)
 	if err != nil {
 		return nil, errors.WithMessage(err, "Failed to connect to database. Is the hostname and port correct?")
 	}
-	s.connections.Store(key, connection{driver: dr, db: db})
+	s.connections.Store(key, connection{driver: dr, db: db, api: api})
 	return db, nil
 }
 
@@ -148,5 +158,5 @@ func (s *AthenaDatasource) DataCatalogs(ctx context.Context, region string) ([]s
 			return nil, fmt.Errorf("missing connection")
 		}
 	}
-	return c.(connection).driver.ListDataCatalogsWithContext(ctx)
+	return c.(connection).api.ListDataCatalogs(ctx)
 }

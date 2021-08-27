@@ -7,8 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/google/go-cmp/cmp"
-	athenaclientmock "github.com/grafana/athena-datasource/pkg/athena/driver/mock"
+	athenaclientmock "github.com/grafana/athena-datasource/pkg/athena/api/mock"
 	"github.com/grafana/athena-datasource/pkg/athena/models"
 	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 	"github.com/jpillora/backoff"
@@ -17,7 +16,6 @@ import (
 
 func TestConnection_QueryContext(t *testing.T) {
 	c := &conn{
-		sessionCache: &awsds.SessionCache{},
 		settings: &models.AthenaDataSourceSettings{
 			AWSDatasourceSettings: awsds.AWSDatasourceSettings{},
 			Database:              "test-Database",
@@ -25,7 +23,7 @@ func TestConnection_QueryContext(t *testing.T) {
 			WorkGroup:             "test-Workgroup",
 		},
 		backoffInstance: backoff.Backoff{Min: 1 * time.Millisecond, Max: 1 * time.Millisecond},
-		mockedClient:    &athenaclientmock.MockAthenaClient{CalledTimesCountDown: 1},
+		athenaCli:       &athenaclientmock.MockAthenaClient{CalledTimesCountDown: 1},
 	}
 
 	failedOutput, err := c.QueryContext(context.Background(), athenaclientmock.FAKE_ERROR, []driver.NamedValue{})
@@ -52,14 +50,17 @@ func TestConnection_waitOnQuery(t *testing.T) {
 
 	for _, tc := range waitOnQueryTestCases {
 		// for tests we override backoff instance to always take 1 millisecond so the tests run quickly
-		c := &conn{backoffInstance: backoff.Backoff{
-			Min: 1 * time.Millisecond,
-			Max: 1 * time.Millisecond,
-		}}
-		athenaClient := &athenaclientmock.MockAthenaClient{
+		cliMock := &athenaclientmock.MockAthenaClient{
 			CalledTimesCountDown: tc.calledTimesCountDown,
 		}
-		err := c.waitOnQuery(context.Background(), athenaClient, tc.statementStatus)
+		c := &conn{
+			backoffInstance: backoff.Backoff{
+				Min: 1 * time.Millisecond,
+				Max: 1 * time.Millisecond,
+			},
+			athenaCli: cliMock,
+		}
+		err := c.waitOnQuery(context.Background(), tc.statementStatus)
 		if tc.err != nil || err != nil {
 			if err != nil && tc.err == nil {
 				t.Fatalf("unexpected error %v", err)
@@ -69,18 +70,6 @@ func TestConnection_waitOnQuery(t *testing.T) {
 			}
 			assert.Equal(t, tc.err.Error(), err.Error())
 		}
-		assert.Equal(t, tc.calledTimesCountDown, athenaClient.CalledTimesCounter)
-	}
-}
-
-func TestConnection_ListDataCatalogs(t *testing.T) {
-	expectedCatalogs := []string{"foo"}
-	c := &conn{mockedClient: &athenaclientmock.MockAthenaClient{Catalogs: expectedCatalogs}}
-	catalogs, err := c.ListDataCatalogs(context.TODO())
-	if err != nil {
-		t.Fatalf("unexpected error %v", err)
-	}
-	if !cmp.Equal(expectedCatalogs, catalogs) {
-		t.Errorf("unexpected result: %v", cmp.Diff(expectedCatalogs, catalogs))
+		assert.Equal(t, tc.calledTimesCountDown, cliMock.CalledTimesCounter)
 	}
 }

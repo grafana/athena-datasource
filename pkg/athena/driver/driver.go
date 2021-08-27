@@ -1,14 +1,13 @@
 package driver
 
 import (
-	"context"
 	"database/sql"
 	"database/sql/driver"
 	"fmt"
 	"sync"
 
+	"github.com/aws/aws-sdk-go/service/athena/athenaiface"
 	"github.com/grafana/athena-datasource/pkg/athena/models"
-	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 )
 
 const DriverName string = "athena"
@@ -22,37 +21,26 @@ var (
 type Driver struct {
 	settings   *models.AthenaDataSourceSettings
 	connection *conn
-}
-
-func (d *Driver) connect() *conn {
-	if d.connection == nil {
-		c := newConnection(awsds.NewSessionCache(), d.settings)
-		d.connection = c
-	}
-	return d.connection
+	athenaCli  athenaiface.AthenaAPI
 }
 
 // Open returns a new driver.Conn using already existing settings
 func (d *Driver) Open(_ string) (driver.Conn, error) {
-	return d.connect(), nil
+	d.connection = newConnection(d.athenaCli, d.settings)
+	return d.connection, nil
 }
 
 func (d *Driver) Closed() bool {
-	return d.connection.closed
-}
-
-func (d *Driver) ListDataCatalogsWithContext(ctx context.Context) ([]string, error) {
-	return d.connection.ListDataCatalogs(ctx)
+	return d.connection == nil || d.connection.closed
 }
 
 // Open registers a new driver with a unique name
-func Open(settings models.AthenaDataSourceSettings) (*Driver, *sql.DB, error) {
+func Open(settings *models.AthenaDataSourceSettings, athenaCli athenaiface.AthenaAPI) (*Driver, *sql.DB, error) {
 	openFromSessionMutex.Lock()
 	openFromSessionCount++
 	name := fmt.Sprintf("%s-%d", DriverName, openFromSessionCount)
 	openFromSessionMutex.Unlock()
-	d := &Driver{&settings, nil}
-	d.connect()
+	d := &Driver{settings: settings, athenaCli: athenaCli}
 	sql.Register(name, d)
 	db, err := sql.Open(name, "")
 	return d, db, err

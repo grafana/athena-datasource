@@ -70,7 +70,7 @@ export function ConfigEditor(props: Props) {
     <div className="gf-form-group">
       <ConnectionConfig {...props} onOptionsChange={onOptionsChange} />
       <h3>Athena Details </h3>
-      <InlineField label="Catalog (datasource)" labelWidth={28}>
+      <InlineField label={selectors.components.ConfigEditor.Catalog.input} labelWidth={28}>
         <div
           data-testid="onloadcatalogs"
           onClick={onLoadCatalogs}
@@ -78,7 +78,7 @@ export function ConfigEditor(props: Props) {
         >
           <Select
             data-testid={selectors.components.ConfigEditor.Catalog.input}
-            aria-label="Catalog (datasource)"
+            aria-label={selectors.components.ConfigEditor.Catalog.input}
             options={catalogs.map((c) => ({ label: c, value: c }))}
             value={catalog}
             onChange={onCatalogChange}

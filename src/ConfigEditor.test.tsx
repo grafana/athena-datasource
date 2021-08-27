@@ -9,7 +9,9 @@ const catalogName = 'foo';
 jest.mock('@grafana/aws-sdk', () => {
   return {
     ...(jest.requireActual('@grafana/aws-sdk') as any),
-    ConnectionConfig: () => <></>,
+    ConnectionConfig: function ConnectionConfig() {
+      return <></>;
+    },
   };
 });
 jest.mock('@grafana/runtime', () => {

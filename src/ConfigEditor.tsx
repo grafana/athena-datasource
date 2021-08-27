@@ -77,6 +77,7 @@ export function ConfigEditor(props: Props) {
           title={props.options.jsonData.defaultRegion ? '' : 'select a default region'}
         >
           <Select
+            data-testid={selectors.components.ConfigEditor.Catalog.input}
             aria-label="Catalog (datasource)"
             options={catalogs.map((c) => ({ label: c, value: c }))}
             value={catalog}

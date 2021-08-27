@@ -52,7 +52,10 @@ e2e.scenario({
               .click({ force: true })
               .type(datasource.jsonData.defaultRegion)
               .type('{enter}');
-            e2eSelectors.ConfigEditor.Catalog.input().type(datasource.jsonData.catalog);
+            e2eSelectors.ConfigEditor.Catalog.input().click({ force: true });
+            // wait for the catalogs to load
+            e2e().get('[data-testid="onloadcatalogs"]').contains(datasource.jsonData.catalog);
+            e2eSelectors.ConfigEditor.Catalog.input().type(datasource.jsonData.catalog).type('{enter}');
             e2eSelectors.ConfigEditor.Database.input().type(datasource.jsonData.database);
             e2eSelectors.ConfigEditor.Workgroup.input().type(datasource.jsonData.workgroup);
           },
@@ -73,17 +76,14 @@ e2e.scenario({
           queriesForm: () => {
             e2eSelectors.QueryEditor.CodeEditor.container()
               .click({ force: true })
-              .type(
-                `{selectall} select time as time, bytes as bytes from cloudfront_logs limit 2`
-              );
-            // TODO: we should be able to just pass visualizationName: "Table" to addPanel 
+              .type(`{selectall} select time as time, bytes as bytes from cloudfront_logs limit 2`);
+            // TODO: we should be able to just pass visualizationName: "Table" to addPanel
             // but it doesn't seem to work for some reason, maybe make a ticket in core grafana
-            e2e().get('[aria-label="toggle-viz-picker"]').click({ force: true })
+            e2e().get('[aria-label="toggle-viz-picker"]').click({ force: true });
             e2e().get('[aria-label="Plugin visualization item Table"]').click({ force: true });
             e2e().wait(3000);
           },
         });
-        
       });
   },
 });

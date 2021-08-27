@@ -71,7 +71,11 @@ export function ConfigEditor(props: Props) {
       <ConnectionConfig {...props} onOptionsChange={onOptionsChange} />
       <h3>Athena Details </h3>
       <InlineField label="Catalog (datasource)" labelWidth={28}>
-        <div onClick={onLoadCatalogs} title={props.options.jsonData.defaultRegion ? '' : 'select a default region'}>
+        <div
+          data-testid="onloadcatalogs"
+          onClick={onLoadCatalogs}
+          title={props.options.jsonData.defaultRegion ? '' : 'select a default region'}
+        >
           <Select
             aria-label="Catalog (datasource)"
             options={catalogs.map((c) => ({ label: c, value: c }))}
@@ -85,8 +89,8 @@ export function ConfigEditor(props: Props) {
       </InlineField>
       <InlineField label="Database" labelWidth={28}>
         <Input
-          data-testId={selectors.components.ConfigEditor.Database.input}
-          css
+          data-testid={selectors.components.ConfigEditor.Database.input}
+          css={{}}
           className="width-30"
           value={props.options.jsonData.database}
           onChange={onUpdateDatasourceJsonDataOption(props, 'database')}
@@ -94,8 +98,8 @@ export function ConfigEditor(props: Props) {
       </InlineField>
       <InlineField label="Workgroup" labelWidth={28}>
         <Input
-          data-testId={selectors.components.ConfigEditor.Workgroup.input}
-          css
+          data-testid={selectors.components.ConfigEditor.Workgroup.input}
+          css={{}}
           className="width-30"
           value={props.options.jsonData.workgroup}
           onChange={onUpdateDatasourceJsonDataOption(props, 'workgroup')}

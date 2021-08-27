@@ -36,7 +36,26 @@ describe('QueryEditor', () => {
 
     expect(onChange).toHaveBeenCalledWith({
       ...q,
-      connectionArgs: { region: 'foo' },
+      connectionArgs: { region: 'foo', catalog: 'default' },
+    });
+  });
+
+  it('should request catalogs and use a new one', async () => {
+    const onChange = jest.fn();
+    ds.postResource = jest.fn().mockResolvedValue([ds.defaultCatalog, 'foo']);
+    render(<QueryEditor {...props} onChange={onChange} />);
+
+    expect(screen.getByText(`default (${ds.defaultCatalog})`)).toBeInTheDocument();
+    expect(ds.postResource).toHaveBeenCalledWith('catalogs', { region: 'default' });
+
+    const selectEl = screen.getByLabelText('Catalog (datasource)');
+    expect(selectEl).toBeInTheDocument();
+
+    await select(selectEl, 'foo', { container: document.body });
+
+    expect(onChange).toHaveBeenCalledWith({
+      ...q,
+      connectionArgs: { region: 'default', catalog: 'foo' },
     });
   });
 });

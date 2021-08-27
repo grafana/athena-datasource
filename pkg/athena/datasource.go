@@ -29,7 +29,6 @@ type AthenaDatasource struct {
 
 	connections sync.Map
 	config      backend.DataSourceInstanceSettings
-	athenaAPI   *api.API
 }
 
 type ConnectionArgs struct {
@@ -85,6 +84,21 @@ func getConnectionKey(defaultSettings *models.AthenaDataSourceSettings, region, 
 	return fmt.Sprintf("%s-%s", regionKey, catalogKey)
 }
 
+func (s *AthenaDatasource) athenaSettings(args *ConnectionArgs) (*models.AthenaDataSourceSettings, string, error) {
+	defaultSettings := &models.AthenaDataSourceSettings{}
+	err := defaultSettings.Load(s.config)
+	if err != nil {
+		return nil, "", fmt.Errorf("error reading settings: %s", err.Error())
+	}
+	connectionKey := getConnectionKey(defaultSettings, args.Region, args.Catalog)
+
+	settings, err := applySettings(defaultSettings, args)
+	if err != nil {
+		return nil, "", errors.WithMessage(err, "Failed to parse settings")
+	}
+	return settings, connectionKey, nil
+}
+
 // Connect opens a sql.DB connection using datasource settings
 func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (*sql.DB, error) {
 	s.config = config
@@ -92,16 +106,9 @@ func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings, qu
 	if err != nil {
 		return nil, err
 	}
-	defaultSettings := &models.AthenaDataSourceSettings{}
-	err = defaultSettings.Load(s.config)
+	settings, key, err := s.athenaSettings(args)
 	if err != nil {
-		return nil, fmt.Errorf("error reading settings: %s", err.Error())
-	}
-	key := getConnectionKey(defaultSettings, args.Region, args.Catalog)
-
-	settings, err := applySettings(defaultSettings, args)
-	if err != nil {
-		return nil, errors.WithMessage(err, "Failed to parse settings")
+		return nil, err
 	}
 
 	// avoid to create a new connection if the arguments have not changed
@@ -148,15 +155,15 @@ func (s *AthenaDatasource) DataCatalogs(ctx context.Context, region string) ([]s
 	key := getConnectionKey(&models.AthenaDataSourceSettings{}, region, "")
 	c, exists := s.connections.Load(key)
 	if !exists {
-		// If a connection has not been established for this region, create one
-		_, err := s.Connect(s.config, []byte(fmt.Sprintf(`{"region":"%s"}`, region)))
+		settings, _, err := s.athenaSettings(&ConnectionArgs{Region: region, Catalog: ""})
 		if err != nil {
 			return nil, err
 		}
-		c, exists = s.connections.Load(key)
-		if !exists {
-			return nil, fmt.Errorf("missing connection")
+		api, err := api.New(s.SessionCache, settings)
+		if err != nil {
+			return nil, errors.WithMessage(err, "Failed to create athena client")
 		}
+		return api.ListDataCatalogs(ctx)
 	}
 	return c.(connection).api.ListDataCatalogs(ctx)
 }

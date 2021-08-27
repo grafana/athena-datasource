@@ -6,7 +6,7 @@ This template is a starting point for building Grafana data source backend plugi
 
 ## What is the Grafana data source backend plugin?
 
-Grafana supports a wide range of data sources, including Prometheus, MySQL, and Datadog. There’s a good chance you can already visualize metrics from the systems you that have already set up. In cases where you have an in-house metrics solution that you’d like to add to your Grafana dashboards, Grafana data source plugins allow you to integrate such solutions with Grafana.
+Grafana supports a wide range of data sources, including Prometheus, MySQL, and Datadog. There’s a good chance you can already visualize metrics from the systems that you have already set up. In cases where you have an in-house metrics solution that you’d like to add to your Grafana dashboards, Grafana data source plugins allow you to integrate such solutions with Grafana.
 
 For more information about backend plugins, refer to the documentation on [Backend plugins](https://grafana.com/docs/grafana/latest/developers/plugins/backend/).
 

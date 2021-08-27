@@ -72,25 +72,13 @@ func applySettings(defaultSettings *models.AthenaDataSourceSettings, args *Conne
 	return &settings, nil
 }
 
-func getConnectionKey(defaultSettings *models.AthenaDataSourceSettings, region, catalog string) string {
-	regionKey := "default"
-	catalogKey := "default"
-	if region != "" && region != defaultSettings.DefaultRegion {
-		regionKey = region
-	}
-	if catalog != "" && catalog != defaultSettings.Catalog {
-		catalogKey = catalog
-	}
-	return fmt.Sprintf("%s-%s", regionKey, catalogKey)
-}
-
 func (s *AthenaDatasource) athenaSettings(args *ConnectionArgs) (*models.AthenaDataSourceSettings, string, error) {
 	defaultSettings := &models.AthenaDataSourceSettings{}
 	err := defaultSettings.Load(s.config)
 	if err != nil {
 		return nil, "", fmt.Errorf("error reading settings: %s", err.Error())
 	}
-	connectionKey := getConnectionKey(defaultSettings, args.Region, args.Catalog)
+	connectionKey := defaultSettings.GetConnectionKey(args.Region, args.Catalog)
 
 	settings, err := applySettings(defaultSettings, args)
 	if err != nil {
@@ -152,7 +140,8 @@ func (s *AthenaDatasource) Columns(ctx context.Context, table string) ([]string,
 }
 
 func (s *AthenaDatasource) DataCatalogs(ctx context.Context, region string) ([]string, error) {
-	key := getConnectionKey(&models.AthenaDataSourceSettings{}, region, "")
+	settings := &models.AthenaDataSourceSettings{}
+	key := settings.GetConnectionKey(region, "")
 	c, exists := s.connections.Load(key)
 	if !exists {
 		settings, _, err := s.athenaSettings(&ConnectionArgs{Region: region, Catalog: ""})

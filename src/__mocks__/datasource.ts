@@ -65,7 +65,8 @@ export const mockDatasource = new DataSource({
 });
 
 export const mockQuery: AthenaQuery = {
+  connectionArgs: { region: 'default', catalog: 'default' },
+  format: 1,
   rawSQL: 'select 1',
   refId: '',
-  connectionArgs: { region: 'default', catalog: 'default' },
 };

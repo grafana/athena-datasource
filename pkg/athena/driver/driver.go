@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/aws/aws-sdk-go/service/athena/athenaiface"
 	"github.com/grafana/athena-datasource/pkg/athena/models"
-	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 )
 
 const DriverName string = "athena"
@@ -21,25 +21,26 @@ var (
 type Driver struct {
 	settings   *models.AthenaDataSourceSettings
 	connection *conn
+	athenaCli  athenaiface.AthenaAPI
 }
 
 // Open returns a new driver.Conn using already existing settings
 func (d *Driver) Open(_ string) (driver.Conn, error) {
-	d.connection = newConnection(awsds.NewSessionCache(), d.settings)
+	d.connection = newConnection(d.athenaCli, d.settings)
 	return d.connection, nil
 }
 
 func (d *Driver) Closed() bool {
-	return d.connection.closed
+	return d.connection == nil || d.connection.closed
 }
 
 // Open registers a new driver with a unique name
-func Open(settings models.AthenaDataSourceSettings) (*Driver, *sql.DB, error) {
+func Open(settings *models.AthenaDataSourceSettings, athenaCli athenaiface.AthenaAPI) (*Driver, *sql.DB, error) {
 	openFromSessionMutex.Lock()
 	openFromSessionCount++
 	name := fmt.Sprintf("%s-%d", DriverName, openFromSessionCount)
 	openFromSessionMutex.Unlock()
-	d := &Driver{&settings, nil}
+	d := &Driver{settings: settings, athenaCli: athenaCli}
 	sql.Register(name, d)
 	db, err := sql.Open(name, "")
 	return d, db, err

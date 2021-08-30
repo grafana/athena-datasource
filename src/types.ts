@@ -1,15 +1,20 @@
 import { AwsAuthDataSourceJsonData, AwsAuthDataSourceSecureJsonData } from '@grafana/aws-sdk';
-import { DataQuery } from '@grafana/data';
+import { DataQuery, DataSourceSettings } from '@grafana/data';
 
 export interface AthenaQuery extends DataQuery {
   rawSQL: string;
   connectionArgs: {
     region: string;
+    catalog: string;
   };
 }
 
 export const defaultQuery: Partial<AthenaQuery> = {
   rawSQL: 'select 1',
+  connectionArgs: {
+    region: 'default',
+    catalog: 'default',
+  },
 };
 
 /**
@@ -25,3 +30,5 @@ export interface AthenaDataSourceOptions extends AwsAuthDataSourceJsonData {
  * Values that are used in the backend, but never sent over HTTP to the frontend
  */
 export interface AthenaDataSourceSecureJsonData extends AwsAuthDataSourceSecureJsonData {}
+
+export type AthenaDataSourceSettings = DataSourceSettings<AthenaDataSourceOptions, AthenaDataSourceSecureJsonData>;

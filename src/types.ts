@@ -6,7 +6,7 @@ export enum FormatOptions {
   Table,
 }
 export interface AthenaQuery extends DataQuery {
-  format: FormatOptions; 
+  format: FormatOptions;
   rawSQL: string;
   connectionArgs: {
     region: string;

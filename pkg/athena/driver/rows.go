@@ -6,7 +6,6 @@ import (
 	"io"
 	"reflect"
 	"strconv"
-	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/athena"
@@ -255,11 +254,12 @@ func (r *Rows) convertValueFromAthena(columnInfo *athena.ColumnInfo, rawValue *s
 		}
 		return nil, fmt.Errorf("unknown value `%s` for boolean", val)
 	case "date", "time", "time with time zone", "timestamp", "timestamp with time zone":
-		t, err := time.Parse("2006-01-02 15:04:05", val)
-		if err != nil {
+		vv, err := scanTime(val)
+		if !vv.Valid {
+			log.DefaultLogger.Error("failed to convert date: %v", val)
 			return nil, err
 		}
-		return t, nil
+		return vv.Time, err
 	default:
 		return nil, fmt.Errorf("unsupported type %s", *columnInfo.Type)
 	}

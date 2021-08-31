@@ -52,12 +52,21 @@ e2e.scenario({
               .click({ force: true })
               .type(datasource.jsonData.defaultRegion)
               .type('{enter}');
-            e2eSelectors.ConfigEditor.Catalog.input().click({ force: true });
-            // wait for the catalogs to load
-            e2e().get('[data-testid="onloadcatalogs"]').contains(datasource.jsonData.catalog);
-            e2eSelectors.ConfigEditor.Catalog.input().type(datasource.jsonData.catalog).type('{enter}');
-            e2eSelectors.ConfigEditor.Database.input().type(datasource.jsonData.database);
-            e2eSelectors.ConfigEditor.Workgroup.input().type(datasource.jsonData.workgroup);
+            // Catalogs
+            e2eSelectors.ConfigEditor.catalog.input().click({ force: true });
+            // wait for it to load
+            e2e().get('[data-testid="onloadcatalog"]').contains(datasource.jsonData.catalog);
+            e2eSelectors.ConfigEditor.catalog.input().type(datasource.jsonData.catalog).type('{enter}');
+            // Databases
+            e2eSelectors.ConfigEditor.database.input().click({ force: true });
+            // wait for it to load
+            e2e().get('[data-testid="onloaddatabase"]').contains(datasource.jsonData.database);
+            e2eSelectors.ConfigEditor.database.input().type(datasource.jsonData.database).type('{enter}');
+            // Workgroups
+            e2eSelectors.ConfigEditor.workgroup.input().click({ force: true });
+            // wait for it to load
+            e2e().get('[data-testid="onloadworkgroup"]').contains(datasource.jsonData.workgroup);
+            e2eSelectors.ConfigEditor.workgroup.input().type(datasource.jsonData.workgroup).type('{enter}');
           },
           type: 'athena-datasource',
         });

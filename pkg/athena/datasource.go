@@ -32,8 +32,9 @@ type AthenaDatasource struct {
 }
 
 type ConnectionArgs struct {
-	Region  string `json:"region,omitempty"`
-	Catalog string `json:"catalog,omitempty"`
+	Region   string `json:"region,omitempty"`
+	Catalog  string `json:"catalog,omitempty"`
+	Database string `json:"database,omitempty"`
 }
 
 func (s *AthenaDatasource) Settings(_ backend.DataSourceInstanceSettings) sqlds.DriverSettings {
@@ -69,6 +70,10 @@ func applySettings(defaultSettings *models.AthenaDataSourceSettings, args *Conne
 		settings.Catalog = args.Catalog
 	}
 
+	if args.Database != "" && args.Database != "default" {
+		settings.Database = args.Database
+	}
+
 	return &settings, nil
 }
 
@@ -78,7 +83,7 @@ func (s *AthenaDatasource) athenaSettings(args *ConnectionArgs) (*models.AthenaD
 	if err != nil {
 		return nil, "", fmt.Errorf("error reading settings: %s", err.Error())
 	}
-	connectionKey := defaultSettings.GetConnectionKey(args.Region, args.Catalog)
+	connectionKey := defaultSettings.GetConnectionKey(args.Region, args.Catalog, args.Database)
 
 	settings, err := applySettings(defaultSettings, args)
 	if err != nil {
@@ -140,14 +145,12 @@ func (s *AthenaDatasource) Columns(ctx context.Context, table string) ([]string,
 }
 
 func (s *AthenaDatasource) DataCatalogs(ctx context.Context, region string) ([]string, error) {
-	settings := &models.AthenaDataSourceSettings{}
-	key := settings.GetConnectionKey(region, "")
+	settings, key, err := s.athenaSettings(&ConnectionArgs{Region: region})
+	if err != nil {
+		return nil, err
+	}
 	c, exists := s.connections.Load(key)
 	if !exists {
-		settings, _, err := s.athenaSettings(&ConnectionArgs{Region: region, Catalog: ""})
-		if err != nil {
-			return nil, err
-		}
 		api, err := api.New(s.SessionCache, settings)
 		if err != nil {
 			return nil, errors.WithMessage(err, "Failed to create athena client")
@@ -155,4 +158,36 @@ func (s *AthenaDatasource) DataCatalogs(ctx context.Context, region string) ([]s
 		return api.ListDataCatalogs(ctx)
 	}
 	return c.(connection).api.ListDataCatalogs(ctx)
+}
+
+func (s *AthenaDatasource) Databases(ctx context.Context, region, catalog string) ([]string, error) {
+	settings, key, err := s.athenaSettings(&ConnectionArgs{Region: region, Catalog: catalog})
+	if err != nil {
+		return nil, err
+	}
+	c, exists := s.connections.Load(key)
+	if !exists {
+		api, err := api.New(s.SessionCache, settings)
+		if err != nil {
+			return nil, errors.WithMessage(err, "Failed to create athena client")
+		}
+		return api.ListDatabases(ctx, settings.Catalog)
+	}
+	return c.(connection).api.ListDatabases(ctx, settings.Catalog)
+}
+
+func (s *AthenaDatasource) Workgroups(ctx context.Context, region string) ([]string, error) {
+	settings, key, err := s.athenaSettings(&ConnectionArgs{Region: region})
+	if err != nil {
+		return nil, err
+	}
+	c, exists := s.connections.Load(key)
+	if !exists {
+		api, err := api.New(s.SessionCache, settings)
+		if err != nil {
+			return nil, errors.WithMessage(err, "Failed to create athena client")
+		}
+		return api.ListWorkgroups(ctx)
+	}
+	return c.(connection).api.ListWorkgroups(ctx)
 }

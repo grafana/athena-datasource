@@ -40,6 +40,8 @@ export const mockDatasource = new DataSource({
   name: 'Athena Data Source',
   jsonData: {
     defaultRegion: 'us-east-2',
+    catalog: 'aws-catalog',
+    database: 'db',
   },
   meta: {
     id: 'athena-datasource',
@@ -67,5 +69,5 @@ export const mockDatasource = new DataSource({
 export const mockQuery: AthenaQuery = {
   rawSQL: 'select 1',
   refId: '',
-  connectionArgs: { region: 'default', catalog: 'default' },
+  connectionArgs: { region: 'default', catalog: 'default', database: 'default' },
 };

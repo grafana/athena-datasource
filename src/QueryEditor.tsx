@@ -1,81 +1,62 @@
 import { defaults } from 'lodash';
 
-import React, { useState, useEffect, useMemo } from 'react';
-import { QueryEditorProps, SelectableValue } from '@grafana/data';
+import React, { useState } from 'react';
+import { QueryEditorProps } from '@grafana/data';
 import { DataSource } from './datasource';
 import { AthenaDataSourceOptions, AthenaQuery, defaultQuery } from './types';
-import { CodeEditor, InlineField, InlineSegmentGroup, Select } from '@grafana/ui';
+import { CodeEditor, InlineSegmentGroup } from '@grafana/ui';
+import { AthenaResourceSelector, QueryResourceType } from './AthenaResourceSelector';
 
 type Props = QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions>;
 
 export function QueryEditor(props: Props) {
   const { rawSQL } = defaults(props.query, defaultQuery);
   // Region selector
-  const defaultRegionOpt = useMemo(
-    () => ({
-      label: `default (${props.datasource.defaultRegion})`,
-      value: 'default',
-      description: 'Default region set in the data source',
-    }),
-    [props.datasource.defaultRegion]
-  );
-  const [regionOptions, setRegionOptions] = useState<Array<SelectableValue<string>>>([defaultRegionOpt]);
+  const [region, setRegion] = useState(props.query.connectionArgs.region);
+  const [regions, setRegions] = useState([props.query.connectionArgs.region]);
   const [regionsFetched, setRegionsFetched] = useState(false);
-  const region = props.query.connectionArgs?.region || defaultRegionOpt.value;
+  const fetchRegions = async () => {
+    if (regionsFetched) {
+      return;
+    }
+    try {
+      const regions = await props.datasource.getResource('regions');
+      setRegions(regions);
+    } finally {
+      // avoid re-fetching even if there are errors
+      setRegionsFetched(true);
+    }
+  };
   // Catalog selector
-  const defaultCatalogOpt = useMemo(
-    () => ({
-      label: `default (${props.datasource.defaultCatalog})`,
-      value: 'default',
-      description: 'Default catalog set in the data source',
-    }),
-    [props.datasource.defaultCatalog]
-  );
-  const [catalogOptions, setCatalogOptions] = useState<Array<SelectableValue<string>>>([defaultCatalogOpt]);
+  const [catalog, setCatalog] = useState<string | null>(props.query.connectionArgs.catalog);
+  const [catalogs, setCatalogs] = useState([props.query.connectionArgs.catalog]);
   const [catalogsFetched, setCatalogsFetched] = useState(false);
-  const catalog = props.query.connectionArgs?.catalog || defaultCatalogOpt.value;
-
-  useEffect(() => {
-    if (!regionsFetched) {
-      props.datasource
-        .getResource('regions')
-        .then((regions: string[]) => {
-          if (!regions.length) {
-            return;
-          }
-          // place the default option at the top
-          const options: Array<SelectableValue<string>> = [defaultRegionOpt];
-          regions.forEach((r) => {
-            if (r !== props.datasource.defaultRegion) {
-              options.push({ label: r, value: r });
-            }
-          });
-          setRegionOptions(options);
-        })
-        .finally(() => setRegionsFetched(true));
+  const fetchCatalogs = async () => {
+    if (catalogsFetched) {
+      return;
     }
-  }, [defaultRegionOpt, regionsFetched, props.datasource]);
-
-  useEffect(() => {
-    if (!catalogsFetched) {
-      props.datasource
-        .postResource('catalogs', { region })
-        .then((catalogs: string[]) => {
-          if (!catalogs.length) {
-            return;
-          }
-          // place the default option at the top
-          const options: Array<SelectableValue<string>> = [defaultCatalogOpt];
-          catalogs.forEach((r) => {
-            if (r !== props.datasource.defaultCatalog) {
-              options.push({ label: r, value: r });
-            }
-          });
-          setCatalogOptions(options);
-        })
-        .finally(() => setCatalogsFetched(true));
+    try {
+      setCatalogs(await props.datasource.postResource('catalogs', { region }));
+    } finally {
+      // avoid re-fetching even if there are errors
+      setCatalogsFetched(true);
     }
-  }, [defaultCatalogOpt, catalogsFetched, props.datasource, region]);
+  };
+  // Database selector
+  const [database, setDatabase] = useState<string | null>(props.query.connectionArgs.database);
+  const [databases, setDatabases] = useState([props.query.connectionArgs.database]);
+  const [databasesFetched, setDatabasesFetched] = useState(false);
+  const fetchDatabases = async () => {
+    if (databasesFetched) {
+      return;
+    }
+    try {
+      setDatabases(await props.datasource.postResource('databases', { region, catalog }));
+    } finally {
+      // avoid re-fetching even if there are errors
+      setDatabasesFetched(true);
+    }
+  };
 
   const onRawSqlChange = (rawSQL: string) => {
     const query = {
@@ -86,30 +67,47 @@ export function QueryEditor(props: Props) {
     props.onRunQuery();
   };
 
-  const onRegionChange = (e: SelectableValue<string>) => {
+  const onResourceChange = (r: QueryResourceType) => (value: string) => {
+    const newArgs = {
+      ...props.query.connectionArgs,
+    };
+    switch (r) {
+      case 'region':
+        setRegion(value);
+        newArgs.region = value;
+        // reset the related state
+        newArgs.catalog = '';
+        newArgs.database = '';
+        setCatalog(null);
+        setCatalogs([]);
+        setCatalogsFetched(false);
+        setDatabase(null);
+        setDatabases([]);
+        setDatabasesFetched(false);
+        break;
+      case 'catalog':
+        setCatalog(value);
+        newArgs.catalog = value;
+        // reset the related state
+        newArgs.database = '';
+        setDatabase(null);
+        setDatabases([]);
+        setDatabasesFetched(false);
+        break;
+      case 'database':
+        setDatabase(value);
+        newArgs.database = value;
+        // now that connection args are complete, run request
+        props.onRunQuery();
+    }
     const query = {
       ...props.query,
       connectionArgs: {
         ...props.query.connectionArgs,
-        region: e.value || props.datasource.defaultRegion,
+        ...newArgs,
       },
     };
     props.onChange(query);
-    props.onRunQuery();
-    // reset the catalog to re-request it
-    setCatalogsFetched(false);
-  };
-
-  const onCatalogChange = (e: SelectableValue<string>) => {
-    const query = {
-      ...props.query,
-      connectionArgs: {
-        ...props.query.connectionArgs,
-        catalog: e.value || props.datasource.defaultCatalog,
-      },
-    };
-    props.onChange(query);
-    props.onRunQuery();
   };
 
   return (
@@ -123,18 +121,32 @@ export function QueryEditor(props: Props) {
         showMiniMap={false}
         showLineNumbers={true}
       />
+      <h6>Connection Details</h6>
       <InlineSegmentGroup>
-        <InlineField label="Region">
-          <Select aria-label="Region" options={regionOptions} value={region} onChange={onRegionChange} />
-        </InlineField>
-        <InlineField label="Catalog (datasource)">
-          <Select
-            aria-label="Catalog (datasource)"
-            options={catalogOptions}
-            value={catalog}
-            onChange={onCatalogChange}
-          />
-        </InlineField>
+        <AthenaResourceSelector
+          resource="region"
+          default={props.datasource.defaultRegion}
+          value={region}
+          list={regions}
+          fetch={fetchRegions}
+          onChange={onResourceChange('region')}
+        />
+        <AthenaResourceSelector
+          resource="catalog"
+          default={props.datasource.defaultCatalog}
+          value={catalog}
+          list={catalogs}
+          fetch={fetchCatalogs}
+          onChange={onResourceChange('catalog')}
+        />
+        <AthenaResourceSelector
+          resource="database"
+          default={props.datasource.defaultDatabase}
+          value={database}
+          list={databases}
+          fetch={fetchDatabases}
+          onChange={onResourceChange('database')}
+        />
       </InlineSegmentGroup>
     </>
   );

@@ -2,6 +2,7 @@ package routes
 
 import (
 	"encoding/json"
+	"io"
 	"io/ioutil"
 	"net/http"
 
@@ -40,8 +41,9 @@ type ResourceHandler struct {
 	ds *athena.AthenaDatasource
 }
 
-type catalogReqBody struct {
-	Region string `json:"region"`
+type reqBody struct {
+	Region  string `json:"region"`
+	Catalog string `json:"catalog,omitempty"`
 }
 
 func New(ds *athena.AthenaDatasource) *ResourceHandler {
@@ -55,34 +57,20 @@ func write(rw http.ResponseWriter, b []byte) {
 	}
 }
 
-func (r *ResourceHandler) regions(rw http.ResponseWriter, _ *http.Request) {
-	rw.Header().Add("Content-Type", "application/json")
-	// TODO: Replace with a resolved list of regions
-	res, err := json.Marshal(standardRegions)
+func parseBody(body io.ReadCloser) (*reqBody, error) {
+	reqBody := &reqBody{}
+	b, err := ioutil.ReadAll(body)
 	if err != nil {
-		log.DefaultLogger.Error(err.Error())
-		rw.WriteHeader(http.StatusInternalServerError)
-		write(rw, []byte(err.Error()))
-		return
+		return nil, err
 	}
-	write(rw, res)
+	err = json.Unmarshal(b, reqBody)
+	if err != nil {
+		return nil, err
+	}
+	return reqBody, nil
 }
 
-func (r *ResourceHandler) catalogs(rw http.ResponseWriter, req *http.Request) {
-	b, err := ioutil.ReadAll(req.Body)
-	if err != nil {
-		rw.WriteHeader(http.StatusBadRequest)
-		write(rw, []byte(err.Error()))
-		return
-	}
-	reqBody := catalogReqBody{}
-	err = json.Unmarshal(b, &reqBody)
-	if err != nil {
-		rw.WriteHeader(http.StatusBadRequest)
-		write(rw, []byte(err.Error()))
-		return
-	}
-	res, err := r.ds.DataCatalogs(req.Context(), reqBody.Region)
+func sendResponse(res interface{}, err error, rw http.ResponseWriter) {
 	if err != nil {
 		rw.WriteHeader(http.StatusBadRequest)
 		write(rw, []byte(err.Error()))
@@ -99,9 +87,49 @@ func (r *ResourceHandler) catalogs(rw http.ResponseWriter, req *http.Request) {
 	write(rw, bytes)
 }
 
+func (r *ResourceHandler) regions(rw http.ResponseWriter, _ *http.Request) {
+	// TODO: Replace with a resolved list of regions
+	sendResponse(standardRegions, nil, rw)
+}
+
+func (r *ResourceHandler) catalogs(rw http.ResponseWriter, req *http.Request) {
+	reqBody, err := parseBody(req.Body)
+	if err != nil {
+		rw.WriteHeader(http.StatusBadRequest)
+		write(rw, []byte(err.Error()))
+		return
+	}
+	res, err := r.ds.DataCatalogs(req.Context(), reqBody.Region)
+	sendResponse(res, err, rw)
+}
+
+func (r *ResourceHandler) databases(rw http.ResponseWriter, req *http.Request) {
+	reqBody, err := parseBody(req.Body)
+	if err != nil {
+		rw.WriteHeader(http.StatusBadRequest)
+		write(rw, []byte(err.Error()))
+		return
+	}
+	res, err := r.ds.Databases(req.Context(), reqBody.Region, reqBody.Catalog)
+	sendResponse(res, err, rw)
+}
+
+func (r *ResourceHandler) workgroups(rw http.ResponseWriter, req *http.Request) {
+	reqBody, err := parseBody(req.Body)
+	if err != nil {
+		rw.WriteHeader(http.StatusBadRequest)
+		write(rw, []byte(err.Error()))
+		return
+	}
+	res, err := r.ds.Workgroups(req.Context(), reqBody.Region)
+	sendResponse(res, err, rw)
+}
+
 func (r *ResourceHandler) Routes() map[string]func(http.ResponseWriter, *http.Request) {
 	return map[string]func(http.ResponseWriter, *http.Request){
-		"/regions":  r.regions,
-		"/catalogs": r.catalogs,
+		"/regions":    r.regions,
+		"/catalogs":   r.catalogs,
+		"/databases":  r.databases,
+		"/workgroups": r.workgroups,
 	}
 }

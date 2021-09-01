@@ -26,10 +26,8 @@ export class DataSource extends DataSourceWithBackend<AthenaQuery, AthenaDataSou
     if (typeof value === 'string') {
       if (isNaN(parseInt(value))) {
         return this.quoteLiteral(value);
-
       }
       return value;
-
     }
 
     const quotedValues = value.map((v) => {

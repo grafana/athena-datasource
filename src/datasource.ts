@@ -24,7 +24,7 @@ export class DataSource extends DataSourceWithBackend<AthenaQuery, AthenaDataSou
 
   private interpolateVariable = (value: string | string[]) => {
     if (typeof value === 'string') {
-      if (isNaN(parseInt(value))) {
+      if (isNaN(parseInt(value, 10))) {
         return this.quoteLiteral(value);
       }
       return value;

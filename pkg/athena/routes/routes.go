@@ -38,7 +38,7 @@ var standardRegions = []string{
 }
 
 type ResourceHandler struct {
-	ds *athena.AthenaDatasource
+	ds athena.AthenaDatasourceIface
 }
 
 type reqBody struct {

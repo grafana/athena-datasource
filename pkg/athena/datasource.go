@@ -31,6 +31,13 @@ type AthenaDatasource struct {
 	config      backend.DataSourceInstanceSettings
 }
 
+type AthenaDatasourceIface interface {
+	sqlds.Driver
+	DataCatalogs(ctx context.Context, region string) ([]string, error)
+	Databases(ctx context.Context, region, catalog string) ([]string, error)
+	Workgroups(ctx context.Context, region string) ([]string, error)
+}
+
 type ConnectionArgs struct {
 	Region   string `json:"region,omitempty"`
 	Catalog  string `json:"catalog,omitempty"`

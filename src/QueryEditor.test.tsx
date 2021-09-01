@@ -27,19 +27,15 @@ describe('QueryEditor', () => {
     ds.getResource = jest.fn().mockResolvedValue([ds.defaultRegion, 'foo']);
     render(<QueryEditor {...props} onChange={onChange} />);
 
-    const selector = screen.getByText(`default (${ds.defaultRegion})`);
-    expect(selector).toBeInTheDocument();
-    selector.click();
-    expect(ds.getResource).toHaveBeenCalledWith('regions');
-
     const selectEl = screen.getByLabelText(selectors.components.ConfigEditor.region.input);
     expect(selectEl).toBeInTheDocument();
 
     await select(selectEl, 'foo', { container: document.body });
 
+    expect(ds.getResource).toHaveBeenCalledWith('regions');
     expect(onChange).toHaveBeenCalledWith({
       ...q,
-      connectionArgs: { region: 'foo', catalog: '', database: '' },
+      connectionArgs: { ...q.connectionArgs, region: 'foo' },
     });
   });
 
@@ -48,19 +44,15 @@ describe('QueryEditor', () => {
     ds.postResource = jest.fn().mockResolvedValue([ds.defaultCatalog, 'foo']);
     render(<QueryEditor {...props} onChange={onChange} />);
 
-    const selector = screen.getByText(`default (${ds.defaultCatalog})`);
-    expect(selector).toBeInTheDocument();
-    selector.click();
-    expect(ds.postResource).toHaveBeenCalledWith('catalogs', { region: 'default' });
-
     const selectEl = screen.getByLabelText(selectors.components.ConfigEditor.catalog.input);
     expect(selectEl).toBeInTheDocument();
 
     await select(selectEl, 'foo', { container: document.body });
 
+    expect(ds.postResource).toHaveBeenCalledWith('catalogs', { region: 'default' });
     expect(onChange).toHaveBeenCalledWith({
       ...q,
-      connectionArgs: { region: 'default', catalog: 'foo', database: '' },
+      connectionArgs: { ...q.connectionArgs, catalog: 'foo' },
     });
   });
 
@@ -70,19 +62,15 @@ describe('QueryEditor', () => {
     ds.postResource = jest.fn().mockResolvedValue([ds.defaultDatabase, 'foo']);
     render(<QueryEditor {...props} onChange={onChange} onRunQuery={onRunQuery} />);
 
-    const selector = screen.getByText(`default (${ds.defaultDatabase})`);
-    expect(selector).toBeInTheDocument();
-    selector.click();
-    expect(ds.postResource).toHaveBeenCalledWith('databases', { region: 'default', catalog: 'default' });
-
     const selectEl = screen.getByLabelText(selectors.components.ConfigEditor.database.input);
     expect(selectEl).toBeInTheDocument();
 
     await select(selectEl, 'foo', { container: document.body });
 
+    expect(ds.postResource).toHaveBeenCalledWith('databases', { region: 'default', catalog: 'default' });
     expect(onChange).toHaveBeenCalledWith({
       ...q,
-      connectionArgs: { region: 'default', catalog: 'default', database: 'foo' },
+      connectionArgs: { ...q.connectionArgs, database: 'foo' },
     });
     expect(onRunQuery).toHaveBeenCalled();
   });

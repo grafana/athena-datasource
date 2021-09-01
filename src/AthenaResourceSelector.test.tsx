@@ -18,12 +18,9 @@ describe('AthenaResourceSelector', () => {
   });
 
   it('should select a new option', async () => {
-    const list = ['foo', 'bar'];
     const onChange = jest.fn();
-    const fetch = jest.fn();
-    render(
-      <AthenaResourceSelector {...props} list={list} default="foo" value="default" fetch={fetch} onChange={onChange} />
-    );
+    const fetch = jest.fn().mockResolvedValue(['foo', 'bar']);
+    render(<AthenaResourceSelector {...props} default="foo" value="default" fetch={fetch} onChange={onChange} />);
     expect(screen.queryByText('default (foo)')).toBeInTheDocument();
 
     const selectEl = screen.getByLabelText('Catalog (datasource)');

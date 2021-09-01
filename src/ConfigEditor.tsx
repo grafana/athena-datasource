@@ -31,100 +31,70 @@ export function ConfigEditor(props: Props) {
 
   // Catalogs
   const [catalog, setCatalog] = useState<string | null>(jsonData.catalog || null);
-  const [catalogs, setCatalogs] = useState<string[]>(catalog ? [catalog] : []);
-  const [catalogsFetched, setCatalogsFetched] = useState(false);
   const fetchCatalogs = async () => {
-    if (catalogsFetched) {
-      return;
-    }
-    await saveOptions();
-    try {
-      const loadedCatalogs: string[] = await getBackendSrv().post(resourcesURL + '/catalogs', {
-        region: 'default',
-      });
-      setCatalogs(loadedCatalogs);
-    } finally {
-      setCatalogsFetched(true);
-    }
+    const res: string[] = await getBackendSrv().post(resourcesURL + '/catalogs', {
+      region: 'default',
+    });
+    return res;
   };
   // Databases
   const [database, setDatabase] = useState<string | null>(jsonData.database || null);
-  const [databases, setDatabases] = useState<string[]>(database ? [database] : []);
-  const [databasesFetched, setDatabasesFetched] = useState(false);
   const fetchDatabases = async () => {
-    if (databasesFetched) {
-      return;
-    }
-    await saveOptions();
-    try {
-      const loadedDatabases: string[] = await getBackendSrv().post(resourcesURL + '/databases', {
-        region: 'default',
-        catalog: catalog || 'default',
-      });
-      setDatabases(loadedDatabases);
-    } finally {
-      setDatabasesFetched(true);
-    }
+    const loadedDatabases: string[] = await getBackendSrv().post(resourcesURL + '/databases', {
+      region: 'default',
+      catalog: catalog || 'default',
+    });
+    return loadedDatabases;
   };
   // Workgroups
   const [workgroup, setWorkgroup] = useState<string | null>(jsonData.workgroup || null);
-  const [workgroups, setWorkgroups] = useState<string[]>(workgroup ? [workgroup] : []);
-  const [workgroupsFetched, setWorkgroupsFetched] = useState(false);
   const fetchWorkgroups = async () => {
-    if (workgroupsFetched) {
-      return;
-    }
-    await saveOptions();
-    try {
-      const loadedWorkgroups: string[] = await getBackendSrv().post(resourcesURL + '/workgroups', {
-        region: 'default',
-      });
-      setWorkgroups(loadedWorkgroups);
-    } finally {
-      setWorkgroupsFetched(true);
-    }
-  };
-
-  const onChange = (r: ResourceType) => (value: string) => {
-    let newResource = {};
-    switch (r) {
-      case 'catalog':
-        setCatalog(value);
-        setDatabase(null);
-        setDatabases([]);
-        setDatabasesFetched(false);
-        newResource = { catalog: value, database: '' };
-        break;
-      case 'database':
-        setDatabase(value);
-        newResource = { database: value };
-        break;
-      case 'workgroup':
-        newResource = { workgroup: value };
-        setWorkgroup(value);
-    }
-    props.onOptionsChange({
-      ...props.options,
-      jsonData: {
-        ...props.options.jsonData,
-        ...newResource,
-      },
+    const loadedWorkgroups: string[] = await getBackendSrv().post(resourcesURL + '/workgroups', {
+      region: 'default',
     });
+    return loadedWorkgroups;
   };
 
   const onOptionsChange = (options: DataSourceSettings<AthenaDataSourceOptions, AthenaDataSourceSecureJsonData>) => {
     // clean up related state
     setSaved(false);
-    setCatalogsFetched(false);
-    setCatalogs([]);
     setCatalog(null);
-    setDatabasesFetched(false);
-    setDatabases([]);
     setDatabase(null);
-    setWorkgroupsFetched(false);
-    setWorkgroups([]);
     setWorkgroup(null);
     props.onOptionsChange(options);
+  };
+
+  const onCatalogChange = (catalog: string | null) => {
+    setCatalog(catalog);
+    props.onOptionsChange({
+      ...props.options,
+      jsonData: {
+        ...props.options.jsonData,
+        catalog: catalog || '',
+      },
+    });
+  };
+
+  const onDatabaseChange = (database: string | null) => {
+    setDatabase(database);
+    props.onOptionsChange({
+      ...props.options,
+      jsonData: {
+        ...props.options.jsonData,
+        database: database || '',
+      },
+    });
+  };
+
+  const onWorkgroupChange = (workgroup: string | null) => {
+    setWorkgroup(workgroup);
+    props.onOptionsChange({
+      ...props.options,
+      jsonData: {
+        ...props.options.jsonData,
+        workgroup: workgroup || '',
+      },
+    });
   };
 
   const commonProps = {
@@ -139,26 +109,27 @@ export function ConfigEditor(props: Props) {
       <h3>Athena Details </h3>
       <AthenaResourceSelector
         resource="catalog"
-        list={catalogs}
-        value={catalog}
+        onChange={onCatalogChange}
         fetch={fetchCatalogs}
-        onChange={onChange('catalog')}
+        value={catalog}
+        saveOptions={saveOptions}
         {...commonProps}
       />
       <AthenaResourceSelector
         resource="database"
-        list={databases}
-        value={database}
+        onChange={onDatabaseChange}
         fetch={fetchDatabases}
-        onChange={onChange('database')}
+        value={database}
+        saveOptions={saveOptions}
+        dependencies={[catalog]}
         {...commonProps}
       />
       <AthenaResourceSelector
         resource="workgroup"
-        list={workgroups}
-        value={workgroup}
+        onChange={onWorkgroupChange}
         fetch={fetchWorkgroups}
-        onChange={onChange('workgroup')}
+        value={workgroup}
+        saveOptions={saveOptions}
         {...commonProps}
       />
     </div>

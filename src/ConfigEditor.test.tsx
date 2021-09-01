@@ -31,10 +31,6 @@ describe('ConfigEditor', () => {
     const onChange = jest.fn();
     render(<ConfigEditor {...props} onOptionsChange={onChange} />);
 
-    const d = screen.getByTestId('onloadcatalog');
-    expect(d).toBeInTheDocument();
-    d.click();
-
     const selectEl = screen.getByLabelText(selectors.components.ConfigEditor.catalog.input);
     expect(selectEl).toBeInTheDocument();
 
@@ -42,7 +38,7 @@ describe('ConfigEditor', () => {
 
     expect(onChange).toHaveBeenCalledWith({
       ...props.options,
-      jsonData: { ...props.options.jsonData, catalog: resourceName, database: '' },
+      jsonData: { ...props.options.jsonData, catalog: resourceName },
     });
   });
 

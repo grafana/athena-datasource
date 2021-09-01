@@ -1,7 +1,12 @@
 import { AwsAuthDataSourceJsonData, AwsAuthDataSourceSecureJsonData } from '@grafana/aws-sdk';
 import { DataQuery, DataSourceSettings } from '@grafana/data';
 
+export enum FormatOptions {
+  TimeSeries,
+  Table,
+}
 export interface AthenaQuery extends DataQuery {
+  format: FormatOptions;
   rawSQL: string;
   connectionArgs: {
     region: string;
@@ -10,6 +15,7 @@ export interface AthenaQuery extends DataQuery {
 }
 
 export const defaultQuery: Partial<AthenaQuery> = {
+  format: FormatOptions.Table,
   rawSQL: 'select 1',
   connectionArgs: {
     region: 'default',

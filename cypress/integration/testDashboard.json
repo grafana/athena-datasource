@@ -26,7 +26,7 @@
   "links": [],
   "panels": [
     {
-      "datasource": "athena-datasource",
+      "datasource": "e2e-athena-datasource",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -139,7 +139,7 @@
           "text": "IAD2",
           "value": "IAD2"
         },
-        "datasource": "athena-datasource",
+        "datasource": "e2e-athena-datasource",
         "definition": "",
         "description": null,
         "error": null,

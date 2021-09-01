@@ -14,22 +14,21 @@ import (
 	"github.com/jpillora/backoff"
 )
 
+var (
+	backoffMin = 200 * time.Millisecond
+	backoffMax = 10 * time.Minute
+)
+
 type conn struct {
-	athenaCli       athenaiface.AthenaAPI
-	settings        *models.AthenaDataSourceSettings
-	backoffInstance backoff.Backoff
-	closed          bool
+	athenaCli athenaiface.AthenaAPI
+	settings  *models.AthenaDataSourceSettings
+	closed    bool
 }
 
 func newConnection(athenaCli athenaiface.AthenaAPI, settings *models.AthenaDataSourceSettings) *conn {
 	return &conn{
 		athenaCli: athenaCli,
 		settings:  settings,
-		backoffInstance: backoff.Backoff{
-			Min:    500 * time.Millisecond,
-			Max:    10 * time.Minute,
-			Factor: 2,
-		},
 	}
 }
 
@@ -48,7 +47,6 @@ func (c *conn) QueryContext(ctx context.Context, query string, _ []driver.NamedV
 		// 	OutputLocation: aws.String(c.settings.OutputLocation),
 		// },
 	})
-
 	if err != nil {
 		return nil, err
 	}
@@ -62,6 +60,11 @@ func (c *conn) QueryContext(ctx context.Context, query string, _ []driver.NamedV
 
 // waitOnQuery polls the athena api until the query finishes, returning an error if it failed.
 func (c *conn) waitOnQuery(ctx context.Context, queryID string) error {
+	backoffInstance := backoff.Backoff{
+		Min:    backoffMin,
+		Max:    backoffMax,
+		Factor: 2,
+	}
 	for {
 		statusResp, err := c.athenaCli.GetQueryExecutionWithContext(ctx, &athena.GetQueryExecutionInput{
 			QueryExecutionId: aws.String(queryID),
@@ -81,7 +84,7 @@ func (c *conn) waitOnQuery(ctx context.Context, queryID string) error {
 		select {
 		case <-ctx.Done():
 			return ctx.Err()
-		case <-time.After(c.backoffInstance.Duration()):
+		case <-time.After(backoffInstance.Duration()):
 			continue
 		}
 	}

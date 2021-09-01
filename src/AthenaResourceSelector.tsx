@@ -37,11 +37,11 @@ export function AthenaResourceSelector(props: Props) {
         description: `Default ${props.resource} set in the data source`,
       },
     ];
-    if (props.value && props.value != 'default') {
+    if (props.value && props.value !== 'default') {
       opts.push({ label: props.value, value: props.value });
     }
     return opts;
-  }, [props.resource, props.default]);
+  }, [props.resource, props.default, props.value]);
   const [options, setOptions] = useState<Array<SelectableValue<string>>>(props.default ? defaultOpts : []);
 
   useEffect(() => {
@@ -56,7 +56,7 @@ export function AthenaResourceSelector(props: Props) {
     } else {
       setOptions([]);
     }
-  }, [resources]);
+  }, [resources, defaultOpts, props.default]);
 
   useEffect(() => {
     // A change in the dependencies cause a state clean-up
@@ -67,7 +67,7 @@ export function AthenaResourceSelector(props: Props) {
       props.onChange(null);
       setDependencies(props.dependencies);
     }
-  }, [props.dependencies, dependencies]);
+  }, [props, dependencies]);
 
   const fetch = async () => {
     if (fetched) {

@@ -53,6 +53,9 @@ func (c *API) ListDatabases(ctx context.Context, catalog string) ([]string, erro
 	res := []string{}
 	var nextToken *string
 	isFinished := false
+	if catalog == models.DefaultKey {
+		catalog = c.settings.Catalog
+	}
 	for !isFinished {
 		out, err := c.Client.ListDatabasesWithContext(ctx, &athena.ListDatabasesInput{
 			NextToken:   nextToken,

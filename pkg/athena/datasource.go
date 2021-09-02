@@ -28,7 +28,7 @@ type connection struct {
 type AthenaDatasource struct {
 	sessionCache *awsds.SessionCache
 	connections  sync.Map
-	config       map[int64]backend.DataSourceInstanceSettings
+	config       sync.Map
 }
 
 type AthenaDatasourceIface interface {
@@ -47,7 +47,6 @@ type ConnectionArgs struct {
 func New() *AthenaDatasource {
 	return &AthenaDatasource{
 		sessionCache: awsds.NewSessionCache(),
-		config:       map[int64]backend.DataSourceInstanceSettings{},
 	}
 }
 
@@ -93,19 +92,19 @@ func applySettings(defaultSettings *models.AthenaDataSourceSettings, args *Conne
 
 func (s *AthenaDatasource) defaultSettings(id int64) (*models.AthenaDataSourceSettings, error) {
 	defaultSettings := &models.AthenaDataSourceSettings{}
-	config, ok := s.config[id]
+	config, ok := s.config.Load(id)
 	if !ok {
 		return nil, errors.Errorf("unable to find stored configuration for datasource %d", id)
 	}
-	err := defaultSettings.Load(config)
+	err := defaultSettings.Load(config.(backend.DataSourceInstanceSettings))
 	if err != nil {
 		return nil, fmt.Errorf("error reading settings: %s", err.Error())
 	}
 	return defaultSettings, nil
 }
 
-func (s *AthenaDatasource) connectionKey(defaultSettings *models.AthenaDataSourceSettings, args *ConnectionArgs) string {
-	return defaultSettings.GetConnectionKey(args.Region, args.Catalog, args.Database)
+func (s *AthenaDatasource) connectionKey(id int64, defaultSettings *models.AthenaDataSourceSettings, args *ConnectionArgs) string {
+	return defaultSettings.GetConnectionKey(id, args.Region, args.Catalog, args.Database)
 }
 
 func (s *AthenaDatasource) athenaSettings(defaultSettings *models.AthenaDataSourceSettings, args *ConnectionArgs) (*models.AthenaDataSourceSettings, error) {
@@ -118,7 +117,7 @@ func (s *AthenaDatasource) athenaSettings(defaultSettings *models.AthenaDataSour
 
 // Connect opens a sql.DB connection using datasource settings
 func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (*sql.DB, error) {
-	s.config[config.ID] = config
+	s.config.Store(config.ID, config)
 	args, err := parseConnectionArgs(queryArgs)
 	if err != nil {
 		return nil, err
@@ -131,7 +130,7 @@ func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings, qu
 	if err != nil {
 		return nil, err
 	}
-	key := s.connectionKey(defaultSettings, args)
+	key := s.connectionKey(config.ID, defaultSettings, args)
 
 	// avoid to create a new connection if the arguments have not changed
 	c, exists := s.connections.Load(key)
@@ -180,7 +179,8 @@ func getDatasourceID(ctx context.Context) int64 {
 
 func (s *AthenaDatasource) getApi(ctx context.Context, region, catalog string) (*api.API, error) {
 	args := &ConnectionArgs{Region: region, Catalog: catalog}
-	defaultSettings, err := s.defaultSettings(getDatasourceID(ctx))
+	datasourceID := getDatasourceID(ctx)
+	defaultSettings, err := s.defaultSettings(datasourceID)
 	if err != nil {
 		return nil, err
 	}
@@ -188,7 +188,7 @@ func (s *AthenaDatasource) getApi(ctx context.Context, region, catalog string) (
 	if err != nil {
 		return nil, err
 	}
-	key := s.connectionKey(defaultSettings, args)
+	key := s.connectionKey(datasourceID, defaultSettings, args)
 	c, exists := s.connections.Load(key)
 	if !exists {
 		api, err := api.New(s.sessionCache, settings)

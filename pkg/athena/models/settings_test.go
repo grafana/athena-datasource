@@ -19,13 +19,13 @@ func TestConnection_getRegionKey(t *testing.T) {
 		{
 			description: "undefined region",
 			settings:    &AthenaDataSourceSettings{AWSDatasourceSettings: awsds.AWSDatasourceSettings{}},
-			expected:    fmt.Sprintf("%s-%s-%s", DefaultKey, DefaultKey, DefaultKey),
+			expected:    fmt.Sprintf("1-%s-%s-%s", DefaultKey, DefaultKey, DefaultKey),
 		},
 		{
 			description: "default region",
 			settings:    &AthenaDataSourceSettings{AWSDatasourceSettings: awsds.AWSDatasourceSettings{}},
 			region:      DefaultKey,
-			expected:    fmt.Sprintf("%s-%s-%s", DefaultKey, DefaultKey, DefaultKey),
+			expected:    fmt.Sprintf("1-%s-%s-%s", DefaultKey, DefaultKey, DefaultKey),
 		},
 		{
 			description: "same region",
@@ -35,7 +35,7 @@ func TestConnection_getRegionKey(t *testing.T) {
 				},
 			},
 			region:   "foo",
-			expected: fmt.Sprintf("%s-%s-%s", DefaultKey, DefaultKey, DefaultKey),
+			expected: fmt.Sprintf("1-%s-%s-%s", DefaultKey, DefaultKey, DefaultKey),
 		},
 		{
 			description: "different region",
@@ -45,7 +45,7 @@ func TestConnection_getRegionKey(t *testing.T) {
 				},
 			},
 			region:   "foo",
-			expected: fmt.Sprintf("foo-%s-%s", DefaultKey, DefaultKey),
+			expected: fmt.Sprintf("1-foo-%s-%s", DefaultKey, DefaultKey),
 		},
 		{
 			description: "different catalog",
@@ -55,7 +55,7 @@ func TestConnection_getRegionKey(t *testing.T) {
 				},
 			},
 			catalog:  "foo",
-			expected: fmt.Sprintf("%s-foo-%s", DefaultKey, DefaultKey),
+			expected: fmt.Sprintf("1-%s-foo-%s", DefaultKey, DefaultKey),
 		},
 		{
 			description: "different database",
@@ -65,12 +65,12 @@ func TestConnection_getRegionKey(t *testing.T) {
 				},
 			},
 			database: "foo",
-			expected: fmt.Sprintf("%s-%s-foo", DefaultKey, DefaultKey),
+			expected: fmt.Sprintf("1-%s-%s-foo", DefaultKey, DefaultKey),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.description, func(t *testing.T) {
-			if res := tt.settings.GetConnectionKey(tt.region, tt.catalog, tt.database); res != tt.expected {
+			if res := tt.settings.GetConnectionKey(1, tt.region, tt.catalog, tt.database); res != tt.expected {
 				t.Errorf("unexpected result %v expecting %v", res, tt.expected)
 			}
 		})

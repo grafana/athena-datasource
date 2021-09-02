@@ -4,6 +4,7 @@ import { QueryEditor } from './QueryEditor';
 import { mockDatasource, mockQuery } from './__mocks__/datasource';
 import '@testing-library/jest-dom';
 import { select } from 'react-select-event';
+import { selectors } from 'tests/selectors';
 
 const ds = mockDatasource;
 const q = mockQuery;
@@ -26,17 +27,15 @@ describe('QueryEditor', () => {
     ds.getResource = jest.fn().mockResolvedValue([ds.defaultRegion, 'foo']);
     render(<QueryEditor {...props} onChange={onChange} />);
 
-    expect(screen.getByText(`default (${ds.defaultRegion})`)).toBeInTheDocument();
-    expect(ds.getResource).toHaveBeenCalledWith('regions');
-
-    const selectEl = screen.getByLabelText('Region');
+    const selectEl = screen.getByLabelText(selectors.components.ConfigEditor.region.input);
     expect(selectEl).toBeInTheDocument();
 
     await select(selectEl, 'foo', { container: document.body });
 
+    expect(ds.getResource).toHaveBeenCalledWith('regions');
     expect(onChange).toHaveBeenCalledWith({
       ...q,
-      connectionArgs: { region: 'foo', catalog: 'default' },
+      connectionArgs: { ...q.connectionArgs, region: 'foo' },
     });
   });
 
@@ -45,17 +44,34 @@ describe('QueryEditor', () => {
     ds.postResource = jest.fn().mockResolvedValue([ds.defaultCatalog, 'foo']);
     render(<QueryEditor {...props} onChange={onChange} />);
 
-    expect(screen.getByText(`default (${ds.defaultCatalog})`)).toBeInTheDocument();
-    expect(ds.postResource).toHaveBeenCalledWith('catalogs', { region: 'default' });
-
-    const selectEl = screen.getByLabelText('Catalog (datasource)');
+    const selectEl = screen.getByLabelText(selectors.components.ConfigEditor.catalog.input);
     expect(selectEl).toBeInTheDocument();
 
     await select(selectEl, 'foo', { container: document.body });
 
+    expect(ds.postResource).toHaveBeenCalledWith('catalogs', { region: 'default' });
     expect(onChange).toHaveBeenCalledWith({
       ...q,
-      connectionArgs: { region: 'default', catalog: 'foo' },
+      connectionArgs: { ...q.connectionArgs, catalog: 'foo' },
     });
+  });
+
+  it('should request databases and execute the query', async () => {
+    const onChange = jest.fn();
+    const onRunQuery = jest.fn();
+    ds.postResource = jest.fn().mockResolvedValue([ds.defaultDatabase, 'foo']);
+    render(<QueryEditor {...props} onChange={onChange} onRunQuery={onRunQuery} />);
+
+    const selectEl = screen.getByLabelText(selectors.components.ConfigEditor.database.input);
+    expect(selectEl).toBeInTheDocument();
+
+    await select(selectEl, 'foo', { container: document.body });
+
+    expect(ds.postResource).toHaveBeenCalledWith('databases', { region: 'default', catalog: 'default' });
+    expect(onChange).toHaveBeenCalledWith({
+      ...q,
+      connectionArgs: { ...q.connectionArgs, database: 'foo' },
+    });
+    expect(onRunQuery).toHaveBeenCalled();
   });
 });

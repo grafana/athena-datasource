@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/athena"
 	"github.com/aws/aws-sdk-go/service/athena/athenaiface"
 	"github.com/grafana/athena-datasource/pkg/athena/models"
@@ -40,6 +41,51 @@ func (c *API) ListDataCatalogs(ctx context.Context) ([]string, error) {
 		nextToken = out.NextToken
 		for _, cat := range out.DataCatalogsSummary {
 			res = append(res, *cat.CatalogName)
+		}
+		if nextToken == nil {
+			isFinished = true
+		}
+	}
+	return res, nil
+}
+
+func (c *API) ListDatabases(ctx context.Context, catalog string) ([]string, error) {
+	res := []string{}
+	var nextToken *string
+	isFinished := false
+	for !isFinished {
+		out, err := c.Client.ListDatabasesWithContext(ctx, &athena.ListDatabasesInput{
+			NextToken:   nextToken,
+			CatalogName: aws.String(catalog),
+		})
+		if err != nil {
+			return nil, err
+		}
+		nextToken = out.NextToken
+		for _, cat := range out.DatabaseList {
+			res = append(res, *cat.Name)
+		}
+		if nextToken == nil {
+			isFinished = true
+		}
+	}
+	return res, nil
+}
+
+func (c *API) ListWorkgroups(ctx context.Context) ([]string, error) {
+	res := []string{}
+	var nextToken *string
+	isFinished := false
+	for !isFinished {
+		out, err := c.Client.ListWorkGroupsWithContext(ctx, &athena.ListWorkGroupsInput{
+			NextToken: nextToken,
+		})
+		if err != nil {
+			return nil, err
+		}
+		nextToken = out.NextToken
+		for _, cat := range out.WorkGroups {
+			res = append(res, *cat.Name)
 		}
 		if nextToken == nil {
 			isFinished = true

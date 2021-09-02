@@ -11,6 +11,7 @@ export interface AthenaQuery extends DataQuery {
   connectionArgs: {
     region: string;
     catalog: string;
+    database: string;
   };
 }
 
@@ -20,6 +21,7 @@ export const defaultQuery: Partial<AthenaQuery> = {
   connectionArgs: {
     region: 'default',
     catalog: 'default',
+    database: 'default',
   },
 };
 

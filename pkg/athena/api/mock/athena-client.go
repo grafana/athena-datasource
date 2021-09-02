@@ -17,6 +17,8 @@ type MockAthenaClient struct {
 	CalledTimesCounter   int
 	CalledTimesCountDown int
 	Catalogs             []string
+	Databases            []string
+	Workgroups           []string
 
 	athenaiface.AthenaAPI
 }
@@ -123,6 +125,22 @@ func (m *MockAthenaClient) ListDataCatalogsWithContext(ctx aws.Context, input *a
 	r := &athena.ListDataCatalogsOutput{}
 	for _, c := range m.Catalogs {
 		r.DataCatalogsSummary = append(r.DataCatalogsSummary, &athena.DataCatalogSummary{CatalogName: aws.String(c)})
+	}
+	return r, nil
+}
+
+func (m *MockAthenaClient) ListDatabasesWithContext(ctx aws.Context, input *athena.ListDatabasesInput, opts ...request.Option) (*athena.ListDatabasesOutput, error) {
+	r := &athena.ListDatabasesOutput{}
+	for _, c := range m.Databases {
+		r.DatabaseList = append(r.DatabaseList, &athena.Database{Name: aws.String(c)})
+	}
+	return r, nil
+}
+
+func (m *MockAthenaClient) ListWorkGroupsWithContext(ctx aws.Context, input *athena.ListWorkGroupsInput, opts ...request.Option) (*athena.ListWorkGroupsOutput, error) {
+	r := &athena.ListWorkGroupsOutput{}
+	for _, c := range m.Workgroups {
+		r.WorkGroups = append(r.WorkGroups, &athena.WorkGroupSummary{Name: aws.String(c)})
 	}
 	return r, nil
 }

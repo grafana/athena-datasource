@@ -28,14 +28,18 @@ func (s *AthenaDataSourceSettings) Load(config backend.DataSourceInstanceSetting
 	return nil
 }
 
-func (s *AthenaDataSourceSettings) GetConnectionKey(region, catalog string) string {
+func (s *AthenaDataSourceSettings) GetConnectionKey(region, catalog, database string) string {
 	regionKey := "default"
 	catalogKey := "default"
+	databaseKey := "default"
 	if region != "" && region != s.DefaultRegion {
 		regionKey = region
 	}
 	if catalog != "" && catalog != s.Catalog {
 		catalogKey = catalog
 	}
-	return fmt.Sprintf("%s-%s", regionKey, catalogKey)
+	if database != "" && database != s.Database {
+		databaseKey = database
+	}
+	return fmt.Sprintf("%s-%s-%s", regionKey, catalogKey, databaseKey)
 }

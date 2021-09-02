@@ -12,60 +12,65 @@ func TestConnection_getRegionKey(t *testing.T) {
 		settings    *AthenaDataSourceSettings
 		region      string
 		catalog     string
+		database    string
 		expected    string
 	}{
 		{
-			"undefined region",
-			&AthenaDataSourceSettings{AWSDatasourceSettings: awsds.AWSDatasourceSettings{}},
-			"",
-			"",
-			"default-default",
+			description: "undefined region",
+			settings:    &AthenaDataSourceSettings{AWSDatasourceSettings: awsds.AWSDatasourceSettings{}},
+			expected:    "default-default-default",
 		},
 		{
-			"default region",
-			&AthenaDataSourceSettings{AWSDatasourceSettings: awsds.AWSDatasourceSettings{}},
-			"default",
-			"",
-			"default-default",
+			description: "default region",
+			settings:    &AthenaDataSourceSettings{AWSDatasourceSettings: awsds.AWSDatasourceSettings{}},
+			region:      "default",
+			expected:    "default-default-default",
 		},
 		{
-			"same region",
-			&AthenaDataSourceSettings{
+			description: "same region",
+			settings: &AthenaDataSourceSettings{
 				AWSDatasourceSettings: awsds.AWSDatasourceSettings{
 					DefaultRegion: "foo",
 				},
 			},
-			"foo",
-			"",
-			"default-default",
+			region:   "foo",
+			expected: "default-default-default",
 		},
 		{
-			"different region",
-			&AthenaDataSourceSettings{
+			description: "different region",
+			settings: &AthenaDataSourceSettings{
 				AWSDatasourceSettings: awsds.AWSDatasourceSettings{
 					Region: "foo",
 				},
 			},
-			"foo",
-			"",
-			"foo-default",
+			region:   "foo",
+			expected: "foo-default-default",
 		},
 		{
-			"different catalog",
-			&AthenaDataSourceSettings{
+			description: "different catalog",
+			settings: &AthenaDataSourceSettings{
 				AWSDatasourceSettings: awsds.AWSDatasourceSettings{
 					Region: "foo",
 				},
 			},
-			"",
-			"foo",
-			"default-foo",
+			catalog:  "foo",
+			expected: "default-foo-default",
+		},
+		{
+			description: "different database",
+			settings: &AthenaDataSourceSettings{
+				AWSDatasourceSettings: awsds.AWSDatasourceSettings{
+					Region: "foo",
+				},
+			},
+			database: "foo",
+			expected: "default-default-foo",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.description, func(t *testing.T) {
-			if res := tt.settings.GetConnectionKey(tt.region, tt.catalog); res != tt.expected {
-				t.Errorf("unexpected result %v", res)
+			if res := tt.settings.GetConnectionKey(tt.region, tt.catalog, tt.database); res != tt.expected {
+				t.Errorf("unexpected result %v expecting %v", res, tt.expected)
 			}
 		})
 	}

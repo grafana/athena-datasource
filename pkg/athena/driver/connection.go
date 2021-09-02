@@ -11,55 +11,32 @@ import (
 	"github.com/aws/aws-sdk-go/service/athena"
 	"github.com/aws/aws-sdk-go/service/athena/athenaiface"
 	"github.com/grafana/athena-datasource/pkg/athena/models"
-	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 	"github.com/jpillora/backoff"
 )
 
+var (
+	backoffMin = 200 * time.Millisecond
+	backoffMax = 10 * time.Minute
+)
+
 type conn struct {
-	sessionCache    *awsds.SessionCache
-	settings        *models.AthenaDataSourceSettings
-	backoffInstance backoff.Backoff
-	closed          bool
-	mockedClient    athenaiface.AthenaAPI
+	athenaCli athenaiface.AthenaAPI
+	settings  *models.AthenaDataSourceSettings
+	closed    bool
 }
 
-func newConnection(sessionCache *awsds.SessionCache, settings *models.AthenaDataSourceSettings) *conn {
+func newConnection(athenaCli athenaiface.AthenaAPI, settings *models.AthenaDataSourceSettings) *conn {
 	return &conn{
-		sessionCache: sessionCache,
-		settings:     settings,
-		backoffInstance: backoff.Backoff{
-			Min:    500 * time.Millisecond,
-			Max:    10 * time.Minute,
-			Factor: 2,
-		},
+		athenaCli: athenaCli,
+		settings:  settings,
 	}
-}
-
-func (c *conn) GetAthenaClient() (athenaiface.AthenaAPI, error) {
-	if c.mockedClient != nil {
-		return c.mockedClient, nil
-	}
-
-	region := c.settings.DefaultRegion
-	if c.settings.Region != "" {
-		region = c.settings.Region
-	}
-	session, err := c.sessionCache.GetSession(region, c.settings.AWSDatasourceSettings)
-	if err != nil {
-		return nil, err
-	}
-	client := athena.New(session)
-	return client, nil
 }
 
 func (c *conn) QueryContext(ctx context.Context, query string, _ []driver.NamedValue) (driver.Rows, error) {
-	client, err := c.GetAthenaClient()
-	if err != nil {
-		return nil, err
-	}
-	executionResult, err := client.StartQueryExecutionWithContext(ctx, &athena.StartQueryExecutionInput{
+	executionResult, err := c.athenaCli.StartQueryExecutionWithContext(ctx, &athena.StartQueryExecutionInput{
 		QueryString: aws.String(query),
 		QueryExecutionContext: &athena.QueryExecutionContext{
+			Catalog:  aws.String(c.settings.Catalog),
 			Database: aws.String(c.settings.Database),
 		},
 		WorkGroup: aws.String(c.settings.WorkGroup),
@@ -70,22 +47,26 @@ func (c *conn) QueryContext(ctx context.Context, query string, _ []driver.NamedV
 		// 	OutputLocation: aws.String(c.settings.OutputLocation),
 		// },
 	})
-
 	if err != nil {
 		return nil, err
 	}
 
-	if err := c.waitOnQuery(ctx, client, *executionResult.QueryExecutionId); err != nil {
+	if err := c.waitOnQuery(ctx, *executionResult.QueryExecutionId); err != nil {
 		return nil, err
 	}
 
-	return newRows(client, *executionResult.QueryExecutionId)
+	return newRows(c.athenaCli, *executionResult.QueryExecutionId)
 }
 
 // waitOnQuery polls the athena api until the query finishes, returning an error if it failed.
-func (c *conn) waitOnQuery(ctx context.Context, client athenaiface.AthenaAPI, queryID string) error {
+func (c *conn) waitOnQuery(ctx context.Context, queryID string) error {
+	backoffInstance := backoff.Backoff{
+		Min:    backoffMin,
+		Max:    backoffMax,
+		Factor: 2,
+	}
 	for {
-		statusResp, err := client.GetQueryExecutionWithContext(ctx, &athena.GetQueryExecutionInput{
+		statusResp, err := c.athenaCli.GetQueryExecutionWithContext(ctx, &athena.GetQueryExecutionInput{
 			QueryExecutionId: aws.String(queryID),
 		})
 		if err != nil {
@@ -103,7 +84,7 @@ func (c *conn) waitOnQuery(ctx context.Context, client athenaiface.AthenaAPI, qu
 		select {
 		case <-ctx.Done():
 			return ctx.Err()
-		case <-time.After(c.backoffInstance.Duration()):
+		case <-time.After(backoffInstance.Duration()):
 			continue
 		}
 	}

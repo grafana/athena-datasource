@@ -8,14 +8,17 @@ export const Components = {
     AccessKey: {
       input: 'Config editor access key input',
     },
-    Catalog: {
-      input: 'data-testid-catalog',
+    catalog: {
+      input: 'Catalog (datasource)',
     },
-    Database: {
-      input: 'data-testid-database',
+    database: {
+      input: 'Database',
     },
-    Workgroup: {
-      input: 'data-testid-workgroup',
+    workgroup: {
+      input: 'Workgroup',
+    },
+    region: {
+      input: 'Region',
     },
   },
   QueryEditor: {

@@ -1,39 +1,28 @@
 import { defaults } from 'lodash';
 
-import React, { useState, useEffect } from 'react';
-import { QueryEditorProps, SelectableValue } from '@grafana/data';
+import React, { useState } from 'react';
+import { QueryEditorProps } from '@grafana/data';
 import { DataSource } from './datasource';
 import { AthenaDataSourceOptions, AthenaQuery, defaultQuery } from './types';
-import { CodeEditor, InlineField, Select } from '@grafana/ui';
+import { CodeEditor, InlineSegmentGroup } from '@grafana/ui';
+import { AthenaResourceSelector } from 'AthenaResourceSelector';
 
 type Props = QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions>;
 
 export function QueryEditor(props: Props) {
   const { rawSQL } = defaults(props.query, defaultQuery);
-  const defaultRegionOpt = {
-    label: `default (${props.datasource.defaultRegion})`,
-    value: 'default',
-    description: 'Default region set in the data source',
+  // Region selector
+  const [region, setRegion] = useState(props.query.connectionArgs.region);
+  const fetchRegions = async () => {
+    const regions = await props.datasource.getResource('regions');
+    return regions;
   };
-  const [regionOptions, setRegionOptions] = useState<Array<SelectableValue<string>>>([defaultRegionOpt]);
-
-  useEffect(() => {
-    if (regionOptions.length === 1) {
-      props.datasource.getResource('regions').then((regions: string[]) => {
-        if (!regions.length) {
-          return;
-        }
-        // place the default option at the top
-        const options: Array<SelectableValue<string>> = [defaultRegionOpt];
-        regions.forEach((r) => {
-          if (r !== props.datasource.defaultRegion) {
-            options.push({ label: r, value: r });
-          }
-        });
-        setRegionOptions(options);
-      });
-    }
-  }, [defaultRegionOpt, regionOptions, props.datasource]);
+  // Catalog selector
+  const [catalog, setCatalog] = useState<string | null>(props.query.connectionArgs.catalog);
+  const fetchCatalogs = async () => await props.datasource.postResource('catalogs', { region });
+  // Database selector
+  const [database, setDatabase] = useState<string | null>(props.query.connectionArgs.database);
+  const fetchDatabases = async () => await props.datasource.postResource('databases', { region, catalog });
 
   const onRawSqlChange = (rawSQL: string) => {
     const query = {
@@ -44,15 +33,38 @@ export function QueryEditor(props: Props) {
     props.onRunQuery();
   };
 
-  const onRegionChange = (e: SelectableValue<string>) => {
-    const query = {
+  const onRegionChange = (region: string | null) => {
+    setRegion(region || '');
+    props.onChange({
       ...props.query,
       connectionArgs: {
         ...props.query.connectionArgs,
-        region: e.value || props.datasource.defaultRegion,
+        region: region || '',
       },
-    };
-    props.onChange(query);
+    });
+  };
+
+  const onCatalogChange = (catalog: string | null) => {
+    setCatalog(catalog);
+    props.onChange({
+      ...props.query,
+      connectionArgs: {
+        ...props.query.connectionArgs,
+        catalog: catalog || '',
+      },
+    });
+  };
+
+  const onDatabaseChange = (database: string | null) => {
+    setDatabase(database);
+    props.onChange({
+      ...props.query,
+      connectionArgs: {
+        ...props.query.connectionArgs,
+        database: database || '',
+      },
+    });
+    // now that connection args are complete, run request
     props.onRunQuery();
   };
 
@@ -67,14 +79,32 @@ export function QueryEditor(props: Props) {
         showMiniMap={false}
         showLineNumbers={true}
       />
-      <InlineField label="Region">
-        <Select
-          aria-label="Region"
-          options={regionOptions}
-          value={props.query.connectionArgs?.region || defaultRegionOpt.value}
+      <h6>Connection Details</h6>
+      <InlineSegmentGroup>
+        <AthenaResourceSelector
+          resource="region"
+          value={region}
+          fetch={fetchRegions}
           onChange={onRegionChange}
+          default={props.datasource.defaultRegion}
         />
-      </InlineField>
+        <AthenaResourceSelector
+          resource="catalog"
+          value={catalog}
+          fetch={fetchCatalogs}
+          onChange={onCatalogChange}
+          default={props.datasource.defaultCatalog}
+          dependencies={[region]}
+        />
+        <AthenaResourceSelector
+          resource="database"
+          value={database}
+          fetch={fetchDatabases}
+          onChange={onDatabaseChange}
+          default={props.datasource.defaultDatabase}
+          dependencies={[region, catalog]}
+        />
+      </InlineSegmentGroup>
     </>
   );
 }

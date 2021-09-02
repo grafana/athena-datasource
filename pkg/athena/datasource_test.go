@@ -10,87 +10,107 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 )
 
-func TestConnection_Connect(t *testing.T) {
+func TestConnection_athenaSettings(t *testing.T) {
 	defaultRegion := "us-east-1"
-	settings := backend.DataSourceInstanceSettings{
-		JSONData: []byte(fmt.Sprintf(`{"defaultRegion": "%s"}`, defaultRegion)),
+	defaultCatalog := "foo"
+	defaultDatabase := "bar"
+	config := backend.DataSourceInstanceSettings{
+		JSONData: []byte(fmt.Sprintf(
+			`{"defaultRegion":"%s","catalog":"%s","database":"%s"}`,
+			defaultRegion,
+			defaultCatalog,
+			defaultDatabase),
+		),
 	}
 	tests := []struct {
-		description string
-		args        []byte
-		expected    *models.AthenaDataSourceSettings
+		description      string
+		args             *ConnectionArgs
+		expectedSettings *models.AthenaDataSourceSettings
+		expectedKey      string
 	}{
 		{
-			"it retrieves default settings",
-			nil,
-			&models.AthenaDataSourceSettings{
+			description: "it retrieves default settings",
+			args:        &ConnectionArgs{},
+			expectedSettings: &models.AthenaDataSourceSettings{
 				AWSDatasourceSettings: awsds.AWSDatasourceSettings{DefaultRegion: defaultRegion},
+				Catalog:               defaultCatalog,
+				Database:              defaultDatabase,
 			},
+			expectedKey: "default-default-default",
 		},
 		{
-			"it should modify the region",
-			[]byte(`{"region":"other"}`),
-			&models.AthenaDataSourceSettings{
+			description: "it should modify the region",
+			args:        &ConnectionArgs{Region: "other"},
+			expectedSettings: &models.AthenaDataSourceSettings{
 				AWSDatasourceSettings: awsds.AWSDatasourceSettings{DefaultRegion: defaultRegion, Region: "other"},
+				Catalog:               defaultCatalog,
+				Database:              defaultDatabase,
 			},
+			expectedKey: "other-default-default",
 		},
 		{
-			"it should use the default region",
-			[]byte(`{"region":"default"}`),
-			&models.AthenaDataSourceSettings{
+			description: "it should use the default region",
+			args:        &ConnectionArgs{Region: "default"},
+			expectedSettings: &models.AthenaDataSourceSettings{
 				AWSDatasourceSettings: awsds.AWSDatasourceSettings{DefaultRegion: defaultRegion, Region: defaultRegion},
+				Catalog:               defaultCatalog,
+				Database:              defaultDatabase,
 			},
+			expectedKey: "default-default-default",
+		},
+		{
+			description: "it should modify the catalog",
+			args:        &ConnectionArgs{Catalog: "other"},
+			expectedSettings: &models.AthenaDataSourceSettings{
+				AWSDatasourceSettings: awsds.AWSDatasourceSettings{DefaultRegion: defaultRegion},
+				Catalog:               "other",
+				Database:              defaultDatabase,
+			},
+			expectedKey: "default-other-default",
+		},
+		{
+			description: "it should use the default catalog",
+			args:        &ConnectionArgs{Catalog: "default"},
+			expectedSettings: &models.AthenaDataSourceSettings{
+				AWSDatasourceSettings: awsds.AWSDatasourceSettings{DefaultRegion: defaultRegion},
+				Catalog:               defaultCatalog,
+				Database:              defaultDatabase,
+			},
+			expectedKey: "default-default-default",
+		},
+		{
+			description: "it should modify the database",
+			args:        &ConnectionArgs{Database: "other"},
+			expectedSettings: &models.AthenaDataSourceSettings{
+				AWSDatasourceSettings: awsds.AWSDatasourceSettings{DefaultRegion: defaultRegion},
+				Catalog:               defaultCatalog,
+				Database:              "other",
+			},
+			expectedKey: "default-default-other",
+		},
+		{
+			description: "it should use the default database",
+			args:        &ConnectionArgs{Database: "default"},
+			expectedSettings: &models.AthenaDataSourceSettings{
+				AWSDatasourceSettings: awsds.AWSDatasourceSettings{DefaultRegion: defaultRegion},
+				Catalog:               defaultCatalog,
+				Database:              defaultDatabase,
+			},
+			expectedKey: "default-default-default",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.description, func(t *testing.T) {
-			res, err := getSettings(settings, tt.args)
+			ds := AthenaDatasource{config: config}
+			settings, key, err := ds.athenaSettings(tt.args)
 			if err != nil {
 				t.Fatalf("unexpected error %v", err)
 			}
-			if !cmp.Equal(res, tt.expected) {
-				t.Errorf("unexpected result: %v", cmp.Diff(res, tt.expected))
+			if !cmp.Equal(settings, tt.expectedSettings) {
+				t.Errorf("unexpected result: %v", cmp.Diff(settings, tt.expectedSettings))
 			}
-		})
-	}
-}
-
-func TestConnection_isDefault(t *testing.T) {
-	tests := []struct {
-		description string
-		settings    *models.AthenaDataSourceSettings
-		expected    bool
-	}{
-		{
-			"undefined region",
-			&models.AthenaDataSourceSettings{},
-			true,
-		},
-		{
-			"same region",
-			&models.AthenaDataSourceSettings{
-				AWSDatasourceSettings: awsds.AWSDatasourceSettings{
-					Region:        "foo",
-					DefaultRegion: "foo",
-				},
-			},
-			true,
-		},
-		{
-			"different region",
-			&models.AthenaDataSourceSettings{
-				AWSDatasourceSettings: awsds.AWSDatasourceSettings{
-					Region:        "foo",
-					DefaultRegion: "bar",
-				},
-			},
-			false,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.description, func(t *testing.T) {
-			if res := isDefault(tt.settings); res != tt.expected {
-				t.Errorf("unexpected result %v", res)
+			if !cmp.Equal(key, tt.expectedKey) {
+				t.Errorf("unexpected result: %v", cmp.Diff(key, tt.expectedKey))
 			}
 		})
 	}

@@ -1,5 +1,6 @@
 import { e2e } from '@grafana/e2e';
 import { selectors } from '../../src/tests/selectors';
+import TEST_DASHBOARD from './testDashboard.json';
 
 const e2eSelectors = e2e.getSelectors(selectors.components);
 
@@ -35,6 +36,7 @@ e2e.scenario({
         const datasource = AthenaProvisions[0].datasources[0];
 
         e2e.flows.addDataSource({
+          name: 'e2e-athena-datasource',
           checkHealth: false,
           expectedAlertMessage: 'Data source is working',
           form: () => {
@@ -52,13 +54,27 @@ e2e.scenario({
               .click({ force: true })
               .type(datasource.jsonData.defaultRegion)
               .type('{enter}');
-            e2eSelectors.ConfigEditor.Catalog.input().type(datasource.jsonData.catalog);
-            e2eSelectors.ConfigEditor.Database.input().type(datasource.jsonData.database);
-            e2eSelectors.ConfigEditor.Workgroup.input().type(datasource.jsonData.workgroup);
+            // Catalogs
+            e2eSelectors.ConfigEditor.catalog.input().click({ force: true });
+            // wait for it to load
+            e2e().get('[data-testid="onloadcatalog"]').contains(datasource.jsonData.catalog);
+            e2eSelectors.ConfigEditor.catalog.input().type(datasource.jsonData.catalog).type('{enter}');
+            // Databases
+            e2eSelectors.ConfigEditor.database.input().click({ force: true });
+            // wait for it to load
+            e2e().get('[data-testid="onloaddatabase"]').contains(datasource.jsonData.database);
+            e2eSelectors.ConfigEditor.database.input().type(datasource.jsonData.database).type('{enter}');
+            // Workgroups
+            e2eSelectors.ConfigEditor.workgroup.input().click({ force: true });
+            // wait for it to load
+            e2e().get('[data-testid="onloadworkgroup"]').contains(datasource.jsonData.workgroup);
+            e2eSelectors.ConfigEditor.workgroup.input().type(datasource.jsonData.workgroup).type('{enter}');
           },
           type: 'Athena data source for Grafana',
         });
 
+        // TODO: https://github.com/grafana/grafana/issues/38683
+        // then we can add a variable with addDashboard
         e2e.flows.addDashboard({
           timeRange: {
             from: '2008-01-01 19:00:00',
@@ -73,7 +89,7 @@ e2e.scenario({
           queriesForm: () => {
             e2eSelectors.QueryEditor.CodeEditor.container()
               .click({ force: true })
-              .type(`{selectall} select time as time, bytes as bytes from cloudfront_logs limit 2`);
+              .type(`{selectall} select time, bytes from cloudfront_logs limit 2`);
             // TODO: we should be able to just pass visualizationName: "Table" to addPanel
             // but it doesn't seem to work for some reason, maybe make a ticket in core grafana
             e2e().get('[aria-label="toggle-viz-picker"]').click({ force: true });
@@ -81,6 +97,8 @@ e2e.scenario({
             e2e().wait(3000);
           },
         });
+
+        e2e.flows.importDashboard(TEST_DASHBOARD);
       });
   },
 });

@@ -10,9 +10,9 @@ import (
 
 type AthenaDataSourceSettings struct {
 	awsds.AWSDatasourceSettings
-	Database					string `json:"Database"`
-	Catalog						string `json:"Catalog"`
-	WorkGroup					string `json:"WorkGroup"`
+	Database  string `json:"Database"`
+	Catalog   string `json:"Catalog"`
+	WorkGroup string `json:"WorkGroup"`
 }
 
 func (s *AthenaDataSourceSettings) Load(config backend.DataSourceInstanceSettings) error {
@@ -26,4 +26,20 @@ func (s *AthenaDataSourceSettings) Load(config backend.DataSourceInstanceSetting
 	s.SecretKey = config.DecryptedSecureJSONData["secretKey"]
 
 	return nil
+}
+
+func (s *AthenaDataSourceSettings) GetConnectionKey(region, catalog, database string) string {
+	regionKey := "default"
+	catalogKey := "default"
+	databaseKey := "default"
+	if region != "" && region != s.DefaultRegion {
+		regionKey = region
+	}
+	if catalog != "" && catalog != s.Catalog {
+		catalogKey = catalog
+	}
+	if database != "" && database != s.Database {
+		databaseKey = database
+	}
+	return fmt.Sprintf("%s-%s-%s", regionKey, catalogKey, databaseKey)
 }

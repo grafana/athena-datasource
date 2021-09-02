@@ -36,7 +36,7 @@ e2e.scenario({
         const datasource = AthenaProvisions[0].datasources[0];
 
         e2e.flows.addDataSource({
-          name: "e2e-athena-datasource",
+          name: 'e2e-athena-datasource',
           checkHealth: false,
           expectedAlertMessage: 'Data source is working',
           form: () => {
@@ -70,7 +70,7 @@ e2e.scenario({
             e2e().get('[data-testid="onloadworkgroup"]').contains(datasource.jsonData.workgroup);
             e2eSelectors.ConfigEditor.workgroup.input().type(datasource.jsonData.workgroup).type('{enter}');
           },
-          type: 'athena-datasource',
+          type: 'Athena data source for Grafana',
         });
 
         // TODO: https://github.com/grafana/grafana/issues/38683

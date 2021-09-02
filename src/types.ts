@@ -15,13 +15,15 @@ export interface AthenaQuery extends DataQuery {
   };
 }
 
+export const defaultKey = '__default';
+
 export const defaultQuery: Partial<AthenaQuery> = {
   format: FormatOptions.Table,
   rawSQL: 'select 1',
   connectionArgs: {
-    region: 'default',
-    catalog: 'default',
-    database: 'default',
+    region: defaultKey,
+    catalog: defaultKey,
+    database: defaultKey,
   },
 };
 

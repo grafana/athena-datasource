@@ -67,8 +67,9 @@
       "targets": [
         {
           "connectionArgs": {
-            "catalog": "default",
-            "region": "default"
+            "catalog": "__default",
+            "region": "__default",
+            "database": "__default"
           },
           "format": 1,
           "queryType": "randomWalk",

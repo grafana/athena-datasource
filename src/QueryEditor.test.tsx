@@ -5,6 +5,7 @@ import { mockDatasource, mockQuery } from './__mocks__/datasource';
 import '@testing-library/jest-dom';
 import { select } from 'react-select-event';
 import { selectors } from 'tests/selectors';
+import { defaultKey } from 'types';
 
 const ds = mockDatasource;
 const q = mockQuery;
@@ -49,7 +50,7 @@ describe('QueryEditor', () => {
 
     await select(selectEl, 'foo', { container: document.body });
 
-    expect(ds.postResource).toHaveBeenCalledWith('catalogs', { region: 'default' });
+    expect(ds.postResource).toHaveBeenCalledWith('catalogs', { region: defaultKey });
     expect(onChange).toHaveBeenCalledWith({
       ...q,
       connectionArgs: { ...q.connectionArgs, catalog: 'foo' },
@@ -67,7 +68,7 @@ describe('QueryEditor', () => {
 
     await select(selectEl, 'foo', { container: document.body });
 
-    expect(ds.postResource).toHaveBeenCalledWith('databases', { region: 'default', catalog: 'default' });
+    expect(ds.postResource).toHaveBeenCalledWith('databases', { region: defaultKey, catalog: defaultKey });
     expect(onChange).toHaveBeenCalledWith({
       ...q,
       connectionArgs: { ...q.connectionArgs, database: 'foo' },

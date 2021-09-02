@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { DataSourcePluginOptionsEditorProps, DataSourceSettings } from '@grafana/data';
-import { AthenaDataSourceOptions, AthenaDataSourceSecureJsonData, AthenaDataSourceSettings } from './types';
+import { AthenaDataSourceOptions, AthenaDataSourceSecureJsonData, AthenaDataSourceSettings, defaultKey } from './types';
 import { ConnectionConfig } from '@grafana/aws-sdk';
 import { getBackendSrv } from '@grafana/runtime';
 import { AthenaResourceSelector } from './AthenaResourceSelector';
@@ -33,7 +33,7 @@ export function ConfigEditor(props: Props) {
   const [catalog, setCatalog] = useState<string | null>(jsonData.catalog || null);
   const fetchCatalogs = async () => {
     const res: string[] = await getBackendSrv().post(resourcesURL + '/catalogs', {
-      region: 'default',
+      region: defaultKey,
     });
     return res;
   };
@@ -41,8 +41,8 @@ export function ConfigEditor(props: Props) {
   const [database, setDatabase] = useState<string | null>(jsonData.database || null);
   const fetchDatabases = async () => {
     const loadedDatabases: string[] = await getBackendSrv().post(resourcesURL + '/databases', {
-      region: 'default',
-      catalog: catalog || 'default',
+      region: defaultKey,
+      catalog: catalog || defaultKey,
     });
     return loadedDatabases;
   };
@@ -50,7 +50,7 @@ export function ConfigEditor(props: Props) {
   const [workgroup, setWorkgroup] = useState<string | null>(jsonData.workgroup || null);
   const fetchWorkgroups = async () => {
     const loadedWorkgroups: string[] = await getBackendSrv().post(resourcesURL + '/workgroups', {
-      region: 'default',
+      region: defaultKey,
     });
     return loadedWorkgroups;
   };

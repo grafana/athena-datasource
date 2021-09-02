@@ -10,7 +10,7 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 )
 
-func TestConnection_athenaSettings(t *testing.T) {
+func TestConnection_athenaSettingsAndKey(t *testing.T) {
 	defaultRegion := "us-east-1"
 	defaultCatalog := "foo"
 	defaultDatabase := "bar"
@@ -36,7 +36,7 @@ func TestConnection_athenaSettings(t *testing.T) {
 				Catalog:               defaultCatalog,
 				Database:              defaultDatabase,
 			},
-			expectedKey: "default-default-default",
+			expectedKey: fmt.Sprintf("1-%s-%s-%s", models.DefaultKey, models.DefaultKey, models.DefaultKey),
 		},
 		{
 			description: "it should modify the region",
@@ -46,17 +46,17 @@ func TestConnection_athenaSettings(t *testing.T) {
 				Catalog:               defaultCatalog,
 				Database:              defaultDatabase,
 			},
-			expectedKey: "other-default-default",
+			expectedKey: fmt.Sprintf("1-other-%s-%s", models.DefaultKey, models.DefaultKey),
 		},
 		{
 			description: "it should use the default region",
-			args:        &ConnectionArgs{Region: "default"},
+			args:        &ConnectionArgs{Region: models.DefaultKey},
 			expectedSettings: &models.AthenaDataSourceSettings{
 				AWSDatasourceSettings: awsds.AWSDatasourceSettings{DefaultRegion: defaultRegion, Region: defaultRegion},
 				Catalog:               defaultCatalog,
 				Database:              defaultDatabase,
 			},
-			expectedKey: "default-default-default",
+			expectedKey: fmt.Sprintf("1-%s-%s-%s", models.DefaultKey, models.DefaultKey, models.DefaultKey),
 		},
 		{
 			description: "it should modify the catalog",
@@ -66,17 +66,17 @@ func TestConnection_athenaSettings(t *testing.T) {
 				Catalog:               "other",
 				Database:              defaultDatabase,
 			},
-			expectedKey: "default-other-default",
+			expectedKey: fmt.Sprintf("1-%s-other-%s", models.DefaultKey, models.DefaultKey),
 		},
 		{
 			description: "it should use the default catalog",
-			args:        &ConnectionArgs{Catalog: "default"},
+			args:        &ConnectionArgs{Catalog: models.DefaultKey},
 			expectedSettings: &models.AthenaDataSourceSettings{
 				AWSDatasourceSettings: awsds.AWSDatasourceSettings{DefaultRegion: defaultRegion},
 				Catalog:               defaultCatalog,
 				Database:              defaultDatabase,
 			},
-			expectedKey: "default-default-default",
+			expectedKey: fmt.Sprintf("1-%s-%s-%s", models.DefaultKey, models.DefaultKey, models.DefaultKey),
 		},
 		{
 			description: "it should modify the database",
@@ -86,29 +86,36 @@ func TestConnection_athenaSettings(t *testing.T) {
 				Catalog:               defaultCatalog,
 				Database:              "other",
 			},
-			expectedKey: "default-default-other",
+			expectedKey: fmt.Sprintf("1-%s-%s-other", models.DefaultKey, models.DefaultKey),
 		},
 		{
 			description: "it should use the default database",
-			args:        &ConnectionArgs{Database: "default"},
+			args:        &ConnectionArgs{Database: models.DefaultKey},
 			expectedSettings: &models.AthenaDataSourceSettings{
 				AWSDatasourceSettings: awsds.AWSDatasourceSettings{DefaultRegion: defaultRegion},
 				Catalog:               defaultCatalog,
 				Database:              defaultDatabase,
 			},
-			expectedKey: "default-default-default",
+			expectedKey: fmt.Sprintf("1-%s-%s-%s", models.DefaultKey, models.DefaultKey, models.DefaultKey),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.description, func(t *testing.T) {
-			ds := AthenaDatasource{config: config}
-			settings, key, err := ds.athenaSettings(tt.args)
+			id := int64(1)
+			ds := AthenaDatasource{}
+			ds.config.Store(id, config)
+			defaultSettings, err := ds.defaultSettings(id)
+			if err != nil {
+				t.Fatalf("unexpected error %v", err)
+			}
+			settings, err := ds.athenaSettings(defaultSettings, tt.args)
 			if err != nil {
 				t.Fatalf("unexpected error %v", err)
 			}
 			if !cmp.Equal(settings, tt.expectedSettings) {
 				t.Errorf("unexpected result: %v", cmp.Diff(settings, tt.expectedSettings))
 			}
+			key := ds.connectionKey(id, defaultSettings, tt.args)
 			if !cmp.Equal(key, tt.expectedKey) {
 				t.Errorf("unexpected result: %v", cmp.Diff(key, tt.expectedKey))
 			}

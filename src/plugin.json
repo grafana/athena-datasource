@@ -1,11 +1,13 @@
 {
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
   "type": "datasource",
-  "name": "athena-datasource",
+  "name": "Athena data source for Grafana",
   "id": "grafana-athena-datasource",
   "metrics": true,
   "backend": true,
   "executable": "gpx_athena",
+  "alerting": true,
+  "annotations": true,
   "info": {
     "description": "Use Amazon Athena with Grafana",
     "author": {
@@ -20,11 +22,11 @@
     "links": [
       {
         "name": "Website",
-        "url": "https://github.com/grafana/grafana-starter-datasource-backend"
+        "url": "https://github.com/grafana/redshift-datasource"
       },
       {
         "name": "License",
-        "url": "https://github.com/grafana/grafana-starter-datasource-backend/blob/master/LICENSE"
+        "url": "https://github.com/grafana/redshift-datasource/blob/master/LICENSE"
       }
     ],
     "screenshots": [],
@@ -32,7 +34,7 @@
     "updated": "%TODAY%"
   },
   "dependencies": {
-    "grafanaDependency": ">=7.0.0",
+    "grafanaDependency": ">=7.5.0",
     "plugins": []
   }
 }

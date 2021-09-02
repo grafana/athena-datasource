@@ -10,7 +10,7 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 )
 
-func TestConnection_athenaSettings(t *testing.T) {
+func TestConnection_athenaSettingsAndKey(t *testing.T) {
 	defaultRegion := "us-east-1"
 	defaultCatalog := "foo"
 	defaultDatabase := "bar"
@@ -101,14 +101,21 @@ func TestConnection_athenaSettings(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.description, func(t *testing.T) {
-			ds := AthenaDatasource{config: config}
-			settings, key, err := ds.athenaSettings(tt.args)
+			ds := AthenaDatasource{config: map[int64]backend.DataSourceInstanceSettings{
+				1: config,
+			}}
+			defaultSettings, err := ds.defaultSettings(1)
+			if err != nil {
+				t.Fatalf("unexpected error %v", err)
+			}
+			settings, err := ds.athenaSettings(defaultSettings, tt.args)
 			if err != nil {
 				t.Fatalf("unexpected error %v", err)
 			}
 			if !cmp.Equal(settings, tt.expectedSettings) {
 				t.Errorf("unexpected result: %v", cmp.Diff(settings, tt.expectedSettings))
 			}
+			key := ds.connectionKey(defaultSettings, tt.args)
 			if !cmp.Equal(key, tt.expectedKey) {
 				t.Errorf("unexpected result: %v", cmp.Diff(key, tt.expectedKey))
 			}

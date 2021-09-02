@@ -36,7 +36,7 @@ func TestConnection_athenaSettings(t *testing.T) {
 				Catalog:               defaultCatalog,
 				Database:              defaultDatabase,
 			},
-			expectedKey: "default-default-default",
+			expectedKey: fmt.Sprintf("%s-%s-%s", models.DefaultKey, models.DefaultKey, models.DefaultKey),
 		},
 		{
 			description: "it should modify the region",
@@ -46,17 +46,17 @@ func TestConnection_athenaSettings(t *testing.T) {
 				Catalog:               defaultCatalog,
 				Database:              defaultDatabase,
 			},
-			expectedKey: "other-default-default",
+			expectedKey: fmt.Sprintf("other-%s-%s", models.DefaultKey, models.DefaultKey),
 		},
 		{
 			description: "it should use the default region",
-			args:        &ConnectionArgs{Region: "default"},
+			args:        &ConnectionArgs{Region: models.DefaultKey},
 			expectedSettings: &models.AthenaDataSourceSettings{
 				AWSDatasourceSettings: awsds.AWSDatasourceSettings{DefaultRegion: defaultRegion, Region: defaultRegion},
 				Catalog:               defaultCatalog,
 				Database:              defaultDatabase,
 			},
-			expectedKey: "default-default-default",
+			expectedKey: fmt.Sprintf("%s-%s-%s", models.DefaultKey, models.DefaultKey, models.DefaultKey),
 		},
 		{
 			description: "it should modify the catalog",
@@ -66,17 +66,17 @@ func TestConnection_athenaSettings(t *testing.T) {
 				Catalog:               "other",
 				Database:              defaultDatabase,
 			},
-			expectedKey: "default-other-default",
+			expectedKey: fmt.Sprintf("%s-other-%s", models.DefaultKey, models.DefaultKey),
 		},
 		{
 			description: "it should use the default catalog",
-			args:        &ConnectionArgs{Catalog: "default"},
+			args:        &ConnectionArgs{Catalog: models.DefaultKey},
 			expectedSettings: &models.AthenaDataSourceSettings{
 				AWSDatasourceSettings: awsds.AWSDatasourceSettings{DefaultRegion: defaultRegion},
 				Catalog:               defaultCatalog,
 				Database:              defaultDatabase,
 			},
-			expectedKey: "default-default-default",
+			expectedKey: fmt.Sprintf("%s-%s-%s", models.DefaultKey, models.DefaultKey, models.DefaultKey),
 		},
 		{
 			description: "it should modify the database",
@@ -86,17 +86,17 @@ func TestConnection_athenaSettings(t *testing.T) {
 				Catalog:               defaultCatalog,
 				Database:              "other",
 			},
-			expectedKey: "default-default-other",
+			expectedKey: fmt.Sprintf("%s-%s-other", models.DefaultKey, models.DefaultKey),
 		},
 		{
 			description: "it should use the default database",
-			args:        &ConnectionArgs{Database: "default"},
+			args:        &ConnectionArgs{Database: models.DefaultKey},
 			expectedSettings: &models.AthenaDataSourceSettings{
 				AWSDatasourceSettings: awsds.AWSDatasourceSettings{DefaultRegion: defaultRegion},
 				Catalog:               defaultCatalog,
 				Database:              defaultDatabase,
 			},
-			expectedKey: "default-default-default",
+			expectedKey: fmt.Sprintf("%s-%s-%s", models.DefaultKey, models.DefaultKey, models.DefaultKey),
 		},
 	}
 	for _, tt := range tests {

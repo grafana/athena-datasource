@@ -8,6 +8,8 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 )
 
+const DefaultKey = "__default"
+
 type AthenaDataSourceSettings struct {
 	awsds.AWSDatasourceSettings
 	Database  string `json:"Database"`
@@ -29,9 +31,9 @@ func (s *AthenaDataSourceSettings) Load(config backend.DataSourceInstanceSetting
 }
 
 func (s *AthenaDataSourceSettings) GetConnectionKey(region, catalog, database string) string {
-	regionKey := "default"
-	catalogKey := "default"
-	databaseKey := "default"
+	regionKey := DefaultKey
+	catalogKey := DefaultKey
+	databaseKey := DefaultKey
 	if region != "" && region != s.DefaultRegion {
 		regionKey = region
 	}

@@ -1,5 +1,5 @@
 import { DataSourcePluginOptionsEditorProps, PluginType } from '@grafana/data';
-import { AthenaDataSourceOptions, AthenaDataSourceSecureJsonData, AthenaQuery } from '../types';
+import { AthenaDataSourceOptions, AthenaDataSourceSecureJsonData, AthenaQuery, defaultKey } from '../types';
 import { DataSource } from '../datasource';
 
 export const mockDatasourceOptions: DataSourcePluginOptionsEditorProps<
@@ -67,7 +67,7 @@ export const mockDatasource = new DataSource({
 });
 
 export const mockQuery: AthenaQuery = {
-  connectionArgs: { region: 'default', catalog: 'default', database: 'default' },
+  connectionArgs: { region: defaultKey, catalog: defaultKey, database: defaultKey },
   format: 1,
   rawSQL: 'select 1',
   refId: '',

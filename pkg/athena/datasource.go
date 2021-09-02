@@ -66,18 +66,18 @@ func parseConnectionArgs(queryArgs json.RawMessage) (*ConnectionArgs, error) {
 func applySettings(defaultSettings *models.AthenaDataSourceSettings, args *ConnectionArgs) (*models.AthenaDataSourceSettings, error) {
 	settings := *defaultSettings
 	if args.Region != "" {
-		if args.Region == "default" {
+		if args.Region == models.DefaultKey {
 			settings.Region = settings.DefaultRegion
 		} else {
 			settings.Region = args.Region
 		}
 	}
 
-	if args.Catalog != "" && args.Catalog != "default" {
+	if args.Catalog != "" && args.Catalog != models.DefaultKey {
 		settings.Catalog = args.Catalog
 	}
 
-	if args.Database != "" && args.Database != "default" {
+	if args.Database != "" && args.Database != models.DefaultKey {
 		settings.Database = args.Database
 	}
 

@@ -4,6 +4,7 @@ import { InlineField, Select } from '@grafana/ui';
 import { ResourceType } from './ConfigEditor';
 import { selectors } from './tests/selectors';
 import { isEqual } from 'lodash';
+import { defaultKey } from 'types';
 
 export type QueryResourceType = ResourceType | 'region';
 
@@ -33,11 +34,11 @@ export function AthenaResourceSelector(props: Props) {
     const opts: Array<SelectableValue<string>> = [
       {
         label: `default (${props.default})`,
-        value: 'default',
+        value: defaultKey,
         description: `Default ${props.resource} set in the data source`,
       },
     ];
-    if (props.value && props.value !== 'default') {
+    if (props.value && props.value !== defaultKey) {
       opts.push({ label: props.value, value: props.value });
     }
     return opts;

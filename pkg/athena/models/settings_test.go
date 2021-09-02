@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
@@ -18,13 +19,13 @@ func TestConnection_getRegionKey(t *testing.T) {
 		{
 			description: "undefined region",
 			settings:    &AthenaDataSourceSettings{AWSDatasourceSettings: awsds.AWSDatasourceSettings{}},
-			expected:    "default-default-default",
+			expected:    fmt.Sprintf("%s-%s-%s", DefaultKey, DefaultKey, DefaultKey),
 		},
 		{
 			description: "default region",
 			settings:    &AthenaDataSourceSettings{AWSDatasourceSettings: awsds.AWSDatasourceSettings{}},
-			region:      "default",
-			expected:    "default-default-default",
+			region:      DefaultKey,
+			expected:    fmt.Sprintf("%s-%s-%s", DefaultKey, DefaultKey, DefaultKey),
 		},
 		{
 			description: "same region",
@@ -34,7 +35,7 @@ func TestConnection_getRegionKey(t *testing.T) {
 				},
 			},
 			region:   "foo",
-			expected: "default-default-default",
+			expected: fmt.Sprintf("%s-%s-%s", DefaultKey, DefaultKey, DefaultKey),
 		},
 		{
 			description: "different region",
@@ -44,7 +45,7 @@ func TestConnection_getRegionKey(t *testing.T) {
 				},
 			},
 			region:   "foo",
-			expected: "foo-default-default",
+			expected: fmt.Sprintf("foo-%s-%s", DefaultKey, DefaultKey),
 		},
 		{
 			description: "different catalog",
@@ -54,7 +55,7 @@ func TestConnection_getRegionKey(t *testing.T) {
 				},
 			},
 			catalog:  "foo",
-			expected: "default-foo-default",
+			expected: fmt.Sprintf("%s-foo-%s", DefaultKey, DefaultKey),
 		},
 		{
 			description: "different database",
@@ -64,7 +65,7 @@ func TestConnection_getRegionKey(t *testing.T) {
 				},
 			},
 			database: "foo",
-			expected: "default-default-foo",
+			expected: fmt.Sprintf("%s-%s-foo", DefaultKey, DefaultKey),
 		},
 	}
 	for _, tt := range tests {

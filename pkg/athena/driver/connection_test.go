@@ -10,7 +10,6 @@ import (
 	athenaclientmock "github.com/grafana/athena-datasource/pkg/athena/api/mock"
 	"github.com/grafana/athena-datasource/pkg/athena/models"
 	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
-	"github.com/jpillora/backoff"
 	"gotest.tools/assert"
 )
 
@@ -22,8 +21,7 @@ func TestConnection_QueryContext(t *testing.T) {
 			Catalog:               "",
 			WorkGroup:             "test-Workgroup",
 		},
-		backoffInstance: backoff.Backoff{Min: 1 * time.Millisecond, Max: 1 * time.Millisecond},
-		athenaCli:       &athenaclientmock.MockAthenaClient{CalledTimesCountDown: 1},
+		athenaCli: &athenaclientmock.MockAthenaClient{CalledTimesCountDown: 1},
 	}
 
 	failedOutput, err := c.QueryContext(context.Background(), athenaclientmock.FAKE_ERROR, []driver.NamedValue{})
@@ -47,6 +45,8 @@ var waitOnQueryTestCases = []struct {
 
 func TestConnection_waitOnQuery(t *testing.T) {
 	t.Parallel()
+	backoffMin = 1 * time.Millisecond
+	backoffMax = 1 * time.Millisecond
 
 	for _, tc := range waitOnQueryTestCases {
 		// for tests we override backoff instance to always take 1 millisecond so the tests run quickly
@@ -54,10 +54,6 @@ func TestConnection_waitOnQuery(t *testing.T) {
 			CalledTimesCountDown: tc.calledTimesCountDown,
 		}
 		c := &conn{
-			backoffInstance: backoff.Backoff{
-				Min: 1 * time.Millisecond,
-				Max: 1 * time.Millisecond,
-			},
 			athenaCli: cliMock,
 		}
 		err := c.waitOnQuery(context.Background(), tc.statementStatus)

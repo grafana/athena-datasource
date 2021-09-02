@@ -51,8 +51,8 @@ func TestRows_Next(t *testing.T) {
 
 func TestRows_convertValueFromAthena(t *testing.T) {
 	t.Parallel()
-	timeString := "2001-01-01 01:01:01"
-	parsedTime, parsingErr := time.Parse("2006-01-02 15:04:05", timeString)
+	timeString := "2001-01-01 01:01:01.000"
+	parsedTime, parsingErr := time.ParseInLocation("2006-01-02 15:04:05", timeString, time.Local)
 	if parsingErr != nil {
 		panic("parsing error with time test case")
 	}

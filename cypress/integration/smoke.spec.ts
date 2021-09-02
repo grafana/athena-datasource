@@ -1,5 +1,6 @@
 import { e2e } from '@grafana/e2e';
 import { selectors } from '../../src/tests/selectors';
+import TEST_DASHBOARD from './testDashboard.json';
 
 const e2eSelectors = e2e.getSelectors(selectors.components);
 
@@ -35,6 +36,7 @@ e2e.scenario({
         const datasource = AthenaProvisions[0].datasources[0];
 
         e2e.flows.addDataSource({
+          name: "e2e-athena-datasource",
           checkHealth: false,
           expectedAlertMessage: 'Data source is working',
           form: () => {
@@ -71,6 +73,8 @@ e2e.scenario({
           type: 'athena-datasource',
         });
 
+        // TODO: https://github.com/grafana/grafana/issues/38683
+        // then we can add a variable with addDashboard
         e2e.flows.addDashboard({
           timeRange: {
             from: '2008-01-01 19:00:00',
@@ -85,7 +89,7 @@ e2e.scenario({
           queriesForm: () => {
             e2eSelectors.QueryEditor.CodeEditor.container()
               .click({ force: true })
-              .type(`{selectall} select time as time, bytes as bytes from cloudfront_logs limit 2`);
+              .type(`{selectall} select time, bytes from cloudfront_logs limit 2`);
             // TODO: we should be able to just pass visualizationName: "Table" to addPanel
             // but it doesn't seem to work for some reason, maybe make a ticket in core grafana
             e2e().get('[aria-label="toggle-viz-picker"]').click({ force: true });
@@ -93,6 +97,8 @@ e2e.scenario({
             e2e().wait(3000);
           },
         });
+
+        e2e.flows.importDashboard(TEST_DASHBOARD);
       });
   },
 });

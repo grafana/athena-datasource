@@ -3,7 +3,6 @@ package mock
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/request"
@@ -124,7 +123,6 @@ func (m *MockAthenaClient) GetQueryResults(input *athena.GetQueryResultsInput) (
 }
 
 func (m *MockAthenaClient) GetQueryResultsWithContext(ctx context.Context, input *athena.GetQueryResultsInput, opts ...request.Option) (*athena.GetQueryResultsOutput, error) {
-	fmt.Println("fooo")
 	return &athena.GetQueryResultsOutput{
 		ResultSet: &athena.ResultSet{
 			ResultSetMetadata: &athena.ResultSetMetadata{},

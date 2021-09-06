@@ -1,6 +1,7 @@
 package mock
 
 import (
+	"context"
 	"errors"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -119,6 +120,15 @@ func (m *MockAthenaClient) GetQueryResults(input *athena.GetQueryResultsInput) (
 	}
 
 	return output, nil
+}
+
+func (m *MockAthenaClient) GetQueryResultsWithContext(ctx context.Context, input *athena.GetQueryResultsInput, opts ...request.Option) (*athena.GetQueryResultsOutput, error) {
+	return &athena.GetQueryResultsOutput{
+		ResultSet: &athena.ResultSet{
+			ResultSetMetadata: &athena.ResultSetMetadata{},
+			Rows:              []*athena.Row{},
+		},
+	}, nil
 }
 
 func (m *MockAthenaClient) ListDataCatalogsWithContext(ctx aws.Context, input *athena.ListDataCatalogsInput, opts ...request.Option) (*athena.ListDataCatalogsOutput, error) {

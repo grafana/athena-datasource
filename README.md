@@ -61,6 +61,10 @@ A data source backend plugin consists of both frontend and backend components.
    mage -l
    ```
 
+### Acknowledgment
+
+The backend driver is based on the implementation of [uber/athenadriver](https://github.com/uber/athenadriver), which provides a fully-featured driver for AWS Athena.
+
 ## Learn more
 
 - [Build a data source backend plugin tutorial](https://grafana.com/tutorials/build-a-data-source-backend-plugin)

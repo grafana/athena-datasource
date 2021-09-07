@@ -15,14 +15,38 @@
           "type": "dashboard"
         },
         "type": "dashboard"
+      },
+      {
+        "datasource": "e2e-athena-datasource",
+        "enable": true,
+        "iconColor": "red",
+        "mappings": {
+          "time": {
+            "source": "field",
+            "value": "date"
+          }
+        },
+        "name": "New annotation",
+        "target": {
+          "connectionArgs": {
+            "catalog": "__default",
+            "database": "__default",
+            "region": "__default"
+          },
+          "format": 1,
+          "limit": 100,
+          "matchAny": false,
+          "rawSQL": "select * from cloudfront_logs where bytes < 100",
+          "tags": [],
+          "type": "dashboard"
+        }
       }
     ]
   },
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 283,
-  "iteration": 1630526138003,
+  "id": 291,
   "links": [],
   "panels": [
     {
@@ -30,11 +54,35 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "palette-classic"
           },
           "custom": {
-            "align": "auto",
-            "displayMode": "auto"
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "mappings": [],
           "thresholds": {
@@ -61,24 +109,33 @@
       },
       "id": 2,
       "options": {
-        "showHeader": true
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
       },
       "pluginVersion": "8.1.0-pre",
       "targets": [
         {
           "connectionArgs": {
             "catalog": "__default",
-            "region": "__default",
-            "database": "__default"
+            "database": "__default",
+            "region": "__default"
           },
           "format": 1,
           "queryType": "randomWalk",
-          "rawSQL": "select time, location from cloudfront_logs where location = $location limit $limitNum",
+          "rawSQL": "select date as time, bytes from cloudfront_logs",
           "refId": "A"
         }
       ],
+      "timeFrom": null,
+      "timeShift": null,
       "title": "Panel Title",
-      "type": "table"
+      "type": "timeseries"
     }
   ],
   "refresh": "",
@@ -86,88 +143,15 @@
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": [
-      {
-        "allValue": null,
-        "current": {
-          "selected": false,
-          "text": "2",
-          "value": "2"
-        },
-        "description": null,
-        "error": null,
-        "hide": 0,
-        "includeAll": false,
-        "label": null,
-        "multi": false,
-        "name": "limitNum",
-        "options": [
-          {
-            "selected": false,
-            "text": "1",
-            "value": "1"
-          },
-          {
-            "selected": true,
-            "text": "2",
-            "value": "2"
-          },
-          {
-            "selected": false,
-            "text": "3",
-            "value": "3"
-          },
-          {
-            "selected": false,
-            "text": "4",
-            "value": "4"
-          },
-          {
-            "selected": false,
-            "text": "5",
-            "value": "5"
-          }
-        ],
-        "query": "1,2,3,4,5",
-        "queryValue": "",
-        "skipUrlSync": false,
-        "type": "custom"
-      },
-      {
-        "allValue": null,
-        "current": {
-          "selected": false,
-          "text": "IAD2",
-          "value": "IAD2"
-        },
-        "datasource": "e2e-athena-datasource",
-        "definition": "",
-        "description": null,
-        "error": null,
-        "hide": 0,
-        "includeAll": false,
-        "label": null,
-        "multi": false,
-        "name": "location",
-        "options": [],
-        "query": {
-          "rawSQL": "select location from  cloudfront_logs"
-        },
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "type": "query"
-      }
-    ]
+    "list": []
   },
   "time": {
-    "from": "now-6h",
-    "to": "now"
+    "from": "2012-08-05T04:00:00.000Z",
+    "to": "2020-01-02T05:00:00.000Z"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "athena dashboard",
-  "uid": "4bnIGB47z",
-  "version": 8
+  "title": "athenadashboard",
+  "uid": "mW9LDZS7z",
+  "version": 19
 }

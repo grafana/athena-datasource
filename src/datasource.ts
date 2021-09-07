@@ -13,7 +13,7 @@ export class DataSource extends DataSourceWithBackend<AthenaQuery, AthenaDataSou
     this.defaultRegion = instanceSettings.jsonData.defaultRegion || '';
     this.defaultCatalog = instanceSettings.jsonData.catalog || '';
     this.defaultDatabase = instanceSettings.jsonData.database || '';
-    this.variables = new AthenaVariableSupport();
+    this.variables = new AthenaVariableSupport(this);
   }
 
   applyTemplateVariables(query: AthenaQuery, scopedVars: ScopedVars): AthenaQuery {

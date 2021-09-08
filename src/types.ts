@@ -1,10 +1,22 @@
 import { AwsAuthDataSourceJsonData, AwsAuthDataSourceSecureJsonData } from '@grafana/aws-sdk';
-import { DataQuery, DataSourceSettings } from '@grafana/data';
+import { DataQuery, DataSourceSettings, SelectableValue } from '@grafana/data';
 
 export enum FormatOptions {
   TimeSeries,
   Table,
 }
+
+export const SelectableFormatOptions: Array<SelectableValue<FormatOptions>> = [
+  {
+    label: 'Time Series',
+    value: FormatOptions.TimeSeries,
+  },
+  {
+    label: 'Table',
+    value: FormatOptions.Table,
+  },
+];
+
 export interface AthenaQuery extends DataQuery {
   format: FormatOptions;
   rawSQL: string;

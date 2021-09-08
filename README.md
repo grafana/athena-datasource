@@ -122,9 +122,29 @@ After creating a variable, you can use it in your Athena queries by using [Varia
 
 ### Annotations
 
-[Annotations](https://grafana.com/docs/grafana/latest/dashboards/annotations/)
+[Annotations](https://grafana.com/docs/grafana/latest/dashboards/annotations/) allow you to overlay rich event information on top of graphs. You can add annotations by clicking on panels or by adding annotation queries via the Dashboard menu / Annotations view.
 
-To be implemented.
+**Example query to automatically add annotations:**
+
+```sql
+SELECT
+  time as time,
+  environment as tags,
+  humidity as text
+FROM
+  tableName
+WHERE
+  $__dateFilter(time) and humidity > 95
+```
+
+The following table represents the values of the columns taken into account to render annotations:
+
+| Name      | Description                                                                                                                       |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `time`    | The name of the date/time field. Could be a column with a native SQL date/time data type or epoch value.                          |
+| `timeend` | Optional name of the end date/time field. Could be a column with a native SQL date/time data type or epoch value. (Grafana v6.6+) |
+| `text`    | Event description field.                                                                                                          |
+| `tags`    | Optional field name to use for event tags as a comma separated string.                                                            |
 
 ## Provision Athena data source
 
@@ -186,6 +206,10 @@ datasources:
       assumeRoleArn: arn:aws:iam::123456789012:root
       defaultRegion: eu-west-2
 ```
+
+### Acknowledgment
+
+The backend driver is based on the implementation of [uber/athenadriver](https://github.com/uber/athenadriver), which provides a fully-featured driver for AWS Athena.
 
 ## Get the most out of the plugin
 

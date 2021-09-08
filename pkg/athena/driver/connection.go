@@ -12,7 +12,6 @@ import (
 	"github.com/aws/aws-sdk-go/service/athena/athenaiface"
 	"github.com/grafana/athena-datasource/pkg/athena/models"
 	"github.com/jpillora/backoff"
-	drv "github.com/uber/athenadriver/go"
 )
 
 var (
@@ -56,7 +55,7 @@ func (c *conn) QueryContext(ctx context.Context, query string, _ []driver.NamedV
 		return nil, err
 	}
 
-	return drv.NewRows(ctx, c.athenaCli, *executionResult.QueryExecutionId, drv.NewNoOpsConfig(), nil)
+	return NewRows(ctx, c.athenaCli, *executionResult.QueryExecutionId)
 }
 
 // waitOnQuery polls the athena api until the query finishes, returning an error if it failed.

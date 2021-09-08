@@ -2,7 +2,7 @@
 
 The Athena data source plugin allows you to query and visualize Athena data metrics from within Grafana.
 
-This topic explains options, variables, querying, and other options specific to this data source. Refer to [Add a data source](https://grafana.com/docs/grafana/latest/datasources/add-a-data-source/) for instructions on how to add a data source to Grafana.
+This documentation explains options, variables, querying, and other options specific to this data source. Refer to [Add a data source](https://grafana.com/docs/grafana/latest/datasources/add-a-data-source/) for instructions on how to add a data source to Grafana.
 
 ## Configure the data source in Grafana
 
@@ -48,7 +48,7 @@ Depending on the source of the data you'd query with Athena, you may need differ
 
 ### Assuming a role
 
-The `Assume Role ARN` field allows you to specify which IAM role to assume, if any. When left blank, the provided credentials are used directly and the associated role or user should have the required permissions. If this field is non-blank, on the other hand, the provided credentials are used to perform an [sts:AssumeRole](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html) call.
+The `Assume Role ARN` field allows you to specify which IAM role to assume, if any. When left blank, the provided credentials are used directly and the associated role or user should have the required permissions. If this field is filled in, on the other hand, the provided credentials are used to perform an [sts:AssumeRole](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html) call.
 
 ### Endpoint
 
@@ -92,7 +92,7 @@ The provided query editor is a standard SQL query editor. Grafana includes some 
 
 #### Table Visualization
 
-Most queries in Athena will be best represented by a table visualization. Any query will display data in a table. If it can be queried, then it can be put in a table.
+Most queries in Athena will be best represented by a table visualization. Any query will display data in a table. Any query that returns results will display data in a table..
 
 This example returns results for a table visualization:
 
@@ -110,13 +110,13 @@ For timeseries / graph visualizations, there are a few requirements:
 
 #### Inspecting the query
 
-Because Grafana supports macros that Athena does not, the fully rendered query, which can be copy/pasted directly into Athena, is visible in the Query Inspector. To view the full interpolated query, click the Query Inspector button, and the full query will be visible under the "Query" tab.
+Grafana supports macros that Athena does not which means a query may not necessarily always work when copy/pasted directly into Athena. To view the full interpolated query which should always work directly in Athena, click the Query Inspector button, and the full query will be visible under the "Query" tab.
 
 ### Templates and variables
 
 To add a new Athena query variable, refer to [Add a query variable](https://grafana.com/docs/grafana/latest/variables/variable-types/add-query-variable/).
 
-Any value queried from a Athena table can be used as a variable. Be sure to avoid selecting too many values, as this can cause performance issues.
+Any value queried from an Athena table can be used as a variable.
 
 After creating a variable, you can use it in your Athena queries by using [Variable syntax](https://grafana.com/docs/grafana/latest/variables/syntax/). For more information about variables, refer to [Templates and variables](https://grafana.com/docs/grafana/latest/variables/).
 

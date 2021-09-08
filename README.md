@@ -110,7 +110,7 @@ For timeseries / graph visualizations, there are a few requirements:
 
 #### Inspecting the query
 
-Grafana supports macros that Athena does not which means a query may not necessarily always work when copy/pasted directly into Athena. To view the full interpolated query which should always work directly in Athena, click the Query Inspector button, and the full query will be visible under the "Query" tab.
+Grafana supports macros that Athena does not, which means a query might not work when copied and pasted directly into Athena. To view the full interpolated query, which works directly in Athena, click the **Query Inspector** button. The full query is displayed under the **Query** tab.
 
 ### Templates and variables
 

@@ -16,6 +16,9 @@ export class DataSource extends DataSourceWithBackend<AthenaQuery, AthenaDataSou
     this.variables = new AthenaVariableSupport(this);
   }
 
+  // This will support annotation queries for 7.2+
+  annotations = {};
+
   applyTemplateVariables(query: AthenaQuery, scopedVars: ScopedVars): AthenaQuery {
     const templateSrv = getTemplateSrv();
     return {

@@ -80,6 +80,26 @@ e2e.scenario({
             from: '2008-01-01 19:00:00',
             to: '2008-01-02 19:00:00',
           },
+          annotations: [
+            {
+              dataSource: 'e2e-athena-datasource',
+              name: 'e2e test annotation',
+              dataSourceForm: () => {
+                e2eSelectors.QueryEditor.CodeEditor.container()
+                  .click({ force: true })
+                  .type(`{selectall} select * from cloudfront_logs where bytes < 100`);
+
+                e2e()
+                  .get('.filter-table')
+                  .contains('time')
+                  .parent()
+                  .find('input')
+                  .click({ force: true })
+                  .type('date (time)')
+                  .type('{enter}');
+              },
+            },
+          ],
         });
 
         // TODO change this to a time series once $__timeFilter is working

@@ -4,6 +4,7 @@ import { DataQuery, DataSourceSettings, SelectableValue } from '@grafana/data';
 export enum FormatOptions {
   TimeSeries,
   Table,
+  Logs,
 }
 
 export const SelectableFormatOptions: Array<SelectableValue<FormatOptions>> = [
@@ -14,6 +15,10 @@ export const SelectableFormatOptions: Array<SelectableValue<FormatOptions>> = [
   {
     label: 'Table',
     value: FormatOptions.Table,
+  },
+  {
+    label: 'Logs',
+    value: FormatOptions.Logs,
   },
 ];
 

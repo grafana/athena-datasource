@@ -2,11 +2,14 @@
 
 The Athena data source plugin allows you to query and visualize Athena data metrics from within Grafana.
 
-This documentation explains options, variables, querying, and other options specific to this data source. Refer to [Add a data source](https://grafana.com/docs/grafana/latest/datasources/add-a-data-source/) for instructions on how to add a data source to Grafana.
+This topic explains options, variables, querying, and other options specific to this data source. Refer to [Add a data source](https://grafana.com/docs/grafana/latest/datasources/add-a-data-source/) for instructions on how to add a data source to Grafana.
 
 ## Configure the data source in Grafana
 
-To access data source settings, hover your mouse over the **Configuration** (gear) icon, then click **Data Sources**, and then click the AWS Redshift data source.
+To access data source settings:
+
+1. Hover your mouse over the **Configuration** (gear) icon.
+1. Click **Data Sources**, and then click the AWS Redshift data source.
 
 | Name                         | Description                                                                                                             |
 | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------- |

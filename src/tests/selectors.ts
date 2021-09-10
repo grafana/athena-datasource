@@ -26,6 +26,9 @@ export const Components = {
       container: 'Code editor container',
     },
   },
+  RefreshPicker: {
+    runButton: 'RefreshPicker run button',
+  },
 };
 
 export const selectors: { components: E2ESelectors<typeof Components> } = {

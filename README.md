@@ -9,7 +9,7 @@ This topic explains options, variables, querying, and other options specific to 
 To access data source settings:
 
 1. Hover your mouse over the **Configuration** (gear) icon.
-1. Click **Data Sources**, and then click the AWS Redshift data source.
+1. Click **Data sources**, and then click the AWS Athena data source.
 
 | Name                         | Description                                                                                                             |
 | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------- |

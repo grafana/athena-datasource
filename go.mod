@@ -10,6 +10,7 @@ require (
 	github.com/grafana/sqlds/v2 v2.1.0
 	github.com/jpillora/backoff v1.0.0
 	github.com/pkg/errors v0.9.1
+	github.com/stretchr/testify v1.7.0
 	github.com/uber/athenadriver v1.1.13
 	gotest.tools v2.2.0+incompatible
 )

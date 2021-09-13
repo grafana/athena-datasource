@@ -103,13 +103,12 @@ This example returns results for a table visualization:
 SELECT {column_1}, {column_2} FROM {table};
 ```
 
-#### Timeseries / Graph visualizations
+#### Timeseries and Graph visualizations
 
-For timeseries / graph visualizations, there are a few requirements:
+Time series ad graph visualizations, you must:
 
-- A column with a `date` or `datetime` type must be selected
-- The `date` column must be in ascending order (using `ORDER BY column ASC`)
-- A numeric column must also be selected
+- Select a column with a `date` or `datetime` type. The `date` column must be in ascending order (using `ORDER BY column ASC`).
+- Also select a numeric column.
 
 #### Inspecting the query
 

@@ -77,8 +77,8 @@ e2e.scenario({
         // then we can add a variable with addDashboard
         e2e.flows.addDashboard({
           timeRange: {
-            from: '2008-01-01 19:00:00',
-            to: '2008-01-02 19:00:00',
+            from: '2021-09-08 00:00:00',
+            to: '2021-09-08 12:00:00',
           },
           annotations: [
             {
@@ -102,19 +102,32 @@ e2e.scenario({
           ],
         });
 
-        // TODO change this to a time series once $__timeFilter is working
+        // TODO use $__timeFilter and $__timeGroup when available
         e2e.flows.addPanel({
-          matchScreenshot: false,
+          matchScreenshot: true,
           visitDashboardAtStart: false,
           queriesForm: () => {
-            e2eSelectors.QueryEditor.CodeEditor.container()
-              .click({ force: true })
-              .type(`{selectall} select time, bytes from cloudfront_logs limit 2`);
-            // TODO: we should be able to just pass visualizationName: "Table" to addPanel
-            // but it doesn't seem to work for some reason, maybe make a ticket in core grafana
-            e2e().get('[aria-label="toggle-viz-picker"]').click({ force: true });
-            e2e().get('[aria-label="Plugin visualization item Table"]').click({ force: true });
-            e2e().wait(3000);
+            // Change database selection for query
+            e2eSelectors.ConfigEditor.database.input().click({ force: true });
+            e2e().get('[data-testid="onloaddatabase"]').contains('cloudtrail');
+            e2eSelectors.ConfigEditor.database.input().type('{selectall}cloudtrail{enter}');
+
+            e2eSelectors.QueryEditor.CodeEditor.container().click({ force: true }).type(`{selectall}{enter}
+SELECT 
+    parse_datetime(eventtime,'yyyy-MM-dd''T''HH:mm:ss''Z') as time, 
+    sum(cast(json_extract_scalar(additionaleventdata, '$.bytesTransferredOut') as real)) AS bytes 
+FROM 
+    cloudtrail_logs 
+WHERE additionaleventdata IS NOT NULL AND json_extract_scalar(additionaleventdata, '$.bytesTransferredOut') IS NOT NULL 
+AND 
+    parse_datetime(eventtime,'yyyy-MM-dd''T''HH:mm:ss''Z') 
+      BETWEEN 
+        parse_datetime('2021-09-08 00:00:00','yyyy-MM-dd HH:mm:ss') 
+        AND parse_datetime('2021-09-08 12:00:00','yyyy-MM-dd HH:mm:ss') 
+GROUP BY 1 
+ORDER BY 1 
+`);
+            e2eSelectors.RefreshPicker.runButton().first().click({ force: true });
           },
         });
 

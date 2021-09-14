@@ -107,7 +107,7 @@ e2e.scenario({
           matchScreenshot: true,
           visitDashboardAtStart: false,
           queriesForm: () => {
-            // Select the new database
+            // Change database selection for query
             e2eSelectors.ConfigEditor.database.input().click({ force: true });
             e2e().get('[data-testid="onloaddatabase"]').contains('cloudtrail');
             e2eSelectors.ConfigEditor.database.input().type('{selectall}cloudtrail{enter}');

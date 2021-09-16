@@ -75,7 +75,6 @@ export function QueryEditor(props: Props) {
     props.onRunQuery();
   };
 
-
   return (
     <>
       <ResourceMacros

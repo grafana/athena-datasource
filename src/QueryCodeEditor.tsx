@@ -6,7 +6,6 @@ import { getTemplateSrv } from '@grafana/runtime';
 import { buildGetSuggestions } from 'Suggestions';
 import { AthenaQuery, defaultQuery } from './types';
 
-
 type Props = {
   query: AthenaQuery;
   onChange: (value: AthenaQuery) => void;
@@ -24,7 +23,7 @@ export function QueryCodeEditor(props: Props) {
     props.onRunQuery();
   };
 
-  const getSuggestions = buildGetSuggestions({ query: props.query, templateSrv: getTemplateSrv() })
+  const getSuggestions = buildGetSuggestions({ query: props.query, templateSrv: getTemplateSrv() });
 
   return (
     <CodeEditor

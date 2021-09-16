@@ -30,6 +30,8 @@ export interface AthenaQuery extends DataQuery {
     catalog: string;
     database: string;
   };
+  table?: string;
+  column?: string;
 }
 
 export const defaultKey = '__default';

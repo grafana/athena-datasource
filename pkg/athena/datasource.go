@@ -36,6 +36,8 @@ type AthenaDatasourceIface interface {
 	DataCatalogs(ctx context.Context, region string) ([]string, error)
 	Databases(ctx context.Context, region, catalog string) ([]string, error)
 	Workgroups(ctx context.Context, region string) ([]string, error)
+	TablesWithConnectionDetails(ctx context.Context, region, catalog, database string) ([]string, error)
+	ColumnsWithConnectionDetails(ctx context.Context, region, catalog, database, table string) ([]string, error)
 }
 
 type ConnectionArgs struct {
@@ -162,14 +164,62 @@ func (s *AthenaDatasource) Schemas(ctx context.Context) ([]string, error) {
 	return []string{}, nil
 }
 
+// do not use Tables, use TablesWithConnectionDetails instead
 func (s *AthenaDatasource) Tables(ctx context.Context, schema string) ([]string, error) {
-	// TBD
-	return []string{}, nil
+	return []string{}, errors.New("/tables endpoint is intentionally disabled for athena")
 }
 
+func (s *AthenaDatasource) TablesWithConnectionDetails(ctx context.Context, region string, catalog string, database string) ([]string, error) {
+	// get the api
+	api, err := s.getApi(ctx, region, catalog)
+	if err != nil {
+		return nil, err
+	}
+	
+	// gets setings with passed in region, catalog, database, replacing __defaults as necessary
+	args := &ConnectionArgs{Region: region, Catalog: catalog, Database: database} 
+	datasourceID := getDatasourceID(ctx)
+	defaultSettings, err := s.defaultSettings(datasourceID)
+	if err != nil {
+		return nil, err
+	}
+	settings, err := s.athenaSettings(defaultSettings, args)
+	if err != nil {
+		return nil, err
+	}
+
+	// call api with correct settings
+	return api.ListTables(ctx, settings.Catalog, settings.Database)
+}
+
+// do not use Columns, use ColumnsWithConnectionDetails instead
 func (s *AthenaDatasource) Columns(ctx context.Context, table string) ([]string, error) {
-	// TBD
-	return []string{}, nil
+	return []string{}, errors.New("/columns endpoint is intentionally disabled for athena")
+}
+
+func (s *AthenaDatasource) ColumnsWithConnectionDetails(ctx context.Context, region string, catalog string, database string, table string) ([]string, error) {
+	if (table == "") {
+		return nil, nil
+	}
+
+	api, err := s.getApi(ctx, region, catalog)
+	if err != nil {
+		return nil, err
+	}
+	
+	// gets setings with passed in region, catalog, database, replacing defaults as necessary
+	args := &ConnectionArgs{Region: region, Catalog: catalog, Database: database} 
+	datasourceID := getDatasourceID(ctx)
+	defaultSettings, err := s.defaultSettings(datasourceID)
+	if err != nil {
+		return nil, err
+	}
+	settings, err := s.athenaSettings(defaultSettings, args)
+	if err != nil {
+		return nil, err
+	}
+
+	return api.ListColumnsForTable(ctx, settings.Catalog, settings.Database, table)
 }
 
 func getDatasourceID(ctx context.Context) int64 {

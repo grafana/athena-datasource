@@ -44,6 +44,8 @@ type ResourceHandler struct {
 type reqBody struct {
 	Region  string `json:"region"`
 	Catalog string `json:"catalog,omitempty"`
+	Database string `json:"database,omitempty"`
+	Table string `json:"table,omitempty"`
 }
 
 func New(ds *athena.AthenaDatasource) *ResourceHandler {
@@ -125,11 +127,36 @@ func (r *ResourceHandler) workgroups(rw http.ResponseWriter, req *http.Request) 
 	sendResponse(res, err, rw)
 }
 
+func (r *ResourceHandler) tablesWithConnectionDetails(rw http.ResponseWriter, req *http.Request) {
+	reqBody, err := parseBody(req.Body)
+	if err != nil {
+		rw.WriteHeader(http.StatusBadRequest)
+		write(rw, []byte(err.Error()))
+		return
+	}
+	res, err := r.ds.TablesWithConnectionDetails(req.Context(), reqBody.Region, reqBody.Catalog, reqBody.Database)
+	sendResponse(res, err, rw)
+}
+
+func (r *ResourceHandler) columnsWithConnectionDetails(rw http.ResponseWriter, req *http.Request) {
+	reqBody, err := parseBody(req.Body)
+	if err != nil {
+		rw.WriteHeader(http.StatusBadRequest)
+		write(rw, []byte(err.Error()))
+		return
+	}
+
+	res, err := r.ds.ColumnsWithConnectionDetails(req.Context(), reqBody.Region, reqBody.Catalog, reqBody.Database, reqBody.Table)
+	sendResponse(res, err, rw)
+}
+
 func (r *ResourceHandler) Routes() map[string]func(http.ResponseWriter, *http.Request) {
 	return map[string]func(http.ResponseWriter, *http.Request){
 		"/regions":    r.regions,
 		"/catalogs":   r.catalogs,
 		"/databases":  r.databases,
 		"/workgroups": r.workgroups,
+		"/tablesWithConnectionDetails": r.tablesWithConnectionDetails,
+		"/columnsWithConnectionDetails": r.columnsWithConnectionDetails,
 	}
 }

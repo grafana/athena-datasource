@@ -7,6 +7,7 @@ import { AthenaDataSourceOptions, AthenaQuery, defaultQuery, FormatOptions, Sele
 import { InlineField, InlineSegmentGroup, Select } from '@grafana/ui';
 import { AthenaResourceSelector } from 'AthenaResourceSelector';
 import { QueryCodeEditor } from 'QueryCodeEditor';
+import { ResourceMacros } from 'ResourceMacros';
 
 type Props = QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions>;
 
@@ -29,6 +30,8 @@ export function QueryEditor(props: Props) {
     setRegion(region || '');
     props.onChange({
       ...props.query,
+      table: '',
+      column: '',
       connectionArgs: {
         ...connectionArgs,
         region: region || '',
@@ -40,6 +43,8 @@ export function QueryEditor(props: Props) {
     setCatalog(catalog);
     props.onChange({
       ...props.query,
+      table: '',
+      column: '',
       connectionArgs: {
         ...connectionArgs,
         catalog: catalog || '',
@@ -51,6 +56,8 @@ export function QueryEditor(props: Props) {
     setDatabase(database);
     props.onChange({
       ...props.query,
+      table: '',
+      column: '',
       connectionArgs: {
         ...connectionArgs,
         database: database || '',
@@ -68,8 +75,16 @@ export function QueryEditor(props: Props) {
     props.onRunQuery();
   };
 
+
   return (
     <>
+      <ResourceMacros
+        query={props.query}
+        datasource={props.datasource}
+        onChange={props.onChange}
+        onRunQuery={props.onRunQuery}
+        dependencies={[region, catalog, database].join('')}
+      />
       <QueryCodeEditor query={props.query} onChange={props.onChange} onRunQuery={props.onRunQuery} />
       <InlineField label="Format as">
         <Select options={SelectableFormatOptions} value={format} onChange={onChangeFormat} />

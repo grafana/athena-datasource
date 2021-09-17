@@ -10,15 +10,19 @@ export const Components = {
     },
     catalog: {
       input: 'Catalog (datasource)',
+      wrapper: 'data-testid onloadcatalog',
     },
     database: {
       input: 'Database',
+      wrapper: 'data-testid onloaddatabase',
     },
     workgroup: {
       input: 'Workgroup',
+      wrapper: 'data-testid onloadworkgroup',
     },
     region: {
       input: 'Region',
+      wrapper: 'data-testid onloadregion',
     },
   },
   QueryEditor: {

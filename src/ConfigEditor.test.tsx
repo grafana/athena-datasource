@@ -46,7 +46,7 @@ describe('ConfigEditor', () => {
     const onChange = jest.fn();
     render(<ConfigEditor {...props} onOptionsChange={onChange} />);
 
-    const d = screen.getByTestId('onloaddatabase');
+    const d = screen.getByTestId(selectors.components.ConfigEditor.database.wrapper);
     expect(d).toBeInTheDocument();
     d.click();
 
@@ -65,7 +65,7 @@ describe('ConfigEditor', () => {
     const onChange = jest.fn();
     render(<ConfigEditor {...props} onOptionsChange={onChange} />);
 
-    const d = screen.getByTestId('onloadworkgroup');
+    const d = screen.getByTestId(selectors.components.ConfigEditor.workgroup.wrapper);
     expect(d).toBeInTheDocument();
     d.click();
 

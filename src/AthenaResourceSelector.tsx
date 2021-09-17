@@ -102,7 +102,7 @@ export function AthenaResourceSelector(props: Props) {
 
   return (
     <InlineField label={selectors.components.ConfigEditor[props.resource].input} labelWidth={props.labelWidth}>
-      <div data-testid={`onload${props.resource}`} title={props.title}>
+      <div data-testid={selectors.components.ConfigEditor[props.resource].wrapper} title={props.title}>
         <Select
           aria-label={selectors.components.ConfigEditor[props.resource].input}
           options={options}

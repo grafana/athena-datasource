@@ -57,17 +57,17 @@ e2e.scenario({
             // Catalogs
             e2eSelectors.ConfigEditor.catalog.input().click({ force: true });
             // wait for it to load
-            e2e().get('[data-testid="onloadcatalog"]').contains(datasource.jsonData.catalog);
+            e2eSelectors.ConfigEditor.catalog.wrapper().contains(datasource.jsonData.catalog);
             e2eSelectors.ConfigEditor.catalog.input().type(datasource.jsonData.catalog).type('{enter}');
             // Databases
             e2eSelectors.ConfigEditor.database.input().click({ force: true });
             // wait for it to load
-            e2e().get('[data-testid="onloaddatabase"]').contains(datasource.jsonData.database);
+            e2eSelectors.ConfigEditor.database.wrapper().contains(datasource.jsonData.database);
             e2eSelectors.ConfigEditor.database.input().type(datasource.jsonData.database).type('{enter}');
             // Workgroups
             e2eSelectors.ConfigEditor.workgroup.input().click({ force: true });
             // wait for it to load
-            e2e().get('[data-testid="onloadworkgroup"]').contains(datasource.jsonData.workgroup);
+            e2eSelectors.ConfigEditor.workgroup.wrapper().contains(datasource.jsonData.workgroup);
             e2eSelectors.ConfigEditor.workgroup.input().type(datasource.jsonData.workgroup).type('{enter}');
           },
           type: 'Athena data source for Grafana',
@@ -109,7 +109,7 @@ e2e.scenario({
           queriesForm: () => {
             // Change database selection for query
             e2eSelectors.ConfigEditor.database.input().click({ force: true });
-            e2e().get('[data-testid="onloaddatabase"]').contains('cloudtrail');
+            e2eSelectors.ConfigEditor.database.wrapper().contains('cloudtrail');
             e2eSelectors.ConfigEditor.database.input().type('{selectall}cloudtrail{enter}');
 
             e2eSelectors.QueryEditor.CodeEditor.container().click({ force: true }).type(`{selectall}{enter}

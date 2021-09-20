@@ -157,6 +157,7 @@ export function QueryEditor(props: Props) {
             labelWidth={17}
             className="width-16"
           />
+          <h6>Frames</h6>
           <InlineField label="Format as" labelWidth={17}>
             <Select
               options={SelectableFormatOptions}

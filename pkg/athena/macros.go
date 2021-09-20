@@ -101,12 +101,16 @@ func macroDateFilter(query *sqlds.Query, args []string) (string, error) {
 }
 
 var macros = map[string]sqlds.MacroFunc{
+<<<<<<< HEAD
 	"dateFilter": macroDateFilter,
 	"parseTime":  macroParseTime,
 	"timeFilter": macroTimeFilter,
 	"timeFrom":   macroTimeFrom,
 	"timeGroup":  macroTimeGroup,
 	"timeTo":     macroTimeTo,
+=======
+	"dateFilter":      macroDateFilter,
+>>>>>>> b3fbd03 (Upgrade to new sqlds)
 }
 
 func (s *AthenaDatasource) Macros() sqlds.Macros {

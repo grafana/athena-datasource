@@ -42,10 +42,10 @@ type ResourceHandler struct {
 }
 
 type reqBody struct {
-	Region  string `json:"region"`
-	Catalog string `json:"catalog,omitempty"`
+	Region   string `json:"region"`
+	Catalog  string `json:"catalog,omitempty"`
 	Database string `json:"database,omitempty"`
-	Table string `json:"table,omitempty"`
+	Table    string `json:"table,omitempty"`
 }
 
 func New(ds *athena.AthenaDatasource) *ResourceHandler {
@@ -153,11 +153,11 @@ func (r *ResourceHandler) columnsWithConnectionDetails(rw http.ResponseWriter, r
 
 func (r *ResourceHandler) Routes() map[string]func(http.ResponseWriter, *http.Request) {
 	return map[string]func(http.ResponseWriter, *http.Request){
-		"/regions":    r.regions,
-		"/catalogs":   r.catalogs,
-		"/databases":  r.databases,
-		"/workgroups": r.workgroups,
-		"/tablesWithConnectionDetails": r.tablesWithConnectionDetails,
+		"/regions":                      r.regions,
+		"/catalogs":                     r.catalogs,
+		"/databases":                    r.databases,
+		"/workgroups":                   r.workgroups,
+		"/tablesWithConnectionDetails":  r.tablesWithConnectionDetails,
 		"/columnsWithConnectionDetails": r.columnsWithConnectionDetails,
 	}
 }

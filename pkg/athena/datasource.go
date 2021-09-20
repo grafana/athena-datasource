@@ -175,9 +175,9 @@ func (s *AthenaDatasource) TablesWithConnectionDetails(ctx context.Context, regi
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// gets setings with passed in region, catalog, database, replacing __defaults as necessary
-	args := &ConnectionArgs{Region: region, Catalog: catalog, Database: database} 
+	args := &ConnectionArgs{Region: region, Catalog: catalog, Database: database}
 	datasourceID := getDatasourceID(ctx)
 	defaultSettings, err := s.defaultSettings(datasourceID)
 	if err != nil {
@@ -198,7 +198,7 @@ func (s *AthenaDatasource) Columns(ctx context.Context, table string) ([]string,
 }
 
 func (s *AthenaDatasource) ColumnsWithConnectionDetails(ctx context.Context, region string, catalog string, database string, table string) ([]string, error) {
-	if (table == "") {
+	if table == "" {
 		return nil, nil
 	}
 
@@ -206,9 +206,9 @@ func (s *AthenaDatasource) ColumnsWithConnectionDetails(ctx context.Context, reg
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// gets setings with passed in region, catalog, database, replacing defaults as necessary
-	args := &ConnectionArgs{Region: region, Catalog: catalog, Database: database} 
+	args := &ConnectionArgs{Region: region, Catalog: catalog, Database: database}
 	datasourceID := getDatasourceID(ctx)
 	defaultSettings, err := s.defaultSettings(datasourceID)
 	if err != nil {

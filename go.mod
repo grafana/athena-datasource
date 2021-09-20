@@ -6,8 +6,8 @@ require (
 	github.com/aws/aws-sdk-go v1.37.32
 	github.com/google/go-cmp v0.5.5
 	github.com/grafana/grafana-aws-sdk v0.7.0
-	github.com/grafana/grafana-plugin-sdk-go v0.110.0
-	github.com/grafana/sqlds/v2 v2.1.1-0.20210909150504-1c981c05fd07
+	github.com/grafana/grafana-plugin-sdk-go v0.114.0
+	github.com/grafana/sqlds/v2 v2.2.0
 	github.com/jpillora/backoff v1.0.0
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.7.0

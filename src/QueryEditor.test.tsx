@@ -5,6 +5,7 @@ import { mockDatasource, mockQuery } from './__mocks__/datasource';
 import '@testing-library/jest-dom';
 import { select } from 'react-select-event';
 import { selectors } from 'tests/selectors';
+import { defaultKey } from 'types';
 
 const ds = mockDatasource;
 const q = mockQuery;
@@ -35,7 +36,7 @@ describe('QueryEditor', () => {
     expect(ds.getResource).toHaveBeenCalledWith('regions');
     expect(onChange).toHaveBeenCalledWith({
       ...q,
-      connectionArgs: { region: 'foo', catalog: '', database: '' },
+      connectionArgs: { ...q.connectionArgs, region: 'foo' },
     });
   });
 
@@ -49,10 +50,10 @@ describe('QueryEditor', () => {
 
     await select(selectEl, 'foo', { container: document.body });
 
-    expect(ds.postResource).toHaveBeenCalledWith('catalogs', { region: 'us-east-2' });
+    expect(ds.postResource).toHaveBeenCalledWith('catalogs', { region: defaultKey });
     expect(onChange).toHaveBeenCalledWith({
       ...q,
-      connectionArgs: { region: '__default', catalog: 'foo', database: '' },
+      connectionArgs: { ...q.connectionArgs, catalog: 'foo' },
     });
   });
 
@@ -67,7 +68,7 @@ describe('QueryEditor', () => {
 
     await select(selectEl, 'foo', { container: document.body });
 
-    expect(ds.postResource).toHaveBeenCalledWith('databases', { catalog: 'aws-catalog', region: 'us-east-2' });
+    expect(ds.postResource).toHaveBeenCalledWith('databases', { region: defaultKey, catalog: defaultKey });
     expect(onChange).toHaveBeenCalledWith({
       ...q,
       connectionArgs: { ...q.connectionArgs, database: 'foo' },
@@ -81,7 +82,7 @@ describe('QueryEditor', () => {
     ds.postResource = jest.fn().mockResolvedValue(['foo']);
     render(<QueryEditor {...props} onChange={onChange} onRunQuery={onRunQuery} />);
 
-    const selectEl = screen.getByLabelText('$__table =');
+    const selectEl = screen.getByLabelText('Table');
     expect(selectEl).toBeInTheDocument();
 
     await select(selectEl, 'foo', { container: document.body });
@@ -107,7 +108,7 @@ describe('QueryEditor', () => {
       />
     );
 
-    const selectEl = screen.getByLabelText('$__column =');
+    const selectEl = screen.getByLabelText('Column');
     expect(selectEl).toBeInTheDocument();
 
     await select(selectEl, 'columnName', { container: document.body });

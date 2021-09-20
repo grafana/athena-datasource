@@ -20,8 +20,8 @@ type MockAthenaClient struct {
 	Catalogs             []string
 	Databases            []string
 	Workgroups           []string
-	TableMetadataList           []string
-	Columns []string
+	TableMetadataList  	 []string
+	Columns              []string
 	athenaiface.AthenaAPI
 }
 

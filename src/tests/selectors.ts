@@ -24,6 +24,14 @@ export const Components = {
       input: 'Region',
       wrapper: 'data-testid onloadregion',
     },
+    table: {
+      input: 'Table',
+      wrapper: 'data-testid onloadtable',
+    },
+    column: {
+      input: 'Column',
+      wrapper: 'data-testid onloadcolumn',
+    },
   },
   QueryEditor: {
     CodeEditor: {

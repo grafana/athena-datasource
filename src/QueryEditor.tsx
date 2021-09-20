@@ -143,7 +143,7 @@ export function QueryEditor(props: Props) {
             fetch={fetchTables}
             onChange={onTableChange}
             dependencies={[region, catalog, database]}
-            tooltip="Use the selected table the $__table macro"
+            tooltip="Use the selected table with the $__table macro"
             labelWidth={17}
             className="width-16"
           />
@@ -153,7 +153,7 @@ export function QueryEditor(props: Props) {
             fetch={fetchColumns}
             onChange={onColumnChange}
             dependencies={[region, catalog, database, table]}
-            tooltip="Use the selected column the $__column macro"
+            tooltip="Use the selected column with the $__column macro"
             labelWidth={17}
             className="width-16"
           />

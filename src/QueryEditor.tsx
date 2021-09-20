@@ -148,7 +148,7 @@ export function QueryEditor(props: Props) {
             tooltip="Use the selected column the $__column macro"
           />
         </div>
-        <div style={{ minWidth: '70%', marginLeft: '10px' }}>
+        <div style={{ minWidth: '70%', marginLeft: '10px', flex: 1 }}>
           <QueryCodeEditor query={queryWithDefaults} onChange={props.onChange} onRunQuery={props.onRunQuery} />
         </div>
       </InlineSegmentGroup>

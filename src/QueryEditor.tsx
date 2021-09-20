@@ -144,7 +144,7 @@ export function QueryEditor(props: Props) {
             value={column}
             fetch={fetchColumns}
             onChange={onColumnChange}
-            dependencies={[region, catalog]}
+            dependencies={[region, catalog, database, table]}
             tooltip="Use the selected column the $__column macro"
           />
         </div>

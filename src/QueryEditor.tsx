@@ -107,13 +107,15 @@ export function QueryEditor(props: Props) {
   return (
     <>
       <InlineSegmentGroup>
-        <div>
+        <div className="gf-form-group">
           <AthenaResourceSelector
             resource="region"
             value={region}
             fetch={fetchRegions}
             onChange={onRegionChange}
             default={props.datasource.defaultRegion}
+            labelWidth={17}
+            className="width-16"
           />
           <AthenaResourceSelector
             resource="catalog"
@@ -122,6 +124,8 @@ export function QueryEditor(props: Props) {
             onChange={onCatalogChange}
             default={props.datasource.defaultCatalog}
             dependencies={[region]}
+            labelWidth={17}
+            className="width-16"
           />
           <AthenaResourceSelector
             resource="database"
@@ -130,6 +134,8 @@ export function QueryEditor(props: Props) {
             onChange={onDatabaseChange}
             default={props.datasource.defaultDatabase}
             dependencies={[region, catalog]}
+            labelWidth={17}
+            className="width-16"
           />
           <AthenaResourceSelector
             resource="table"
@@ -138,6 +144,8 @@ export function QueryEditor(props: Props) {
             onChange={onTableChange}
             dependencies={[region, catalog, database]}
             tooltip="Use the selected table the $__table macro"
+            labelWidth={17}
+            className="width-16"
           />
           <AthenaResourceSelector
             resource="column"
@@ -146,16 +154,21 @@ export function QueryEditor(props: Props) {
             onChange={onColumnChange}
             dependencies={[region, catalog, database, table]}
             tooltip="Use the selected column the $__column macro"
+            labelWidth={17}
+            className="width-16"
           />
+          <InlineField label="Format as" labelWidth={17}>
+            <Select
+              options={SelectableFormatOptions}
+              value={queryWithDefaults.format}
+              onChange={onChangeFormat}
+              className="width-16"
+            />
+          </InlineField>
         </div>
-        <div style={{ minWidth: '70%', marginLeft: '10px', flex: 1 }}>
+        <div style={{ minWidth: '400px', marginLeft: '10px', flex: 1 }}>
           <QueryCodeEditor query={queryWithDefaults} onChange={props.onChange} onRunQuery={props.onRunQuery} />
         </div>
-      </InlineSegmentGroup>
-      <InlineSegmentGroup>
-        <InlineField label="Format as">
-          <Select options={SelectableFormatOptions} value={queryWithDefaults.format} onChange={onChangeFormat} />
-        </InlineField>
       </InlineSegmentGroup>
     </>
   );

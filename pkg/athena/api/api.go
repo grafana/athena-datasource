@@ -113,7 +113,6 @@ func (c *API) ListTables(ctx aws.Context, catalog string, database string)([]str
 		nextToken = out.NextToken
 		for _, cat := range out.TableMetadataList {
 			res = append(res, *cat.Name)
-			
 		}
 		if nextToken == nil {
 			isFinished = true

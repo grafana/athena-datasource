@@ -101,6 +101,7 @@ func (r *ResourceHandler) catalogs(rw http.ResponseWriter, req *http.Request) {
 		write(rw, []byte(err.Error()))
 		return
 	}
+
 	res, err := r.ds.DataCatalogs(req.Context(), reqBody.Region)
 	sendResponse(res, err, rw)
 }

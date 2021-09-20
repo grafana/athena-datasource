@@ -166,7 +166,7 @@ func (s *AthenaDatasource) Schemas(ctx context.Context) ([]string, error) {
 
 // do not use Tables, use TablesWithConnectionDetails instead
 func (s *AthenaDatasource) Tables(ctx context.Context, schema string) ([]string, error) {
-	return []string{}, errors.New("/tables endpoint is intentionally disabled for athena")
+	return []string{}, errors.New("/tables endpoint is intentionally disabled for athena, please use /tablesWithConnectionDetails")
 }
 
 func (s *AthenaDatasource) TablesWithConnectionDetails(ctx context.Context, region string, catalog string, database string) ([]string, error) {
@@ -194,7 +194,7 @@ func (s *AthenaDatasource) TablesWithConnectionDetails(ctx context.Context, regi
 
 // do not use Columns, use ColumnsWithConnectionDetails instead
 func (s *AthenaDatasource) Columns(ctx context.Context, table string) ([]string, error) {
-	return []string{}, errors.New("/columns endpoint is intentionally disabled for athena")
+	return []string{}, errors.New("/columns endpoint is intentionally disabled for athena, please use /columnsWithConnectionDetails")
 }
 
 func (s *AthenaDatasource) ColumnsWithConnectionDetails(ctx context.Context, region string, catalog string, database string, table string) ([]string, error) {

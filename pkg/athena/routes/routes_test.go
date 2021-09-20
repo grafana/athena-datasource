@@ -21,6 +21,22 @@ var ds = &fake.AthenaFakeDatasource{
 	Wg: map[string][]string{
 		"us-east-2": {"wg1", "wg2"},
 	},
+	Tables: map[string]map[string]map[string][]string{
+		"us-east-2": {
+			"catalog": {
+				"database": []string{"tb1", "tb2"},
+			},
+		},
+	},
+	Columns: map[string]map[string]map[string]map[string][]string{
+		"us-east-2": {
+			"catalog": {
+				"database": {
+					"table": []string{"c1", "c2"},
+				},
+			},
+		},
+	},
 }
 
 func TestRoutes(t *testing.T) {
@@ -99,6 +115,20 @@ func TestRoutes(t *testing.T) {
 			reqBody:      []byte(`{"region":"us-east-3"}`),
 			expectedCode: http.StatusBadRequest,
 		},
+		{
+			description:    "tables with connection details",
+			route:          "tablesWithConnectionDetails",
+			reqBody:        []byte(`{"region":"us-east-2","catalog":"catalog","database":"database"}`),
+			expectedCode:   http.StatusOK,
+			expectedResult: `["tb1","tb2"]`,
+		},
+		{
+			description:    "columns with connection details",
+			route:          "columnsWithConnectionDetails",
+			reqBody:        []byte(`{"region":"us-east-2","catalog":"catalog","database":"database","table":"table"}`),
+			expectedCode:   http.StatusOK,
+			expectedResult: `["c1","c2"]`,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.description, func(t *testing.T) {
@@ -114,6 +144,10 @@ func TestRoutes(t *testing.T) {
 				rh.databases(rw, req)
 			case "workgroups":
 				rh.workgroups(rw, req)
+			case "tablesWithConnectionDetails":
+				rh.tablesWithConnectionDetails(rw, req)
+			case "columnsWithConnectionDetails":
+				rh.columnsWithConnectionDetails(rw, req)
 			default:
 				t.Fatalf("unexpected route %s", tt.route)
 			}

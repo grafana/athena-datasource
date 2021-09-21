@@ -114,8 +114,8 @@ export function QueryEditor(props: Props) {
             fetch={fetchRegions}
             onChange={onRegionChange}
             default={props.datasource.defaultRegion}
-            labelWidth={17}
-            className="width-16"
+            labelWidth={11}
+            className="width-12"
           />
           <AthenaResourceSelector
             resource="catalog"
@@ -124,8 +124,8 @@ export function QueryEditor(props: Props) {
             onChange={onCatalogChange}
             default={props.datasource.defaultCatalog}
             dependencies={[region]}
-            labelWidth={17}
-            className="width-16"
+            labelWidth={11}
+            className="width-12"
           />
           <AthenaResourceSelector
             resource="database"
@@ -134,8 +134,8 @@ export function QueryEditor(props: Props) {
             onChange={onDatabaseChange}
             default={props.datasource.defaultDatabase}
             dependencies={[region, catalog]}
-            labelWidth={17}
-            className="width-16"
+            labelWidth={11}
+            className="width-12"
           />
           <AthenaResourceSelector
             resource="table"
@@ -144,8 +144,8 @@ export function QueryEditor(props: Props) {
             onChange={onTableChange}
             dependencies={[region, catalog, database]}
             tooltip="Use the selected table with the $__table macro"
-            labelWidth={17}
-            className="width-16"
+            labelWidth={11}
+            className="width-12"
           />
           <AthenaResourceSelector
             resource="column"
@@ -154,16 +154,16 @@ export function QueryEditor(props: Props) {
             onChange={onColumnChange}
             dependencies={[region, catalog, database, table]}
             tooltip="Use the selected column with the $__column macro"
-            labelWidth={17}
-            className="width-16"
+            labelWidth={11}
+            className="width-12"
           />
           <h6>Frames</h6>
-          <InlineField label="Format as" labelWidth={17}>
+          <InlineField label="Format as" labelWidth={11}>
             <Select
               options={SelectableFormatOptions}
               value={queryWithDefaults.format}
               onChange={onChangeFormat}
-              className="width-16"
+              className="width-12"
             />
           </InlineField>
         </div>

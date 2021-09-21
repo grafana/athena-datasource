@@ -24,7 +24,7 @@ describe('AthenaResourceSelector', () => {
     render(<AthenaResourceSelector {...props} default="foo" value={defaultKey} fetch={fetch} onChange={onChange} />);
     expect(screen.queryByText('default (foo)')).toBeInTheDocument();
 
-    const selectEl = screen.getByLabelText('Catalog (datasource)');
+    const selectEl = screen.getByLabelText('Data source');
     expect(selectEl).toBeInTheDocument();
 
     await select(selectEl, 'bar', { container: document.body });

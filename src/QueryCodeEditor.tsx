@@ -27,7 +27,7 @@ export function QueryCodeEditor(props: Props) {
 
   return (
     <CodeEditor
-      height={'250px'}
+      height={'240px'}
       language={'sql'}
       value={rawSQL}
       onBlur={onRawSqlChange}

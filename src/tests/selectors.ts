@@ -9,7 +9,7 @@ export const Components = {
       input: 'Config editor access key input',
     },
     catalog: {
-      input: 'Catalog (datasource)',
+      input: 'Data source',
       wrapper: 'data-testid onloadcatalog',
     },
     database: {

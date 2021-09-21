@@ -1,8 +1,10 @@
 import { defaults } from 'lodash';
 
 import React from 'react';
-import { AthenaQuery, defaultQuery } from './types';
 import { CodeEditor } from '@grafana/ui';
+import { getTemplateSrv } from '@grafana/runtime';
+import { buildGetSuggestions } from 'Suggestions';
+import { AthenaQuery, defaultQuery } from './types';
 
 type Props = {
   query: AthenaQuery;
@@ -21,15 +23,18 @@ export function QueryCodeEditor(props: Props) {
     props.onRunQuery();
   };
 
+  const getSuggestions = buildGetSuggestions({ query: props.query, templateSrv: getTemplateSrv() });
+
   return (
     <CodeEditor
-      height={'250px'}
+      height={'240px'}
       language={'sql'}
       value={rawSQL}
       onBlur={onRawSqlChange}
-      onSave={onRawSqlChange}
+      // removed onSave due to bug: https://github.com/grafana/grafana/issues/39264
       showMiniMap={false}
       showLineNumbers={true}
+      getSuggestions={getSuggestions}
     />
   );
 }

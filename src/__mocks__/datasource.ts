@@ -71,4 +71,6 @@ export const mockQuery: AthenaQuery = {
   format: 1,
   rawSQL: 'select 1',
   refId: '',
+  table: undefined,
+  column: undefined,
 };

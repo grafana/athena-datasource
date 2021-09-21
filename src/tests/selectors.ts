@@ -9,7 +9,7 @@ export const Components = {
       input: 'Config editor access key input',
     },
     catalog: {
-      input: 'Catalog (datasource)',
+      input: 'Data source',
       wrapper: 'data-testid onloadcatalog',
     },
     database: {
@@ -23,6 +23,14 @@ export const Components = {
     region: {
       input: 'Region',
       wrapper: 'data-testid onloadregion',
+    },
+    table: {
+      input: 'Table',
+      wrapper: 'data-testid onloadtable',
+    },
+    column: {
+      input: 'Column',
+      wrapper: 'data-testid onloadcolumn',
     },
   },
   QueryEditor: {

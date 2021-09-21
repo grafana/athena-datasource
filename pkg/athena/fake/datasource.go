@@ -15,7 +15,9 @@ type AthenaFakeDatasource struct {
 	// regions -> catalogs -> databases
 	Resources map[string]map[string][]string
 	// regions -> workgroups
-	Wg map[string][]string
+	Wg      map[string][]string
+	Tables  map[string]map[string]map[string][]string
+	Columns map[string]map[string]map[string]map[string][]string
 }
 
 func (s *AthenaFakeDatasource) Settings(_ backend.DataSourceInstanceSettings) sqlds.DriverSettings {
@@ -60,4 +62,12 @@ func (s *AthenaFakeDatasource) Workgroups(ctx context.Context, region string) ([
 		return nil, fmt.Errorf("missing region %s", region)
 	}
 	return s.Wg[region], nil
+}
+
+func (s *AthenaFakeDatasource) TablesWithConnectionDetails(ctx context.Context, region string, catalog string, database string) ([]string, error) {
+	return s.Tables[region][catalog][database], nil
+}
+
+func (s *AthenaFakeDatasource) ColumnsWithConnectionDetails(ctx context.Context, region string, catalog string, database string, table string) ([]string, error) {
+	return s.Columns[region][catalog][database][table], nil
 }

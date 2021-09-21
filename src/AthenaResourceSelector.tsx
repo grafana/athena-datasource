@@ -6,7 +6,7 @@ import { selectors } from './tests/selectors';
 import { isEqual } from 'lodash';
 import { defaultKey } from 'types';
 
-export type QueryResourceType = ResourceType | 'region';
+export type QueryResourceType = ResourceType | 'region' | 'table' | 'column';
 
 type Props = {
   resource: QueryResourceType;
@@ -14,6 +14,7 @@ type Props = {
   fetch: () => Promise<string[]>;
   onChange: (v: string | null) => void;
   dependencies?: Array<string | null>;
+  tooltip?: string;
   // Options only needed for QueryEditor
   default?: string;
   // Options only needed for the ConfigEditor
@@ -101,7 +102,11 @@ export function AthenaResourceSelector(props: Props) {
   };
 
   return (
-    <InlineField label={selectors.components.ConfigEditor[props.resource].input} labelWidth={props.labelWidth}>
+    <InlineField
+      label={selectors.components.ConfigEditor[props.resource].input}
+      labelWidth={props.labelWidth}
+      tooltip={props.tooltip}
+    >
       <div data-testid={selectors.components.ConfigEditor[props.resource].wrapper} title={props.title}>
         <Select
           aria-label={selectors.components.ConfigEditor[props.resource].input}

@@ -20,7 +20,8 @@ type MockAthenaClient struct {
 	Catalogs             []string
 	Databases            []string
 	Workgroups           []string
-
+	TableMetadataList    []string
+	Columns              []string
 	athenaiface.AthenaAPI
 }
 
@@ -151,6 +152,23 @@ func (m *MockAthenaClient) ListWorkGroupsWithContext(ctx aws.Context, input *ath
 	r := &athena.ListWorkGroupsOutput{}
 	for _, c := range m.Workgroups {
 		r.WorkGroups = append(r.WorkGroups, &athena.WorkGroupSummary{Name: aws.String(c)})
+	}
+	return r, nil
+}
+
+func (m *MockAthenaClient) ListTableMetadataWithContext(ctx aws.Context, input *athena.ListTableMetadataInput, opts ...request.Option) (*athena.ListTableMetadataOutput, error) {
+	r := &athena.ListTableMetadataOutput{}
+	for _, c := range m.TableMetadataList {
+		r.TableMetadataList = append(r.TableMetadataList, &athena.TableMetadata{Name: aws.String(c)})
+	}
+	return r, nil
+}
+
+func (m *MockAthenaClient) GetTableMetadataWithContext(ctx aws.Context, input *athena.GetTableMetadataInput, opts ...request.Option) (*athena.GetTableMetadataOutput, error) {
+	r := &athena.GetTableMetadataOutput{}
+	r.TableMetadata = &athena.TableMetadata{Name: aws.String("fake table metadata")}
+	for _, c := range m.Columns {
+		r.TableMetadata.Columns = append(r.TableMetadata.Columns, &athena.Column{Name: aws.String(c)})
 	}
 	return r, nil
 }

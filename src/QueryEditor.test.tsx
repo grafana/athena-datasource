@@ -75,4 +75,53 @@ describe('QueryEditor', () => {
     });
     expect(onRunQuery).toHaveBeenCalled();
   });
+
+  it('should request select tables and execute the query', async () => {
+    const onChange = jest.fn();
+    const onRunQuery = jest.fn();
+    ds.postResource = jest.fn().mockResolvedValue(['foo']);
+    render(<QueryEditor {...props} onChange={onChange} onRunQuery={onRunQuery} />);
+
+    const selectEl = screen.getByLabelText('Table');
+    expect(selectEl).toBeInTheDocument();
+
+    await select(selectEl, 'foo', { container: document.body });
+
+    expect(ds.postResource).toHaveBeenCalledWith('tablesWithConnectionDetails', { ...q.connectionArgs });
+    expect(onChange).toHaveBeenCalledWith({
+      ...q,
+      table: 'foo',
+    });
+    expect(onRunQuery).toHaveBeenCalled();
+  });
+
+  it('should request select columns and execute the query', async () => {
+    const onChange = jest.fn();
+    const onRunQuery = jest.fn();
+    ds.postResource = jest.fn().mockResolvedValue(['columnName']);
+    render(
+      <QueryEditor
+        {...props}
+        onChange={onChange}
+        onRunQuery={onRunQuery}
+        query={{ ...props.query, table: 'tableName' }}
+      />
+    );
+
+    const selectEl = screen.getByLabelText('Column');
+    expect(selectEl).toBeInTheDocument();
+
+    await select(selectEl, 'columnName', { container: document.body });
+
+    expect(ds.postResource).toHaveBeenCalledWith('columnsWithConnectionDetails', {
+      ...q.connectionArgs,
+      table: 'tableName',
+    });
+    expect(onChange).toHaveBeenCalledWith({
+      ...q,
+      column: 'columnName',
+      table: 'tableName',
+    });
+    expect(onRunQuery).toHaveBeenCalled();
+  });
 });

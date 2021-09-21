@@ -43,3 +43,27 @@ func TestConnection_ListWorkgroups(t *testing.T) {
 		t.Errorf("unexpected result: %v", cmp.Diff(expected, res))
 	}
 }
+
+func TestConnection_ListTables(t *testing.T) {
+	expected := []string{"foo"}
+	c := &API{Client: &athenaclientmock.MockAthenaClient{TableMetadataList: expected}}
+	res, err := c.ListTables(context.TODO(), "catalog", "database")
+	if err != nil {
+		t.Fatalf("unexpected error %v", err)
+	}
+	if !cmp.Equal(expected, res) {
+		t.Errorf("unexpected result: %v", cmp.Diff(expected, res))
+	}
+}
+
+func TestConnection_ListColumnsForTable(t *testing.T) {
+	expected := []string{"foo"}
+	c := &API{Client: &athenaclientmock.MockAthenaClient{Columns: expected}}
+	res, err := c.ListColumnsForTable(context.TODO(), "catalog", "database", "table")
+	if err != nil {
+		t.Fatalf("unexpected error %v", err)
+	}
+	if !cmp.Equal(expected, res) {
+		t.Errorf("unexpected result: %v", cmp.Diff(expected, res))
+	}
+}

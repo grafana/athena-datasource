@@ -11,6 +11,31 @@ export const buildGetSuggestions = ({ templateSrv, query }: { templateSrv: Templ
         detail: '(Macro)',
       },
       {
+        label: '$__parseTime',
+        kind: CodeEditorSuggestionItemKind.Method,
+        detail: '(Macro)',
+      },
+      {
+        label: '$__timeFilter',
+        kind: CodeEditorSuggestionItemKind.Method,
+        detail: '(Macro)',
+      },
+      {
+        label: '$__timeFrom',
+        kind: CodeEditorSuggestionItemKind.Method,
+        detail: '(Macro)',
+      },
+      {
+        label: '$__timeTo',
+        kind: CodeEditorSuggestionItemKind.Method,
+        detail: '(Macro)',
+      },
+      {
+        label: '$__timeGroup',
+        kind: CodeEditorSuggestionItemKind.Method,
+        detail: '(Macro)',
+      },
+      {
         label: '$__table',
         kind: CodeEditorSuggestionItemKind.Text,
         detail: `(Macro) ${query.table}`,

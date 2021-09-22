@@ -48,6 +48,14 @@ Make sure you have the following dependencies installed first:
 
 ## Build a release for the Athena data source plugin
 
+### Pre-requisites
+
+Before doing a release, make sure that the GitHub repository is configured with a `GRAFANA_API_KEY` to be able to sign the plugin and that the Golang and Node versions in the [release.yaml](./.github/workflows/release.yaml) workflow are correct.
+
+Also, make sure that the path to the plugin validator is correct: `pushd ./plugin-validator/pkg/cmd/plugincheck`.
+
+### Release
+
 You need to have commit rights to the GitHub repository to publish a release.
 
 1. Update the version number in the `package.json` file.

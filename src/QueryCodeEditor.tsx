@@ -30,8 +30,14 @@ export function QueryCodeEditor(props: Props) {
       height={'240px'}
       language={'sql'}
       value={rawSQL}
-      onBlur={onRawSqlChange}
-      // removed onSave due to bug: https://github.com/grafana/grafana/issues/39264
+      onBlur={(rawSQL) => {
+        console.log('onBlur has been called, props.query.table is defined', props.query.table);
+        onRawSqlChange(rawSQL);
+      }}
+      onSave={(rawSQL) => {
+        console.log('onSave has been called, props.query.table is sometimes undefined', props.query.table);
+        onRawSqlChange(rawSQL);
+      }}
       showMiniMap={false}
       showLineNumbers={true}
       getSuggestions={getSuggestions}

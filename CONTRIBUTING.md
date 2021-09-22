@@ -52,7 +52,11 @@ Make sure you have the following dependencies installed first:
 
 Before doing a release, make sure that the GitHub repository is configured with a `GRAFANA_API_KEY` to be able to sign the plugin and that the Golang and Node versions in the [release.yaml](./.github/workflows/release.yaml) workflow are correct.
 
-Also, make sure that the path to the plugin validator is correct: `pushd ./plugin-validator/pkg/cmd/plugincheck`.
+Also, make sure that the path to the plugin validator in the [release.yaml](./.github/workflows/release.yaml#L122) is correct (this fixes the error `pushd: ./plugin-validator/cmd/plugincheck: No such file or directory`):
+
+```
+pushd ./plugin-validator/pkg/cmd/plugincheck`
+```
 
 ### Release
 

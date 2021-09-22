@@ -127,7 +127,10 @@ AND
 GROUP BY 1 
 ORDER BY 1 
 `);
-            e2eSelectors.RefreshPicker.runButton().first().click({ force: true });
+            // blur and wait for loading
+            cy.get('.panel-content').click();
+            cy.get('.panel-loading');
+            cy.get('.panel-loading', { timeout: 10000 }).should('not.exist');
           },
         });
 

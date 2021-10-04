@@ -1,13 +1,20 @@
 {
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
   "type": "datasource",
-  "name": "Athena data source for Grafana",
+  "name": "Amazon Athena",
   "id": "grafana-athena-datasource",
   "metrics": true,
   "backend": true,
   "executable": "gpx_athena",
   "alerting": true,
   "annotations": true,
+  "includes": [
+    {
+      "type": "dashboard",
+      "name": "Cost Usage Report Monitoring",
+      "path": "dashboards/cur-monitoring.json"
+    }
+  ],
   "info": {
     "description": "Use Amazon Athena with Grafana",
     "author": {

@@ -1,6 +1,6 @@
 import { defaults } from 'lodash';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { CodeEditor, CodeEditorSuggestionItem } from '@grafana/ui';
 import { getTemplateSrv } from '@grafana/runtime';
 import { getSuggestions } from 'Suggestions';
@@ -26,7 +26,11 @@ export function QueryCodeEditor(props: Props) {
     props.onChange(query);
     props.onRunQuery();
   };
-  suggestions = getSuggestions({ query: props.query, templateSrv: getTemplateSrv() });
+
+  const { table, column } = props.query;
+  useEffect(() => {
+    suggestions = getSuggestions({ table, column, templateSrv: getTemplateSrv() });
+  }, [table, column]);
 
   return (
     <CodeEditor

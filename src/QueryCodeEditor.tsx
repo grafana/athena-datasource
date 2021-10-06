@@ -1,9 +1,9 @@
 import { defaults } from 'lodash';
 
 import React from 'react';
-import { CodeEditor } from '@grafana/ui';
+import { CodeEditor, CodeEditorSuggestionItem } from '@grafana/ui';
 import { getTemplateSrv } from '@grafana/runtime';
-import { buildGetSuggestions } from 'Suggestions';
+import { getSuggestions } from 'Suggestions';
 import { AthenaQuery, defaultQuery } from './types';
 
 type Props = {
@@ -11,6 +11,10 @@ type Props = {
   onChange: (value: AthenaQuery) => void;
   onRunQuery: () => void;
 };
+
+// getSuggestions result gets cached so we need to reference a var outside the component
+// related issue: https://github.com/grafana/grafana/issues/39264
+let suggestions: CodeEditorSuggestionItem[] = [];
 
 export function QueryCodeEditor(props: Props) {
   const { rawSQL } = defaults(props.query, defaultQuery);
@@ -22,8 +26,7 @@ export function QueryCodeEditor(props: Props) {
     props.onChange(query);
     props.onRunQuery();
   };
-
-  const getSuggestions = buildGetSuggestions({ query: props.query, templateSrv: getTemplateSrv() });
+  suggestions = getSuggestions({ query: props.query, templateSrv: getTemplateSrv() });
 
   return (
     <CodeEditor
@@ -31,10 +34,9 @@ export function QueryCodeEditor(props: Props) {
       language={'sql'}
       value={rawSQL}
       onBlur={onRawSqlChange}
-      // removed onSave due to bug: https://github.com/grafana/grafana/issues/39264
       showMiniMap={false}
       showLineNumbers={true}
-      getSuggestions={getSuggestions}
+      getSuggestions={() => suggestions}
     />
   );
 }

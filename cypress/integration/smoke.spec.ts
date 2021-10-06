@@ -102,7 +102,6 @@ e2e.scenario({
           ],
         });
 
-        // TODO use $__timeFilter and $__timeGroup when available
         e2e.flows.addPanel({
           matchScreenshot: true,
           visitDashboardAtStart: false,
@@ -112,18 +111,24 @@ e2e.scenario({
             e2eSelectors.ConfigEditor.database.wrapper().contains('cloudtrail');
             e2eSelectors.ConfigEditor.database.input().type('{selectall}cloudtrail{enter}');
 
+            // Select a table from the explorer
+            e2eSelectors.ConfigEditor.table.input().click({ force: true });
+            e2eSelectors.ConfigEditor.table.wrapper().contains('cloudtrail_logs');
+            e2eSelectors.ConfigEditor.table.input().type('cloudtrail_logs').type('{enter}');
+
+            // Verify editor suggestions
+            e2eSelectors.QueryEditor.CodeEditor.container().click({ force: true }).type(`{selectall}$__table`);
+            e2eSelectors.QueryEditor.CodeEditor.container().contains('(Macro) cloudtrail_logs');
+
             e2eSelectors.QueryEditor.CodeEditor.container().click({ force: true }).type(`{selectall}{enter}
 SELECT 
-    parse_datetime(eventtime,'yyyy-MM-dd''T''HH:mm:ss''Z') as time, 
+    $__parseTime(eventtime, 'yyyy-MM-dd''T''HH:mm:ss''Z'), 
     sum(cast(json_extract_scalar(additionaleventdata, '$.bytesTransferredOut') as real)) AS bytes 
 FROM 
-    cloudtrail_logs 
+    $__table 
 WHERE additionaleventdata IS NOT NULL AND json_extract_scalar(additionaleventdata, '$.bytesTransferredOut') IS NOT NULL 
 AND 
-    parse_datetime(eventtime,'yyyy-MM-dd''T''HH:mm:ss''Z') 
-      BETWEEN 
-        parse_datetime('2021-09-08 00:00:00','yyyy-MM-dd HH:mm:ss') 
-        AND parse_datetime('2021-09-08 12:00:00','yyyy-MM-dd HH:mm:ss') 
+    $__timeFilter(eventtime, 'yyyy-MM-dd''T''HH:mm:ss''Z') 
 GROUP BY 1 
 ORDER BY 1 
 `);

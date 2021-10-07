@@ -1,9 +1,9 @@
 import { defaults } from 'lodash';
 
-import React, { useEffect } from 'react';
-import { CodeEditor, CodeEditorSuggestionItem } from '@grafana/ui';
+import React, { useState, useEffect } from 'react';
+import { CodeEditor } from '@grafana/ui';
 import { getTemplateSrv } from '@grafana/runtime';
-import { getSuggestions } from 'Suggestions';
+import { Suggestions } from 'Suggestions';
 import { AthenaQuery, defaultQuery } from './types';
 
 type Props = {
@@ -11,10 +11,6 @@ type Props = {
   onChange: (value: AthenaQuery) => void;
   onRunQuery: () => void;
 };
-
-// getSuggestions result gets cached so we need to reference a var outside the component
-// related issue: https://github.com/grafana/grafana/issues/39264
-let suggestions: CodeEditorSuggestionItem[] = [];
 
 export function QueryCodeEditor(props: Props) {
   const { rawSQL } = defaults(props.query, defaultQuery);
@@ -26,11 +22,10 @@ export function QueryCodeEditor(props: Props) {
     props.onChange(query);
     props.onRunQuery();
   };
-
-  const { table, column } = props.query;
+  const [suggestions] = useState(new Suggestions({ query: props.query, templateSrv: getTemplateSrv() }));
   useEffect(() => {
-    suggestions = getSuggestions({ table, column, templateSrv: getTemplateSrv() });
-  }, [table, column]);
+    suggestions.query = props.query;
+  }, [props.query]);
 
   return (
     <CodeEditor
@@ -40,7 +35,7 @@ export function QueryCodeEditor(props: Props) {
       onBlur={onRawSqlChange}
       showMiniMap={false}
       showLineNumbers={true}
-      getSuggestions={() => suggestions}
+      getSuggestions={() => suggestions.list()}
     />
   );
 }

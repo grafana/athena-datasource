@@ -22,10 +22,17 @@ export function QueryCodeEditor(props: Props) {
     props.onChange(query);
     props.onRunQuery();
   };
-  const [suggestions] = useState(new Suggestions({ query: props.query, templateSrv: getTemplateSrv() }));
+  const [suggestions] = useState(
+    new Suggestions({ table: props.query.table, column: props.query.column, templateSrv: getTemplateSrv() })
+  );
   useEffect(() => {
-    suggestions.query = props.query;
-  }, [props.query]);
+    if (suggestions.table !== props.query.table) {
+      suggestions.table = props.query.table;
+    }
+    if (suggestions.column !== props.query.column) {
+      suggestions.column = props.query.column;
+    }
+  }, [suggestions, props.query.table, props.query.column]);
 
   return (
     <CodeEditor

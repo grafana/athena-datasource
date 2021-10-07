@@ -3,6 +3,7 @@ package driver
 import (
 	"context"
 	"database/sql/driver"
+	"errors"
 	"fmt"
 	"testing"
 	"time"
@@ -67,5 +68,37 @@ func TestConnection_waitOnQuery(t *testing.T) {
 			assert.Equal(t, tc.err.Error(), err.Error())
 		}
 		assert.Equal(t, tc.calledTimesCountDown, cliMock.CalledTimesCounter)
+	}
+}
+
+func TestConnection_waitOnQueryCancelled(t *testing.T) {
+	// add a big timeout to have time to cancel
+	backoffMin = 10000 * time.Millisecond
+	backoffMax = 10000 * time.Millisecond
+
+	cliMock := &athenaclientmock.MockAthenaClient{
+		CalledTimesCountDown: 5,
+	}
+	c := &conn{
+		athenaCli: cliMock,
+	}
+
+	ctx := context.Background()
+	ctx, cancel := context.WithCancel(ctx)
+	done := make(chan bool)
+
+	// start the execution in parallel
+	go func() {
+		err := c.waitOnQuery(ctx, "foo")
+		if err == nil || !errors.Is(err, context.Canceled) {
+			t.Errorf("unexpected error %v", err)
+		}
+		done <- true
+	}()
+	cancel()
+	<-done
+
+	if !cliMock.Cancelled {
+		t.Errorf("failed to cancel the request")
 	}
 }

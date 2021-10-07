@@ -11,6 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/athena"
 	"github.com/aws/aws-sdk-go/service/athena/athenaiface"
 	"github.com/grafana/athena-datasource/pkg/athena/models"
+	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"github.com/jpillora/backoff"
 )
 
@@ -76,6 +77,7 @@ func (c *conn) waitOnQuery(ctx context.Context, queryID string) error {
 		switch *statusResp.QueryExecution.Status.State {
 		case athena.QueryExecutionStateFailed:
 			reason := *statusResp.QueryExecution.Status.StateChangeReason
+			log.DefaultLogger.Debug("request failed", "query ID", queryID, "reason", reason)
 			return errors.New(reason)
 		case athena.QueryExecutionStateSucceeded:
 			return nil
@@ -83,7 +85,17 @@ func (c *conn) waitOnQuery(ctx context.Context, queryID string) error {
 
 		select {
 		case <-ctx.Done():
-			return ctx.Err()
+			err := ctx.Err()
+			if errors.Is(err, context.Canceled) {
+				_, err := c.athenaCli.StopQueryExecution(&athena.StopQueryExecutionInput{
+					QueryExecutionId: aws.String(queryID),
+				})
+				if err != nil {
+					return fmt.Errorf("%w: unable to stop query", err)
+				}
+			}
+			log.DefaultLogger.Debug("request failed", "query ID", queryID, "error", err)
+			return err
 		case <-time.After(backoffInstance.Duration()):
 			continue
 		}

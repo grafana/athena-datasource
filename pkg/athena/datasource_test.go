@@ -1,6 +1,7 @@
 package athena
 
 import (
+	"context"
 	"fmt"
 	"testing"
 
@@ -121,4 +122,17 @@ func TestConnection_athenaSettingsAndKey(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestConnection_ColumnsWithConnectionDetails(t *testing.T) {
+	t.Run("it should return an empty list if the table is not set", func(t *testing.T) {
+		ds := AthenaDatasource{}
+		tables, err := ds.ColumnsWithConnectionDetails(context.TODO(), "us-east1", "cat", "db", "")
+		if err != nil {
+			t.Errorf("unexpected error %v", err)
+		}
+		if tables == nil {
+			t.Errorf("unexpected null result")
+		}
+	})
 }

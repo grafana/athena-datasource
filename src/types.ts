@@ -38,7 +38,7 @@ export const defaultKey = '__default';
 
 export const defaultQuery: Partial<AthenaQuery> = {
   format: FormatOptions.Table,
-  rawSQL: 'select 1',
+  rawSQL: '',
   connectionArgs: {
     region: defaultKey,
     catalog: defaultKey,

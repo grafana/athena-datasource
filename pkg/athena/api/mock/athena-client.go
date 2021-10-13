@@ -22,6 +22,7 @@ type MockAthenaClient struct {
 	Workgroups           []string
 	TableMetadataList    []string
 	Columns              []string
+	Cancelled            bool
 	athenaiface.AthenaAPI
 }
 
@@ -171,4 +172,9 @@ func (m *MockAthenaClient) GetTableMetadataWithContext(ctx aws.Context, input *a
 		r.TableMetadata.Columns = append(r.TableMetadata.Columns, &athena.Column{Name: aws.String(c)})
 	}
 	return r, nil
+}
+
+func (m *MockAthenaClient) StopQueryExecution(input *athena.StopQueryExecutionInput) (*athena.StopQueryExecutionOutput, error) {
+	m.Cancelled = true
+	return &athena.StopQueryExecutionOutput{}, nil
 }

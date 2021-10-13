@@ -199,7 +199,7 @@ func (s *AthenaDatasource) Columns(ctx context.Context, table string) ([]string,
 
 func (s *AthenaDatasource) ColumnsWithConnectionDetails(ctx context.Context, region string, catalog string, database string, table string) ([]string, error) {
 	if table == "" {
-		return nil, nil
+		return []string{}, nil
 	}
 
 	api, err := s.getApi(ctx, region, catalog)

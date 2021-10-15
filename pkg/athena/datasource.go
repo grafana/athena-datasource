@@ -165,7 +165,6 @@ func (s *AthenaDatasource) Schemas(ctx context.Context, options sqlds.Options) (
 	return []string{}, nil
 }
 
-// do not use Tables, use TablesWithConnectionDetails instead
 func (s *AthenaDatasource) Tables(ctx context.Context, options sqlds.Options) ([]string, error) {
 	region, catalog, database := options["region"], options["catalog"], options["database"]
 	// get the api
@@ -190,7 +189,6 @@ func (s *AthenaDatasource) Tables(ctx context.Context, options sqlds.Options) ([
 	return api.ListTables(ctx, settings.Catalog, settings.Database)
 }
 
-// do not use Columns, use ColumnsWithConnectionDetails instead
 func (s *AthenaDatasource) Columns(ctx context.Context, options sqlds.Options) ([]string, error) {
 	region, catalog, database, table := options["region"], options["catalog"], options["database"], options["table"]
 	if table == "" {

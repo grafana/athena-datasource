@@ -1,9 +1,9 @@
 import { defaults } from 'lodash';
 
-import React, { useState, useEffect } from 'react';
-import { CodeEditor } from '@grafana/ui';
+import React, { useRef, useEffect } from 'react';
+import { CodeEditor, CodeEditorSuggestionItem } from '@grafana/ui';
 import { getTemplateSrv } from '@grafana/runtime';
-import { Suggestions } from 'Suggestions';
+import { getSuggestions } from 'Suggestions';
 import { AthenaQuery, defaultQuery } from './types';
 
 type Props = {
@@ -22,17 +22,10 @@ export function QueryCodeEditor(props: Props) {
     props.onChange(query);
     props.onRunQuery();
   };
-  const [suggestions] = useState(
-    new Suggestions({ table: props.query.table, column: props.query.column, templateSrv: getTemplateSrv() })
-  );
+  const suggestionsRef = useRef<CodeEditorSuggestionItem[]>([]);
   useEffect(() => {
-    if (suggestions.table !== props.query.table) {
-      suggestions.table = props.query.table;
-    }
-    if (suggestions.column !== props.query.column) {
-      suggestions.column = props.query.column;
-    }
-  }, [suggestions, props.query.table, props.query.column]);
+    suggestionsRef.current = getSuggestions(getTemplateSrv(), props.query.table, props.query.column);
+  }, [props.query.table, props.query.column]);
 
   return (
     <CodeEditor
@@ -42,7 +35,7 @@ export function QueryCodeEditor(props: Props) {
       onBlur={onRawSqlChange}
       showMiniMap={false}
       showLineNumbers={true}
-      getSuggestions={() => suggestions.list()}
+      getSuggestions={() => suggestionsRef.current}
     />
   );
 }

@@ -21,14 +21,14 @@ var ds = &fake.AthenaFakeDatasource{
 	Wg: map[string][]string{
 		"us-east-2": {"wg1", "wg2"},
 	},
-	Tables: map[string]map[string]map[string][]string{
+	ExistingTables: map[string]map[string]map[string][]string{
 		"us-east-2": {
 			"catalog": {
 				"database": []string{"tb1", "tb2"},
 			},
 		},
 	},
-	Columns: map[string]map[string]map[string]map[string][]string{
+	ExistingColumns: map[string]map[string]map[string]map[string][]string{
 		"us-east-2": {
 			"catalog": {
 				"database": {

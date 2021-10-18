@@ -33,11 +33,11 @@ type AthenaDatasource struct {
 
 type AthenaDatasourceIface interface {
 	sqlds.Driver
-	DataCatalogs(ctx context.Context, region string) ([]string, error)
-	Databases(ctx context.Context, region, catalog string) ([]string, error)
-	Workgroups(ctx context.Context, region string) ([]string, error)
-	TablesWithConnectionDetails(ctx context.Context, region, catalog, database string) ([]string, error)
-	ColumnsWithConnectionDetails(ctx context.Context, region, catalog, database, table string) ([]string, error)
+	DataCatalogs(ctx context.Context, options sqlds.Options) ([]string, error)
+	Databases(ctx context.Context, options sqlds.Options) ([]string, error)
+	Workgroups(ctx context.Context, options sqlds.Options) ([]string, error)
+	Tables(ctx context.Context, options sqlds.Options) ([]string, error)
+	Columns(ctx context.Context, options sqlds.Options) ([]string, error)
 }
 
 type ConnectionArgs struct {
@@ -159,17 +159,14 @@ func (s *AthenaDatasource) Converters() (sc []sqlutil.Converter) {
 	return sc
 }
 
-func (s *AthenaDatasource) Schemas(ctx context.Context) ([]string, error) {
-	// TBD
+func (s *AthenaDatasource) Schemas(ctx context.Context, options sqlds.Options) ([]string, error) {
+	// Athena uses an approach known as schema-on-read
+	// Ref: https://docs.aws.amazon.com/athena/latest/ug/creating-tables.html
 	return []string{}, nil
 }
 
-// do not use Tables, use TablesWithConnectionDetails instead
-func (s *AthenaDatasource) Tables(ctx context.Context, schema string) ([]string, error) {
-	return []string{}, errors.New("/tables endpoint is intentionally disabled for athena, please use /tablesWithConnectionDetails")
-}
-
-func (s *AthenaDatasource) TablesWithConnectionDetails(ctx context.Context, region string, catalog string, database string) ([]string, error) {
+func (s *AthenaDatasource) Tables(ctx context.Context, options sqlds.Options) ([]string, error) {
+	region, catalog, database := options["region"], options["catalog"], options["database"]
 	// get the api
 	api, err := s.getApi(ctx, region, catalog)
 	if err != nil {
@@ -192,12 +189,8 @@ func (s *AthenaDatasource) TablesWithConnectionDetails(ctx context.Context, regi
 	return api.ListTables(ctx, settings.Catalog, settings.Database)
 }
 
-// do not use Columns, use ColumnsWithConnectionDetails instead
-func (s *AthenaDatasource) Columns(ctx context.Context, table string) ([]string, error) {
-	return []string{}, errors.New("/columns endpoint is intentionally disabled for athena, please use /columnsWithConnectionDetails")
-}
-
-func (s *AthenaDatasource) ColumnsWithConnectionDetails(ctx context.Context, region string, catalog string, database string, table string) ([]string, error) {
+func (s *AthenaDatasource) Columns(ctx context.Context, options sqlds.Options) ([]string, error) {
+	region, catalog, database, table := options["region"], options["catalog"], options["database"], options["table"]
 	if table == "" {
 		return []string{}, nil
 	}
@@ -250,7 +243,8 @@ func (s *AthenaDatasource) getApi(ctx context.Context, region, catalog string) (
 	return c.(connection).api, nil
 }
 
-func (s *AthenaDatasource) DataCatalogs(ctx context.Context, region string) ([]string, error) {
+func (s *AthenaDatasource) DataCatalogs(ctx context.Context, options sqlds.Options) ([]string, error) {
+	region := options["region"]
 	api, err := s.getApi(ctx, region, "")
 	if err != nil {
 		return nil, err
@@ -258,7 +252,8 @@ func (s *AthenaDatasource) DataCatalogs(ctx context.Context, region string) ([]s
 	return api.ListDataCatalogs(ctx)
 }
 
-func (s *AthenaDatasource) Databases(ctx context.Context, region, catalog string) ([]string, error) {
+func (s *AthenaDatasource) Databases(ctx context.Context, options sqlds.Options) ([]string, error) {
+	region, catalog := options["region"], options["catalog"]
 	api, err := s.getApi(ctx, region, catalog)
 	if err != nil {
 		return nil, err
@@ -266,7 +261,8 @@ func (s *AthenaDatasource) Databases(ctx context.Context, region, catalog string
 	return api.ListDatabases(ctx, catalog)
 }
 
-func (s *AthenaDatasource) Workgroups(ctx context.Context, region string) ([]string, error) {
+func (s *AthenaDatasource) Workgroups(ctx context.Context, options sqlds.Options) ([]string, error) {
+	region := options["region"]
 	api, err := s.getApi(ctx, region, "")
 	if err != nil {
 		return nil, err

@@ -8,6 +8,7 @@ import (
 
 	"github.com/grafana/athena-datasource/pkg/athena"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
+	"github.com/grafana/sqlds/v2"
 )
 
 // regions from https://docs.aws.amazon.com/general/latest/gr/athena.html
@@ -41,13 +42,6 @@ type ResourceHandler struct {
 	ds athena.AthenaDatasourceIface
 }
 
-type reqBody struct {
-	Region   string `json:"region"`
-	Catalog  string `json:"catalog,omitempty"`
-	Database string `json:"database,omitempty"`
-	Table    string `json:"table,omitempty"`
-}
-
 func New(ds *athena.AthenaDatasource) *ResourceHandler {
 	return &ResourceHandler{ds: ds}
 }
@@ -59,13 +53,13 @@ func write(rw http.ResponseWriter, b []byte) {
 	}
 }
 
-func parseBody(body io.ReadCloser) (*reqBody, error) {
-	reqBody := &reqBody{}
+func parseBody(body io.ReadCloser) (sqlds.Options, error) {
+	reqBody := sqlds.Options{}
 	b, err := ioutil.ReadAll(body)
 	if err != nil {
 		return nil, err
 	}
-	err = json.Unmarshal(b, reqBody)
+	err = json.Unmarshal(b, &reqBody)
 	if err != nil {
 		return nil, err
 	}
@@ -102,7 +96,7 @@ func (r *ResourceHandler) catalogs(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	res, err := r.ds.DataCatalogs(req.Context(), reqBody.Region)
+	res, err := r.ds.DataCatalogs(req.Context(), reqBody)
 	sendResponse(res, err, rw)
 }
 
@@ -113,7 +107,7 @@ func (r *ResourceHandler) databases(rw http.ResponseWriter, req *http.Request) {
 		write(rw, []byte(err.Error()))
 		return
 	}
-	res, err := r.ds.Databases(req.Context(), reqBody.Region, reqBody.Catalog)
+	res, err := r.ds.Databases(req.Context(), reqBody)
 	sendResponse(res, err, rw)
 }
 
@@ -124,7 +118,7 @@ func (r *ResourceHandler) workgroups(rw http.ResponseWriter, req *http.Request) 
 		write(rw, []byte(err.Error()))
 		return
 	}
-	res, err := r.ds.Workgroups(req.Context(), reqBody.Region)
+	res, err := r.ds.Workgroups(req.Context(), reqBody)
 	sendResponse(res, err, rw)
 }
 
@@ -135,7 +129,7 @@ func (r *ResourceHandler) tablesWithConnectionDetails(rw http.ResponseWriter, re
 		write(rw, []byte(err.Error()))
 		return
 	}
-	res, err := r.ds.TablesWithConnectionDetails(req.Context(), reqBody.Region, reqBody.Catalog, reqBody.Database)
+	res, err := r.ds.Tables(req.Context(), reqBody)
 	sendResponse(res, err, rw)
 }
 
@@ -147,17 +141,15 @@ func (r *ResourceHandler) columnsWithConnectionDetails(rw http.ResponseWriter, r
 		return
 	}
 
-	res, err := r.ds.ColumnsWithConnectionDetails(req.Context(), reqBody.Region, reqBody.Catalog, reqBody.Database, reqBody.Table)
+	res, err := r.ds.Columns(req.Context(), reqBody)
 	sendResponse(res, err, rw)
 }
 
 func (r *ResourceHandler) Routes() map[string]func(http.ResponseWriter, *http.Request) {
 	return map[string]func(http.ResponseWriter, *http.Request){
-		"/regions":                      r.regions,
-		"/catalogs":                     r.catalogs,
-		"/databases":                    r.databases,
-		"/workgroups":                   r.workgroups,
-		"/tablesWithConnectionDetails":  r.tablesWithConnectionDetails,
-		"/columnsWithConnectionDetails": r.columnsWithConnectionDetails,
+		"/regions":    r.regions,
+		"/catalogs":   r.catalogs,
+		"/databases":  r.databases,
+		"/workgroups": r.workgroups,
 	}
 }

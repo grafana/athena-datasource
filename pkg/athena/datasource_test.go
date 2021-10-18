@@ -9,6 +9,7 @@ import (
 	"github.com/grafana/athena-datasource/pkg/athena/models"
 	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
+	"github.com/grafana/sqlds/v2"
 )
 
 func TestConnection_athenaSettingsAndKey(t *testing.T) {
@@ -124,10 +125,15 @@ func TestConnection_athenaSettingsAndKey(t *testing.T) {
 	}
 }
 
-func TestConnection_ColumnsWithConnectionDetails(t *testing.T) {
+func TestConnection_Columns(t *testing.T) {
 	t.Run("it should return an empty list if the table is not set", func(t *testing.T) {
 		ds := AthenaDatasource{}
-		tables, err := ds.ColumnsWithConnectionDetails(context.TODO(), "us-east1", "cat", "db", "")
+		tables, err := ds.Columns(context.TODO(), sqlds.Options{
+			"region":   "us-east1",
+			"catalog":  "cat",
+			"database": "db",
+			"table":    "",
+		})
 		if err != nil {
 			t.Errorf("unexpected error %v", err)
 		}

@@ -67,8 +67,7 @@ export function QueryEditor(props: Props) {
 
   // Tables selector
   const [table, setTable] = useState<string | null>(queryWithDefaults.table || null);
-  const fetchTables = async () =>
-    await props.datasource.postResource('tablesWithConnectionDetails', { region, catalog, database });
+  const fetchTables = async () => await props.datasource.postResource('tables', { region, catalog, database });
   const onTableChange = (newTable: string | null) => {
     setTable(newTable);
     props.onChange({
@@ -85,8 +84,7 @@ export function QueryEditor(props: Props) {
     ...queryWithDefaults.connectionArgs,
     table: queryWithDefaults.table,
   };
-  const fetchColumns = async () =>
-    await props.datasource.postResource('columnsWithConnectionDetails', columnDependencies);
+  const fetchColumns = async () => await props.datasource.postResource('columns', columnDependencies);
   const onColumnChange = (newColumn: string | null) => {
     setColumn(newColumn);
     props.onChange({

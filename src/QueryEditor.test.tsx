@@ -92,7 +92,7 @@ describe('QueryEditor', () => {
 
     await select(selectEl, 'foo', { container: document.body });
 
-    expect(ds.postResource).toHaveBeenCalledWith('tablesWithConnectionDetails', { ...q.connectionArgs });
+    expect(ds.postResource).toHaveBeenCalledWith('tables', { ...q.connectionArgs });
     expect(onChange).toHaveBeenCalledWith({
       ...q,
       table: 'foo',
@@ -118,7 +118,7 @@ describe('QueryEditor', () => {
 
     await select(selectEl, 'columnName', { container: document.body });
 
-    expect(ds.postResource).toHaveBeenCalledWith('columnsWithConnectionDetails', {
+    expect(ds.postResource).toHaveBeenCalledWith('columns', {
       ...q.connectionArgs,
       table: 'tableName',
     });

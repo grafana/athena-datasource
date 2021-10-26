@@ -6,7 +6,20 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	athenaclientmock "github.com/grafana/athena-datasource/pkg/athena/api/mock"
+	"github.com/grafana/athena-datasource/pkg/athena/models"
 )
+
+func TestConnection_Execute(t *testing.T) {
+	expectedID := "foo"
+	c := NewFake(&athenaclientmock.MockAthenaClient{}, &models.AthenaDataSourceSettings{})
+	out, err := c.Execute(context.TODO(), expectedID)
+	if err != nil {
+		t.Fatalf("unexpected error %v", err)
+	}
+	if *out.QueryExecutionId != expectedID {
+		t.Errorf("unexpected result: %v", cmp.Diff(out.QueryExecutionId, expectedID))
+	}
+}
 
 func TestConnection_ListDataCatalogs(t *testing.T) {
 	expectedCatalogs := []string{"foo"}

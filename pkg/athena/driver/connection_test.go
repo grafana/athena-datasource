@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/grafana/athena-datasource/pkg/athena/api"
 	athenaclientmock "github.com/grafana/athena-datasource/pkg/athena/api/mock"
 	"github.com/grafana/athena-datasource/pkg/athena/models"
 	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
@@ -16,13 +17,13 @@ import (
 
 func TestConnection_QueryContext(t *testing.T) {
 	c := &conn{
-		settings: &models.AthenaDataSourceSettings{
-			AWSDatasourceSettings: awsds.AWSDatasourceSettings{},
-			Database:              "test-Database",
-			Catalog:               "",
-			WorkGroup:             "test-Workgroup",
-		},
-		athenaCli: &athenaclientmock.MockAthenaClient{CalledTimesCountDown: 1},
+		api: api.NewFake(&athenaclientmock.MockAthenaClient{CalledTimesCountDown: 1},
+			&models.AthenaDataSourceSettings{
+				AWSDatasourceSettings: awsds.AWSDatasourceSettings{},
+				Database:              "test-Database",
+				Catalog:               "",
+				WorkGroup:             "test-Workgroup",
+			}),
 	}
 
 	failedOutput, err := c.QueryContext(context.Background(), athenaclientmock.FAKE_ERROR, []driver.NamedValue{})
@@ -55,7 +56,9 @@ func TestConnection_waitOnQuery(t *testing.T) {
 			CalledTimesCountDown: tc.calledTimesCountDown,
 		}
 		c := &conn{
-			athenaCli: cliMock,
+			api: &api.API{
+				Client: cliMock,
+			},
 		}
 		err := c.waitOnQuery(context.Background(), tc.statementStatus)
 		if tc.err != nil || err != nil {
@@ -80,7 +83,9 @@ func TestConnection_waitOnQueryCancelled(t *testing.T) {
 		CalledTimesCountDown: 5,
 	}
 	c := &conn{
-		athenaCli: cliMock,
+		api: &api.API{
+			Client: cliMock,
+		},
 	}
 
 	ctx := context.Background()

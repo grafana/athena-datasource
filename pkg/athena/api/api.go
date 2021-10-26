@@ -27,6 +27,25 @@ func New(sessionCache *awsds.SessionCache, settings *models.AthenaDataSourceSett
 	return &API{athena.New(session), settings}, nil
 }
 
+func (c *API) Execute(ctx context.Context, query string) (*athena.StartQueryExecutionOutput, error) {
+	input := &athena.StartQueryExecutionInput{
+		QueryString: aws.String(query),
+		QueryExecutionContext: &athena.QueryExecutionContext{
+			Catalog:  aws.String(c.settings.Catalog),
+			Database: aws.String(c.settings.Database),
+		},
+		WorkGroup: aws.String(c.settings.WorkGroup),
+	}
+
+	if c.settings.OutputLocation != "" {
+		input.ResultConfiguration = &athena.ResultConfiguration{
+			OutputLocation: aws.String(c.settings.OutputLocation),
+		}
+	}
+
+	return c.Client.StartQueryExecutionWithContext(ctx, input)
+}
+
 func (c *API) ListDataCatalogs(ctx context.Context) ([]string, error) {
 	res := []string{}
 	var nextToken *string

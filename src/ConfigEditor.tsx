@@ -4,6 +4,8 @@ import { AthenaDataSourceOptions, AthenaDataSourceSecureJsonData, AthenaDataSour
 import { ConnectionConfig } from '@grafana/aws-sdk';
 import { getBackendSrv } from '@grafana/runtime';
 import { AthenaResourceSelector } from './AthenaResourceSelector';
+import { InlineField, Input } from '@grafana/ui';
+import { selectors } from 'tests/selectors';
 
 type Props = DataSourcePluginOptionsEditorProps<AthenaDataSourceOptions, AthenaDataSourceSecureJsonData>;
 
@@ -54,6 +56,8 @@ export function ConfigEditor(props: Props) {
     });
     return loadedWorkgroups;
   };
+  // OuputLocation
+  const [outputLocation, setOutputLocation] = useState<string | null>(jsonData.outputLocation || null);
 
   const onOptionsChange = (options: DataSourceSettings<AthenaDataSourceOptions, AthenaDataSourceSecureJsonData>) => {
     // clean up related state
@@ -97,6 +101,17 @@ export function ConfigEditor(props: Props) {
     });
   };
 
+  const onChangeOutputLocation = (outLoc: string | null) => {
+    setOutputLocation(outLoc);
+    props.onOptionsChange({
+      ...props.options,
+      jsonData: {
+        ...props.options.jsonData,
+        outputLocation: outLoc || '',
+      },
+    });
+  };
+
   const commonProps = {
     title: jsonData.defaultRegion ? '' : 'select a default region',
     disabled: !jsonData.defaultRegion,
@@ -132,6 +147,19 @@ export function ConfigEditor(props: Props) {
         saveOptions={saveOptions}
         {...commonProps}
       />
+      <InlineField
+        label={selectors.components.ConfigEditor.OuputLocation.input}
+        labelWidth={28}
+        tooltip="Optional. If not specified, the default query result location from the Workgroup configuration will be used."
+      >
+        <Input
+          data-testid={selectors.components.ConfigEditor.OuputLocation.wrapper}
+          className="width-30"
+          value={outputLocation ?? ''}
+          onChange={(e) => onChangeOutputLocation(e.currentTarget.value)}
+          placeholder="s3://"
+        />
+      </InlineField>
     </div>
   );
 }

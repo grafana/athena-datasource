@@ -20,6 +20,10 @@ export const Components = {
       input: 'Workgroup',
       wrapper: 'data-testid onloadworkgroup',
     },
+    OuputLocation: {
+      input: 'Output Location',
+      wrapper: 'data-testid onloadoutputlocation',
+    },
     region: {
       input: 'Region',
       wrapper: 'data-testid onloadregion',

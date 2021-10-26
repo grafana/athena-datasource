@@ -9,8 +9,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/athena"
-	"github.com/aws/aws-sdk-go/service/athena/athenaiface"
-	"github.com/grafana/athena-datasource/pkg/athena/models"
+	"github.com/grafana/athena-datasource/pkg/athena/api"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"github.com/jpillora/backoff"
 )
@@ -21,33 +20,18 @@ var (
 )
 
 type conn struct {
-	athenaCli athenaiface.AthenaAPI
-	settings  *models.AthenaDataSourceSettings
-	closed    bool
+	api    *api.API
+	closed bool
 }
 
-func newConnection(athenaCli athenaiface.AthenaAPI, settings *models.AthenaDataSourceSettings) *conn {
+func newConnection(api *api.API) *conn {
 	return &conn{
-		athenaCli: athenaCli,
-		settings:  settings,
+		api: api,
 	}
 }
 
 func (c *conn) QueryContext(ctx context.Context, query string, _ []driver.NamedValue) (driver.Rows, error) {
-	executionResult, err := c.athenaCli.StartQueryExecutionWithContext(ctx, &athena.StartQueryExecutionInput{
-		QueryString: aws.String(query),
-		QueryExecutionContext: &athena.QueryExecutionContext{
-			Catalog:  aws.String(c.settings.Catalog),
-			Database: aws.String(c.settings.Database),
-		},
-		WorkGroup: aws.String(c.settings.WorkGroup),
-		// TODO:
-		// 	consider if we also want output location to be configurable
-		// 	seems like you can specify either work group or output location
-		// ResultConfiguration: &athena.ResultConfiguration{
-		// 	OutputLocation: aws.String(c.settings.OutputLocation),
-		// },
-	})
+	executionResult, err := c.api.Execute(ctx, query)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +40,7 @@ func (c *conn) QueryContext(ctx context.Context, query string, _ []driver.NamedV
 		return nil, err
 	}
 
-	return NewRows(ctx, c.athenaCli, *executionResult.QueryExecutionId)
+	return NewRows(ctx, c.api.Client, *executionResult.QueryExecutionId)
 }
 
 // waitOnQuery polls the athena api until the query finishes, returning an error if it failed.
@@ -67,7 +51,7 @@ func (c *conn) waitOnQuery(ctx context.Context, queryID string) error {
 		Factor: 2,
 	}
 	for {
-		statusResp, err := c.athenaCli.GetQueryExecutionWithContext(ctx, &athena.GetQueryExecutionInput{
+		statusResp, err := c.api.Client.GetQueryExecutionWithContext(ctx, &athena.GetQueryExecutionInput{
 			QueryExecutionId: aws.String(queryID),
 		})
 		if err != nil {
@@ -87,7 +71,7 @@ func (c *conn) waitOnQuery(ctx context.Context, queryID string) error {
 		case <-ctx.Done():
 			err := ctx.Err()
 			if errors.Is(err, context.Canceled) {
-				_, err := c.athenaCli.StopQueryExecution(&athena.StopQueryExecutionInput{
+				_, err := c.api.Client.StopQueryExecution(&athena.StopQueryExecutionInput{
 					QueryExecutionId: aws.String(queryID),
 				})
 				if err != nil {

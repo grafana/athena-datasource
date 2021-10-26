@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { ConfigEditor } from './ConfigEditor';
 import { mockDatasourceOptions } from './__mocks__/datasource';
 import { select } from 'react-select-event';
@@ -77,6 +77,18 @@ describe('ConfigEditor', () => {
     expect(onChange).toHaveBeenCalledWith({
       ...props.options,
       jsonData: { ...props.options.jsonData, workgroup: resourceName },
+    });
+  });
+
+  it('should use an output location', async () => {
+    const onChange = jest.fn();
+    render(<ConfigEditor {...props} onOptionsChange={onChange} />);
+    const input = screen.getByTestId(selectors.components.ConfigEditor.OuputLocation.wrapper);
+    const bucket = 's3://foo';
+    fireEvent.change(input, { target: { value: bucket } });
+    expect(onChange).toBeCalledWith({
+      ...props.options,
+      jsonData: { ...props.options.jsonData, outputLocation: bucket },
     });
   });
 });

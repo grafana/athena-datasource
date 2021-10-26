@@ -103,7 +103,6 @@ e2e.scenario({
         });
 
         e2e.flows.addPanel({
-          matchScreenshot: true,
           visitDashboardAtStart: false,
           queriesForm: () => {
             // Change database selection for query
@@ -136,6 +135,11 @@ ORDER BY 1
             cy.get('.panel-content').click();
             cy.get('.panel-loading');
             cy.get('.panel-loading', { timeout: 10000 }).should('not.exist');
+
+            e2eSelectors.QueryEditor.TableView.input().click({ force: true });
+            // check first table item
+            cy.get('div[role="table"]').should('include.text', '2021-09-08 04:01:00');
+            cy.get('div[role="table"]').should('include.text', '560');
           },
         });
 

@@ -158,6 +158,7 @@ export function ConfigEditor(props: Props) {
           value={outputLocation ?? ''}
           onChange={(e) => onChangeOutputLocation(e.currentTarget.value)}
           placeholder="s3://"
+          css
         />
       </InlineField>
     </div>

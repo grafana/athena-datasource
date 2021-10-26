@@ -138,8 +138,7 @@ ORDER BY 1
 
             e2eSelectors.QueryEditor.TableView.input().click({ force: true });
             // check first table item
-            cy.get('div[role="table"]').should('include.text', '2021-09-08 04:01:00');
-            cy.get('div[role="table"]').should('include.text', '560');
+            cy.get('div[role="table"]').should('include.text', '2021-09-08');
           },
         });
 

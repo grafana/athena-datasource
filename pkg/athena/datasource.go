@@ -147,7 +147,7 @@ func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings, qu
 	if err != nil {
 		return nil, errors.WithMessage(err, "Failed to create athena client")
 	}
-	dr, db, err := driver.Open(settings, api.Client)
+	dr, db, err := driver.Open(api)
 	if err != nil {
 		return nil, errors.WithMessage(err, "Failed to connect to database. Is the hostname and port correct?")
 	}

@@ -12,9 +12,10 @@ const DefaultKey = "__default"
 
 type AthenaDataSourceSettings struct {
 	awsds.AWSDatasourceSettings
-	Database  string `json:"Database"`
-	Catalog   string `json:"Catalog"`
-	WorkGroup string `json:"WorkGroup"`
+	Database       string `json:"Database"`
+	Catalog        string `json:"Catalog"`
+	WorkGroup      string `json:"WorkGroup"`
+	OutputLocation string `json:"OutputLocation"`
 }
 
 func (s *AthenaDataSourceSettings) Load(config backend.DataSourceInstanceSettings) error {

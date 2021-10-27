@@ -53,6 +53,7 @@ export interface AthenaDataSourceOptions extends AwsAuthDataSourceJsonData {
   catalog?: string;
   database?: string;
   workgroup?: string;
+  outputLocation?: string;
 }
 
 /**

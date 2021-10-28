@@ -150,7 +150,7 @@ export function ConfigEditor(props: Props) {
       <InlineField
         label={selectors.components.ConfigEditor.OuputLocation.input}
         labelWidth={28}
-        tooltip="Optional. If not specified, the default query result location from the Workgroup configuration will be used."
+        tooltip="Optional. If not specified, the default query result location from the Workgroup configuration will be used. If the bucket does not exist, it will be created."
       >
         <Input
           data-testid={selectors.components.ConfigEditor.OuputLocation.wrapper}

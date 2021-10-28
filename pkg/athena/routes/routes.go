@@ -122,29 +122,6 @@ func (r *ResourceHandler) workgroups(rw http.ResponseWriter, req *http.Request) 
 	sendResponse(res, err, rw)
 }
 
-func (r *ResourceHandler) tablesWithConnectionDetails(rw http.ResponseWriter, req *http.Request) {
-	reqBody, err := parseBody(req.Body)
-	if err != nil {
-		rw.WriteHeader(http.StatusBadRequest)
-		write(rw, []byte(err.Error()))
-		return
-	}
-	res, err := r.ds.Tables(req.Context(), reqBody)
-	sendResponse(res, err, rw)
-}
-
-func (r *ResourceHandler) columnsWithConnectionDetails(rw http.ResponseWriter, req *http.Request) {
-	reqBody, err := parseBody(req.Body)
-	if err != nil {
-		rw.WriteHeader(http.StatusBadRequest)
-		write(rw, []byte(err.Error()))
-		return
-	}
-
-	res, err := r.ds.Columns(req.Context(), reqBody)
-	sendResponse(res, err, rw)
-}
-
 func (r *ResourceHandler) Routes() map[string]func(http.ResponseWriter, *http.Request) {
 	return map[string]func(http.ResponseWriter, *http.Request){
 		"/regions":    r.regions,

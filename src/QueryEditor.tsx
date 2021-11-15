@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import { QueryEditorProps, SelectableValue } from '@grafana/data';
+import React from 'react';
+import { QueryEditorProps } from '@grafana/data';
 import { DataSource } from './datasource';
-import { AthenaDataSourceOptions, AthenaQuery, defaultQuery, FormatOptions, SelectableFormatOptions } from './types';
-import { InlineField, InlineSegmentGroup, Select } from '@grafana/ui';
-import { QueryCodeEditor } from 'QueryCodeEditor';
-import { AthenaResourceSelector } from 'AthenaResourceSelector';
+import { AthenaDataSourceOptions, AthenaQuery, defaultQuery, SelectableFormatOptions } from './types';
+import { InlineSegmentGroup } from '@grafana/ui';
+import { FormatSelect, QuerySelect, QueryCodeEditor } from '@grafana/aws-sdk';
+import { selectors } from 'tests/selectors';
+import { getTemplateSrv } from '@grafana/runtime';
+import { getSuggestions } from 'Suggestions';
 
 type Props = QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions>;
 
@@ -18,155 +20,100 @@ export function QueryEditor(props: Props) {
     },
   };
 
-  // Region selector
-  const [region, setRegion] = useState(queryWithDefaults.connectionArgs.region);
-  const fetchRegions = async () => {
-    const regions = await props.datasource.getResource('regions');
-    return regions;
-  };
-  const onRegionChange = (region: string | null) => {
-    setRegion(region || '');
-    props.onChange({
-      ...props.query,
-      connectionArgs: {
-        ...queryWithDefaults.connectionArgs,
-        region: region || '',
-      },
+  const fetchRegions = () => props.datasource.getResource('regions');
+  const fetchCatalogs = () =>
+    props.datasource.postResource('catalogs', {
+      region: queryWithDefaults.connectionArgs.region,
     });
-  };
+  const fetchDatabases = () =>
+    props.datasource.postResource('databases', {
+      region: queryWithDefaults.connectionArgs.region,
+      catalog: queryWithDefaults.connectionArgs.catalog,
+    });
+  const fetchTables = () =>
+    props.datasource.postResource('tables', {
+      region: queryWithDefaults.connectionArgs.region,
+      catalog: queryWithDefaults.connectionArgs.catalog,
+      database: queryWithDefaults.connectionArgs.database,
+    });
 
-  // Catalog selector
-  const [catalog, setCatalog] = useState<string | null>(queryWithDefaults.connectionArgs.catalog);
-  const fetchCatalogs = async () => await props.datasource.postResource('catalogs', { region });
-  const onCatalogChange = (catalog: string | null) => {
-    setCatalog(catalog);
-    props.onChange({
-      ...props.query,
-      connectionArgs: {
-        ...queryWithDefaults.connectionArgs,
-        catalog: catalog || '',
-      },
+  const fetchColumns = () =>
+    props.datasource.postResource('columns', {
+      ...queryWithDefaults.connectionArgs,
+      table: queryWithDefaults.table,
     });
-  };
-
-  // Database selector
-  const [database, setDatabase] = useState<string | null>(queryWithDefaults.connectionArgs.database);
-  const fetchDatabases = async () => await props.datasource.postResource('databases', { region, catalog });
-  const onDatabaseChange = (database: string | null) => {
-    setDatabase(database);
-    props.onChange({
-      ...props.query,
-      connectionArgs: {
-        ...queryWithDefaults.connectionArgs,
-        database: database || '',
-      },
-    });
-    // now that connection args are complete, run request
-    props.onRunQuery();
-  };
-
-  // Tables selector
-  const [table, setTable] = useState<string | null>(queryWithDefaults.table || null);
-  const fetchTables = async () => await props.datasource.postResource('tables', { region, catalog, database });
-  const onTableChange = (newTable: string | null) => {
-    setTable(newTable);
-    props.onChange({
-      ...queryWithDefaults,
-      table: newTable || undefined,
-      column: undefined,
-    });
-    props.onRunQuery();
-  };
-
-  // column
-  const [column, setColumn] = useState<string | null>(queryWithDefaults.column || null);
-  const columnDependencies = {
-    ...queryWithDefaults.connectionArgs,
-    table: queryWithDefaults.table,
-  };
-  const fetchColumns = async () => await props.datasource.postResource('columns', columnDependencies);
-  const onColumnChange = (newColumn: string | null) => {
-    setColumn(newColumn);
-    props.onChange({
-      ...queryWithDefaults,
-      column: newColumn || undefined,
-    });
-    props.onRunQuery();
-  };
-
-  const onChangeFormat = (e: SelectableValue<FormatOptions>) => {
-    props.onChange({
-      ...props.query,
-      format: e.value || FormatOptions.TimeSeries,
-    });
-    props.onRunQuery();
-  };
 
   return (
     <>
       <InlineSegmentGroup>
         <div className="gf-form-group">
-          <AthenaResourceSelector
-            resource="region"
-            value={region}
-            fetch={fetchRegions}
-            onChange={onRegionChange}
+          <QuerySelect
+            query={props.query}
             default={props.datasource.defaultRegion}
-            labelWidth={11}
-            className="width-12"
+            queryPropertyPath="connectionArgs.region"
+            fetch={fetchRegions}
+            onChange={props.onChange}
+            label={selectors.components.ConfigEditor.region.input}
+            data-testid={selectors.components.ConfigEditor.region.wrapper}
           />
-          <AthenaResourceSelector
-            resource="catalog"
-            value={catalog}
-            fetch={fetchCatalogs}
-            onChange={onCatalogChange}
+          <QuerySelect
+            query={props.query}
             default={props.datasource.defaultCatalog}
-            dependencies={[region]}
-            labelWidth={11}
-            className="width-12"
+            queryPropertyPath="connectionArgs.catalog"
+            fetch={fetchCatalogs}
+            onChange={props.onChange}
+            label={selectors.components.ConfigEditor.catalog.input}
+            data-testid={selectors.components.ConfigEditor.catalog.wrapper}
+            dependencies={[queryWithDefaults.connectionArgs.region]}
           />
-          <AthenaResourceSelector
-            resource="database"
-            value={database}
-            fetch={fetchDatabases}
-            onChange={onDatabaseChange}
+          <QuerySelect
+            query={props.query}
             default={props.datasource.defaultDatabase}
-            dependencies={[region, catalog]}
-            labelWidth={11}
-            className="width-12"
+            queryPropertyPath="connectionArgs.database"
+            fetch={fetchDatabases}
+            onChange={props.onChange}
+            label={selectors.components.ConfigEditor.database.input}
+            data-testid={selectors.components.ConfigEditor.database.wrapper}
+            dependencies={[queryWithDefaults.connectionArgs.catalog]}
           />
-          <AthenaResourceSelector
-            resource="table"
-            value={table}
+          <QuerySelect
+            query={props.query}
+            queryPropertyPath="table"
             fetch={fetchTables}
-            onChange={onTableChange}
-            dependencies={[region, catalog, database]}
+            onChange={props.onChange}
+            label={selectors.components.ConfigEditor.table.input}
+            data-testid={selectors.components.ConfigEditor.table.wrapper}
             tooltip="Use the selected table with the $__table macro"
-            labelWidth={11}
-            className="width-12"
+            dependencies={[queryWithDefaults.connectionArgs.database]}
+            onRunQuery={props.onRunQuery}
           />
-          <AthenaResourceSelector
-            resource="column"
-            value={column}
+          <QuerySelect
+            query={props.query}
+            queryPropertyPath="column"
             fetch={fetchColumns}
-            onChange={onColumnChange}
-            dependencies={[region, catalog, database, table]}
+            onChange={props.onChange}
+            label={selectors.components.ConfigEditor.column.input}
+            data-testid={selectors.components.ConfigEditor.column.wrapper}
             tooltip="Use the selected column with the $__column macro"
-            labelWidth={11}
-            className="width-12"
+            dependencies={[props.query.table || '']}
+            onRunQuery={props.onRunQuery}
           />
           <h6>Frames</h6>
-          <InlineField label="Format as" labelWidth={11}>
-            <Select
-              options={SelectableFormatOptions}
-              value={queryWithDefaults.format}
-              onChange={onChangeFormat}
-              className="width-12"
-            />
-          </InlineField>
+          <FormatSelect
+            query={props.query}
+            options={SelectableFormatOptions}
+            onChange={props.onChange}
+            onRunQuery={props.onRunQuery}
+          />
         </div>
         <div style={{ minWidth: '400px', marginLeft: '10px', flex: 1 }}>
-          <QueryCodeEditor query={queryWithDefaults} onChange={props.onChange} onRunQuery={props.onRunQuery} />
+          <QueryCodeEditor
+            query={queryWithDefaults}
+            onChange={props.onChange}
+            onRunQuery={props.onRunQuery}
+            getSuggestions={getSuggestions}
+            getTemplateSrv={getTemplateSrv}
+          />
         </div>
       </InlineSegmentGroup>
     </>

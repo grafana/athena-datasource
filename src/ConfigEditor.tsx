@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { DataSourcePluginOptionsEditorProps, DataSourceSettings } from '@grafana/data';
 import { AthenaDataSourceOptions, AthenaDataSourceSecureJsonData, AthenaDataSourceSettings, defaultKey } from './types';
-import { ConnectionConfig } from '@grafana/aws-sdk';
 import { getBackendSrv } from '@grafana/runtime';
-import { AthenaResourceSelector } from './AthenaResourceSelector';
-import { InlineField, Input } from '@grafana/ui';
+import { InlineInput, ConfigSelect, ConnectionConfig } from '@grafana/aws-sdk';
 import { selectors } from 'tests/selectors';
 
 type Props = DataSourcePluginOptionsEditorProps<AthenaDataSourceOptions, AthenaDataSourceSecureJsonData>;
@@ -14,7 +12,6 @@ export type ResourceType = 'catalog' | 'database' | 'workgroup';
 export function ConfigEditor(props: Props) {
   const baseURL = `/api/datasources/${props.options.id}`;
   const resourcesURL = `${baseURL}/resources`;
-  const { jsonData } = props.options;
   const [saved, setSaved] = useState(!!props.options.jsonData.defaultRegion);
   const saveOptions = async () => {
     if (saved) {
@@ -32,134 +29,70 @@ export function ConfigEditor(props: Props) {
   };
 
   // Catalogs
-  const [catalog, setCatalog] = useState<string | null>(jsonData.catalog || null);
   const fetchCatalogs = async () => {
     const res: string[] = await getBackendSrv().post(resourcesURL + '/catalogs', {
-      region: defaultKey,
+      region: props.options.jsonData.defaultRegion,
     });
     return res;
   };
   // Databases
-  const [database, setDatabase] = useState<string | null>(jsonData.database || null);
   const fetchDatabases = async () => {
     const loadedDatabases: string[] = await getBackendSrv().post(resourcesURL + '/databases', {
-      region: defaultKey,
-      catalog: catalog || defaultKey,
+      region: props.options.jsonData.defaultRegion,
+      catalog: props.options.jsonData.catalog || defaultKey,
     });
     return loadedDatabases;
   };
   // Workgroups
-  const [workgroup, setWorkgroup] = useState<string | null>(jsonData.workgroup || null);
   const fetchWorkgroups = async () => {
     const loadedWorkgroups: string[] = await getBackendSrv().post(resourcesURL + '/workgroups', {
-      region: defaultKey,
+      region: props.options.jsonData.defaultRegion,
     });
     return loadedWorkgroups;
   };
-  // OuputLocation
-  const [outputLocation, setOutputLocation] = useState<string | null>(jsonData.outputLocation || null);
 
   const onOptionsChange = (options: DataSourceSettings<AthenaDataSourceOptions, AthenaDataSourceSecureJsonData>) => {
-    // clean up related state
     setSaved(false);
-    setCatalog(null);
-    setDatabase(null);
-    setWorkgroup(null);
     props.onOptionsChange(options);
   };
 
-  const onCatalogChange = (catalog: string | null) => {
-    setCatalog(catalog);
-    props.onOptionsChange({
-      ...props.options,
-      jsonData: {
-        ...props.options.jsonData,
-        catalog: catalog || '',
-      },
-    });
-  };
-
-  const onDatabaseChange = (database: string | null) => {
-    setDatabase(database);
-    props.onOptionsChange({
-      ...props.options,
-      jsonData: {
-        ...props.options.jsonData,
-        database: database || '',
-      },
-    });
-  };
-
-  const onWorkgroupChange = (workgroup: string | null) => {
-    setWorkgroup(workgroup);
-    props.onOptionsChange({
-      ...props.options,
-      jsonData: {
-        ...props.options.jsonData,
-        workgroup: workgroup || '',
-      },
-    });
-  };
-
-  const onChangeOutputLocation = (outLoc: string | null) => {
-    setOutputLocation(outLoc);
-    props.onOptionsChange({
-      ...props.options,
-      jsonData: {
-        ...props.options.jsonData,
-        outputLocation: outLoc || '',
-      },
-    });
-  };
-
-  const commonProps = {
-    title: jsonData.defaultRegion ? '' : 'select a default region',
-    disabled: !jsonData.defaultRegion,
-    labelWidth: 28,
-    className: 'width-30',
-  };
   return (
     <div className="gf-form-group">
       <ConnectionConfig {...props} onOptionsChange={onOptionsChange} />
-      <h3>Athena Details </h3>
-      <AthenaResourceSelector
-        resource="catalog"
-        onChange={onCatalogChange}
+      <h3>Athena Details</h3>
+      <ConfigSelect
+        {...props}
+        jsonDataPath="catalog"
         fetch={fetchCatalogs}
-        value={catalog}
+        label={selectors.components.ConfigEditor.catalog.input}
+        data-testid={selectors.components.ConfigEditor.catalog.wrapper}
         saveOptions={saveOptions}
-        {...commonProps}
       />
-      <AthenaResourceSelector
-        resource="database"
-        onChange={onDatabaseChange}
+      <ConfigSelect
+        {...props}
+        jsonDataPath="database"
         fetch={fetchDatabases}
-        value={database}
+        label={selectors.components.ConfigEditor.database.input}
+        data-testid={selectors.components.ConfigEditor.database.wrapper}
+        dependencies={[props.options.jsonData.catalog || '']}
         saveOptions={saveOptions}
-        dependencies={[catalog]}
-        {...commonProps}
       />
-      <AthenaResourceSelector
-        resource="workgroup"
-        onChange={onWorkgroupChange}
+      <ConfigSelect
+        {...props}
+        jsonDataPath="workgroup"
         fetch={fetchWorkgroups}
-        value={workgroup}
+        label={selectors.components.ConfigEditor.workgroup.input}
+        data-testid={selectors.components.ConfigEditor.workgroup.wrapper}
         saveOptions={saveOptions}
-        {...commonProps}
       />
-      <InlineField
-        label={selectors.components.ConfigEditor.OuputLocation.input}
-        labelWidth={28}
-        tooltip="Optional. If not specified, the default query result location from the Workgroup configuration will be used. If the bucket does not exist, it will be created."
-      >
-        <Input
-          data-testid={selectors.components.ConfigEditor.OuputLocation.wrapper}
-          className="width-30"
-          value={outputLocation ?? ''}
-          onChange={(e) => onChangeOutputLocation(e.currentTarget.value)}
-          placeholder="s3://"
-        />
-      </InlineField>
+      <InlineInput
+        {...props}
+        jsonDataPath="outputLocation"
+        label={selectors.components.ConfigEditor.workgroup.input}
+        data-testid={selectors.components.ConfigEditor.workgroup.wrapper}
+        tooltip="Optional. If not specified, the default query result location from the Workgroup configuration will be used."
+        placeholder="s3://"
+      />
     </div>
   );
 }

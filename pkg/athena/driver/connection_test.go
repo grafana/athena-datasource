@@ -3,10 +3,7 @@ package driver
 import (
 	"context"
 	"database/sql/driver"
-	"errors"
-	"fmt"
 	"testing"
-	"time"
 
 	"github.com/grafana/athena-datasource/pkg/athena/api"
 	athenaclientmock "github.com/grafana/athena-datasource/pkg/athena/api/mock"
@@ -34,76 +31,76 @@ func TestConnection_QueryContext(t *testing.T) {
 	assert.Equal(t, err, nil)
 }
 
-var waitOnQueryTestCases = []struct {
-	calledTimesCountDown int
-	statementStatus      string
-	err                  error
-}{
-	{1, athenaclientmock.DESCRIBE_STATEMENT_SUCCEEDED, nil},
-	{10, athenaclientmock.DESCRIBE_STATEMENT_SUCCEEDED, nil},
-	{1, athenaclientmock.DESCRIBE_STATEMENT_FAILED, fmt.Errorf(athenaclientmock.DESCRIBE_STATEMENT_FAILED)},
-	{10, athenaclientmock.DESCRIBE_STATEMENT_FAILED, fmt.Errorf(athenaclientmock.DESCRIBE_STATEMENT_FAILED)},
-}
+// var waitOnQueryTestCases = []struct {
+// 	calledTimesCountDown int
+// 	statementStatus      string
+// 	err                  error
+// }{
+// 	{1, athenaclientmock.DESCRIBE_STATEMENT_SUCCEEDED, nil},
+// 	{10, athenaclientmock.DESCRIBE_STATEMENT_SUCCEEDED, nil},
+// 	{1, athenaclientmock.DESCRIBE_STATEMENT_FAILED, fmt.Errorf(athenaclientmock.DESCRIBE_STATEMENT_FAILED)},
+// 	{10, athenaclientmock.DESCRIBE_STATEMENT_FAILED, fmt.Errorf(athenaclientmock.DESCRIBE_STATEMENT_FAILED)},
+// }
 
-func TestConnection_waitOnQuery(t *testing.T) {
-	t.Parallel()
-	backoffMin = 1 * time.Millisecond
-	backoffMax = 1 * time.Millisecond
+// func TestConnection_waitOnQuery(t *testing.T) {
+// 	t.Parallel()
+// 	backoffMin = 1 * time.Millisecond
+// 	backoffMax = 1 * time.Millisecond
 
-	for _, tc := range waitOnQueryTestCases {
-		// for tests we override backoff instance to always take 1 millisecond so the tests run quickly
-		cliMock := &athenaclientmock.MockAthenaClient{
-			CalledTimesCountDown: tc.calledTimesCountDown,
-		}
-		c := &conn{
-			api: &api.API{
-				Client: cliMock,
-			},
-		}
-		err := c.waitOnQuery(context.Background(), tc.statementStatus)
-		if tc.err != nil || err != nil {
-			if err != nil && tc.err == nil {
-				t.Fatalf("unexpected error %v", err)
-			}
-			if err == nil && tc.err != nil {
-				t.Fatalf("expecting error %v", tc.err)
-			}
-			assert.Equal(t, tc.err.Error(), err.Error())
-		}
-		assert.Equal(t, tc.calledTimesCountDown, cliMock.CalledTimesCounter)
-	}
-}
+// 	for _, tc := range waitOnQueryTestCases {
+// 		// for tests we override backoff instance to always take 1 millisecond so the tests run quickly
+// 		cliMock := &athenaclientmock.MockAthenaClient{
+// 			CalledTimesCountDown: tc.calledTimesCountDown,
+// 		}
+// 		c := &conn{
+// 			api: &api.API{
+// 				Client: cliMock,
+// 			},
+// 		}
+// 		err := c.waitOnQuery(context.Background(), tc.statementStatus)
+// 		if tc.err != nil || err != nil {
+// 			if err != nil && tc.err == nil {
+// 				t.Fatalf("unexpected error %v", err)
+// 			}
+// 			if err == nil && tc.err != nil {
+// 				t.Fatalf("expecting error %v", tc.err)
+// 			}
+// 			assert.Equal(t, tc.err.Error(), err.Error())
+// 		}
+// 		assert.Equal(t, tc.calledTimesCountDown, cliMock.CalledTimesCounter)
+// 	}
+// }
 
-func TestConnection_waitOnQueryCancelled(t *testing.T) {
-	// add a big timeout to have time to cancel
-	backoffMin = 10000 * time.Millisecond
-	backoffMax = 10000 * time.Millisecond
+// func TestConnection_waitOnQueryCancelled(t *testing.T) {
+// 	// add a big timeout to have time to cancel
+// 	backoffMin = 10000 * time.Millisecond
+// 	backoffMax = 10000 * time.Millisecond
 
-	cliMock := &athenaclientmock.MockAthenaClient{
-		CalledTimesCountDown: 5,
-	}
-	c := &conn{
-		api: &api.API{
-			Client: cliMock,
-		},
-	}
+// 	cliMock := &athenaclientmock.MockAthenaClient{
+// 		CalledTimesCountDown: 5,
+// 	}
+// 	c := &conn{
+// 		api: &api.API{
+// 			Client: cliMock,
+// 		},
+// 	}
 
-	ctx := context.Background()
-	ctx, cancel := context.WithCancel(ctx)
-	done := make(chan bool)
+// 	ctx := context.Background()
+// 	ctx, cancel := context.WithCancel(ctx)
+// 	done := make(chan bool)
 
-	// start the execution in parallel
-	go func() {
-		err := c.waitOnQuery(ctx, "foo")
-		if err == nil || !errors.Is(err, context.Canceled) {
-			t.Errorf("unexpected error %v", err)
-		}
-		done <- true
-	}()
-	cancel()
-	<-done
+// 	// start the execution in parallel
+// 	go func() {
+// 		err := c.waitOnQuery(ctx, "foo")
+// 		if err == nil || !errors.Is(err, context.Canceled) {
+// 			t.Errorf("unexpected error %v", err)
+// 		}
+// 		done <- true
+// 	}()
+// 	cancel()
+// 	<-done
 
-	if !cliMock.Cancelled {
-		t.Errorf("failed to cancel the request")
-	}
-}
+// 	if !cliMock.Cancelled {
+// 		t.Errorf("failed to cancel the request")
+// 	}
+// }

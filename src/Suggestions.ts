@@ -1,7 +1,8 @@
 import { CodeEditorSuggestionItem, CodeEditorSuggestionItemKind } from '@grafana/ui';
 import { TemplateSrv } from '@grafana/runtime';
+import { AthenaQuery } from 'types';
 
-export function getSuggestions(templateSrv: TemplateSrv, table?: string, column?: string) {
+export function getSuggestions(templateSrv: TemplateSrv, query: AthenaQuery) {
   const sugs: CodeEditorSuggestionItem[] = [
     {
       label: '$__dateFilter',
@@ -36,12 +37,12 @@ export function getSuggestions(templateSrv: TemplateSrv, table?: string, column?
     {
       label: '$__table',
       kind: CodeEditorSuggestionItemKind.Text,
-      detail: `(Macro) ${table}`,
+      detail: `(Macro) ${query.table}`,
     },
     {
       label: '$__column',
       kind: CodeEditorSuggestionItemKind.Text,
-      detail: `(Macro) ${column}`,
+      detail: `(Macro) ${query.column}`,
     },
   ];
 

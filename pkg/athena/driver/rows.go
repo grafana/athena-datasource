@@ -18,6 +18,8 @@ type Rows struct {
 
 func NewRows(ctx context.Context, athenaAPI athenaiface.AthenaAPI, queryID string) (*Rows, error) {
 	config := drv.NewNoOpsConfig()
+	config.SetMissingAsEmptyString(false)
+	config.SetMissingAsDefault(true)
 	tracer := drv.NewNoOpsObservability()
 	rows, err := drv.NewRows(ctx, athenaAPI, queryID, config, tracer)
 	if err != nil {

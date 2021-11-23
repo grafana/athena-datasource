@@ -105,6 +105,32 @@ func Test_macros(t *testing.T) {
 			`TIMESTAMP '2021-06-23 01:00:00'`,
 			nil,
 		},
+		{
+			"unix time filter",
+			"unixEpochFilter",
+			&sqlds.Query{
+				TimeRange: backend.TimeRange{
+					From: time.Date(2021, 6, 23, 0, 0, 0, 0, &time.Location{}),
+					To:   time.Date(2021, 6, 23, 1, 0, 0, 0, &time.Location{}),
+				},
+			},
+			[]string{"time"},
+			`time BETWEEN 1624406400 AND 1624410000`,
+			nil,
+		},
+		{
+			"unix time group filter",
+			"unixEpochGroup",
+			&sqlds.Query{
+				TimeRange: backend.TimeRange{
+					From: time.Date(2021, 6, 23, 0, 0, 0, 0, &time.Location{}),
+					To:   time.Date(2021, 6, 23, 1, 0, 0, 0, &time.Location{}),
+				},
+			},
+			[]string{"time", "5m"},
+			`FROM_UNIXTIME(FLOOR(time/300)*300)`,
+			nil,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.description, func(t *testing.T) {

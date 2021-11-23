@@ -34,6 +34,16 @@ export function getSuggestions(templateSrv: TemplateSrv, table?: string, column?
       detail: '(Macro)',
     },
     {
+      label: '$__unixEpochFilter',
+      kind: CodeEditorSuggestionItemKind.Method,
+      detail: '(Macro)',
+    },
+    {
+      label: '$__unixEpochGroup',
+      kind: CodeEditorSuggestionItemKind.Method,
+      detail: '(Macro)',
+    },
+    {
       label: '$__table',
       kind: CodeEditorSuggestionItemKind.Text,
       detail: `(Macro) ${table}`,

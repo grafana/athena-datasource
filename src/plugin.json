@@ -29,11 +29,11 @@
     "links": [
       {
         "name": "Website",
-        "url": "https://github.com/grafana/redshift-datasource"
+        "url": "https://github.com/grafana/athena-datasource"
       },
       {
         "name": "License",
-        "url": "https://github.com/grafana/redshift-datasource/blob/master/LICENSE"
+        "url": "https://github.com/grafana/athena-datasource/blob/master/LICENSE"
       }
     ],
     "screenshots": [],

@@ -13,4 +13,5 @@ require (
 )
 
 replace github.com/grafana/grafana-aws-sdk => ../grafana-aws-sdk
+
 replace github.com/grafana/sqlds/v2 => ../sqlds

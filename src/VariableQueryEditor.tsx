@@ -7,5 +7,5 @@ import { QueryEditorProps } from '@grafana/data';
 import { DataSource } from 'datasource';
 
 export function VariableQueryCodeEditor(props: QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions>) {
-  return <QueryCodeEditor {...props} getSuggestions={getSuggestions} getTemplateSrv={getTemplateSrv} />;
+  return <QueryCodeEditor {...props} language="sql" getSuggestions={getSuggestions} getTemplateSrv={getTemplateSrv} />;
 }

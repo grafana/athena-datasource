@@ -1,14 +1,16 @@
 import React from 'react';
-import { QueryEditorProps } from '@grafana/data';
+import { QueryEditorProps, SelectableValue } from '@grafana/data';
 import { DataSource } from './datasource';
 import { AthenaDataSourceOptions, AthenaQuery, defaultQuery, SelectableFormatOptions } from './types';
 import { InlineSegmentGroup } from '@grafana/ui';
-import { FormatSelect, QuerySelect, QueryCodeEditor } from '@grafana/aws-sdk';
+import { FormatSelect, ResourceSelector, QueryCodeEditor } from '@grafana/aws-sdk';
 import { selectors } from 'tests/selectors';
 import { getTemplateSrv } from '@grafana/runtime';
 import { getSuggestions } from 'Suggestions';
 
 type Props = QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions>;
+
+type QueryProperties = 'regions' | 'catalogs' | 'databases' | 'tables' | 'columns';
 
 export function QueryEditor(props: Props) {
   const queryWithDefaults = {
@@ -43,60 +45,89 @@ export function QueryEditor(props: Props) {
       table: queryWithDefaults.table,
     });
 
+  const onChange = (prop: QueryProperties) => (e: SelectableValue<string> | null) => {
+    const newQuery = { ...props.query };
+    const value = e?.value;
+    switch (prop) {
+      case 'regions':
+        newQuery.connectionArgs = { ...newQuery.connectionArgs, region: value };
+        break;
+      case 'catalogs':
+        newQuery.connectionArgs = { ...newQuery.connectionArgs, catalog: value };
+        break;
+      case 'databases':
+        newQuery.connectionArgs = { ...newQuery.connectionArgs, database: value };
+        break;
+      case 'tables':
+        newQuery.table = value;
+        break;
+      case 'columns':
+        newQuery.column = value;
+        break;
+    }
+    props.onChange(newQuery);
+    if (props.onRunQuery) {
+      props.onRunQuery();
+    }
+  };
+
   return (
     <>
       <InlineSegmentGroup>
         <div className="gf-form-group">
-          <QuerySelect
-            query={props.query}
-            default={props.datasource.defaultRegion}
-            queryPropertyPath="connectionArgs.region"
+          <ResourceSelector
+            onChange={onChange('regions')}
             fetch={fetchRegions}
-            onChange={props.onChange}
+            value={queryWithDefaults.connectionArgs.region ?? null}
+            default={props.datasource.defaultRegion}
             label={selectors.components.ConfigEditor.region.input}
             data-testid={selectors.components.ConfigEditor.region.wrapper}
+            labelWidth={11}
+            className="width-12"
           />
-          <QuerySelect
-            query={props.query}
-            default={props.datasource.defaultCatalog}
-            queryPropertyPath="connectionArgs.catalog"
+          <ResourceSelector
+            onChange={onChange('catalogs')}
             fetch={fetchCatalogs}
-            onChange={props.onChange}
+            value={queryWithDefaults.connectionArgs.catalog ?? null}
+            default={props.datasource.defaultCatalog}
+            dependencies={[queryWithDefaults.connectionArgs.region]}
             label={selectors.components.ConfigEditor.catalog.input}
             data-testid={selectors.components.ConfigEditor.catalog.wrapper}
-            dependencies={[queryWithDefaults.connectionArgs.region]}
+            labelWidth={11}
+            className="width-12"
           />
-          <QuerySelect
-            query={props.query}
-            default={props.datasource.defaultDatabase}
-            queryPropertyPath="connectionArgs.database"
+          <ResourceSelector
+            onChange={onChange('databases')}
             fetch={fetchDatabases}
-            onChange={props.onChange}
+            value={queryWithDefaults.connectionArgs.database ?? null}
+            default={props.datasource.defaultDatabase}
+            dependencies={[queryWithDefaults.connectionArgs.catalog]}
             label={selectors.components.ConfigEditor.database.input}
             data-testid={selectors.components.ConfigEditor.database.wrapper}
-            dependencies={[queryWithDefaults.connectionArgs.catalog]}
+            labelWidth={11}
+            className="width-12"
           />
-          <QuerySelect
-            query={props.query}
-            queryPropertyPath="table"
+          <ResourceSelector
+            onChange={onChange('tables')}
             fetch={fetchTables}
-            onChange={props.onChange}
+            value={props.query.table || null}
+            dependencies={[queryWithDefaults.connectionArgs.database]}
+            tooltip="Use the selected table with the $__table macro"
             label={selectors.components.ConfigEditor.table.input}
             data-testid={selectors.components.ConfigEditor.table.wrapper}
-            tooltip="Use the selected table with the $__table macro"
-            dependencies={[queryWithDefaults.connectionArgs.database]}
-            onRunQuery={props.onRunQuery}
+            labelWidth={11}
+            className="width-12"
           />
-          <QuerySelect
-            query={props.query}
-            queryPropertyPath="column"
+          <ResourceSelector
+            onChange={onChange('columns')}
             fetch={fetchColumns}
-            onChange={props.onChange}
-            label={selectors.components.ConfigEditor.column.input}
-            data-testid={selectors.components.ConfigEditor.column.wrapper}
+            value={props.query.column || null}
+            dependencies={[queryWithDefaults.table]}
             tooltip="Use the selected column with the $__column macro"
-            dependencies={[props.query.table || '']}
-            onRunQuery={props.onRunQuery}
+            label={selectors.components.ConfigEditor.table.input}
+            data-testid={selectors.components.ConfigEditor.table.wrapper}
+            labelWidth={11}
+            className="width-12"
           />
           <h6>Frames</h6>
           <FormatSelect
@@ -108,6 +139,7 @@ export function QueryEditor(props: Props) {
         </div>
         <div style={{ minWidth: '400px', marginLeft: '10px', flex: 1 }}>
           <QueryCodeEditor
+            language="sql"
             query={queryWithDefaults}
             onChange={props.onChange}
             onRunQuery={props.onRunQuery}

@@ -1,5 +1,5 @@
-import { AwsAuthDataSourceJsonData, AwsAuthDataSourceSecureJsonData } from '@grafana/aws-sdk';
-import { DataQuery, DataSourceSettings, SelectableValue } from '@grafana/data';
+import { AwsAuthDataSourceJsonData, AwsAuthDataSourceSecureJsonData, SQLQuery } from '@grafana/aws-sdk';
+import { DataSourceSettings, SelectableValue } from '@grafana/data';
 
 export enum FormatOptions {
   TimeSeries,
@@ -22,13 +22,12 @@ export const SelectableFormatOptions: Array<SelectableValue<FormatOptions>> = [
   },
 ];
 
-export interface AthenaQuery extends DataQuery {
+export interface AthenaQuery extends SQLQuery {
   format: FormatOptions;
-  rawSQL: string;
   connectionArgs: {
-    region: string;
-    catalog: string;
-    database: string;
+    region?: string;
+    catalog?: string;
+    database?: string;
   };
   table?: string;
   column?: string;

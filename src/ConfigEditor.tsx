@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DataSourcePluginOptionsEditorProps, DataSourceSettings } from '@grafana/data';
+import { DataSourcePluginOptionsEditorProps, DataSourceSettings, SelectableValue } from '@grafana/data';
 import { AthenaDataSourceOptions, AthenaDataSourceSecureJsonData, AthenaDataSourceSettings, defaultKey } from './types';
 import { getBackendSrv } from '@grafana/runtime';
 import { InlineInput, ConfigSelect, ConnectionConfig } from '@grafana/aws-sdk';
@@ -56,13 +56,34 @@ export function ConfigEditor(props: Props) {
     props.onOptionsChange(options);
   };
 
+  const onChange = (resource: ResourceType) => (e: SelectableValue<string> | null) => {
+    const newOptions = {
+      ...props.options,
+    };
+    const value = e?.value ?? '';
+
+    switch (resource) {
+      case 'catalog':
+        newOptions.jsonData.catalog = value;
+        break;
+      case 'database':
+        newOptions.jsonData.database = value;
+        break;
+      case 'workgroup':
+        newOptions.jsonData.workgroup = value;
+        break;
+    }
+    props.onOptionsChange(newOptions);
+  };
+
   return (
     <div className="gf-form-group">
       <ConnectionConfig {...props} onOptionsChange={onOptionsChange} />
       <h3>Athena Details</h3>
       <ConfigSelect
         {...props}
-        jsonDataPath="catalog"
+        value={props.options.jsonData.catalog ?? ''}
+        onChange={onChange('catalog')}
         fetch={fetchCatalogs}
         label={selectors.components.ConfigEditor.catalog.input}
         data-testid={selectors.components.ConfigEditor.catalog.wrapper}
@@ -70,7 +91,8 @@ export function ConfigEditor(props: Props) {
       />
       <ConfigSelect
         {...props}
-        jsonDataPath="database"
+        value={props.options.jsonData.database ?? ''}
+        onChange={onChange('database')}
         fetch={fetchDatabases}
         label={selectors.components.ConfigEditor.database.input}
         data-testid={selectors.components.ConfigEditor.database.wrapper}
@@ -79,7 +101,8 @@ export function ConfigEditor(props: Props) {
       />
       <ConfigSelect
         {...props}
-        jsonDataPath="workgroup"
+        value={props.options.jsonData.workgroup ?? ''}
+        onChange={onChange('workgroup')}
         fetch={fetchWorkgroups}
         label={selectors.components.ConfigEditor.workgroup.input}
         data-testid={selectors.components.ConfigEditor.workgroup.wrapper}

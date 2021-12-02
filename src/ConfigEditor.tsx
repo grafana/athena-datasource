@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, FormEvent } from 'react';
 import { DataSourcePluginOptionsEditorProps, DataSourceSettings, SelectableValue } from '@grafana/data';
 import { AthenaDataSourceOptions, AthenaDataSourceSecureJsonData, AthenaDataSourceSettings, defaultKey } from './types';
 import { getBackendSrv } from '@grafana/runtime';
@@ -76,6 +76,17 @@ export function ConfigEditor(props: Props) {
     props.onOptionsChange(newOptions);
   };
 
+  const onChangeWorkGroup = (e: FormEvent<HTMLInputElement>) => {
+    const value = e.currentTarget.value;
+    props.onOptionsChange({
+      ...props.options,
+      jsonData: {
+        ...props.options.jsonData,
+        outputLocation: value,
+      },
+    });
+  };
+
   return (
     <div className="gf-form-group">
       <ConnectionConfig {...props} onOptionsChange={onOptionsChange} />
@@ -110,7 +121,8 @@ export function ConfigEditor(props: Props) {
       />
       <InlineInput
         {...props}
-        jsonDataPath="outputLocation"
+        value={props.options.jsonData.outputLocation ?? ''}
+        onChange={onChangeWorkGroup}
         label={selectors.components.ConfigEditor.workgroup.input}
         data-testid={selectors.components.ConfigEditor.workgroup.wrapper}
         tooltip="Optional. If not specified, the default query result location from the Workgroup configuration will be used."

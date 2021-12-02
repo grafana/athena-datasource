@@ -85,7 +85,7 @@ describe('ConfigEditor', () => {
     render(<ConfigEditor {...props} onOptionsChange={onChange} />);
     const input = screen.getByTestId(selectors.components.ConfigEditor.OuputLocation.wrapper);
     const bucket = 's3://foo';
-    fireEvent.change(input, { target: { value: bucket } });
+    fireEvent.change(input, { currentTarget: { value: bucket } });
     expect(onChange).toBeCalledWith({
       ...props.options,
       jsonData: { ...props.options.jsonData, outputLocation: bucket },

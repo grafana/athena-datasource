@@ -91,13 +91,13 @@ This is an example of a minimal policy you can use to query Athena. It is based 
         "s3:AbortMultipartUpload",
         "s3:PutObject"
       ],
-      "Resource": ["arn:aws:s3:::aws-athena-query-results-*"]
+      "Resource": ["arn:aws:s3:::aws-athena-query-results-*", "arn:aws:s3:::aws-athena-query-results-*/*"]
     },
     {
       "Sid": "AthenaExamplesS3Access",
       "Effect": "Allow",
       "Action": ["s3:GetObject", "s3:ListBucket"],
-      "Resource": ["arn:aws:s3:::athena-examples*"]
+      "Resource": ["arn:aws:s3:::athena-examples*","arn:aws:s3:::athena-examples*/*"]
     }
   ]
 }

@@ -2,6 +2,7 @@ import { DataSourceInstanceSettings, ScopedVars } from '@grafana/data';
 import { DataSourceWithBackend, getTemplateSrv } from '@grafana/runtime';
 import { AthenaDataSourceOptions, AthenaQuery } from './types';
 import { AthenaVariableSupport } from './variables';
+import { filterQuery, applyTemplateVariables } from '@grafana/aws-sdk';
 
 export class DataSource extends DataSourceWithBackend<AthenaQuery, AthenaDataSourceOptions> {
   defaultRegion = '';
@@ -19,33 +20,8 @@ export class DataSource extends DataSourceWithBackend<AthenaQuery, AthenaDataSou
   // This will support annotation queries for 7.2+
   annotations = {};
 
-  /**
-   * Do not execute queries that do not exist yet
-   */
-  filterQuery(query: AthenaQuery): boolean {
-    return !!query.rawSQL;
-  }
+  filterQuery = filterQuery;
 
-  applyTemplateVariables(query: AthenaQuery, scopedVars: ScopedVars): AthenaQuery {
-    const templateSrv = getTemplateSrv();
-    return {
-      ...query,
-      rawSQL: templateSrv.replace(query.rawSQL, scopedVars, this.interpolateVariable),
-    };
-  }
-
-  private interpolateVariable = (value: string | string[]) => {
-    if (typeof value === 'string') {
-      return value;
-    }
-
-    const quotedValues = value.map((v) => {
-      return this.quoteLiteral(v);
-    });
-    return quotedValues.join(',');
-  };
-
-  private quoteLiteral(value: any) {
-    return "'" + String(value).replace(/'/g, "''") + "'";
-  }
+  applyTemplateVariables = (query: AthenaQuery, scopedVars: ScopedVars) =>
+    applyTemplateVariables(query, scopedVars, getTemplateSrv);
 }

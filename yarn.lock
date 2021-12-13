@@ -1374,10 +1374,6 @@
     prettier "2.2.1"
     typescript "4.3.4"
 
-"@grafana/grafana-plugin-sdk-go@grafana/grafana-plugin-sdk-go#v0.112.0":
-  version "0.0.0"
-  resolved "https://codeload.github.com/grafana/grafana-plugin-sdk-go/tar.gz/4c305c4d10215404291b5c2963a83f7acd558264"
-
 "@grafana/runtime@8.2.1":
   version "8.2.1"
   resolved "https://registry.yarnpkg.com/@grafana/runtime/-/runtime-8.2.1.tgz#5c93b3af814fa66cd27f85eb0d3d244e9821c9dc"

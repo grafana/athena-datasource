@@ -20,7 +20,6 @@
     "@grafana/data": "8.2.1",
     "@grafana/e2e": "8.2.1",
     "@grafana/e2e-selectors": "8.2.1",
-    "@grafana/grafana-plugin-sdk-go": "grafana/grafana-plugin-sdk-go#v0.112.0",
     "@grafana/runtime": "8.2.1",
     "@grafana/toolkit": "8.2.1",
     "@grafana/ui": "8.2.1",

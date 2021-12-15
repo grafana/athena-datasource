@@ -2,7 +2,6 @@ package routes
 
 import (
 	"bytes"
-	"encoding/json"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -40,10 +39,6 @@ var ds = &fake.AthenaFakeDatasource{
 }
 
 func TestRoutes(t *testing.T) {
-	standardRegionsBytes, err := json.Marshal(standardRegions)
-	if err != nil {
-		panic(err)
-	}
 	tests := []struct {
 		description    string
 		route          string
@@ -53,65 +48,65 @@ func TestRoutes(t *testing.T) {
 	}{
 		{
 			description:    "return default regions",
-			route:          "regions",
+			route:          "/regions",
 			reqBody:        nil,
 			expectedCode:   http.StatusOK,
-			expectedResult: string(standardRegionsBytes),
+			expectedResult: string("ff"),
 		},
 		{
 			description:  "wrong req body for catalogs",
-			route:        "catalogs",
+			route:        "/catalogs",
 			reqBody:      []byte{},
 			expectedCode: http.StatusBadRequest,
 		},
 		{
 			description:    "default catalogs",
-			route:          "catalogs",
+			route:          "/catalogs",
 			reqBody:        []byte(`{"region":"us-east-2"}`),
 			expectedCode:   http.StatusOK,
 			expectedResult: `["catalog"]`,
 		},
 		{
 			description:  "wrong region for catalogs",
-			route:        "catalogs",
+			route:        "/catalogs",
 			reqBody:      []byte(`{"region":"us-east-3"}`),
 			expectedCode: http.StatusBadRequest,
 		},
 		{
 			description:  "wrong req body for databases",
-			route:        "databases",
+			route:        "/databases",
 			reqBody:      []byte{},
 			expectedCode: http.StatusBadRequest,
 		},
 		{
 			description:    "default databases",
-			route:          "databases",
+			route:          "/databases",
 			reqBody:        []byte(`{"region":"us-east-2","catalog":"catalog"}`),
 			expectedCode:   http.StatusOK,
 			expectedResult: `["db1","db2"]`,
 		},
 		{
 			description:  "wrong region for databases",
-			route:        "databases",
+			route:        "/databases",
 			reqBody:      []byte(`{"region":"us-east-3"}`),
 			expectedCode: http.StatusBadRequest,
 		},
 		{
 			description:  "wrong req body for workgroups",
-			route:        "workgroups",
+			route:        "/workgroups",
 			reqBody:      []byte{},
 			expectedCode: http.StatusBadRequest,
 		},
 		{
 			description:    "default workgroups",
-			route:          "workgroups",
+			route:          "/workgroups",
 			reqBody:        []byte(`{"region":"us-east-2"}`),
 			expectedCode:   http.StatusOK,
 			expectedResult: `["wg1","wg2"]`,
 		},
 		{
 			description:  "wrong region for workgroups",
-			route:        "workgroups",
+			route:        "/workgroups",
 			reqBody:      []byte(`{"region":"us-east-3"}`),
 			expectedCode: http.StatusBadRequest,
 		},
@@ -120,20 +115,8 @@ func TestRoutes(t *testing.T) {
 		t.Run(tt.description, func(t *testing.T) {
 			req := httptest.NewRequest("GET", "http://example.com/foo", bytes.NewReader(tt.reqBody))
 			rw := httptest.NewRecorder()
-			rh := ResourceHandler{ds: ds}
-			switch tt.route {
-			case "regions":
-				rh.regions(rw, req)
-			case "catalogs":
-				rh.catalogs(rw, req)
-			case "databases":
-				rh.databases(rw, req)
-			case "workgroups":
-				rh.workgroups(rw, req)
-			default:
-				t.Fatalf("unexpected route %s", tt.route)
-			}
-
+			rh := AthenaResourceHandler{athena: ds}
+			rh.Routes()[tt.route](rw, req)
 			resp := rw.Result()
 			body, err := io.ReadAll(resp.Body)
 			if err != nil {

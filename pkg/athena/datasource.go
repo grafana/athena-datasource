@@ -11,6 +11,7 @@ import (
 	"github.com/grafana/athena-datasource/pkg/athena/driver"
 	"github.com/grafana/athena-datasource/pkg/athena/models"
 	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
+	sqlAPI "github.com/grafana/grafana-aws-sdk/pkg/sql/api"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/resource/httpadapter"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
@@ -33,6 +34,8 @@ type AthenaDatasource struct {
 
 type AthenaDatasourceIface interface {
 	sqlds.Driver
+	sqlds.Completable
+	sqlAPI.Resources
 	DataCatalogs(ctx context.Context, options sqlds.Options) ([]string, error)
 	Databases(ctx context.Context, options sqlds.Options) ([]string, error)
 	Workgroups(ctx context.Context, options sqlds.Options) ([]string, error)
@@ -143,15 +146,15 @@ func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings, qu
 		}
 	}
 
-	api, err := api.New(s.sessionCache, settings)
+	apiInstance, err := api.New(s.sessionCache, settings)
 	if err != nil {
 		return nil, errors.WithMessage(err, "Failed to create athena client")
 	}
-	dr, db, err := driver.Open(api)
+	dr, db, err := driver.Open(apiInstance)
 	if err != nil {
 		return nil, errors.WithMessage(err, "Failed to connect to database. Is the hostname and port correct?")
 	}
-	s.connections.Store(key, connection{driver: dr, db: db, api: api})
+	s.connections.Store(key, connection{driver: dr, db: db, api: apiInstance.(*api.API)})
 	return db, nil
 }
 
@@ -166,31 +169,19 @@ func (s *AthenaDatasource) Schemas(ctx context.Context, options sqlds.Options) (
 }
 
 func (s *AthenaDatasource) Tables(ctx context.Context, options sqlds.Options) ([]string, error) {
-	region, catalog, database := options["region"], options["catalog"], options["database"]
+	region, catalog := options["region"], options["catalog"]
 	// get the api
 	api, err := s.getApi(ctx, region, catalog)
 	if err != nil {
 		return nil, err
 	}
 
-	// gets setings with passed in region, catalog, database, replacing __defaults as necessary
-	args := &ConnectionArgs{Region: region, Catalog: catalog, Database: database}
-	datasourceID := getDatasourceID(ctx)
-	defaultSettings, err := s.defaultSettings(datasourceID)
-	if err != nil {
-		return nil, err
-	}
-	settings, err := s.athenaSettings(defaultSettings, args)
-	if err != nil {
-		return nil, err
-	}
-
 	// call api with correct settings
-	return api.ListTables(ctx, settings.Catalog, settings.Database)
+	return api.Tables(ctx, options)
 }
 
 func (s *AthenaDatasource) Columns(ctx context.Context, options sqlds.Options) ([]string, error) {
-	region, catalog, database, table := options["region"], options["catalog"], options["database"], options["table"]
+	region, catalog, table := options["region"], options["catalog"], options["table"]
 	if table == "" {
 		return []string{}, nil
 	}
@@ -200,19 +191,7 @@ func (s *AthenaDatasource) Columns(ctx context.Context, options sqlds.Options) (
 		return nil, err
 	}
 
-	// gets setings with passed in region, catalog, database, replacing defaults as necessary
-	args := &ConnectionArgs{Region: region, Catalog: catalog, Database: database}
-	datasourceID := getDatasourceID(ctx)
-	defaultSettings, err := s.defaultSettings(datasourceID)
-	if err != nil {
-		return nil, err
-	}
-	settings, err := s.athenaSettings(defaultSettings, args)
-	if err != nil {
-		return nil, err
-	}
-
-	return api.ListColumnsForTable(ctx, settings.Catalog, settings.Database, table)
+	return api.Columns(ctx, options)
 }
 
 func getDatasourceID(ctx context.Context) int64 {
@@ -234,13 +213,21 @@ func (s *AthenaDatasource) getApi(ctx context.Context, region, catalog string) (
 	key := s.connectionKey(datasourceID, defaultSettings, args)
 	c, exists := s.connections.Load(key)
 	if !exists {
-		api, err := api.New(s.sessionCache, settings)
+		apiInstance, err := api.New(s.sessionCache, settings)
 		if err != nil {
 			return nil, errors.WithMessage(err, "Failed to create athena client")
 		}
-		return api, nil
+		return apiInstance.(*api.API), nil
 	}
 	return c.(connection).api, nil
+}
+
+func (s *AthenaDatasource) Regions(ctx context.Context) ([]string, error) {
+	api, err := s.getApi(ctx, "", "")
+	if err != nil {
+		return nil, err
+	}
+	return api.Regions(ctx)
 }
 
 func (s *AthenaDatasource) DataCatalogs(ctx context.Context, options sqlds.Options) ([]string, error) {
@@ -249,7 +236,7 @@ func (s *AthenaDatasource) DataCatalogs(ctx context.Context, options sqlds.Optio
 	if err != nil {
 		return nil, err
 	}
-	return api.ListDataCatalogs(ctx)
+	return api.DataCatalogs(ctx)
 }
 
 func (s *AthenaDatasource) Databases(ctx context.Context, options sqlds.Options) ([]string, error) {
@@ -258,7 +245,7 @@ func (s *AthenaDatasource) Databases(ctx context.Context, options sqlds.Options)
 	if err != nil {
 		return nil, err
 	}
-	return api.ListDatabases(ctx, catalog)
+	return api.Databases(ctx, options)
 }
 
 func (s *AthenaDatasource) Workgroups(ctx context.Context, options sqlds.Options) ([]string, error) {
@@ -267,5 +254,5 @@ func (s *AthenaDatasource) Workgroups(ctx context.Context, options sqlds.Options
 	if err != nil {
 		return nil, err
 	}
-	return api.ListWorkgroups(ctx)
+	return api.Workgroups(ctx)
 }

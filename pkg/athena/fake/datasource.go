@@ -36,6 +36,14 @@ func (s *AthenaFakeDatasource) Macros() sqlds.Macros {
 	return sqlds.Macros{}
 }
 
+func (s *AthenaFakeDatasource) Regions(ctx context.Context) ([]string, error) {
+	return []string{}, nil
+}
+
+func (s *AthenaFakeDatasource) Schemas(ctx context.Context, options sqlds.Options) ([]string, error) {
+	return []string{}, nil
+}
+
 func (s *AthenaFakeDatasource) DataCatalogs(ctx context.Context, options sqlds.Options) ([]string, error) {
 	region := options["region"]
 	catalogs := []string{}

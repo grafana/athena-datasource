@@ -51,7 +51,7 @@ func TestRoutes(t *testing.T) {
 			route:          "/regions",
 			reqBody:        nil,
 			expectedCode:   http.StatusOK,
-			expectedResult: string("ff"),
+			expectedResult: string("[]"),
 		},
 		{
 			description:  "wrong req body for catalogs",
@@ -116,6 +116,7 @@ func TestRoutes(t *testing.T) {
 			req := httptest.NewRequest("GET", "http://example.com/foo", bytes.NewReader(tt.reqBody))
 			rw := httptest.NewRecorder()
 			rh := AthenaResourceHandler{athena: ds}
+			rh.API = ds
 			rh.Routes()[tt.route](rw, req)
 			resp := rw.Result()
 			body, err := io.ReadAll(resp.Body)

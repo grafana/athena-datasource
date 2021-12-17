@@ -12,6 +12,7 @@ import (
 	"github.com/grafana/athena-datasource/pkg/athena/models"
 	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 	"github.com/grafana/grafana-aws-sdk/pkg/sql/api"
+	sqlModels "github.com/grafana/grafana-aws-sdk/pkg/sql/models"
 	"github.com/grafana/sqlds/v2"
 )
 
@@ -20,18 +21,17 @@ type API struct {
 	settings *models.AthenaDataSourceSettings
 }
 
-func New(sessionCache *awsds.SessionCache, settings *models.AthenaDataSourceSettings) (api.AWSAPI, error) {
-	sess, err := awsds.GetSessionWithDefaultRegion(sessionCache, settings.AWSDatasourceSettings)
+func New(sessionCache *awsds.SessionCache, settings sqlModels.Settings) (api.AWSAPI, error) {
+	athenaSettings := settings.(*models.AthenaDataSourceSettings)
+	sess, err := awsds.GetSessionWithDefaultRegion(sessionCache, athenaSettings.AWSDatasourceSettings)
 	if err != nil {
 		return nil, err
 	}
-
 	svc := athena.New(sess)
 	svc.Handlers.Send.PushFront(func(r *request.Request) {
 		r.HTTPRequest.Header.Set("User-Agent", awsds.GetUserAgentString("Athena"))
 	})
-
-	return &API{svc, settings}, nil
+	return &API{Client: svc, settings: athenaSettings}, nil
 }
 
 func (c *API) Execute(ctx context.Context, input *api.ExecuteQueryInput) (*api.ExecuteQueryOutput, error) {
@@ -130,7 +130,7 @@ func (c *API) getOptionWithDefault(options sqlds.Options, option string) string 
 	if !ok {
 		return ""
 	}
-	if v == models.DefaultKey {
+	if v == sqlModels.DefaultKey {
 		switch option {
 		case "region":
 			v = c.settings.DefaultRegion
@@ -170,7 +170,7 @@ func (c *API) Databases(ctx aws.Context, options sqlds.Options) ([]string, error
 	res := []string{}
 	var nextToken *string
 	isFinished := false
-	if catalog == models.DefaultKey {
+	if catalog == sqlModels.DefaultKey {
 		catalog = c.settings.Catalog
 	}
 	for !isFinished {

@@ -5,10 +5,10 @@ import (
 	"fmt"
 
 	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
+	"github.com/grafana/grafana-aws-sdk/pkg/sql/models"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
+	"github.com/grafana/sqlds/v2"
 )
-
-const DefaultKey = "__default"
 
 type AthenaDataSourceSettings struct {
 	awsds.AWSDatasourceSettings
@@ -16,6 +16,10 @@ type AthenaDataSourceSettings struct {
 	Catalog        string `json:"Catalog"`
 	WorkGroup      string `json:"WorkGroup"`
 	OutputLocation string `json:"OutputLocation"`
+}
+
+func New() models.Settings {
+	return &AthenaDataSourceSettings{}
 }
 
 func (s *AthenaDataSourceSettings) Load(config backend.DataSourceInstanceSettings) error {
@@ -31,18 +35,21 @@ func (s *AthenaDataSourceSettings) Load(config backend.DataSourceInstanceSetting
 	return nil
 }
 
-func (s *AthenaDataSourceSettings) GetConnectionKey(id int64, region, catalog, database string) string {
-	regionKey := DefaultKey
-	catalogKey := DefaultKey
-	databaseKey := DefaultKey
-	if region != "" && region != s.DefaultRegion {
-		regionKey = region
+func (s *AthenaDataSourceSettings) Apply(args sqlds.Options) {
+	region, catalog, database := args["region"], args["catalog"], args["database"]
+	if region != "" {
+		if region == models.DefaultKey {
+			s.Region = s.DefaultRegion
+		} else {
+			s.Region = region
+		}
 	}
-	if catalog != "" && catalog != s.Catalog {
-		catalogKey = catalog
+
+	if catalog != "" && catalog != models.DefaultKey {
+		s.Catalog = catalog
 	}
-	if database != "" && database != s.Database {
-		databaseKey = database
+
+	if database != "" && database != models.DefaultKey {
+		s.Database = database
 	}
-	return fmt.Sprintf("%d-%s-%s-%s", id, regionKey, catalogKey, databaseKey)
 }

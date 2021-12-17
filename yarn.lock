@@ -1305,13 +1305,12 @@
 
 "@grafana/aws-sdk@0.0.3":
   version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@grafana/aws-sdk/-/aws-sdk-0.0.3.tgz#bc632c6c77971a5474acbe45847420503679fc75"
-  integrity sha512-V0PJLk+oU1C33knurXp8BkT5N2ctDu9b21zpK16vkJAs5aOiH/OaOhQ/IP9ipxYhB+b9PFjr8RXagV/8XJ8xwg==
+  resolved "git://github.com/grafana/grafana-aws-sdk-react.git#2ed1b110f9c16d7345804fff777f620b8a9ad637"
 
-"@grafana/aws-sdk@^0.0.31":
-  version "0.0.31"
-  resolved "https://registry.yarnpkg.com/@grafana/aws-sdk/-/aws-sdk-0.0.31.tgz#ddc7f5e3f2f35e4ad5c43fdf3e8efe64c5a5303a"
-  integrity sha512-AUgw19cAnwkg2QTwghlMk7cmLkjph4oQtH5S57hjX6XywlbUF3SXCoMwTXlqfM6oeBPVelCJ4zM9imtmBQFAVQ==
+"@grafana/aws-sdk@0.0.32-pre.2":
+  version "0.0.32-pre.2"
+  resolved "https://registry.yarnpkg.com/@grafana/aws-sdk/-/aws-sdk-0.0.32-pre.2.tgz#6a27be225294f5291baf4aefae09bfbea4d33a9b"
+  integrity sha512-JsRgzNjKaBcSUE2jgTU8vyfOOMZz9+cq07dIDiZ8KiGBV35AT5Hq5IK6pTmdOEC4c9mw7ZnknEVEGfgRH8/4kQ==
 
 "@grafana/data@8.2.1":
   version "8.2.1"

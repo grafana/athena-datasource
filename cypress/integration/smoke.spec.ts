@@ -43,7 +43,10 @@ e2e.scenario({
             e2eSelectors.ConfigEditor.AuthenticationProvider.input().type('Access & secret key').type('{enter}');
             e2eSelectors.ConfigEditor.AccessKey.input().type(datasource.secureJsonData.accessKey);
             e2eSelectors.ConfigEditor.SecretKey.input().type(datasource.secureJsonData.secretKey);
-            e2eSelectors.ConfigEditor.DefaultRegion.input().type(datasource.jsonData.defaultRegion).type('{enter}');
+            e2eSelectors.ConfigEditor.DefaultRegion.input()
+              .click({ force: true })
+              .type(datasource.jsonData.defaultRegion)
+              .type('{enter}');
             // Catalogs
             e2eSelectors.ConfigEditor.catalog.input().click({ force: true });
             // wait for it to load

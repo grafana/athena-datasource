@@ -2,7 +2,7 @@
 
 ## 1.0.1
 
-Fixes a bug preventing from creating several data sources of the plugin in the same instance.
+Fixes a bug that caused several instances of the plugin to accidentally connect to the same instance.
 
 ## 1.0.0
 

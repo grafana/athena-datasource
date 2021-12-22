@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1
+
+Fixes a bug preventing from creating several data sources of the plugin in the same instance.
+
 ## 1.0.0
 
 Initial release.

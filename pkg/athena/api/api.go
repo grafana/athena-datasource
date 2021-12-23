@@ -6,7 +6,6 @@ import (
 	"fmt"
 
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/request"
 	"github.com/aws/aws-sdk-go/service/athena"
 	"github.com/aws/aws-sdk-go/service/athena/athenaiface"
 	"github.com/grafana/athena-datasource/pkg/athena/models"
@@ -25,13 +24,9 @@ func New(sessionCache *awsds.SessionCache, settings *models.AthenaDataSourceSett
 	if err != nil {
 		return nil, err
 	}
+	awsds.WithUserAgent(sess, "Athena")
 
-	svc := athena.New(sess)
-	svc.Handlers.Send.PushFront(func(r *request.Request) {
-		r.HTTPRequest.Header.Set("User-Agent", awsds.GetUserAgentString("Athena"))
-	})
-
-	return &API{svc, settings}, nil
+	return &API{athena.New(sess), settings}, nil
 }
 
 func (c *API) Execute(ctx context.Context, input *api.ExecuteQueryInput) (*api.ExecuteQueryOutput, error) {

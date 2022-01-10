@@ -1,7 +1,9 @@
 import { CodeEditorSuggestionItem, CodeEditorSuggestionItemKind } from '@grafana/ui';
-import { TemplateSrv } from '@grafana/runtime';
+import { AthenaQuery } from 'types';
+import { appendTemplateVariablesAsSuggestions } from '@grafana/aws-sdk';
+import { getTemplateSrv } from '@grafana/runtime';
 
-export function getSuggestions(templateSrv: TemplateSrv, table?: string, column?: string) {
+export function getSuggestions(query: AthenaQuery) {
   const sugs: CodeEditorSuggestionItem[] = [
     {
       label: '$__dateFilter',
@@ -46,27 +48,14 @@ export function getSuggestions(templateSrv: TemplateSrv, table?: string, column?
     {
       label: '$__table',
       kind: CodeEditorSuggestionItemKind.Text,
-      detail: `(Macro) ${table}`,
+      detail: `(Macro) ${query.table}`,
     },
     {
       label: '$__column',
       kind: CodeEditorSuggestionItemKind.Text,
-      detail: `(Macro) ${column}`,
+      detail: `(Macro) ${query.column}`,
     },
   ];
 
-  templateSrv.getVariables().forEach((variable) => {
-    const label = '$' + variable.name;
-    let val = templateSrv.replace(label);
-    if (val === label) {
-      val = '';
-    }
-    sugs.push({
-      label,
-      kind: CodeEditorSuggestionItemKind.Text,
-      detail: `(Template Variable) ${val}`,
-    });
-  });
-
-  return sugs;
+  return appendTemplateVariablesAsSuggestions(getTemplateSrv, sugs);
 }

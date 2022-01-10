@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1
+
+Fixes a bug that caused several instances of the plugin to accidentally connect to the same instance.
+
 ## 1.0.0
 
 Initial release.

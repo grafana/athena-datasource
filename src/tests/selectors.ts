@@ -2,11 +2,17 @@ import { E2ESelectors } from '@grafana/e2e-selectors';
 
 export const Components = {
   ConfigEditor: {
+    AuthenticationProvider: {
+      input: 'Authentication Provider',
+    },
     SecretKey: {
-      input: 'Config editor secret key input',
+      input: 'Secret Access Key',
     },
     AccessKey: {
-      input: 'Config editor access key input',
+      input: 'Access Key ID',
+    },
+    DefaultRegion: {
+      input: 'Default Region',
     },
     catalog: {
       input: 'Data source',

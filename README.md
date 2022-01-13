@@ -238,6 +238,29 @@ datasources:
       defaultRegion: eu-west-2
 ```
 
+### Complete configuration using Grafana's [Datasource API](https://grafana.com/docs/grafana/latest/http_api/data_source/#create-a-data-source)
+```json
+{
+  "name": "Amazon Athena",
+  "type": "grafana-athena-datasource",
+  "typeName": "Amazon Athena",
+  "access": "proxy",
+  "basicAuth": false,
+  "isDefault": true,
+  "jsonData": {
+    "assumeRoleArn": "arn:aws:iam::111111111111:role/test-role",
+    "authType": "default",
+    "catalog": "AwsDataCatalog",
+    "database": "test-database",
+    "defaultRegion": "eu-west-1",
+    "endpoint": "https://test",
+    "externalId": "external",
+    "outputLocation": "s3://test-bucket",
+    "workgroup": "test-workgroup"
+  }
+}
+```
+
 ### Acknowledgment
 
 The backend driver is based on the implementation of [uber/athenadriver](https://github.com/uber/athenadriver), which provides a fully-featured driver for AWS Athena.

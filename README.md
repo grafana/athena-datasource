@@ -179,7 +179,8 @@ The following table represents the values of the columns taken into account to r
 
 ## Provision Athena data source
 
-You can configure the Athena data source using configuration files with Grafana's provisioning system. For more information, refer to the [provisioning docs page](https://grafana.com/docs/grafana/latest/administration/provisioning/).
+You can configure the Athena data source using configuration files with Grafana's provisioning system or using Grafana's [Datasource JSON API](https://grafana.com/docs/grafana/latest/http_api/data_source/#create-a-data-source)
+. For more information, refer to the [provisioning docs page](https://grafana.com/docs/grafana/latest/administration/provisioning/).
 
 Here are some provisioning examples.
 
@@ -189,10 +190,13 @@ Here are some provisioning examples.
 apiVersion: 1
 datasources:
   - name: Athena
-    type: athena
+    type: grafana-athena-datasource
     jsonData:
       authType: default
       defaultRegion: eu-west-2
+      catalog: AwsDataCatalog
+      database: '<your athena database>'
+      workgroup: '<your athena workgroup>'
 ```
 
 ### Using credentials' profile name (non-default)
@@ -202,11 +206,14 @@ apiVersion: 1
 
 datasources:
   - name: Athena
-    type: athena
+    type: grafana-athena-datasource
     jsonData:
       authType: credentials
       defaultRegion: eu-west-2
       profile: secondary
+      catalog: AwsDataCatalog
+      database: '<your athena database>'
+      workgroup: '<your athena workgroup>'
 ```
 
 ### Using `accessKey` and `secretKey`
@@ -216,13 +223,16 @@ apiVersion: 1
 
 datasources:
   - name: Athena
-    type: athena
+    type: grafana-athena-datasource
     jsonData:
       authType: keys
       defaultRegion: eu-west-2
     secureJsonData:
       accessKey: '<your access key>'
       secretKey: '<your secret key>'
+      catalog: AwsDataCatalog
+      database: '<your athena database>'
+      workgroup: '<your athena workgroup>'
 ```
 
 ### Using AWS SDK Default and ARN of IAM Role to Assume
@@ -231,11 +241,23 @@ datasources:
 apiVersion: 1
 datasources:
   - name: Athena
-    type: athena
+    type: grafana-athena-datasource
     jsonData:
       authType: default
       assumeRoleArn: arn:aws:iam::123456789012:root
       defaultRegion: eu-west-2
+      catalog: AwsDataCatalog
+      database: '<your athena database>'
+      workgroup: '<your athena workgroup>'
+```
+
+There are also some optional parameters to configure this datasource:
+
+```yaml
+    jsonData:
+      endpoint: https://'{service}.{region}.amazonaws.com'
+      externalId: '<your role external id>'
+      outputLocation: s3://'<your s3 bucket>'
 ```
 
 ### Acknowledgment

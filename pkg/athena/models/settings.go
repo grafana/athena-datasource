@@ -12,6 +12,7 @@ import (
 
 type AthenaDataSourceSettings struct {
 	awsds.AWSDatasourceSettings
+	Config         backend.DataSourceInstanceSettings
 	Database       string `json:"Database"`
 	Catalog        string `json:"Catalog"`
 	WorkGroup      string `json:"WorkGroup"`
@@ -31,6 +32,8 @@ func (s *AthenaDataSourceSettings) Load(config backend.DataSourceInstanceSetting
 
 	s.AccessKey = config.DecryptedSecureJSONData["accessKey"]
 	s.SecretKey = config.DecryptedSecureJSONData["secretKey"]
+
+	s.Config = config
 
 	return nil
 }

@@ -22,11 +22,14 @@ type API struct {
 
 func New(sessionCache *awsds.SessionCache, settings sqlModels.Settings) (api.AWSAPI, error) {
 	athenaSettings := settings.(*models.AthenaDataSourceSettings)
-	sess, err := awsds.GetSessionWithDefaultRegion(sessionCache, athenaSettings.AWSDatasourceSettings)
+	sess, err := sessionCache.GetSession(awsds.SessionConfig{
+		Settings:      athenaSettings.AWSDatasourceSettings,
+		Config:        athenaSettings.Config,
+		UserAgentName: aws.String("Athena"),
+	})
 	if err != nil {
 		return nil, err
 	}
-	awsds.WithUserAgent(sess, "Athena")
 
 	return &API{Client: athena.New(sess), settings: athenaSettings}, nil
 }

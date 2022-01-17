@@ -12,6 +12,8 @@ import (
 	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 	"github.com/grafana/grafana-aws-sdk/pkg/sql/api"
 	sqlModels "github.com/grafana/grafana-aws-sdk/pkg/sql/models"
+	"github.com/grafana/grafana-plugin-sdk-go/backend"
+	sdkhttpclient "github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
 	"github.com/grafana/sqlds/v2"
 )
 
@@ -22,9 +24,22 @@ type API struct {
 
 func New(sessionCache *awsds.SessionCache, settings sqlModels.Settings) (api.AWSAPI, error) {
 	athenaSettings := settings.(*models.AthenaDataSourceSettings)
+
+	httpClientProvider := sdkhttpclient.NewProvider()
+	httpClientOptions, err := athenaSettings.Config.HTTPClientOptions()
+	if err != nil {
+		backend.Logger.Error("failed to create HTTP client options", "error", err.Error())
+		return nil, err
+	}
+	httpClient, err := httpClientProvider.New(httpClientOptions)
+	if err != nil {
+		backend.Logger.Error("failed to create HTTP client", "error", err.Error())
+		return nil, err
+	}
+
 	sess, err := sessionCache.GetSession(awsds.SessionConfig{
+		HTTPClient:    httpClient,
 		Settings:      athenaSettings.AWSDatasourceSettings,
-		Config:        athenaSettings.Config,
 		UserAgentName: aws.String("Athena"),
 	})
 	if err != nil {

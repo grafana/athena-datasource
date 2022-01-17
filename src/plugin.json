@@ -13,6 +13,11 @@
       "type": "dashboard",
       "name": "Cost Usage Report Monitoring",
       "path": "dashboards/cur-monitoring.json"
+    },
+    {
+      "type": "dashboard",
+      "name": "Amazon VPC Flow Logs",
+      "path": "dashboards/vpc-flow-logs.json"
     }
   ],
   "info": {

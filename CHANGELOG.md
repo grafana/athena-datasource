@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2
+
+- Includes a curated dashboard for Amazon VPC Flow Logs.
+- Fixes a bug in which modifications to the data source configuration were not being applied (#105).
+- Add User-Agent to requests.
+
 ## 1.0.1
 
 Fixes a bug that caused several instances of the plugin to accidentally connect to the same instance.

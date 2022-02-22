@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.3
+
+- Fixes bugs for Endpoint and Assume Role settings
+
 ## 1.0.2
 
 - Includes a curated dashboard for Amazon VPC Flow Logs.

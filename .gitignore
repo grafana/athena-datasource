@@ -30,7 +30,7 @@ e2e-results/
 .idea
 
 # End to End tests
-provisioning/
+provisioning
 cypress/report.json
 cypress/screenshots/actual
 cypress/videos/

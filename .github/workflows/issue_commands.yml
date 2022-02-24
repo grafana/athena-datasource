@@ -4,6 +4,7 @@ on:
     types: [labeled]
   pull_request:
     types: [labeled]    
+    branches-ignore: "dependabot/**"
 jobs:
   main:
     runs-on: ubuntu-latest

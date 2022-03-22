@@ -59,7 +59,7 @@ func Test_macros(t *testing.T) {
 			nil,
 		},
 		{
-			"time filter",
+			"time filter without format",
 			"timeFilter",
 			&sqlds.Query{
 				TimeRange: backend.TimeRange{
@@ -69,6 +69,32 @@ func Test_macros(t *testing.T) {
 			},
 			[]string{"starttime"},
 			`starttime BETWEEN TIMESTAMP '2021-06-23 00:00:00' AND TIMESTAMP '2021-06-23 01:00:00'`,
+			nil,
+		},
+		{
+			"time filter with default format",
+			"timeFilter",
+			&sqlds.Query{
+				TimeRange: backend.TimeRange{
+					From: time.Date(2021, 6, 23, 0, 0, 0, 0, &time.Location{}),
+					To:   time.Date(2021, 6, 23, 1, 0, 0, 0, &time.Location{}),
+				},
+			},
+			[]string{"starttime","'yyyy-MM-dd HH:mm:ss'"},
+			`TIMESTAMP starttime BETWEEN TIMESTAMP '2017-07-18T11:15:52Z' AND TIMESTAMP '2017-07-18T11:15:52Z'`,
+			nil,
+		},
+		{
+			"time filter with a custom format",
+			"timeFilter",
+			&sqlds.Query{
+				TimeRange: backend.TimeRange{
+					From: time.Date(2021, 6, 23, 0, 0, 0, 0, &time.Location{}),
+					To:   time.Date(2021, 6, 23, 1, 0, 0, 0, &time.Location{}),
+				},
+			},
+			[]string{"starttime","'yyyy-MM-dd''T''HH:mm:ss''+0000'"},
+			`parse_datetime(starttime,'yyyy-MM-dd''T''HH:mm:ss''+0000') BETWEEN TIMESTAMP '2017-07-18 11:15:52' AND TIMESTAMP '2017-07-18 11:25:52'`,
 			nil,
 		},
 		{

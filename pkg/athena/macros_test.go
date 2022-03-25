@@ -106,6 +106,19 @@ func Test_macros(t *testing.T) {
 			sqlds.ErrorBadArgumentCount,
 		},
 		{
+			"raw time from",
+			"rawTimeFrom",
+			&sqlds.Query{
+				TimeRange: backend.TimeRange{
+					From: time.Date(2021, 6, 23, 0, 0, 0, 0, &time.Location{}),
+					To:   time.Date(2021, 6, 23, 1, 0, 0, 0, &time.Location{}),
+				},
+			},
+			[]string{"'yyyy/MM/dd/HH/mm/ss'"},
+			`format_datetime(TIMESTAMP '2021-06-23 00:00:00','yyyy/MM/dd/HH/mm/ss')`,
+			nil,
+		},
+		{
 			"time from filter",
 			"timeFrom",
 			&sqlds.Query{
@@ -116,6 +129,19 @@ func Test_macros(t *testing.T) {
 			},
 			[]string{},
 			`TIMESTAMP '2021-06-23 00:00:00'`,
+			nil,
+		},
+		{
+			"raw time to",
+			"rawTimeTo",
+			&sqlds.Query{
+				TimeRange: backend.TimeRange{
+					From: time.Date(2021, 6, 23, 0, 0, 0, 0, &time.Location{}),
+					To:   time.Date(2021, 6, 23, 1, 0, 0, 0, &time.Location{}),
+				},
+			},
+			[]string{"'yyyy/MM/dd/HH/mm/ss'"},
+			`format_datetime(TIMESTAMP '2021-06-23 01:00:00','yyyy/MM/dd/HH/mm/ss')`,
 			nil,
 		},
 		{

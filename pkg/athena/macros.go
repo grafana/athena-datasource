@@ -114,8 +114,26 @@ func macroTimeFrom(query *sqlds.Query, args []string) (string, error) {
 
 }
 
+func macroRawTimeFrom(query *sqlds.Query, args []string) (string, error) {
+	format := timestampFormat
+	if len(args) == 1 && args[0] != "" {
+		format = args[0]
+	}
+
+	return fmt.Sprintf("format_datetime(TIMESTAMP '%s',%s)", query.TimeRange.From.UTC().Format(goTimestampFormat), format), nil
+}
+
 func macroTimeTo(query *sqlds.Query, args []string) (string, error) {
 	return fmt.Sprintf("TIMESTAMP '%s'", query.TimeRange.To.UTC().Format(goTimestampFormat)), nil
+}
+
+func macroRawTimeTo(query *sqlds.Query, args []string) (string, error) {
+	format := timestampFormat
+	if len(args) == 1 && args[0] != "" {
+		format = args[0]
+	}
+
+	return fmt.Sprintf("format_datetime(TIMESTAMP '%s',%s)", query.TimeRange.To.UTC().Format(goTimestampFormat), format), nil
 }
 
 func macroDateFilter(query *sqlds.Query, args []string) (string, error) {
@@ -137,9 +155,11 @@ var macros = map[string]sqlds.MacroFunc{
 	"parseTime":       macroParseTime,
 	"unixEpochFilter": macroUnixEpochFilter,
 	"timeFilter":      macroTimeFilter,
+	"rawTimeFrom":     macroRawTimeFrom,
 	"timeFrom":        macroTimeFrom,
 	"timeGroup":       macroTimeGroup,
 	"unixEpochGroup":  macroUnixEpochGroup,
+	"rawTimeTo":       macroRawTimeTo,
 	"timeTo":          macroTimeTo,
 }
 

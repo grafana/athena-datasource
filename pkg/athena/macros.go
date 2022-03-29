@@ -8,6 +8,7 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/backend/gtime"
 	"github.com/grafana/sqlds/v2"
 	"github.com/pkg/errors"
+	"github.com/viant/toolbox"
 )
 
 const (
@@ -119,8 +120,8 @@ func macroRawTimeFrom(query *sqlds.Query, args []string) (string, error) {
 	if len(args) == 1 && args[0] != "" {
 		format = args[0]
 	}
-
-	return fmt.Sprintf("format_datetime(TIMESTAMP '%s',%s)", query.TimeRange.From.UTC().Format(goTimestampFormat), format), nil
+	timeLayout := toolbox.DateFormatToLayout(format)
+	return query.TimeRange.From.UTC().Format(timeLayout), nil
 }
 
 func macroTimeTo(query *sqlds.Query, args []string) (string, error) {
@@ -132,8 +133,8 @@ func macroRawTimeTo(query *sqlds.Query, args []string) (string, error) {
 	if len(args) == 1 && args[0] != "" {
 		format = args[0]
 	}
-
-	return fmt.Sprintf("format_datetime(TIMESTAMP '%s',%s)", query.TimeRange.To.UTC().Format(goTimestampFormat), format), nil
+	timeLayout := toolbox.DateFormatToLayout(format)
+	return query.TimeRange.To.UTC().Format(timeLayout), nil
 }
 
 func macroDateFilter(query *sqlds.Query, args []string) (string, error) {

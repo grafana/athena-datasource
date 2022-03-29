@@ -115,7 +115,7 @@ func Test_macros(t *testing.T) {
 				},
 			},
 			[]string{"'yyyy/MM/dd/HH/mm/ss'"},
-			`format_datetime(TIMESTAMP '2021-06-23 00:00:00','yyyy/MM/dd/HH/mm/ss')`,
+			`'2021/06/23/00/00/00'`,
 			nil,
 		},
 		{
@@ -141,7 +141,7 @@ func Test_macros(t *testing.T) {
 				},
 			},
 			[]string{"'yyyy/MM/dd/HH/mm/ss'"},
-			`format_datetime(TIMESTAMP '2021-06-23 01:00:00','yyyy/MM/dd/HH/mm/ss')`,
+			`'2021/06/23/01/00/00'`,
 			nil,
 		},
 		{

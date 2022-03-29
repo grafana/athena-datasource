@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.1.0
+## 1.0.4
 
 - Add macros to output the raw starting or ending time of the panel's range
 

@@ -8,6 +8,7 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/backend/gtime"
 	"github.com/grafana/sqlds/v2"
 	"github.com/pkg/errors"
+	"github.com/viant/toolbox"
 )
 
 const (
@@ -114,8 +115,26 @@ func macroTimeFrom(query *sqlds.Query, args []string) (string, error) {
 
 }
 
+func macroRawTimeFrom(query *sqlds.Query, args []string) (string, error) {
+	format := timestampFormat
+	if len(args) == 1 && args[0] != "" {
+		format = args[0]
+	}
+	timeLayout := toolbox.DateFormatToLayout(format)
+	return query.TimeRange.From.UTC().Format(timeLayout), nil
+}
+
 func macroTimeTo(query *sqlds.Query, args []string) (string, error) {
 	return fmt.Sprintf("TIMESTAMP '%s'", query.TimeRange.To.UTC().Format(goTimestampFormat)), nil
+}
+
+func macroRawTimeTo(query *sqlds.Query, args []string) (string, error) {
+	format := timestampFormat
+	if len(args) == 1 && args[0] != "" {
+		format = args[0]
+	}
+	timeLayout := toolbox.DateFormatToLayout(format)
+	return query.TimeRange.To.UTC().Format(timeLayout), nil
 }
 
 func macroDateFilter(query *sqlds.Query, args []string) (string, error) {
@@ -137,9 +156,11 @@ var macros = map[string]sqlds.MacroFunc{
 	"parseTime":       macroParseTime,
 	"unixEpochFilter": macroUnixEpochFilter,
 	"timeFilter":      macroTimeFilter,
+	"rawTimeFrom":     macroRawTimeFrom,
 	"timeFrom":        macroTimeFrom,
 	"timeGroup":       macroTimeGroup,
 	"unixEpochGroup":  macroUnixEpochGroup,
+	"rawTimeTo":       macroRawTimeTo,
 	"timeTo":          macroTimeTo,
 }
 

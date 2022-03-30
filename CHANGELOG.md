@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.4
+
+- Add macros to output the raw starting or ending time of the panel's range
+
 ## 1.0.3
 
 - Fixes bugs for Endpoint and Assume Role settings

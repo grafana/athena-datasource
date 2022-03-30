@@ -21,7 +21,17 @@ export function getSuggestions(query: AthenaQuery) {
       detail: '(Macro)',
     },
     {
+      label: '$__rawTimeFrom',
+      kind: CodeEditorSuggestionItemKind.Method,
+      detail: '(Macro)',
+    },
+    {
       label: '$__timeFrom',
+      kind: CodeEditorSuggestionItemKind.Method,
+      detail: '(Macro)',
+    },
+    {
+      label: '$__rawTimeTo',
       kind: CodeEditorSuggestionItemKind.Method,
       detail: '(Macro)',
     },

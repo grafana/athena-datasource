@@ -1,8 +1,9 @@
 import { FormatSelect, QueryCodeEditor, ResourceSelector } from '@grafana/aws-sdk';
-import { QueryEditorProps, SelectableValue } from '@grafana/data';
-import { Button, InlineSegmentGroup } from '@grafana/ui';
+import { QueryEditorProps, SelectableValue, GrafanaTheme2 } from '@grafana/data';
+import { Button, InlineSegmentGroup, useStyles2 } from '@grafana/ui';
 import React from 'react';
 import { getSuggestions } from 'Suggestions';
+import { css } from '@emotion/css';
 import { selectors } from 'tests/selectors';
 
 import { DataSource } from './datasource';
@@ -71,15 +72,25 @@ export function QueryEditor(props: Props) {
     }
   };
 
+  const getStyles = (theme: GrafanaTheme2) => ({
+    spacing: css`
+    margin-right: 4px;
+    `,
+    }); 
+
+  const styles = useStyles2(getStyles);
+
   return (
     <>
-      <Button
-        variant="primary"
-        aria-label={selectors.components.QueryEditor.RunQuery.button}
-        onClick={props.onRunQuery}
-      >
-        Run Query
-      </Button>
+      <div className={styles.spacing}>
+        <Button
+          variant="primary"
+          aria-label={selectors.components.QueryEditor.RunQuery.button}
+          onClick={props.onRunQuery}
+        >
+          Run Query
+       </Button>
+      </div>
       <InlineSegmentGroup>
         <div className="gf-form-group">
           <ResourceSelector

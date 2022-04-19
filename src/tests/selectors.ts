@@ -50,6 +50,9 @@ export const Components = {
     TableView: {
       input: 'toggle-table-view',
     },
+    RunQuery: {
+      button: 'Run Query',
+    },
   },
   RefreshPicker: {
     runButton: 'RefreshPicker run button',

@@ -1,11 +1,12 @@
-import React from 'react';
+import { FormatSelect, QueryCodeEditor, ResourceSelector } from '@grafana/aws-sdk';
 import { QueryEditorProps, SelectableValue } from '@grafana/data';
+import { Button, InlineSegmentGroup } from '@grafana/ui';
+import React from 'react';
+import { getSuggestions } from 'Suggestions';
+import { selectors } from 'tests/selectors';
+
 import { DataSource } from './datasource';
 import { AthenaDataSourceOptions, AthenaQuery, defaultQuery, SelectableFormatOptions } from './types';
-import { InlineSegmentGroup } from '@grafana/ui';
-import { FormatSelect, ResourceSelector, QueryCodeEditor } from '@grafana/aws-sdk';
-import { selectors } from 'tests/selectors';
-import { getSuggestions } from 'Suggestions';
 
 type Props = QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions>;
 
@@ -72,7 +73,13 @@ export function QueryEditor(props: Props) {
 
   return (
     <>
-      <p>abc</p>
+      <Button
+        variant="primary"
+        aria-label={selectors.components.QueryEditor.RunQuery.button}
+        onClick={props.onRunQuery}
+      >
+        Run Query
+      </Button>
       <InlineSegmentGroup>
         <div className="gf-form-group">
           <ResourceSelector

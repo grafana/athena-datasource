@@ -74,9 +74,10 @@ export function QueryEditor(props: Props) {
 
   const getStyles = (theme: GrafanaTheme2) => ({
     spacing: css`
-    margin-right: 4px;
+      text-align: right;
+      padding: 12px 0px;
     `,
-    }); 
+  });
 
   const styles = useStyles2(getStyles);
 
@@ -89,7 +90,7 @@ export function QueryEditor(props: Props) {
           onClick={props.onRunQuery}
         >
           Run Query
-       </Button>
+        </Button>
       </div>
       <InlineSegmentGroup>
         <div className="gf-form-group">

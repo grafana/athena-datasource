@@ -72,6 +72,7 @@ export function QueryEditor(props: Props) {
 
   return (
     <>
+      <p>abc</p>
       <InlineSegmentGroup>
         <div className="gf-form-group">
           <ResourceSelector

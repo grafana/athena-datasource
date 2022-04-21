@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.5
+
+- Fixes a bug that caused invalid tokens when assuming a role in private clouds (e.g. `gov`).
+
 ## 1.0.4
 
 - Add macros to output the raw starting or ending time of the panel's range

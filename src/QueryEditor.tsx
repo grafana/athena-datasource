@@ -163,6 +163,7 @@ export function QueryEditor(props: Props) {
             onChange={props.onChange}
             onRunQuery={props.onRunQuery}
             getSuggestions={getSuggestions}
+            disableRunOnBlur={true}
           />
         </div>
       </InlineSegmentGroup>

@@ -1,9 +1,9 @@
+import { css } from '@emotion/css';
 import { FormatSelect, QueryCodeEditor, ResourceSelector } from '@grafana/aws-sdk';
-import { QueryEditorProps, SelectableValue, GrafanaTheme2 } from '@grafana/data';
+import { GrafanaTheme2, QueryEditorProps, SelectableValue } from '@grafana/data';
 import { Button, InlineSegmentGroup, useStyles2 } from '@grafana/ui';
 import React from 'react';
 import { getSuggestions } from 'Suggestions';
-import { css } from '@emotion/css';
 import { selectors } from 'tests/selectors';
 
 import { DataSource } from './datasource';
@@ -75,7 +75,7 @@ export function QueryEditor(props: Props) {
   const getStyles = (theme: GrafanaTheme2) => ({
     spacing: css`
       text-align: right;
-      padding: 12px 0px;
+      padding: 4px 0px;
     `,
   });
 

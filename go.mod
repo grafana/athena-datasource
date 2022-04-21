@@ -6,7 +6,7 @@ require (
 	github.com/aws/aws-sdk-go v1.37.32
 	github.com/go-errors/errors v1.4.2 // indirect
 	github.com/google/go-cmp v0.5.7
-	github.com/grafana/grafana-aws-sdk v0.10.1
+	github.com/grafana/grafana-aws-sdk v0.10.3
 	github.com/grafana/grafana-plugin-sdk-go v0.125.0
 	github.com/grafana/sqlds/v2 v2.3.3
 	github.com/pkg/errors v0.9.1

@@ -21,28 +21,11 @@ export function QueryEditor(props: Props) {
     },
   };
 
-  const fetchRegions = () => props.datasource.getResource('regions');
-  const fetchCatalogs = () =>
-    props.datasource.postResource('catalogs', {
-      region: queryWithDefaults.connectionArgs.region,
-    });
-  const fetchDatabases = () =>
-    props.datasource.postResource('databases', {
-      region: queryWithDefaults.connectionArgs.region,
-      catalog: queryWithDefaults.connectionArgs.catalog,
-    });
-  const fetchTables = () =>
-    props.datasource.postResource('tables', {
-      region: queryWithDefaults.connectionArgs.region,
-      catalog: queryWithDefaults.connectionArgs.catalog,
-      database: queryWithDefaults.connectionArgs.database,
-    });
-
-  const fetchColumns = () =>
-    props.datasource.postResource('columns', {
-      ...queryWithDefaults.connectionArgs,
-      table: queryWithDefaults.table,
-    });
+  const fetchRegions = () => props.datasource.getRegions();
+  const fetchCatalogs = () => props.datasource.getCatalogs(queryWithDefaults);
+  const fetchDatabases = () => props.datasource.getDatabases(queryWithDefaults);
+  const fetchTables = () => props.datasource.getTables(queryWithDefaults);
+  const fetchColumns = () => props.datasource.getColumns(queryWithDefaults);
 
   const onChange = (prop: QueryProperties) => (e: SelectableValue<string> | null) => {
     const newQuery = { ...props.query };

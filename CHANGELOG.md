@@ -1,10 +1,10 @@
 # Changelog
 
-
 ## 2.0.0
 _Not released yet_
 
 - Breaking Change: Athena plugin now requires Grafana 8.0+ to run.
+
 ## 1.0.5
 
 - Fixes a bug that caused invalid tokens when assuming a role in private clouds (e.g. `gov`).

@@ -31,6 +31,7 @@ describe('QueryEditor', () => {
   it('should request regions and use a new one', async () => {
     const onChange = jest.fn();
     ds.getResource = jest.fn().mockResolvedValue([ds.defaultRegion, 'foo']);
+    ds.getRegions = jest.fn(() => ds.getResource('regions'));
     render(<QueryEditor {...props} onChange={onChange} />);
 
     const selectEl = screen.getByLabelText(selectors.components.ConfigEditor.region.input);
@@ -48,6 +49,7 @@ describe('QueryEditor', () => {
   it('should request catalogs and use a new one', async () => {
     const onChange = jest.fn();
     ds.postResource = jest.fn().mockResolvedValue([ds.defaultCatalog, 'foo']);
+    ds.getCatalogs = jest.fn((query) => ds.postResource('catalogs', { region: query.connectionArgs.region }));
     render(<QueryEditor {...props} onChange={onChange} />);
 
     const selectEl = screen.getByLabelText(selectors.components.ConfigEditor.catalog.input);
@@ -66,6 +68,9 @@ describe('QueryEditor', () => {
     const onChange = jest.fn();
     const onRunQuery = jest.fn();
     ds.postResource = jest.fn().mockResolvedValue([ds.defaultDatabase, 'foo']);
+    ds.getDatabases = jest.fn((query) =>
+      ds.postResource('databases', { region: query.connectionArgs.region, catalog: query.connectionArgs.catalog })
+    );
     render(<QueryEditor {...props} onChange={onChange} onRunQuery={onRunQuery} />);
 
     const selectEl = screen.getByLabelText(selectors.components.ConfigEditor.database.input);
@@ -85,6 +90,13 @@ describe('QueryEditor', () => {
     const onChange = jest.fn();
     const onRunQuery = jest.fn();
     ds.postResource = jest.fn().mockResolvedValue(['foo']);
+    ds.getTables = jest.fn((query) =>
+      ds.postResource('tables', {
+        region: query.connectionArgs.region,
+        catalog: query.connectionArgs.catalog,
+        database: query.connectionArgs.database,
+      })
+    );
     render(<QueryEditor {...props} onChange={onChange} onRunQuery={onRunQuery} />);
 
     const selectEl = screen.getByLabelText('Table');
@@ -104,6 +116,14 @@ describe('QueryEditor', () => {
     const onChange = jest.fn();
     const onRunQuery = jest.fn();
     ds.postResource = jest.fn().mockResolvedValue(['columnName']);
+    ds.getColumns = jest.fn((query) =>
+      ds.postResource('columns', {
+        region: query.connectionArgs.region,
+        catalog: query.connectionArgs.catalog,
+        database: query.connectionArgs.database,
+        table: query.table,
+      })
+    );
     render(
       <QueryEditor
         {...props}

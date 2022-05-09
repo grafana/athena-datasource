@@ -1,10 +1,4 @@
-import {
-  DataQueryRequest,
-  DataQueryResponse,
-  DataSourceInstanceSettings,
-  ScopedVars,
-  SelectableValue,
-} from '@grafana/data';
+import { DataQueryRequest, DataQueryResponse, DataSourceInstanceSettings, ScopedVars } from '@grafana/data';
 import { DataSourceWithBackend, getTemplateSrv, TemplateSrv } from '@grafana/runtime';
 import { AthenaDataSourceOptions, AthenaQuery } from './types';
 import { AthenaVariableSupport } from './variables';
@@ -39,8 +33,7 @@ export class DataSource extends DataSourceWithBackend<AthenaQuery, AthenaDataSou
 
   getVariables = () => this.templateSrv.getVariables().map((v) => `$${v.name}`);
 
-  getRegions = (): Promise<(string | SelectableValue<string>)[]> =>
-    this.getResource('regions').then((regions) => appendTemplateVariables(this, regions));
+  getRegions = () => this.getResource('regions').then((regions) => appendTemplateVariables(this, regions));
 
   getCatalogs = (query: AthenaQuery) =>
     this.postResource('catalogs', {

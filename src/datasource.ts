@@ -5,7 +5,6 @@ import { AthenaVariableSupport } from './variables';
 import { filterSQLQuery, applySQLTemplateVariables } from '@grafana/aws-sdk';
 import { Observable } from 'rxjs';
 import { cloneDeep } from 'lodash';
-import { appendTemplateVariables } from 'utils';
 
 export class DataSource extends DataSourceWithBackend<AthenaQuery, AthenaDataSourceOptions> {
   defaultRegion = '';
@@ -33,25 +32,25 @@ export class DataSource extends DataSourceWithBackend<AthenaQuery, AthenaDataSou
 
   getVariables = () => this.templateSrv.getVariables().map((v) => `$${v.name}`);
 
-  getRegions = () => this.getResource('regions').then((regions) => appendTemplateVariables(this, regions));
+  getRegions = () => this.getResource('regions');
 
   getCatalogs = (query: AthenaQuery) =>
     this.postResource('catalogs', {
       region: this.templateSrv.replace(query.connectionArgs.region),
-    }).then((catalogs) => appendTemplateVariables(this, catalogs));
+    });
 
   getDatabases = (query: AthenaQuery) =>
     this.postResource('databases', {
       region: this.templateSrv.replace(query.connectionArgs.region),
       catalog: this.templateSrv.replace(query.connectionArgs.catalog),
-    }).then((databases) => appendTemplateVariables(this, databases));
+    });
 
   getTables = (query: AthenaQuery) =>
     this.postResource('tables', {
       region: this.templateSrv.replace(query.connectionArgs.region),
       catalog: this.templateSrv.replace(query.connectionArgs.catalog),
       database: this.templateSrv.replace(query.connectionArgs.database),
-    }).then((tables) => appendTemplateVariables(this, tables));
+    });
 
   getColumns = (query: AthenaQuery) =>
     this.postResource('columns', {
@@ -59,13 +58,9 @@ export class DataSource extends DataSourceWithBackend<AthenaQuery, AthenaDataSou
       catalog: this.templateSrv.replace(query.connectionArgs.catalog),
       database: this.templateSrv.replace(query.connectionArgs.database),
       table: this.templateSrv.replace(query.table),
-    }).then((columns) => appendTemplateVariables(this, columns));
+    });
 
-  query(options: DataQueryRequest<AthenaQuery>): Observable<DataQueryResponse> {
-    options = cloneDeep(options);
-
-    const queries = options.targets.filter((item) => item.hide !== true);
-
+  buildQuery(options: DataQueryRequest<AthenaQuery>, queries: AthenaQuery[]): AthenaQuery[] {
     const updatedQueries = queries.map((query) => {
       query.connectionArgs.region = this.templateSrv.replace(query.connectionArgs.region, options.scopedVars);
       query.connectionArgs.catalog = this.templateSrv.replace(query.connectionArgs.catalog, options.scopedVars);
@@ -75,7 +70,15 @@ export class DataSource extends DataSourceWithBackend<AthenaQuery, AthenaDataSou
       return query;
     });
 
-    options.targets = updatedQueries;
+    return updatedQueries;
+  }
+
+  query(options: DataQueryRequest<AthenaQuery>): Observable<DataQueryResponse> {
+    options = cloneDeep(options);
+
+    const queries = options.targets.filter((item) => item.hide !== true);
+
+    options.targets = this.buildQuery(options, queries);
 
     return super.query(options);
   }

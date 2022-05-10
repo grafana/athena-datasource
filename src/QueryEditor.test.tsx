@@ -11,9 +11,13 @@ import * as runtime from '@grafana/runtime';
 const ds = mockDatasource;
 const q = mockQuery;
 
+const mockGetVariables = jest.fn().mockReturnValue([]);
+
 jest
   .spyOn(runtime, 'getTemplateSrv')
-  .mockImplementation(() => ({ getVariables: jest.fn().mockReturnValue([]), replace: jest.fn() }));
+  .mockImplementation(() => ({ getVariables: mockGetVariables, replace: jest.fn() }));
+
+jest.spyOn(ds, 'getVariables').mockImplementation(mockGetVariables);
 
 const props = {
   datasource: ds,

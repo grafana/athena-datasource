@@ -6,6 +6,7 @@ import { InlineSegmentGroup } from '@grafana/ui';
 import { FormatSelect, ResourceSelector, QueryCodeEditor } from '@grafana/aws-sdk';
 import { selectors } from 'tests/selectors';
 import { getSuggestions } from 'Suggestions';
+import { appendTemplateVariables } from 'utils';
 
 type Props = QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions>;
 
@@ -21,11 +22,24 @@ export function QueryEditor(props: Props) {
     },
   };
 
-  const fetchRegions = () => props.datasource.getRegions();
-  const fetchCatalogs = () => props.datasource.getCatalogs(queryWithDefaults);
-  const fetchDatabases = () => props.datasource.getDatabases(queryWithDefaults);
-  const fetchTables = () => props.datasource.getTables(queryWithDefaults);
-  const fetchColumns = () => props.datasource.getColumns(queryWithDefaults);
+  const templateVariables = props.datasource.getVariables();
+
+  const fetchRegions = () =>
+    props.datasource.getRegions().then((regions) => appendTemplateVariables(templateVariables, regions));
+  const fetchCatalogs = () =>
+    props.datasource
+      .getCatalogs(queryWithDefaults)
+      .then((catalogs) => appendTemplateVariables(templateVariables, catalogs));
+  const fetchDatabases = () =>
+    props.datasource
+      .getDatabases(queryWithDefaults)
+      .then((databases) => appendTemplateVariables(templateVariables, databases));
+  const fetchTables = () =>
+    props.datasource.getTables(queryWithDefaults).then((tables) => appendTemplateVariables(templateVariables, tables));
+  const fetchColumns = () =>
+    props.datasource
+      .getColumns(queryWithDefaults)
+      .then((columns) => appendTemplateVariables(templateVariables, columns));
 
   const onChange = (prop: QueryProperties) => (e: SelectableValue<string> | null) => {
     const newQuery = { ...props.query };

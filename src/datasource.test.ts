@@ -1,6 +1,5 @@
 import { DataQueryRequest, DataSourceInstanceSettings, dateTime } from '@grafana/data';
-import { BackendSrv, setBackendSrv, setTemplateSrv } from '@grafana/runtime';
-import { TemplateSrv } from 'tests/template_srv';
+import * as runtime from '@grafana/runtime';
 import { AthenaDataSourceOptions, AthenaQuery, FormatOptions } from 'types';
 
 import { DataSource } from './datasource';
@@ -16,7 +15,12 @@ describe('AthenaDatasource', () => {
     get: (url: string, params?: any, requestId?: string) => {},
     post: (url: string, data?: any) => {},
   };
-  const templateSrv = new TemplateSrv();
+
+  const mockGetVariables = jest.fn().mockReturnValue([]);
+
+  jest
+    .spyOn(runtime, 'getTemplateSrv')
+    .mockImplementation(() => ({ getVariables: mockGetVariables, replace: jest.fn() }));
 
   const defaultQuery: AthenaQuery = {
     connectionArgs: {
@@ -54,9 +58,7 @@ describe('AthenaDatasource', () => {
       jsonData: { defaultRegion: 'testRegion', catalog: 'testCatalog', database: 'testDatabase' },
     } as unknown as DataSourceInstanceSettings<AthenaDataSourceOptions>;
     ctx.ds = new DataSource(ctx.instanceSettings);
-    setBackendSrv(backendSrv as BackendSrv);
-    setTemplateSrv(templateSrv);
-    jest.spyOn(templateSrv, 'replace');
+    runtime.setBackendSrv(backendSrv as runtime.BackendSrv);
   });
 
   describe('When performing getRegions', () => {
@@ -78,7 +80,6 @@ describe('AthenaDatasource', () => {
 
       expect(catalogsResponse).toHaveLength(response.length);
       expect(catalogsResponse).toBe(response);
-      expect(templateSrv.replace).toHaveBeenCalledWith(defaultQuery.connectionArgs.region);
     });
   });
 
@@ -90,9 +91,6 @@ describe('AthenaDatasource', () => {
 
       expect(databasesResponse).toHaveLength(response.length);
       expect(databasesResponse).toBe(response);
-      expect(templateSrv.replace).toHaveBeenCalledTimes(2);
-      expect(templateSrv.replace).toHaveBeenCalledWith(defaultQuery.connectionArgs.region);
-      expect(templateSrv.replace).toHaveBeenCalledWith(defaultQuery.connectionArgs.catalog);
     });
   });
 
@@ -104,10 +102,6 @@ describe('AthenaDatasource', () => {
 
       expect(tablesResponse).toHaveLength(response.length);
       expect(tablesResponse).toBe(response);
-      expect(templateSrv.replace).toHaveBeenCalledTimes(3);
-      expect(templateSrv.replace).toHaveBeenCalledWith(defaultQuery.connectionArgs.region);
-      expect(templateSrv.replace).toHaveBeenCalledWith(defaultQuery.connectionArgs.catalog);
-      expect(templateSrv.replace).toHaveBeenCalledWith(defaultQuery.connectionArgs.database);
     });
   });
 
@@ -119,15 +113,15 @@ describe('AthenaDatasource', () => {
 
       expect(columnsResponse).toHaveLength(response.length);
       expect(columnsResponse).toBe(response);
-      expect(templateSrv.replace).toHaveBeenCalledTimes(4);
-      expect(templateSrv.replace).toHaveBeenCalledWith(defaultQuery.connectionArgs.region);
-      expect(templateSrv.replace).toHaveBeenCalledWith(defaultQuery.connectionArgs.catalog);
-      expect(templateSrv.replace).toHaveBeenCalledWith(defaultQuery.connectionArgs.database);
-      expect(templateSrv.replace).toHaveBeenCalledWith(defaultQuery.table);
     });
   });
 
   describe('When building queries', () => {
+    jest.spyOn(runtime, 'getTemplateSrv').mockImplementation(() => ({
+      getVariables: mockGetVariables,
+      replace: (target: string) => target.replace('$testVar', 'replaced'),
+    }));
+
     it('should return query unchanged if there are no template variables', async () => {
       const queries = ctx.ds.buildQuery(queryRequest, queryRequest.targets);
 
@@ -136,10 +130,6 @@ describe('AthenaDatasource', () => {
     });
 
     it('should return query with template variables replaced', async () => {
-      const variables = [
-        { label: 'testingReplace', name: 'testVar', type: 'textbox', current: { text: 'replaced', value: 'replaced' } },
-      ];
-      templateSrv.init(variables);
       queryRequest.targets = [
         {
           ...defaultQuery,
@@ -151,7 +141,7 @@ describe('AthenaDatasource', () => {
       ];
       const queries = ctx.ds.buildQuery(queryRequest, queryRequest.targets);
       expect(queries).toHaveLength(1);
-      expect(queries[0].connectionArgs.region).toEqual(variables[0].current.value);
+      expect(queries[0].connectionArgs.region).toEqual('replaced');
     });
   });
 });

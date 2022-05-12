@@ -6,6 +6,7 @@ import { InlineSegmentGroup } from '@grafana/ui';
 import { FormatSelect, ResourceSelector, QueryCodeEditor } from '@grafana/aws-sdk';
 import { selectors } from 'tests/selectors';
 import { getSuggestions } from 'Suggestions';
+import { appendTemplateVariables } from 'utils';
 
 type Props = QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions>;
 
@@ -21,28 +22,24 @@ export function QueryEditor(props: Props) {
     },
   };
 
-  const fetchRegions = () => props.datasource.getResource('regions');
-  const fetchCatalogs = () =>
-    props.datasource.postResource('catalogs', {
-      region: queryWithDefaults.connectionArgs.region,
-    });
-  const fetchDatabases = () =>
-    props.datasource.postResource('databases', {
-      region: queryWithDefaults.connectionArgs.region,
-      catalog: queryWithDefaults.connectionArgs.catalog,
-    });
-  const fetchTables = () =>
-    props.datasource.postResource('tables', {
-      region: queryWithDefaults.connectionArgs.region,
-      catalog: queryWithDefaults.connectionArgs.catalog,
-      database: queryWithDefaults.connectionArgs.database,
-    });
+  const templateVariables = props.datasource.getVariables();
 
+  const fetchRegions = () =>
+    props.datasource.getRegions().then((regions) => appendTemplateVariables(templateVariables, regions));
+  const fetchCatalogs = () =>
+    props.datasource
+      .getCatalogs(queryWithDefaults)
+      .then((catalogs) => appendTemplateVariables(templateVariables, catalogs));
+  const fetchDatabases = () =>
+    props.datasource
+      .getDatabases(queryWithDefaults)
+      .then((databases) => appendTemplateVariables(templateVariables, databases));
+  const fetchTables = () =>
+    props.datasource.getTables(queryWithDefaults).then((tables) => appendTemplateVariables(templateVariables, tables));
   const fetchColumns = () =>
-    props.datasource.postResource('columns', {
-      ...queryWithDefaults.connectionArgs,
-      table: queryWithDefaults.table,
-    });
+    props.datasource
+      .getColumns(queryWithDefaults)
+      .then((columns) => appendTemplateVariables(templateVariables, columns));
 
   const onChange = (prop: QueryProperties) => (e: SelectableValue<string> | null) => {
     const newQuery = { ...props.query };

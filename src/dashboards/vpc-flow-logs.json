@@ -37,7 +37,7 @@
       },
       "id": 5,
       "options": {
-        "content": "# ![logo](https://www.vectorlogo.zone/logos/grafana/grafana-icon.svg) Amazon VPC Flow Logs Monitoring with Grafana\n\nWelcome to the Athena data source for Grafana! In order to be able to use this dashboard, first create an Athena database and populate it with your VPC Flow Logs data. For that, check [the AWS documentation](https://docs.aws.amazon.com/athena/latest/ug/vpc-flow-logs.html).\n\nOnce the data catalog is ready:\n\n - Select the database with the VPC Flow Logs data as the default database in the configuration.\n - The dashboard will automatically use the first table of the database. If that is not the table with the data, select the correct one in the `VPC_Flow_Logs_Table` selector at the top.\n\nHaving trouble using this dashboard? Open an issue in the [Athena repository for Grafana](https://github.com/grafana/athena-datasource/issues/new/choose)!",
+        "content": "# ![logo](https://www.vectorlogo.zone/logos/grafana/grafana-icon.svg) Amazon VPC Flow Logs Monitoring with Grafana\n\nWelcome to the Athena data source for Grafana! In order to be able to use this dashboard, first create an Athena database and populate it with your VPC Flow Logs data. For that, check [the AWS documentation](https://docs.aws.amazon.com/athena/latest/ug/vpc-flow-logs.html).\n\nOnce the data catalog is ready:\n\n - The database can then be changed using the database selector at the top.\n - The dashboard will automatically use the first table of the database. If that is not the table with the data, select the correct one in the `VPC_Flow_Logs_Table` selector at the top.\n\nHaving trouble using this dashboard? Open an issue in the [Athena repository for Grafana](https://github.com/grafana/athena-datasource/issues/new/choose)!",
         "mode": "markdown"
       },
       "pluginVersion": "9.0.0-pre",
@@ -363,10 +363,35 @@
         "hide": 0,
         "includeAll": false,
         "multi": false,
+        "name": "Database",
+        "options": [],
+        "query": {
+          "rawSQL": "SHOW DATABASES"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "vpc_flow_logs",
+          "value": "vpc_flow_logs"
+        },
+        "datasource": {
+          "type": "grafana-athena-datasource",
+          "uid": "${datasource}"
+        },
+        "definition": "",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
         "name": "VPC_Flow_Logs_Table",
         "options": [],
         "query": {
-          "rawSQL": "show tables"
+          "rawSQL": "show tables from $Database"
         },
         "refresh": 1,
         "regex": "",
@@ -417,31 +442,6 @@
         "queryValue": "",
         "skipUrlSync": false,
         "type": "custom"
-      },
-      {
-        "current": {
-          "selected": false,
-          "text": "vpc_flow_logs",
-          "value": "vpc_flow_logs"
-        },
-        "datasource": {
-          "type": "grafana-athena-datasource",
-          "uid": "${datasource}"
-        },
-        "definition": "",
-        "hide": 0,
-        "includeAll": false,
-        "multi": false,
-        "name": "Database",
-        "options": [],
-        "query": {
-          "rawSQL": "SHOW DATABASES"
-        },
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "type": "query"
       }
     ]
   },

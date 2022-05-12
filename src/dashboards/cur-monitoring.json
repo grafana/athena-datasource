@@ -60,7 +60,7 @@
       },
       "id": 4,
       "options": {
-        "content": "# ![logo](https://www.vectorlogo.zone/logos/grafana/grafana-icon.svg) Cost Usage Report (CUR) Monitoring with Grafana\n\nWelcome to the Athena data source for Grafana! In order to be able to use this dashboard, first create an Athena database and populate it with your CUR data. For that, check [the AWS documentation](https://docs.aws.amazon.com/cur/latest/userguide/cur-query-athena.html).\n\nOnce data catalog is ready:\n\n - Select the database with the CUR data as the default database in the configuration. The database can then be changed using the database selector at the top.\n - The dashboard will automatically use the first table of the database (avoiding the table `cost_and_usage_data_status`). If that is not the table with the CUR data, select the correct one in the `CUR_Table` selector at the top.\n\nHaving trouble using this dashboard? Open an issue in the [Athena repository for Grafana](https://github.com/grafana/athena-datasource/issues/new/choose)!",
+        "content": "# ![logo](https://www.vectorlogo.zone/logos/grafana/grafana-icon.svg) Cost Usage Report (CUR) Monitoring with Grafana\n\nWelcome to the Athena data source for Grafana! In order to be able to use this dashboard, first create an Athena database and populate it with your CUR data. For that, check [the AWS documentation](https://docs.aws.amazon.com/cur/latest/userguide/cur-query-athena.html).\n\nOnce data catalog is ready:\n\n - The database can then be changed using the database selector at the top.\n - The dashboard will automatically use the first table of the database (avoiding the table `cost_and_usage_data_status`). If that is not the table with the CUR data, select the correct one in the `CUR_Table` selector at the top.\n\nHaving trouble using this dashboard? Open an issue in the [Athena repository for Grafana](https://github.com/grafana/athena-datasource/issues/new/choose)!",
         "mode": "markdown"
       },
       "pluginVersion": "9.0.0-pre",
@@ -1009,6 +1009,31 @@
       },
       {
         "current": {
+          "selected": true,
+          "text": "athenacurcfn_edwin_cur_athena",
+          "value": "athenacurcfn_edwin_cur_athena"
+        },
+        "datasource": {
+          "type": "grafana-athena-datasource",
+          "uid": "${Datasource}"
+        },
+        "definition": "",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "Database",
+        "options": [],
+        "query": {
+          "rawSQL": "SHOW DATABASES"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
           "selected": false,
           "text": "edwin_cur_athena",
           "value": "edwin_cur_athena"
@@ -1023,7 +1048,7 @@
         "name": "CUR_Table",
         "options": [],
         "query": {
-          "rawSQL": "show tables"
+          "rawSQL": "show tables from $Database"
         },
         "refresh": 1,
         "regex": "^(?!cost_and_usage_data_status).+$",
@@ -1077,31 +1102,6 @@
         "regex": "",
         "skipUrlSync": false,
         "sort": 1,
-        "type": "query"
-      },
-      {
-        "current": {
-          "selected": true,
-          "text": "athenacurcfn_edwin_cur_athena",
-          "value": "athenacurcfn_edwin_cur_athena"
-        },
-        "datasource": {
-          "type": "grafana-athena-datasource",
-          "uid": "${Datasource}"
-        },
-        "definition": "",
-        "hide": 0,
-        "includeAll": false,
-        "multi": false,
-        "name": "Database",
-        "options": [],
-        "query": {
-          "rawSQL": "SHOW DATABASES"
-        },
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       }
     ]

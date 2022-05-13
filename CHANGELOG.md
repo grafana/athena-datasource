@@ -1,9 +1,8 @@
 # Changelog
 
 ## 2.0.0
-_Not released yet_
 
-- Breaking Change: Athena plugin now requires Grafana 8.0+ to run.
+- Stopping support for Grafana versions under `8.0.0` .
 
 ## 1.0.5
 

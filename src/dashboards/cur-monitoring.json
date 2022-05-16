@@ -3,7 +3,10 @@
     "list": [
       {
         "builtIn": 1,
-        "datasource": "-- Grafana --",
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
@@ -17,7 +20,9 @@
         "type": "dashboard"
       },
       {
-        "datasource": "${Datasource}",
+        "datasource": {
+          "uid": "${Datasource}"
+        },
         "enable": false,
         "iconColor": "red",
         "name": "Budget exceeded",
@@ -43,7 +48,9 @@
   "liveNow": false,
   "panels": [
     {
-      "datasource": "athena-datasource",
+      "datasource": {
+        "uid": "athena-datasource"
+      },
       "description": "",
       "gridPos": {
         "h": 8,
@@ -53,15 +60,18 @@
       },
       "id": 4,
       "options": {
-        "content": "# ![logo](https://www.vectorlogo.zone/logos/grafana/grafana-icon.svg) Cost Usage Report (CUR) Monitoring with Grafana\n\nWelcome to the Athena data source for Grafana! In order to be able to use this dashboard, first create an Athena database and populate it with your CUR data. For that, check [the AWS documentation](https://docs.aws.amazon.com/cur/latest/userguide/cur-query-athena.html).\n\nOnce data catalog is ready:\n\n - Select the database with the CUR data as the default database in the configuration.\n - The dashboard will automatically use the first table of the database (avoiding the table `cost_and_usage_data_status`). If that is not the table with the CUR data, select the correct one in the `CUR_Table` selector at the top.\n\nHaving trouble using this dashboard? Open an issue in the [Athena repository for Grafana](https://github.com/grafana/athena-datasource/issues/new/choose)!",
+        "content": "# ![logo](https://www.vectorlogo.zone/logos/grafana/grafana-icon.svg) Cost Usage Report (CUR) Monitoring with Grafana\n\nWelcome to the Athena data source for Grafana! In order to be able to use this dashboard, first create an Athena database and populate it with your CUR data. For that, check [the AWS documentation](https://docs.aws.amazon.com/cur/latest/userguide/cur-query-athena.html).\n\nOnce data catalog is ready:\n\n - The database can then be changed using the database selector at the top.\n - The dashboard will automatically use the first table of the database (avoiding the table `cost_and_usage_data_status`). If that is not the table with the CUR data, select the correct one in the `CUR_Table` selector at the top.\n\nHaving trouble using this dashboard? Open an issue in the [Athena repository for Grafana](https://github.com/grafana/athena-datasource/issues/new/choose)!",
         "mode": "markdown"
       },
-      "pluginVersion": "8.3.0-pre",
+      "pluginVersion": "9.0.0-pre",
       "title": " ",
       "type": "text"
     },
     {
-      "datasource": "${Datasource}",
+      "datasource": {
+        "type": "grafana-athena-datasource",
+        "uid": "${Datasource}"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -127,14 +137,15 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
         {
           "connectionArgs": {
             "catalog": "__default",
-            "database": "__default",
+            "database": "$Database",
             "region": "__default"
           },
           "format": 0,
@@ -147,7 +158,10 @@
       "type": "timeseries"
     },
     {
-      "datasource": "${Datasource}",
+      "datasource": {
+        "type": "grafana-athena-datasource",
+        "uid": "${Datasource}"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -191,12 +205,12 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0-pre",
+      "pluginVersion": "9.0.0-pre",
       "targets": [
         {
           "connectionArgs": {
             "catalog": "__default",
-            "database": "__default",
+            "database": "$Database",
             "region": "__default"
           },
           "format": 1,
@@ -208,7 +222,10 @@
       "type": "stat"
     },
     {
-      "datasource": "${Datasource}",
+      "datasource": {
+        "type": "grafana-athena-datasource",
+        "uid": "${Datasource}"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -275,14 +292,15 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
         {
           "connectionArgs": {
             "catalog": "__default",
-            "database": "__default",
+            "database": "$Database",
             "region": "__default"
           },
           "format": 0,
@@ -294,7 +312,10 @@
       "type": "timeseries"
     },
     {
-      "datasource": "${Datasource}",
+      "datasource": {
+        "type": "grafana-athena-datasource",
+        "uid": "${Datasource}"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -338,12 +359,12 @@
         "text": {},
         "textMode": "value"
       },
-      "pluginVersion": "8.3.0-pre",
+      "pluginVersion": "9.0.0-pre",
       "targets": [
         {
           "connectionArgs": {
             "catalog": "__default",
-            "database": "__default",
+            "database": "$Database",
             "region": "__default"
           },
           "format": 1,
@@ -368,7 +389,10 @@
       "type": "stat"
     },
     {
-      "datasource": "${Datasource}",
+      "datasource": {
+        "type": "grafana-athena-datasource",
+        "uid": "${Datasource}"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -435,14 +459,15 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
         {
           "connectionArgs": {
             "catalog": "__default",
-            "database": "__default",
+            "database": "$Database",
             "region": "__default"
           },
           "format": 0,
@@ -463,7 +488,10 @@
       "type": "timeseries"
     },
     {
-      "datasource": "${Datasource}",
+      "datasource": {
+        "type": "grafana-athena-datasource",
+        "uid": "${Datasource}"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -506,12 +534,12 @@
         "showThresholdMarkers": true,
         "text": {}
       },
-      "pluginVersion": "8.3.0-pre",
+      "pluginVersion": "9.0.0-pre",
       "targets": [
         {
           "connectionArgs": {
             "catalog": "__default",
-            "database": "__default",
+            "database": "$Database",
             "region": "__default"
           },
           "format": 0,
@@ -532,7 +560,10 @@
       "type": "gauge"
     },
     {
-      "datasource": "${Datasource}",
+      "datasource": {
+        "type": "grafana-athena-datasource",
+        "uid": "${Datasource}"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -577,12 +608,12 @@
         "text": {},
         "textMode": "value"
       },
-      "pluginVersion": "8.3.0-pre",
+      "pluginVersion": "9.0.0-pre",
       "targets": [
         {
           "connectionArgs": {
             "catalog": "__default",
-            "database": "__default",
+            "database": "$Database",
             "region": "__default"
           },
           "format": 1,
@@ -595,7 +626,10 @@
       "type": "stat"
     },
     {
-      "datasource": "${Datasource}",
+      "datasource": {
+        "type": "grafana-athena-datasource",
+        "uid": "${Datasource}"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -662,14 +696,15 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
         {
           "connectionArgs": {
             "catalog": "__default",
-            "database": "__default",
+            "database": "$Database",
             "region": "__default"
           },
           "format": 0,
@@ -690,7 +725,10 @@
       "type": "timeseries"
     },
     {
-      "datasource": "${Datasource}",
+      "datasource": {
+        "type": "grafana-athena-datasource",
+        "uid": "${Datasource}"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -735,13 +773,17 @@
         "text": {},
         "textMode": "value"
       },
-      "pluginVersion": "8.3.0-pre",
+      "pluginVersion": "9.0.0-pre",
       "targets": [
         {
           "connectionArgs": {
             "catalog": "__default",
-            "database": "__default",
+            "database": "$Database",
             "region": "__default"
+          },
+          "datasource": {
+            "type": "grafana-athena-datasource",
+            "uid": "eiO6Wpl7z"
           },
           "format": 1,
           "rawSQL": "select \n  line_item_resource_id as resource_id,\n  sum(line_item_blended_cost) as cost\nfrom $CUR_Table\nwhere\n  $__timeFilter(bill_billing_period_start_date)\nand\n  product_location in ($Regions)\nand\n  line_item_product_code in ($Services)\ngroup by 1\norder by 2 DESC\nlimit 1",
@@ -753,7 +795,10 @@
       "type": "stat"
     },
     {
-      "datasource": "${Datasource}",
+      "datasource": {
+        "type": "grafana-athena-datasource",
+        "uid": "${Datasource}"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -761,7 +806,8 @@
           },
           "custom": {
             "align": "auto",
-            "displayMode": "auto"
+            "displayMode": "auto",
+            "inspect": false
           },
           "mappings": [],
           "thresholds": {
@@ -917,13 +963,17 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "8.3.0-pre",
+      "pluginVersion": "9.0.0-pre",
       "targets": [
         {
           "connectionArgs": {
             "catalog": "__default",
-            "database": "__default",
+            "database": "$Database",
             "region": "__default"
+          },
+          "datasource": {
+            "type": "grafana-athena-datasource",
+            "uid": "eiO6Wpl7z"
           },
           "format": 1,
           "rawSQL": "select * from $CUR_Table limit 10;\n",
@@ -935,7 +985,7 @@
     }
   ],
   "refresh": "",
-  "schemaVersion": 31,
+  "schemaVersion": 36,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -943,14 +993,11 @@
       {
         "current": {
           "selected": false,
-          "text": "athena-datasource",
-          "value": "athena-datasource"
+          "text": "Amazon Athena CUR",
+          "value": "Amazon Athena CUR"
         },
-        "description": null,
-        "error": null,
         "hide": 0,
         "includeAll": false,
-        "label": null,
         "multi": false,
         "name": "Datasource",
         "options": [],
@@ -961,24 +1008,47 @@
         "type": "datasource"
       },
       {
-        "allValue": null,
         "current": {
-          "selected": false,
-          "text": "o11y_costs",
-          "value": "o11y_costs"
+          "selected": true,
+          "text": "athenacurcfn_edwin_cur_athena",
+          "value": "athenacurcfn_edwin_cur_athena"
         },
-        "datasource": "${Datasource}",
+        "datasource": {
+          "type": "grafana-athena-datasource",
+          "uid": "${Datasource}"
+        },
         "definition": "",
-        "description": null,
-        "error": null,
         "hide": 0,
         "includeAll": false,
-        "label": null,
+        "multi": false,
+        "name": "Database",
+        "options": [],
+        "query": {
+          "rawSQL": "SHOW DATABASES"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "edwin_cur_athena",
+          "value": "edwin_cur_athena"
+        },
+        "datasource": {
+          "uid": "${Datasource}"
+        },
+        "definition": "",
+        "hide": 0,
+        "includeAll": false,
         "multi": false,
         "name": "CUR_Table",
         "options": [],
         "query": {
-          "rawSQL": "show tables"
+          "rawSQL": "show tables from $Database"
         },
         "refresh": 1,
         "regex": "^(?!cost_and_usage_data_status).+$",
@@ -987,19 +1057,17 @@
         "type": "query"
       },
       {
-        "allValue": null,
         "current": {
           "selected": true,
           "text": ["All"],
           "value": ["$__all"]
         },
-        "datasource": "${Datasource}",
+        "datasource": {
+          "uid": "${Datasource}"
+        },
         "definition": "",
-        "description": null,
-        "error": null,
         "hide": 0,
         "includeAll": true,
-        "label": null,
         "multi": true,
         "name": "Regions",
         "options": [],
@@ -1013,19 +1081,17 @@
         "type": "query"
       },
       {
-        "allValue": null,
         "current": {
           "selected": true,
           "text": ["All"],
           "value": ["$__all"]
         },
-        "datasource": "${Datasource}",
+        "datasource": {
+          "uid": "${Datasource}"
+        },
         "definition": "",
-        "description": null,
-        "error": null,
         "hide": 0,
         "includeAll": true,
-        "label": null,
         "multi": true,
         "name": "Services",
         "options": [],
@@ -1047,6 +1113,6 @@
   "timepicker": {},
   "timezone": "",
   "title": "Athena Cost and Usage Report",
-  "uid": "",
-  "version": 7
+  "version": 8,
+  "weekStart": ""
 }

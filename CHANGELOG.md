@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.0
+
+- Stopping support for Grafana versions under `8.0.0` .
+
 ## 1.0.5
 
 - Fixes a bug that caused invalid tokens when assuming a role in private clouds (e.g. `gov`).

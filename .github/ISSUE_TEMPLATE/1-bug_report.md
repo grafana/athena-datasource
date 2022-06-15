@@ -41,4 +41,4 @@ If applicable, add screenshots to help explain your problem.
 - Plugin version:
 - OS Grafana is installed on:
 - User OS & Browser:
-- Others:
+- Others: 

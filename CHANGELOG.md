@@ -4,7 +4,7 @@
 
 - Stopping support for Grafana versions under `8.0.0` .
 - Add template variables as options to Athena connection details (#151)
-- Fix Error message not forwarded when listing resources in ConfigEditor (#141)
+- Fix error message not forwarded when listing resources in config editor (#141)
 
 ## 1.0.5
 

@@ -3,6 +3,7 @@
 ## 2.0.0
 
 - Stopping support for Grafana versions under `8.0.0` .
+- Add template variables as options to Athena connection details (#151)
 
 ## 1.0.5
 

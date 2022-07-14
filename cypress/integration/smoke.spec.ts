@@ -56,7 +56,7 @@ e2e.scenario({
             // Databases
             e2eSelectors.ConfigEditor.database.input().click({ force: true });
             // wait for it to load
-            e2eSelectors.ConfigEditor.database.wrapper().contains(datasource.jsonData.database);
+            e2e().contains(datasource.jsonData.database);
             e2eSelectors.ConfigEditor.database.input().type(datasource.jsonData.database).type('{enter}');
             // Workgroups
             e2eSelectors.ConfigEditor.workgroup.input().click({ force: true });
@@ -101,7 +101,7 @@ e2e.scenario({
           queriesForm: () => {
             // Change database selection for query
             e2eSelectors.ConfigEditor.database.input().click({ force: true });
-            e2eSelectors.ConfigEditor.database.wrapper().contains('cloudtrail');
+            e2e().contains('cloudtrail');
             e2eSelectors.ConfigEditor.database.input().type('{selectall}cloudtrail{enter}');
 
             // Select a table from the explorer
@@ -132,7 +132,7 @@ ORDER BY 1
 
             e2eSelectors.QueryEditor.TableView.input().click({ force: true });
             // check that the table content contains at least an entry
-            cy.get('div[role="table"]').should('include.text', '2021-09-08');
+            cy.get('div[role="table"]').should('include.text', '2021');
           },
         });
 

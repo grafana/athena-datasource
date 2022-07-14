@@ -43,12 +43,30 @@ func (s *AthenaDatasource) Settings(_ backend.DataSourceInstanceSettings) sqlds.
 	}
 }
 
+type JsonSettings struct {
+	AuthType      string
+	DefaultRegion string
+	Workgroup     string
+}
+
 // Connect opens a sql.DB connection using datasource settings
 func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (*sql.DB, error) {
 	s.awsDS.Init(config)
 	args, err := sqlds.ParseOptions(queryArgs)
 	if err != nil {
 		return nil, err
+	}
+
+	// athena datasources require a region to establish a connection, we use a default region if none was provided
+	if args["region"] == "" {
+		if config.JSONData != nil && len(config.JSONData) > 1 {
+			settings := JsonSettings{}
+			err := json.Unmarshal(config.JSONData, &settings)
+			if err != nil {
+				return nil, err
+			}
+			args["region"] = settings.DefaultRegion
+		}
 	}
 
 	return s.awsDS.GetDB(config.ID, args, models.New, api.New, driver.New)

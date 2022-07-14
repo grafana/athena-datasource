@@ -10,6 +10,7 @@ import (
 	"github.com/grafana/athena-datasource/pkg/athena/models"
 	sqlAPI "github.com/grafana/grafana-aws-sdk/pkg/sql/api"
 	"github.com/grafana/grafana-aws-sdk/pkg/sql/datasource"
+	awsDriver "github.com/grafana/grafana-aws-sdk/pkg/sql/driver"
 	sqlModels "github.com/grafana/grafana-aws-sdk/pkg/sql/models"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
@@ -17,8 +18,13 @@ import (
 	"github.com/grafana/sqlds/v2"
 )
 
+type awsDSClient interface {
+	Init(config backend.DataSourceInstanceSettings)
+	GetDB(id int64, options sqlds.Options, settingsLoader sqlModels.Loader, apiLoader sqlAPI.Loader, driverLoader awsDriver.Loader) (*sql.DB, error)
+	GetAPI(id int64, options sqlds.Options, settingsLoader sqlModels.Loader, apiLoader sqlAPI.Loader) (sqlAPI.AWSAPI, error)
+}
 type AthenaDatasource struct {
-	awsDS *datasource.AWSDatasource
+	awsDS awsDSClient
 }
 
 type AthenaDatasourceIface interface {

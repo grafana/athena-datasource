@@ -1,6 +1,6 @@
 import React, { useState, FormEvent } from 'react';
 import { DataSourcePluginOptionsEditorProps, DataSourceSettings, SelectableValue } from '@grafana/data';
-import { AthenaDataSourceOptions, AthenaDataSourceSecureJsonData, AthenaDataSourceSettings } from './types';
+import { AthenaDataSourceOptions, AthenaDataSourceSecureJsonData, AthenaDataSourceSettings, defaultKey } from './types';
 import { getBackendSrv } from '@grafana/runtime';
 import { InlineInput, ConfigSelect, ConnectionConfig } from '@grafana/aws-sdk';
 import { selectors } from 'tests/selectors';
@@ -31,7 +31,7 @@ export function ConfigEditor(props: Props) {
   // Catalogs
   const fetchCatalogs = async () => {
     const res: string[] = await getBackendSrv().post(resourcesURL + '/catalogs', {
-      region: props.options.jsonData.defaultRegion,
+      region: defaultKey,
     });
     return res;
   };

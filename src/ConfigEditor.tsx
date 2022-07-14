@@ -38,7 +38,7 @@ export function ConfigEditor(props: Props) {
   // Databases
   const fetchDatabases = async () => {
     const loadedDatabases: string[] = await getBackendSrv().post(resourcesURL + '/databases', {
-      region: props.options.jsonData.defaultRegion,
+      region: defaultKey,
       catalog: props.options.jsonData.catalog,
     });
     return loadedDatabases;
@@ -46,7 +46,7 @@ export function ConfigEditor(props: Props) {
   // Workgroups
   const fetchWorkgroups = async () => {
     const loadedWorkgroups: string[] = await getBackendSrv().post(resourcesURL + '/workgroups', {
-      region: props.options.jsonData.defaultRegion,
+      region: defaultKey,
     });
     return loadedWorkgroups;
   };

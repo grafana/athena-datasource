@@ -44,12 +44,6 @@ func (s *AthenaDatasource) Settings(_ backend.DataSourceInstanceSettings) sqlds.
 	}
 }
 
-type JsonSettings struct {
-	AuthType      string
-	DefaultRegion string
-	Workgroup     string
-}
-
 // Connect opens a sql.DB connection using datasource settings
 func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (*sql.DB, error) {
 	s.awsDS.Init(config)

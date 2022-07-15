@@ -10,14 +10,21 @@ import (
 	"github.com/grafana/athena-datasource/pkg/athena/models"
 	sqlAPI "github.com/grafana/grafana-aws-sdk/pkg/sql/api"
 	"github.com/grafana/grafana-aws-sdk/pkg/sql/datasource"
+	awsDriver "github.com/grafana/grafana-aws-sdk/pkg/sql/driver"
+	sqlModels "github.com/grafana/grafana-aws-sdk/pkg/sql/models"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 	"github.com/grafana/grafana-plugin-sdk-go/data/sqlutil"
 	"github.com/grafana/sqlds/v2"
 )
 
+type awsDSClient interface {
+	Init(config backend.DataSourceInstanceSettings)
+	GetDB(id int64, options sqlds.Options, settingsLoader sqlModels.Loader, apiLoader sqlAPI.Loader, driverLoader awsDriver.Loader) (*sql.DB, error)
+	GetAPI(id int64, options sqlds.Options, settingsLoader sqlModels.Loader, apiLoader sqlAPI.Loader) (sqlAPI.AWSAPI, error)
+}
 type AthenaDatasource struct {
-	awsDS *datasource.AWSDatasource
+	awsDS awsDSClient
 }
 
 type AthenaDatasourceIface interface {
@@ -51,6 +58,11 @@ func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings, qu
 		return nil, err
 	}
 
+	// athena datasources require a region to establish a connection, we use a default region if none was provided
+	if args["region"] == "" {
+		args["region"] = sqlModels.DefaultKey
+	}
+
 	return s.awsDS.GetDB(config.ID, args, models.New, api.New, driver.New)
 }
 
@@ -60,7 +72,9 @@ func (s *AthenaDatasource) Converters() (sc []sqlutil.Converter) {
 
 func (s *AthenaDatasource) getAPI(ctx context.Context, options sqlds.Options) (*api.API, error) {
 	id := datasource.GetDatasourceID(ctx)
-	res, err := s.awsDS.GetAPI(id, options, models.New, api.New)
+	// we only require region for getting an api, the rest of the options are used per-query
+	args := sqlds.Options{"region": options["region"]}
+	res, err := s.awsDS.GetAPI(id, args, models.New, api.New)
 	if err != nil {
 		return nil, err
 	}

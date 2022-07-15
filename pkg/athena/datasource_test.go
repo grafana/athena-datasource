@@ -12,6 +12,7 @@ import (
 	sqlModels "github.com/grafana/grafana-aws-sdk/pkg/sql/models"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/sqlds/v2"
+	"github.com/stretchr/testify/assert"
 )
 
 type mockClient struct {
@@ -77,12 +78,14 @@ func TestColumns(t *testing.T) {
 		ds := AthenaDatasource{
 			awsDS: &mc,
 		}
-		ds.Columns(context.TODO(), sqlds.Options{
+		_, err := ds.Columns(context.TODO(), sqlds.Options{
 			"region":   "us-east1",
 			"catalog":  "cat",
 			"database": "db",
 			"table":    "thing",
 		})
+
+		assert.EqualError(t, err, "fake api error", "unexpected error: %v", err)
 
 		if region, ok := mc.wasCalledWith["region"]; region != "us-east1" {
 			if !ok {

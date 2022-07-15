@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.1
+
+- Fix bug with caching invalid auth args (https://github.com/grafana/athena-datasource/issues/144)
+- Code coverage and Codeowners updates
+
 ## 2.0.0
 
 - Stopping support for Grafana versions under `8.0.0` .

@@ -7,6 +7,7 @@ import { select } from 'react-select-event';
 import { selectors } from 'tests/selectors';
 import { defaultKey } from 'types';
 import * as runtime from '@grafana/runtime';
+import * as experimental from '@grafana/experimental';
 
 const ds = mockDatasource;
 const q = mockQuery;
@@ -18,6 +19,13 @@ jest
   .mockImplementation(() => ({ getVariables: mockGetVariables, replace: jest.fn() }));
 
 jest.spyOn(ds, 'getVariables').mockImplementation(mockGetVariables);
+
+jest.mock('@grafana/experimental', () => ({
+  ...jest.requireActual<typeof experimental>('@grafana/experimental'),
+  SQLEditor: function SQLEditor({ value }: { value: string }) {
+    return <pre>{value}</pre>;
+  },
+}));
 
 const props = {
   datasource: ds,

@@ -3,10 +3,10 @@ import { QueryEditorProps, SelectableValue } from '@grafana/data';
 import { DataSource } from './datasource';
 import { AthenaDataSourceOptions, AthenaQuery, defaultQuery, SelectableFormatOptions } from './types';
 import { InlineSegmentGroup } from '@grafana/ui';
-import { FormatSelect, ResourceSelector, QueryCodeEditor } from '@grafana/aws-sdk';
+import { FormatSelect, ResourceSelector } from '@grafana/aws-sdk';
 import { selectors } from 'tests/selectors';
-import { getSuggestions } from 'Suggestions';
 import { appendTemplateVariables } from 'utils';
+import SQLEditor from 'SQLEditor';
 
 type Props = QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions>;
 
@@ -133,14 +133,9 @@ export function QueryEditor(props: Props) {
             onRunQuery={props.onRunQuery}
           />
         </div>
+
         <div style={{ minWidth: '400px', marginLeft: '10px', flex: 1 }}>
-          <QueryCodeEditor
-            language="sql"
-            query={queryWithDefaults}
-            onChange={props.onChange}
-            onRunQuery={props.onRunQuery}
-            getSuggestions={getSuggestions}
-          />
+          <SQLEditor query={props.query} onChange={props.onChange} datasource={props.datasource} />
         </div>
       </InlineSegmentGroup>
     </>

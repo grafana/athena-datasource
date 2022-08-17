@@ -18,6 +18,7 @@
   "author": "Grafana Labs",
   "license": "Apache-2.0",
   "devDependencies": {
+    "@grafana/experimental": "^0.0.2-canary.37",
     "@grafana/aws-sdk": "0.0.37",
     "@grafana/data": "8.2.1",
     "@grafana/e2e": "8.2.1",

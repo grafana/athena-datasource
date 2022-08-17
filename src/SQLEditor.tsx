@@ -18,7 +18,7 @@ export default function SQLEditor({ query, datasource, onChange }: RawEditorProp
   }, [query]);
 
   const getTables = useCallback(async () => {
-    const tables: string[] = await datasource.getTables(queryRef.current);
+    const tables: string[] = await datasource.getTables(queryRef.current).catch(() => []);
     return tables.map((table) => ({ name: table, completion: table }));
   }, [queryRef.current]);
 

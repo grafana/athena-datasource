@@ -45,7 +45,7 @@ export default function SQLEditor({ query, datasource, onChange }: RawEditorProp
   return (
     <SQLCodeEditor
       query={query.rawSQL}
-      onChange={(rawSQL) => onChange({ ...query, rawSQL })}
+      onChange={(rawSQL) => onChange({ ...queryRef.current, rawSQL })}
       language={{
         id: 'sql',
         completionProvider,

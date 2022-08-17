@@ -133,10 +133,7 @@ export function QueryEditor(props: Props) {
             onRunQuery={props.onRunQuery}
           />
         </div>
-        <div
-          style={{ minWidth: '400px', marginLeft: '10px', flex: 1 }}
-          aria-label={selectors.components.QueryEditor.CodeEditor.container}
-        >
+        <div style={{ minWidth: '400px', marginLeft: '10px', flex: 1 }}>
           <QueryCodeEditor
             language="sql"
             query={queryWithDefaults}

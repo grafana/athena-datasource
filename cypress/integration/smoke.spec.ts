@@ -108,18 +108,17 @@ e2e.scenario({
             e2eSelectors.ConfigEditor.table.input().click({ force: true });
             e2eSelectors.ConfigEditor.table.wrapper().contains('cloudtrail_logs');
             e2eSelectors.ConfigEditor.table.input().type('cloudtrail_logs').type('{enter}');
-            e2eSelectors.QueryEditor.CodeEditor.container().click({ force: true }).type(`{selectall}{enter}
-SELECT 1
-    $__parseTime(eventtime, 'yyyy-MM-dd''T''HH:mm:ss''Z'), 
-    sum(cast(json_extract_scalar(additionaleventdata, '$.bytesTransferredOut') as real)) AS bytes 
-FROM 
-    $__table 
-WHERE additionaleventdata IS NOT NULL AND json_extract_scalar(additionaleventdata, '$.bytesTransferredOut') IS NOT NULL 
-AND 
-    $__timeFilter(eventtime, 'yyyy-MM-dd''T''HH:mm:ss''Z') 
+            e2eSelectors.QueryEditor.CodeEditor.container()
+              .click({ force: true })
+              .type(
+                `
+SELECT $__parseTime(eventtime, 'yyyy-MM-dd''T''HH:mm:ss''Z'), sum(cast(json_extract_scalar(additionaleventdata, '$.bytesTransferredOut') as real)) AS bytes 
+FROM $__table WHERE additionaleventdata IS NOT NULL AND json_extract_scalar(additionaleventdata, '$.bytesTransferredOut') IS NOT NULL AND  $__timeFilter(eventtime, 'yyyy-MM-dd''T''HH:mm:ss''Z') 
 GROUP BY 1 
 ORDER BY 1 
-`);
+`,
+                { delay: 1 }
+              );
             // blur and wait for loading
             cy.get('.panel-content').click();
             cy.get('.panel-loading');

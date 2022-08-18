@@ -108,13 +108,8 @@ e2e.scenario({
             e2eSelectors.ConfigEditor.table.input().click({ force: true });
             e2eSelectors.ConfigEditor.table.wrapper().contains('cloudtrail_logs');
             e2eSelectors.ConfigEditor.table.input().type('cloudtrail_logs').type('{enter}');
-
-            // Verify editor suggestions
-            e2eSelectors.QueryEditor.CodeEditor.container().click({ force: true }).type(`{selectall}$__table`);
-            e2eSelectors.QueryEditor.CodeEditor.container().contains('(Macro) cloudtrail_logs');
-
             e2eSelectors.QueryEditor.CodeEditor.container().click({ force: true }).type(`{selectall}{enter}
-SELECT 
+SELECT 1
     $__parseTime(eventtime, 'yyyy-MM-dd''T''HH:mm:ss''Z'), 
     sum(cast(json_extract_scalar(additionaleventdata, '$.bytesTransferredOut') as real)) AS bytes 
 FROM 

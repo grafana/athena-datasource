@@ -7,11 +7,12 @@ import { AthenaQuery } from 'types';
 
 interface RawEditorProps {
   query: AthenaQuery;
+  onRunQuery: () => void;
   onChange: (q: AthenaQuery) => void;
   datasource: DataSource;
 }
 
-export default function SQLEditor({ query, datasource, onChange }: RawEditorProps) {
+export default function SQLEditor({ query, datasource, onRunQuery, onChange }: RawEditorProps) {
   const queryRef = useRef<AthenaQuery>(query);
   useEffect(() => {
     queryRef.current = query;
@@ -42,7 +43,8 @@ export default function SQLEditor({ query, datasource, onChange }: RawEditorProp
   return (
     <SQLCodeEditor
       query={query.rawSQL}
-      onChange={(rawSQL) => onChange({ ...query, rawSQL })}
+      onBlur={() => onRunQuery()}
+      onChange={(rawSQL) => onChange({ ...queryRef.current, rawSQL })}
       language={{
         id: 'sql',
         completionProvider,

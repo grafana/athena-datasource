@@ -135,7 +135,12 @@ export function QueryEditor(props: Props) {
         </div>
 
         <div style={{ minWidth: '400px', marginLeft: '10px', flex: 1 }}>
-          <SQLEditor query={queryWithDefaults} onChange={props.onChange} datasource={props.datasource} />
+          <SQLEditor
+            query={queryWithDefaults}
+            onRunQuery={props.onRunQuery}
+            onChange={props.onChange}
+            datasource={props.datasource}
+          />
         </div>
       </InlineSegmentGroup>
     </>

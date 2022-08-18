@@ -1374,10 +1374,10 @@
     prettier "2.2.1"
     typescript "4.3.4"
 
-"@grafana/experimental@^0.0.2-canary.37":
-  version "0.0.2-canary.37"
-  resolved "https://registry.yarnpkg.com/@grafana/experimental/-/experimental-0.0.2-canary.37.tgz#3440aeff2d73782842f03655747d7e3e7f41007a"
-  integrity sha512-wXY3hoFNPi6sONpOVzb8Hd7fR3G592oYSwk+qjgy3bImoLBLHVubV04g1Zerj5DXypFsJ101daX7Xk7PhK7DWw==
+"@grafana/experimental@^0.0.2-canary.38":
+  version "0.0.2-canary.38"
+  resolved "https://registry.yarnpkg.com/@grafana/experimental/-/experimental-0.0.2-canary.38.tgz#5cd77e843119c2e2f3aa31be49b46148a56fba20"
+  integrity sha512-7paJo01efDX4PUE4h2Hw55amxiOfXpVOWjSERrL4sf03f1MEWt07eI3pPuIriJ7XW56AW+hrC3ax4Hycga38QQ==
   dependencies:
     "@types/uuid" "^8.3.3"
     uuid "^8.3.2"

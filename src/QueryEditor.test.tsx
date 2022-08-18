@@ -22,8 +22,8 @@ jest.spyOn(ds, 'getVariables').mockImplementation(mockGetVariables);
 
 jest.mock('@grafana/experimental', () => ({
   ...jest.requireActual<typeof experimental>('@grafana/experimental'),
-  SQLEditor: function SQLEditor({ value }: { value: string }) {
-    return <pre>{value}</pre>;
+  SQLEditor: function SQLEditor() {
+    return <></>;
   },
 }));
 

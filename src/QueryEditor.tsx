@@ -8,7 +8,7 @@ import { selectors } from 'tests/selectors';
 import { appendTemplateVariables } from 'utils';
 import SQLEditor from 'SQLEditor';
 
-type Props = QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions>;
+type Props = QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions> & { hideOptions?: boolean };
 
 type QueryProperties = 'regions' | 'catalogs' | 'databases' | 'tables' | 'columns';
 
@@ -125,13 +125,17 @@ export function QueryEditor(props: Props) {
             labelWidth={11}
             className="width-12"
           />
-          <h6>Frames</h6>
-          <FormatSelect
-            query={props.query}
-            options={SelectableFormatOptions}
-            onChange={props.onChange}
-            onRunQuery={props.onRunQuery}
-          />
+          {!props.hideOptions && (
+            <>
+              <h6>Frames</h6>
+              <FormatSelect
+                query={props.query}
+                options={SelectableFormatOptions}
+                onChange={props.onChange}
+                onRunQuery={props.onRunQuery}
+              />
+            </>
+          )}
         </div>
 
         <div style={{ minWidth: '400px', marginLeft: '10px', flex: 1 }}>

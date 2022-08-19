@@ -161,4 +161,10 @@ describe('QueryEditor', () => {
     });
     expect(onRunQuery).toHaveBeenCalled();
   });
+
+  it('should display query options by default', async () => {
+    render(<QueryEditor {...props} />);
+    const selectEl = screen.getByLabelText('Format as');
+    expect(selectEl).toBeInTheDocument();
+  });
 });

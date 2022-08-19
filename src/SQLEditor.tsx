@@ -23,15 +23,18 @@ export default function SQLEditor({ query, datasource, onRunQuery, onChange }: R
     return tables.map((table) => ({ name: table, completion: table }));
   }, [datasource]);
 
-  const getColumns = useCallback(async (tableName?: string) => {
-    const columns: string[] = await datasource
-      .getColumns({
-        ...queryRef.current,
-        table: tableName ? tableName.replace(TABLE_MACRO, queryRef.current.table ?? '') : queryRef.current.table,
-      })
-      .catch(() => []);
-    return columns.map((column) => ({ name: column, completion: column }));
-  }, []);
+  const getColumns = useCallback(
+    async (tableName?: string) => {
+      const columns: string[] = await datasource
+        .getColumns({
+          ...queryRef.current,
+          table: tableName ? tableName.replace(TABLE_MACRO, queryRef.current.table ?? '') : queryRef.current.table,
+        })
+        .catch(() => []);
+      return columns.map((column) => ({ name: column, completion: column }));
+    },
+    [datasource]
+  );
 
   const getTablesRef = useRef(getTables);
   const getColumnsRef = useRef(getColumns);

@@ -20,12 +20,10 @@ export const getAthenaCompletionProvider: (args: CompletionProviderGetterArgs) =
       ...(language && getStandardSQLCompletionProvider(monaco, language)),
       triggerCharacters: ['.', ' ', '$', ',', '(', "'"],
       tables: {
-        resolve: async () => {
-          return await getTables();
-        },
+        resolve: getTables,
       },
       columns: {
-        resolve: async (t: TableIdentifier) => getColumns(t.table!),
+        resolve: (t: TableIdentifier) => getColumns(t.table!),
       },
       supportedMacros: () => MACROS,
     };

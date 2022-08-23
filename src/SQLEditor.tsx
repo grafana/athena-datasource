@@ -36,11 +36,9 @@ export default function SQLEditor({ query, datasource, onRunQuery, onChange }: R
     [datasource]
   );
 
-  const getTablesRef = useRef(getTables);
-  const getColumnsRef = useRef(getColumns);
   const completionProvider = useMemo(
-    () => getAthenaCompletionProvider({ getTables: getTablesRef, getColumns: getColumnsRef }),
-    []
+    () => getAthenaCompletionProvider({ getTables, getColumns }),
+    [getTables, getColumns]
   );
 
   return (

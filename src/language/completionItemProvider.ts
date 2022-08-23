@@ -8,8 +8,8 @@ import {
 import { MACROS } from './macros';
 
 interface CompletionProviderGetterArgs {
-  getTables: React.MutableRefObject<(d?: string) => Promise<TableDefinition[]>>;
-  getColumns: React.MutableRefObject<(table: string) => Promise<ColumnDefinition[]>>;
+  getTables: (d?: string) => Promise<TableDefinition[]>;
+  getColumns: (table: string) => Promise<ColumnDefinition[]>;
 }
 
 export const getAthenaCompletionProvider: (args: CompletionProviderGetterArgs) => LanguageCompletionProvider =
@@ -21,11 +21,11 @@ export const getAthenaCompletionProvider: (args: CompletionProviderGetterArgs) =
       triggerCharacters: ['.', ' ', '$', ',', '(', "'"],
       tables: {
         resolve: async () => {
-          return await getTables.current();
+          return await getTables();
         },
       },
       columns: {
-        resolve: async (t: TableIdentifier) => getColumns.current(t.table!),
+        resolve: async (t: TableIdentifier) => getColumns(t.table!),
       },
       supportedMacros: () => MACROS,
     };

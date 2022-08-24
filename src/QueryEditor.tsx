@@ -3,12 +3,12 @@ import { QueryEditorProps, SelectableValue } from '@grafana/data';
 import { DataSource } from './datasource';
 import { AthenaDataSourceOptions, AthenaQuery, defaultQuery, SelectableFormatOptions } from './types';
 import { InlineSegmentGroup } from '@grafana/ui';
-import { FormatSelect, ResourceSelector, QueryCodeEditor } from '@grafana/aws-sdk';
+import { FormatSelect, ResourceSelector } from '@grafana/aws-sdk';
 import { selectors } from 'tests/selectors';
-import { getSuggestions } from 'Suggestions';
 import { appendTemplateVariables } from 'utils';
+import SQLEditor from 'SQLEditor';
 
-type Props = QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions>;
+type Props = QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions> & { hideOptions?: boolean };
 
 type QueryProperties = 'regions' | 'catalogs' | 'databases' | 'tables' | 'columns';
 
@@ -125,21 +125,25 @@ export function QueryEditor(props: Props) {
             labelWidth={11}
             className="width-12"
           />
-          <h6>Frames</h6>
-          <FormatSelect
-            query={props.query}
-            options={SelectableFormatOptions}
-            onChange={props.onChange}
-            onRunQuery={props.onRunQuery}
-          />
+          {!props.hideOptions && (
+            <>
+              <h6>Frames</h6>
+              <FormatSelect
+                query={props.query}
+                options={SelectableFormatOptions}
+                onChange={props.onChange}
+                onRunQuery={props.onRunQuery}
+              />
+            </>
+          )}
         </div>
+
         <div style={{ minWidth: '400px', marginLeft: '10px', flex: 1 }}>
-          <QueryCodeEditor
-            language="sql"
+          <SQLEditor
             query={queryWithDefaults}
-            onChange={props.onChange}
             onRunQuery={props.onRunQuery}
-            getSuggestions={getSuggestions}
+            onChange={props.onChange}
+            datasource={props.datasource}
           />
         </div>
       </InlineSegmentGroup>

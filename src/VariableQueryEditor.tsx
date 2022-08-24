@@ -1,10 +1,9 @@
 import React from 'react';
-import { QueryCodeEditor } from '@grafana/aws-sdk';
-import { getSuggestions } from 'Suggestions';
 import { AthenaQuery, AthenaDataSourceOptions } from './types';
 import { QueryEditorProps } from '@grafana/data';
 import { DataSource } from 'datasource';
+import { QueryEditor } from 'QueryEditor';
 
 export function VariableQueryCodeEditor(props: QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions>) {
-  return <QueryCodeEditor {...props} language="sql" getSuggestions={getSuggestions} />;
+  return <QueryEditor {...props} hideOptions={true} />;
 }

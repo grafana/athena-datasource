@@ -109,22 +109,27 @@ e2e.scenario({
             e2eSelectors.ConfigEditor.table.wrapper().contains('cloudtrail_logs');
             e2eSelectors.ConfigEditor.table.input().type('cloudtrail_logs').type('{enter}');
 
-            // Verify editor suggestions
-            e2eSelectors.QueryEditor.CodeEditor.container().click({ force: true }).type(`{selectall}$__table`);
-            e2eSelectors.QueryEditor.CodeEditor.container().contains('(Macro) cloudtrail_logs');
+            // The follwing section will verify that autocompletion in behaving as expected.
+            // Throughout the composition of the SQL query, the autocompletion engine will provide appropriate suggestions.
+            // In this test the first few suggestions are accepted by hitting enter which will create a basic query.
+            // Increasing delay to allow tables names and columns names to be resolved async by the plugin
+            e2eSelectors.QueryEditor.CodeEditor.container()
+              .click({ force: true })
+              .type(`s{enter}{enter}{enter}{enter} {enter}{enter}`, { delay: 3000 });
+            e2eSelectors.QueryEditor.CodeEditor.container().contains(
+              'SELECT * FROM cloudtrail_logs GROUP BY additionaleventdata'
+            );
 
-            e2eSelectors.QueryEditor.CodeEditor.container().click({ force: true }).type(`{selectall}{enter}
-SELECT 
-    $__parseTime(eventtime, 'yyyy-MM-dd''T''HH:mm:ss''Z'), 
-    sum(cast(json_extract_scalar(additionaleventdata, '$.bytesTransferredOut') as real)) AS bytes 
-FROM 
-    $__table 
-WHERE additionaleventdata IS NOT NULL AND json_extract_scalar(additionaleventdata, '$.bytesTransferredOut') IS NOT NULL 
-AND 
-    $__timeFilter(eventtime, 'yyyy-MM-dd''T''HH:mm:ss''Z') 
+            e2eSelectors.QueryEditor.CodeEditor.container()
+              .click({ force: true })
+              .type(
+                `{selectall}
+SELECT $__parseTime(eventtime, 'yyyy-MM-dd''T''HH:mm:ss''Z'), sum(cast(json_extract_scalar(additionaleventdata, '$.bytesTransferredOut') as real)) AS bytes 
+FROM $__table WHERE additionaleventdata IS NOT NULL AND json_extract_scalar(additionaleventdata, '$.bytesTransferredOut') IS NOT NULL AND  $__timeFilter(eventtime, 'yyyy-MM-dd''T''HH:mm:ss''Z') 
 GROUP BY 1 
 ORDER BY 1 
-`);
+`
+              );
             // blur and wait for loading
             cy.get('.panel-content').click();
             cy.get('.panel-loading');

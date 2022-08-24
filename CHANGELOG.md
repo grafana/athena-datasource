@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.0
+
+- Add support for context aware autocompletion by @sunker in https://github.com/grafana/athena-datasource/pull/171
+
 ## 2.0.1
 
 - Fix bug with caching invalid auth args (https://github.com/grafana/athena-datasource/issues/144)

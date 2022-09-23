@@ -7,8 +7,10 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 	sqlAPI "github.com/grafana/grafana-aws-sdk/pkg/sql/api"
 	awsDriver "github.com/grafana/grafana-aws-sdk/pkg/sql/driver"
+	asyncDriver "github.com/grafana/grafana-aws-sdk/pkg/sql/driver/async"
 	sqlModels "github.com/grafana/grafana-aws-sdk/pkg/sql/models"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/sqlds/v2"
@@ -21,6 +23,10 @@ type mockClient struct {
 
 func (m *mockClient) Init(config backend.DataSourceInstanceSettings) {}
 func (m *mockClient) GetDB(id int64, options sqlds.Options, settingsLoader sqlModels.Loader, apiLoader sqlAPI.Loader, driverLoader awsDriver.Loader) (*sql.DB, error) {
+	m.wasCalledWith = options
+	return nil, nil
+}
+func (m *mockClient) GetAsyncDB(id int64, options sqlds.Options, settingsLoader sqlModels.Loader, apiLoader sqlAPI.Loader, driverLoader asyncDriver.Loader) (awsds.AsyncDB, error) {
 	m.wasCalledWith = options
 	return nil, nil
 }

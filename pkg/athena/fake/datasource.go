@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/data/sqlutil"
 	"github.com/grafana/sqlds/v2"
@@ -30,6 +31,10 @@ func (s *AthenaFakeDatasource) Converters() (sc []sqlutil.Converter) {
 
 func (s *AthenaFakeDatasource) Connect(config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (*sql.DB, error) {
 	return &sql.DB{}, nil
+}
+
+func (s *AthenaFakeDatasource) GetAsyncDB(config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (awsds.AsyncDB, error) {
+	return nil, nil
 }
 
 func (s *AthenaFakeDatasource) Macros() sqlds.Macros {

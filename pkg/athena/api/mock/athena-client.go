@@ -22,6 +22,7 @@ type MockAthenaClient struct {
 	Workgroups           []string
 	TableMetadataList    []string
 	Columns              []string
+	QueryIds             []*string
 	Cancelled            bool
 	athenaiface.AthenaAPI
 }
@@ -55,6 +56,12 @@ func (m *MockAthenaClient) GetQueryExecutionWithContext(ctx aws.Context, input *
 		}
 	}
 	return output, nil
+}
+
+func (m *MockAthenaClient) ListQueryExecutionsWithContext(ctx aws.Context, input *athena.ListQueryExecutionsInput, opts ...request.Option) (*athena.ListQueryExecutionsOutput, error) {
+	return &athena.ListQueryExecutionsOutput{
+		QueryExecutionIds: m.QueryIds,
+	}, nil
 }
 
 const FAKE_ERROR = "FAKE_ERROR"

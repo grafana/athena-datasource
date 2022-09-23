@@ -8,9 +8,11 @@ import (
 	"github.com/grafana/athena-datasource/pkg/athena/api"
 	"github.com/grafana/athena-datasource/pkg/athena/driver"
 	"github.com/grafana/athena-datasource/pkg/athena/models"
+	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 	sqlAPI "github.com/grafana/grafana-aws-sdk/pkg/sql/api"
 	"github.com/grafana/grafana-aws-sdk/pkg/sql/datasource"
 	awsDriver "github.com/grafana/grafana-aws-sdk/pkg/sql/driver"
+	asyncDriver "github.com/grafana/grafana-aws-sdk/pkg/sql/driver/async"
 	sqlModels "github.com/grafana/grafana-aws-sdk/pkg/sql/models"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
@@ -21,6 +23,7 @@ import (
 type awsDSClient interface {
 	Init(config backend.DataSourceInstanceSettings)
 	GetDB(id int64, options sqlds.Options, settingsLoader sqlModels.Loader, apiLoader sqlAPI.Loader, driverLoader awsDriver.Loader) (*sql.DB, error)
+	GetAsyncDB(id int64, options sqlds.Options, settingsLoader sqlModels.Loader, apiLoader sqlAPI.Loader, driverLoader asyncDriver.Loader) (awsds.AsyncDB, error)
 	GetAPI(id int64, options sqlds.Options, settingsLoader sqlModels.Loader, apiLoader sqlAPI.Loader) (sqlAPI.AWSAPI, error)
 }
 type AthenaDatasource struct {
@@ -31,6 +34,7 @@ type AthenaDatasourceIface interface {
 	sqlds.Driver
 	sqlds.Completable
 	sqlAPI.Resources
+	awsds.AsyncDriver
 	DataCatalogs(ctx context.Context, options sqlds.Options) ([]string, error)
 	Databases(ctx context.Context, options sqlds.Options) ([]string, error)
 	Workgroups(ctx context.Context, options sqlds.Options) ([]string, error)
@@ -63,7 +67,17 @@ func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings, qu
 		args["region"] = sqlModels.DefaultKey
 	}
 
-	return s.awsDS.GetDB(config.ID, args, models.New, api.New, driver.New)
+	return s.awsDS.GetDB(config.ID, args, models.New, api.New, driver.NewSync)
+}
+
+func (s *AthenaDatasource) GetAsyncDB(config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (awsds.AsyncDB, error) {
+	s.awsDS.Init(config)
+	args, err := sqlds.ParseOptions(queryArgs)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.awsDS.GetAsyncDB(config.ID, args, models.New, api.New, driver.New)
 }
 
 func (s *AthenaDatasource) Converters() (sc []sqlutil.Converter) {

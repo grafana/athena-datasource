@@ -17,6 +17,12 @@ import (
 	"github.com/grafana/sqlds/v2"
 )
 
+var validStatuses = []string{
+	athena.QueryExecutionStateQueued,
+	athena.QueryExecutionStateRunning,
+	athena.QueryExecutionStateSucceeded,
+}
+
 type API struct {
 	Client   athenaiface.AthenaAPI
 	settings *models.AthenaDataSourceSettings
@@ -73,6 +79,49 @@ func (c *API) Execute(ctx context.Context, input *api.ExecuteQueryInput) (*api.E
 	return &api.ExecuteQueryOutput{ID: *output.QueryExecutionId}, nil
 }
 
+func sliceContains(slice []string, str string) bool {
+	for _, val := range slice {
+		if val == str {
+			return true
+		}
+	}
+	return false
+}
+
+func (c *API) GetQueryID(ctx context.Context, query string, args ...interface{}) (bool, string, error) {
+	input := &athena.ListQueryExecutionsInput{WorkGroup: &c.settings.WorkGroup}
+	output, err := c.Client.ListQueryExecutionsWithContext(ctx, input)
+	if err != nil {
+		return false, "", fmt.Errorf("%w: %v", api.ExecuteError, err)
+	}
+
+	for {
+		for _, queryID := range output.QueryExecutionIds {
+			result, err := c.Client.GetQueryExecution(&athena.GetQueryExecutionInput{QueryExecutionId: queryID})
+			if err != nil {
+				return false, "", fmt.Errorf("%w: %v", api.ExecuteError, err)
+			}
+			if result.QueryExecution.Query != nil && *result.QueryExecution.Query == query {
+				if result.QueryExecution.Status != nil && sliceContains(validStatuses, *result.QueryExecution.Status.State) {
+					return true, *queryID, nil
+				}
+				return false, "", nil
+			}
+		}
+
+		if output.NextToken == nil {
+			break
+		}
+		input.SetNextToken(*output.NextToken)
+		output, err = c.Client.ListQueryExecutionsWithContext(ctx, input)
+		if err != nil {
+			return false, "", fmt.Errorf("%w: %v", api.ExecuteError, err)
+		}
+	}
+
+	return false, "", nil
+}
+
 func (c *API) Status(ctx aws.Context, output *api.ExecuteQueryOutput) (*api.ExecuteQueryStatus, error) {
 	statusResp, err := c.Client.GetQueryExecutionWithContext(ctx, &athena.GetQueryExecutionInput{
 		QueryExecutionId: aws.String(output.ID),
@@ -84,7 +133,7 @@ func (c *API) Status(ctx aws.Context, output *api.ExecuteQueryOutput) (*api.Exec
 	var finished bool
 	state := *statusResp.QueryExecution.Status.State
 	switch state {
-	case athena.QueryExecutionStateFailed:
+	case athena.QueryExecutionStateFailed, athena.QueryExecutionStateCancelled:
 		finished = true
 		err = errors.New(*statusResp.QueryExecution.Status.StateChangeReason)
 	case athena.QueryExecutionStateSucceeded:

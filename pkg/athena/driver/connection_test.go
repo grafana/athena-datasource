@@ -25,12 +25,12 @@ func TestConnection_QueryContext(t *testing.T) {
 			}),
 	}
 
-	failedOutput, err := c.QueryContext(context.Background(), athenaclientmock.FAKE_ERROR, []driver.NamedValue{})
+	failedOutput, err := c.StartQuery(context.Background(), athenaclientmock.FAKE_ERROR, []driver.NamedValue{})
 	if !errors.Is(err, sqlAPI.ExecuteError) {
 		t.Errorf("unexpected err %v", err)
 	}
-	assert.Equal(t, failedOutput, nil)
+	assert.Equal(t, failedOutput, "")
 
-	_, err = c.QueryContext(context.Background(), athenaclientmock.FAKE_SUCCESS, []driver.NamedValue{})
+	_, err = c.StartQuery(context.Background(), athenaclientmock.FAKE_SUCCESS, []driver.NamedValue{})
 	assert.Equal(t, err, nil)
 }

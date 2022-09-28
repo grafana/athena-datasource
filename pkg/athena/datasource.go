@@ -95,6 +95,14 @@ func (s *AthenaDatasource) getAPI(ctx context.Context, options sqlds.Options) (*
 	return res.(*api.API), err
 }
 
+func (s *AthenaDatasource) CancelQuery(ctx context.Context, options sqlds.Options, queryID string) error {
+	api, err := s.getAPI(ctx, options)
+	if err != nil {
+		return err
+	}
+	return api.CancelQuery(ctx, options, queryID)
+}
+
 func (s *AthenaDatasource) Schemas(ctx context.Context, options sqlds.Options) ([]string, error) {
 	// Athena uses an approach known as schema-on-read
 	// Ref: https://docs.aws.amazon.com/athena/latest/ug/creating-tables.html

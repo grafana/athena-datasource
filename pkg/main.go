@@ -15,6 +15,7 @@ func main() {
 	s := athena.New()
 	ds := awsds.NewAsyncAWSDatasource(s)
 	ds.Completable = s
+	ds.EnableMultipleConnections = true
 	ds.CustomRoutes = routes.New(s).Routes()
 
 	if err := datasource.Manage(

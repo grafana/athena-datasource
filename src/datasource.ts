@@ -1,12 +1,12 @@
 import { DataQueryRequest, DataQueryResponse, DataSourceInstanceSettings, ScopedVars } from '@grafana/data';
-import { DataSourceWithBackend, getTemplateSrv, TemplateSrv } from '@grafana/runtime';
+import { config, getTemplateSrv, TemplateSrv } from '@grafana/runtime';
 import { AthenaDataSourceOptions, AthenaQuery } from './types';
 import { AthenaVariableSupport } from './variables';
-import { filterSQLQuery, applySQLTemplateVariables } from '@grafana/aws-sdk';
+import { filterSQLQuery, applySQLTemplateVariables, AsyncDatasourceWithBackend } from '@grafana/aws-sdk';
 import { Observable } from 'rxjs';
 import { cloneDeep } from 'lodash';
 
-export class DataSource extends DataSourceWithBackend<AthenaQuery, AthenaDataSourceOptions> {
+export class DataSource extends AsyncDatasourceWithBackend<AthenaQuery, AthenaDataSourceOptions> {
   defaultRegion = '';
   defaultCatalog = '';
   defaultDatabase = '';
@@ -15,7 +15,7 @@ export class DataSource extends DataSourceWithBackend<AthenaQuery, AthenaDataSou
     instanceSettings: DataSourceInstanceSettings<AthenaDataSourceOptions>,
     private readonly templateSrv: TemplateSrv = getTemplateSrv()
   ) {
-    super(instanceSettings);
+    super(instanceSettings, config.featureToggles.athenaAsyncQueryDataSupport);
     this.defaultRegion = instanceSettings.jsonData.defaultRegion || '';
     this.defaultCatalog = instanceSettings.jsonData.catalog || '';
     this.defaultDatabase = instanceSettings.jsonData.database || '';

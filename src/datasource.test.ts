@@ -18,9 +18,12 @@ describe('AthenaDatasource', () => {
 
   const mockGetVariables = jest.fn().mockReturnValue([]);
 
-  jest
-    .spyOn(runtime, 'getTemplateSrv')
-    .mockImplementation(() => ({ getVariables: mockGetVariables, replace: jest.fn() }));
+  jest.spyOn(runtime, 'getTemplateSrv').mockImplementation(() => ({
+    getVariables: mockGetVariables,
+    replace: jest.fn(),
+    containsTemplate: jest.fn(),
+    updateTimeRange: jest.fn(),
+  }));
 
   const defaultQuery: AthenaQuery = {
     connectionArgs: {
@@ -120,6 +123,8 @@ describe('AthenaDatasource', () => {
     jest.spyOn(runtime, 'getTemplateSrv').mockImplementation(() => ({
       getVariables: mockGetVariables,
       replace: (target: string) => target.replace('$testVar', 'replaced'),
+      containsTemplate: jest.fn(),
+      updateTimeRange: jest.fn(),
     }));
 
     it('should return query unchanged if there are no template variables', async () => {

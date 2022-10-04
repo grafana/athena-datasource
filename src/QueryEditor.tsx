@@ -3,7 +3,7 @@ import { QueryEditorProps, SelectableValue } from '@grafana/data';
 import { DataSource } from './datasource';
 import { AthenaDataSourceOptions, AthenaQuery, defaultQuery, SelectableFormatOptions } from './types';
 import { InlineSegmentGroup } from '@grafana/ui';
-import { FormatSelect, ResourceSelector } from '@grafana/aws-sdk';
+import { FormatSelect, ResourceSelector, RunQueryButtons } from '@grafana/aws-sdk';
 import { selectors } from 'tests/selectors';
 import { appendTemplateVariables } from 'utils';
 import SQLEditor from 'SQLEditor';
@@ -65,6 +65,10 @@ export function QueryEditor(props: Props) {
     if (props.onRunQuery) {
       props.onRunQuery();
     }
+  };
+
+  const cancelQuery = () => {
+    props.datasource.cancel(props.query);
   };
 
   return (
@@ -139,12 +143,10 @@ export function QueryEditor(props: Props) {
         </div>
 
         <div style={{ minWidth: '400px', marginLeft: '10px', flex: 1 }}>
-          <SQLEditor
-            query={queryWithDefaults}
-            onRunQuery={props.onRunQuery}
-            onChange={props.onChange}
-            datasource={props.datasource}
-          />
+          <SQLEditor query={queryWithDefaults} onChange={props.onChange} datasource={props.datasource} />
+          <div style={{ marginTop: 8 }}>
+            <RunQueryButtons onRunQuery={props.onRunQuery} onCancelQuery={cancelQuery} state={props.data?.state} />
+          </div>
         </div>
       </InlineSegmentGroup>
     </>

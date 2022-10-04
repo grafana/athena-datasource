@@ -22,12 +22,12 @@
   },
   "devDependencies": {
     "@grafana/aws-sdk": "0.0.37",
-    "@grafana/data": "8.2.1",
-    "@grafana/e2e": "8.2.1",
-    "@grafana/e2e-selectors": "8.2.1",
-    "@grafana/runtime": "8.2.1",
-    "@grafana/toolkit": "8.2.1",
-    "@grafana/ui": "8.2.1",
+    "@grafana/data": "8.5.10",
+    "@grafana/e2e": "8.5.10",
+    "@grafana/e2e-selectors": "8.5.10",
+    "@grafana/runtime": "8.5.10",
+    "@grafana/toolkit": "8.5.10",
+    "@grafana/ui": "8.5.10",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
     "@types/lodash": "latest",
@@ -36,7 +36,7 @@
     "tslib": "^2.3.0"
   },
   "resolutions": {
-    "rxjs": "6.6.3"
+    "rxjs": "^6.6.3"
   },
   "engines": {
     "node": ">=14"

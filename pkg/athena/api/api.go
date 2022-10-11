@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/athena"
@@ -91,19 +92,26 @@ func sliceContains(slice []string, str string) bool {
 func (c *API) GetQueryID(ctx context.Context, query string, args ...interface{}) (bool, string, error) {
 	input := &athena.ListQueryExecutionsInput{WorkGroup: &c.settings.WorkGroup}
 	output, err := c.Client.ListQueryExecutionsWithContext(ctx, input)
+	query = strings.TrimSpace(query)
+	query = strings.Trim(query, ";")
+	if err != nil {
+		return false, "", fmt.Errorf("%w: %v", api.ExecuteError, err)
+	}
+
+	describeInput := &athena.BatchGetQueryExecutionInput{QueryExecutionIds: output.QueryExecutionIds}
+	result, err := c.Client.BatchGetQueryExecution(describeInput)
 	if err != nil {
 		return false, "", fmt.Errorf("%w: %v", api.ExecuteError, err)
 	}
 
 	for {
-		for _, queryID := range output.QueryExecutionIds {
-			result, err := c.Client.GetQueryExecution(&athena.GetQueryExecutionInput{QueryExecutionId: queryID})
-			if err != nil {
-				return false, "", fmt.Errorf("%w: %v", api.ExecuteError, err)
+		for _, queryExecution := range result.QueryExecutions {
+			if queryExecution.Query == nil {
+				continue
 			}
-			if result.QueryExecution.Query != nil && *result.QueryExecution.Query == query {
-				if result.QueryExecution.Status != nil && sliceContains(validStatuses, *result.QueryExecution.Status.State) {
-					return true, *queryID, nil
+			if *queryExecution.Query == query {
+				if queryExecution.Status != nil && sliceContains(validStatuses, *queryExecution.Status.State) {
+					return true, *queryExecution.QueryExecutionId, nil
 				}
 				return false, "", nil
 			}
@@ -114,6 +122,11 @@ func (c *API) GetQueryID(ctx context.Context, query string, args ...interface{})
 		}
 		input.SetNextToken(*output.NextToken)
 		output, err = c.Client.ListQueryExecutionsWithContext(ctx, input)
+		if err != nil {
+			return false, "", fmt.Errorf("%w: %v", api.ExecuteError, err)
+		}
+		describeInput.SetQueryExecutionIds(output.QueryExecutionIds)
+		result, err = c.Client.BatchGetQueryExecution(describeInput)
 		if err != nil {
 			return false, "", fmt.Errorf("%w: %v", api.ExecuteError, err)
 		}

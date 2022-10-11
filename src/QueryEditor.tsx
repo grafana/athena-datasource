@@ -62,9 +62,6 @@ export function QueryEditor(props: Props) {
         break;
     }
     props.onChange(newQuery);
-    if (props.onRunQuery) {
-      props.onRunQuery();
-    }
   };
 
   const cancelQuery = () => {

@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/athena"
@@ -17,12 +16,6 @@ import (
 	sdkhttpclient "github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
 	"github.com/grafana/sqlds/v2"
 )
-
-var validStatuses = []string{
-	athena.QueryExecutionStateQueued,
-	athena.QueryExecutionStateRunning,
-	athena.QueryExecutionStateSucceeded,
-}
 
 type API struct {
 	Client   athenaiface.AthenaAPI
@@ -80,58 +73,8 @@ func (c *API) Execute(ctx context.Context, input *api.ExecuteQueryInput) (*api.E
 	return &api.ExecuteQueryOutput{ID: *output.QueryExecutionId}, nil
 }
 
-func sliceContains(slice []string, str string) bool {
-	for _, val := range slice {
-		if val == str {
-			return true
-		}
-	}
-	return false
-}
-
+// GetQueryID returns not found, as calling ListQueryExecutions gets throttled when there are many panels
 func (c *API) GetQueryID(ctx context.Context, query string, args ...interface{}) (bool, string, error) {
-	input := &athena.ListQueryExecutionsInput{WorkGroup: &c.settings.WorkGroup}
-	output, err := c.Client.ListQueryExecutionsWithContext(ctx, input)
-	query = strings.TrimSpace(query)
-	query = strings.Trim(query, ";")
-	if err != nil {
-		return false, "", fmt.Errorf("%w: %v", api.ExecuteError, err)
-	}
-
-	describeInput := &athena.BatchGetQueryExecutionInput{QueryExecutionIds: output.QueryExecutionIds}
-	result, err := c.Client.BatchGetQueryExecution(describeInput)
-	if err != nil {
-		return false, "", fmt.Errorf("%w: %v", api.ExecuteError, err)
-	}
-
-	for {
-		for _, queryExecution := range result.QueryExecutions {
-			if queryExecution.Query == nil {
-				continue
-			}
-			if *queryExecution.Query == query {
-				if queryExecution.Status != nil && sliceContains(validStatuses, *queryExecution.Status.State) {
-					return true, *queryExecution.QueryExecutionId, nil
-				}
-				return false, "", nil
-			}
-		}
-
-		if output.NextToken == nil {
-			break
-		}
-		input.SetNextToken(*output.NextToken)
-		output, err = c.Client.ListQueryExecutionsWithContext(ctx, input)
-		if err != nil {
-			return false, "", fmt.Errorf("%w: %v", api.ExecuteError, err)
-		}
-		describeInput.SetQueryExecutionIds(output.QueryExecutionIds)
-		result, err = c.Client.BatchGetQueryExecution(describeInput)
-		if err != nil {
-			return false, "", fmt.Errorf("%w: %v", api.ExecuteError, err)
-		}
-	}
-
 	return false, "", nil
 }
 

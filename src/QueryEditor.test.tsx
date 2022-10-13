@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { QueryEditor } from './QueryEditor';
 import { mockDatasource, mockQuery } from './__mocks__/datasource';
 import '@testing-library/jest-dom';
@@ -79,7 +79,7 @@ describe('QueryEditor', () => {
     });
   });
 
-  it('should request databases and execute the query', async () => {
+  it('should request databases and not execute the query', async () => {
     const onChange = jest.fn();
     const onRunQuery = jest.fn();
     ds.postResource = jest.fn().mockResolvedValue([ds.defaultDatabase, 'foo']);
@@ -98,10 +98,10 @@ describe('QueryEditor', () => {
       ...q,
       connectionArgs: { ...q.connectionArgs, database: 'foo' },
     });
-    expect(onRunQuery).toHaveBeenCalled();
+    expect(onRunQuery).not.toHaveBeenCalled();
   });
 
-  it('should request select tables and execute the query', async () => {
+  it('should request select tables and not execute the query', async () => {
     const onChange = jest.fn();
     const onRunQuery = jest.fn();
     ds.postResource = jest.fn().mockResolvedValue(['foo']);
@@ -124,10 +124,10 @@ describe('QueryEditor', () => {
       ...q,
       table: 'foo',
     });
-    expect(onRunQuery).toHaveBeenCalled();
+    expect(onRunQuery).not.toHaveBeenCalled();
   });
 
-  it('should request select columns and execute the query', async () => {
+  it('should request select columns and not execute the query', async () => {
     const onChange = jest.fn();
     const onRunQuery = jest.fn();
     ds.postResource = jest.fn().mockResolvedValue(['columnName']);
@@ -162,7 +162,29 @@ describe('QueryEditor', () => {
       column: 'columnName',
       table: 'tableName',
     });
-    expect(onRunQuery).toHaveBeenCalled();
+    expect(onRunQuery).not.toHaveBeenCalled();
+  });
+
+  it('should run queries when the run button is clicked', () => {
+    const onChange = jest.fn();
+    const onRunQuery = jest.fn();
+    render(<QueryEditor {...props} onRunQuery={onRunQuery} onChange={onChange} />);
+    const runButton = screen.getByRole('button', { name: 'Run' });
+    expect(runButton).toBeInTheDocument();
+
+    expect(onRunQuery).not.toBeCalled();
+    fireEvent.click(runButton);
+    expect(onRunQuery).toBeCalledTimes(1);
+  });
+
+  it('stop button should be disabled until run button is clicked', () => {
+    render(<QueryEditor {...props} />);
+    const runButton = screen.getByRole('button', { name: 'Run' });
+    const stopButton = screen.getByRole('button', { name: 'Stop' });
+    expect(stopButton).toBeInTheDocument();
+    expect(stopButton).toBeDisabled();
+    fireEvent.click(runButton);
+    expect(stopButton).not.toBeDisabled();
   });
 
   it('should display query options by default', async () => {

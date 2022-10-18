@@ -8,7 +8,10 @@ import { selectors } from 'tests/selectors';
 import { appendTemplateVariables } from 'utils';
 import SQLEditor from 'SQLEditor';
 
-type Props = QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions> & { hideOptions?: boolean };
+type Props = QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions> & {
+  hideOptions?: boolean;
+  hideRunQueryButtons?: boolean;
+};
 
 type QueryProperties = 'regions' | 'catalogs' | 'databases' | 'tables' | 'columns';
 
@@ -141,9 +144,11 @@ export function QueryEditor(props: Props) {
 
         <div style={{ minWidth: '400px', marginLeft: '10px', flex: 1 }}>
           <SQLEditor query={queryWithDefaults} onChange={props.onChange} datasource={props.datasource} />
-          <div style={{ marginTop: 8 }}>
-            <RunQueryButtons onRunQuery={props.onRunQuery} onCancelQuery={cancelQuery} state={props.data?.state} />
-          </div>
+          {!props.hideRunQueryButtons && (
+            <div style={{ marginTop: 8 }}>
+              <RunQueryButtons onRunQuery={props.onRunQuery} onCancelQuery={cancelQuery} state={props.data?.state} />
+            </div>
+          )}
         </div>
       </InlineSegmentGroup>
     </>

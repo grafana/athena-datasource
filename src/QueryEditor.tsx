@@ -67,10 +67,6 @@ export function QueryEditor(props: Props) {
     props.onChange(newQuery);
   };
 
-  const cancelQuery = () => {
-    props.datasource.cancel(props.query);
-  };
-
   return (
     <>
       <InlineSegmentGroup>
@@ -146,7 +142,12 @@ export function QueryEditor(props: Props) {
           <SQLEditor query={queryWithDefaults} onChange={props.onChange} datasource={props.datasource} />
           {!props.hideRunQueryButtons && (
             <div style={{ marginTop: 8 }}>
-              <RunQueryButtons onRunQuery={props.onRunQuery} onCancelQuery={cancelQuery} state={props.data?.state} />
+              <RunQueryButtons
+                onRunQuery={props.onRunQuery}
+                onCancelQuery={props.datasource.cancel}
+                state={props.data?.state}
+                query={props.query}
+              />
             </div>
           )}
         </div>

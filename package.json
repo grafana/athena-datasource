@@ -1,6 +1,6 @@
 {
   "name": "grafana-athena-datasource",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "Use Amazon Athena with Grafana",
   "scripts": {
     "build": "grafana-toolkit plugin:build",

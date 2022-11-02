@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.2.2
+
+- Security: Upgrade Go in build process to 1.19.3
+
 ## 2.2.1
 
 - Security: Upgrade Go in build process to 1.19.2

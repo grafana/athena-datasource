@@ -83,7 +83,7 @@ describe('ConfigEditor', () => {
   it('should use an output location', async () => {
     const onChange = jest.fn();
     render(<ConfigEditor {...props} onOptionsChange={onChange} />);
-    const input = screen.getByTestId(selectors.components.ConfigEditor.OuputLocation.wrapper);
+    const input = screen.getByTestId(selectors.components.ConfigEditor.OutputLocation.wrapper);
     const bucket = 's3://foo';
     fireEvent.change(input, { target: { value: bucket } });
     expect(onChange).toBeCalledWith({

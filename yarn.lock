@@ -2224,15 +2224,22 @@
   dependencies:
     tslib "2.4.0"
 
+"@grafana/async-query-data@0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@grafana/async-query-data/-/async-query-data-0.0.2.tgz#9949604a9adbcd09d3826052eb4e410eac916318"
+  integrity sha512-/4FgL4aeB9VexChsW6xYjxNDzITrz0ajrLdx7hac9KZvfNOp7GHK+ObjzxZR9INtIX1F1OgPsWBV5fqpL3u2NA==
+  dependencies:
+    tslib "^2.4.1"
+
 "@grafana/aws-sdk@0.0.35":
   version "0.0.35"
   resolved "https://registry.yarnpkg.com/@grafana/aws-sdk/-/aws-sdk-0.0.35.tgz#ef1a1294decdb859f04f170f33cf45277703bb87"
   integrity sha512-EUi4hF0NQ7c9+XfUvRfrCkxPVkzRFv4VdSMlUOyyg7FynKq4Do9HF+4gR30Krt0ct6zmloPIx2AAIHL5898g7A==
 
-"@grafana/aws-sdk@0.0.37":
-  version "0.0.37"
-  resolved "https://registry.yarnpkg.com/@grafana/aws-sdk/-/aws-sdk-0.0.37.tgz#412b8e6b1c24733f12f19b0df77b4ce0d107ace3"
-  integrity sha512-KAESRygY6U5TaGc/CXzLTEI6TEvmlbdOCYIehPjXjnjQnXQh9HVTLosWOptYy3zu5liZXO/+AR/Q4EEPOwC56w==
+"@grafana/aws-sdk@0.0.38":
+  version "0.0.38"
+  resolved "https://registry.yarnpkg.com/@grafana/aws-sdk/-/aws-sdk-0.0.38.tgz#05cfd2a75f56919a22142ac96d556e8e7e0691cc"
+  integrity sha512-nB1JEVilYNL3LB+0mt0YIdQqRetp6JGANcaz5QWHH8J/+hkDu5Y3wywElcvp8e/QihRBihjMY6i06SAWpkkAMQ==
 
 "@grafana/data@8.5.10":
   version "8.5.10"
@@ -14793,6 +14800,11 @@ tslib@^2.0.3, tslib@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.0.tgz#803b8cdab3e12ba581a4ca41c8839bbb0dacb09e"
   integrity sha512-N82ooyxVNm6h1riLCoyS9e3fuJ3AMG2zIZs2Gd1ATcSFjSA23Q0fzjjZeh0jbJvWVDZ0cJT8yaNNaaXHzueNjg==
+
+tslib@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.4.1.tgz#0d0bfbaac2880b91e22df0768e55be9753a5b17e"
+  integrity sha512-tGyy4dAjRIEwI7BzsB0lynWgOpfqjUdq91XXAlIWD2OwKBH7oCl/GZG/HT4BOHrTlPMOASlMQ7veyTqpmRcrNA==
 
 tsutils@^3.21.0:
   version "3.21.0"

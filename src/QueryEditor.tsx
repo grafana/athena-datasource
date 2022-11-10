@@ -3,7 +3,8 @@ import { QueryEditorProps, SelectableValue } from '@grafana/data';
 import { DataSource } from './datasource';
 import { AthenaDataSourceOptions, AthenaQuery, defaultQuery, SelectableFormatOptions } from './types';
 import { InlineSegmentGroup } from '@grafana/ui';
-import { FormatSelect, ResourceSelector, RunQueryButtons } from '@grafana/aws-sdk';
+import { FormatSelect, ResourceSelector } from '@grafana/aws-sdk';
+import { RunQueryButtons } from '@grafana/async-query-data';
 import { selectors } from 'tests/selectors';
 import { appendTemplateVariables } from 'utils';
 import SQLEditor from 'SQLEditor';
@@ -128,12 +129,7 @@ export function QueryEditor(props: Props) {
           {!props.hideOptions && (
             <>
               <h6>Frames</h6>
-              <FormatSelect
-                query={props.query}
-                options={SelectableFormatOptions}
-                onChange={props.onChange}
-                onRunQuery={props.onRunQuery}
-              />
+              <FormatSelect query={props.query} options={SelectableFormatOptions} onChange={props.onChange} />
             </>
           )}
         </div>

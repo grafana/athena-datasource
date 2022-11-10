@@ -1,8 +1,9 @@
 {
   "name": "grafana-athena-datasource",
-  "version": "2.1.0",
+  "version": "2.2.2",
   "description": "Use Amazon Athena with Grafana",
   "scripts": {
+    "spellcheck": "cspell -c cspell.config.json \"**/*.{ts,tsx,js,go,md,mdx,yml,yaml,json,scss,css}\"",
     "build": "grafana-toolkit plugin:build",
     "test": "jest --notify --watch",
     "test:coverage": "jest --coverage",
@@ -32,6 +33,7 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
     "@types/lodash": "latest",
+    "cspell": "6.13.3",
     "cypress": "7.7.0",
     "react-select-event": "^5.3.0",
     "tslib": "^2.3.0"

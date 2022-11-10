@@ -114,8 +114,8 @@ export function ConfigEditor(props: Props) {
         {...props}
         value={props.options.jsonData.outputLocation ?? ''}
         onChange={onChangeOutputLocation}
-        label={selectors.components.ConfigEditor.OuputLocation.input}
-        data-testid={selectors.components.ConfigEditor.OuputLocation.wrapper}
+        label={selectors.components.ConfigEditor.OutputLocation.input}
+        data-testid={selectors.components.ConfigEditor.OutputLocation.wrapper}
         tooltip="Optional. If not specified, the default query result location from the Workgroup configuration will be used."
         placeholder="s3://"
       />

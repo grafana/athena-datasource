@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.2.2
+
+- Security: Upgrade Go in build process to 1.19.3
+
+## 2.2.1
+
+- Security: Upgrade Go in build process to 1.19.2
+
+## 2.2.0
+
+- Upgrade to grafana-aws-sdk v0.11.0 by @fridgepoet in https://github.com/grafana/athena-datasource/pull/175
+
+Full Changelog: https://github.com/grafana/athena-datasource/compare/v2.1.0...v2.2.0
+
 ## 2.1.0
 
 - Add support for context aware autocompletion by @sunker in https://github.com/grafana/athena-datasource/pull/171

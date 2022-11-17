@@ -74,6 +74,9 @@ e2e.scenario({
             from: '2021-09-08 00:00:00',
             to: '2021-09-08 12:00:00',
           },
+          // TODO: reenable annotations
+          // From grafana 8.3.x the aria-labels from the dashboard settings links
+          // were removed so the selectors to open the Annotations settings are broken.
           // annotations: [
           //   {
           //     dataSource: 'e2e-athena-datasource',

@@ -141,7 +141,7 @@ ORDER BY 1
           },
         });
 
-        e2e.flows.importDashboard(TEST_DASHBOARD);
+        e2e.flows.importDashboard(TEST_DASHBOARD, 1000, true);
       });
   },
 });

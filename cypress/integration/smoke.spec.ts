@@ -74,26 +74,26 @@ e2e.scenario({
             from: '2021-09-08 00:00:00',
             to: '2021-09-08 12:00:00',
           },
-          annotations: [
-            {
-              dataSource: 'e2e-athena-datasource',
-              name: 'e2e test annotation',
-              dataSourceForm: () => {
-                e2eSelectors.QueryEditor.CodeEditor.container()
-                  .click({ force: true })
-                  .type(`{selectall} select * from cloudfront_logs where bytes < 100`);
+          // annotations: [
+          //   {
+          //     dataSource: 'e2e-athena-datasource',
+          //     name: 'e2e test annotation',
+          //     dataSourceForm: () => {
+          //       e2eSelectors.QueryEditor.CodeEditor.container()
+          //         .click({ force: true })
+          //         .type(`{selectall} select * from cloudfront_logs where bytes < 100`);
 
-                e2e()
-                  .get('.filter-table')
-                  .contains('time')
-                  .parent()
-                  .find('input')
-                  .click({ force: true })
-                  .type('date (time)')
-                  .type('{enter}');
-              },
-            },
-          ],
+          //       e2e()
+          //         .get('.filter-table')
+          //         .contains('time')
+          //         .parent()
+          //         .find('input')
+          //         .click({ force: true })
+          //         .type('date (time)')
+          //         .type('{enter}');
+          //     },
+          //   },
+          // ],
         });
 
         e2e.flows.addPanel({

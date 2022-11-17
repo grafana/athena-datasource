@@ -38,6 +38,7 @@ e2e.scenario({
 
         e2e.flows.addDataSource({
           name: 'e2e-athena-datasource',
+          checkHealth: false,
           expectedAlertMessage: 'Data source is working',
           form: () => {
             e2eSelectors.ConfigEditor.AuthenticationProvider.input().type('Access & secret key').type('{enter}');
@@ -129,8 +130,8 @@ GROUP BY 1
 ORDER BY 1 
 `
               );
-            // click run and wait for loading
-            cy.contains('button', 'Run').click();
+            // blur and wait for loading
+            cy.get('.panel-content').click();
             cy.get('.panel-loading');
             cy.get('.panel-loading', { timeout: 10000 }).should('not.exist');
 

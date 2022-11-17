@@ -25,8 +25,8 @@
   "devDependencies": {
     "@grafana/aws-sdk": "0.0.38",
     "@grafana/data": "8.5.10",
-    "@grafana/e2e": "8.5.10",
-    "@grafana/e2e-selectors": "8.5.10",
+    "@grafana/e2e": "9.2.4",
+    "@grafana/e2e-selectors": "9.2.4",
     "@grafana/runtime": "8.5.10",
     "@grafana/toolkit": "8.5.10",
     "@grafana/ui": "8.5.10",
@@ -39,6 +39,7 @@
     "tslib": "^2.3.0"
   },
   "resolutions": {
+    "@grafana/e2e-selectors": "9.2.4",
     "rxjs": "^6.6.3"
   },
   "engines": {

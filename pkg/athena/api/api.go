@@ -73,7 +73,9 @@ func (c *API) Execute(ctx context.Context, input *api.ExecuteQueryInput) (*api.E
 	return &api.ExecuteQueryOutput{ID: *output.QueryExecutionId}, nil
 }
 
-// GetQueryID returns not found, as calling ListQueryExecutions gets throttled when there are many panels
+// GetQueryID always returns not found. To actually check if the query has already been called would require calling
+// ListQueryExecutions, which has a limit of 5 calls per second. This leads to throttling when there are many panels
+// and/or many query executions to page through
 func (c *API) GetQueryID(ctx context.Context, query string, args ...interface{}) (bool, string, error) {
 	return false, "", nil
 }

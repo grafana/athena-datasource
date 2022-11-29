@@ -50,6 +50,7 @@
     "timeend",
     "timeseries",
     "tinyint",
+    "typecheck",
     "UNIXTIME",
     "varbinary",
     "varchar",

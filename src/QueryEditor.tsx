@@ -16,6 +16,10 @@ type Props = QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions> 
 
 type QueryProperties = 'regions' | 'catalogs' | 'databases' | 'tables' | 'columns';
 
+function isQueryValid(query: AthenaQuery) {
+  return !!query.rawSQL;
+}
+
 export function QueryEditor(props: Props) {
   const queryWithDefaults = {
     ...defaultQuery,
@@ -143,6 +147,7 @@ export function QueryEditor(props: Props) {
                 onCancelQuery={props.datasource.cancel}
                 state={props.data?.state}
                 query={props.query}
+                isQueryValid={isQueryValid}
               />
             </div>
           )}

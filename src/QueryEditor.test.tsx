@@ -165,6 +165,12 @@ describe('QueryEditor', () => {
     expect(onRunQuery).not.toHaveBeenCalled();
   });
 
+  it('run button should be disabled if the query is not valid', () => {
+    render(<QueryEditor {...props} query={{ ...props.query, rawSQL: '' }} />);
+    const runButton = screen.getByRole('button', { name: 'Run' });
+    expect(runButton).toBeDisabled();
+  });
+
   it('should run queries when the run button is clicked', () => {
     const onChange = jest.fn();
     const onRunQuery = jest.fn();

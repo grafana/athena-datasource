@@ -1,6 +1,6 @@
 {
   "name": "grafana-athena-datasource",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Use Amazon Athena with Grafana",
   "scripts": {
     "spellcheck": "cspell -c cspell.config.json \"**/*.{ts,tsx,js,go,md,mdx,yml,yaml,json,scss,css}\"",

@@ -11,9 +11,12 @@ const q = mockQuery;
 
 const mockGetVariables = jest.fn().mockReturnValue([]);
 
-jest
-  .spyOn(runtime, 'getTemplateSrv')
-  .mockImplementation(() => ({ getVariables: mockGetVariables, replace: jest.fn() }));
+jest.spyOn(runtime, 'getTemplateSrv').mockImplementation(() => ({
+  getVariables: mockGetVariables,
+  replace: jest.fn(),
+  containsTemplate: jest.fn(),
+  updateTimeRange: jest.fn(),
+}));
 
 jest.spyOn(ds, 'getVariables').mockImplementation(mockGetVariables);
 

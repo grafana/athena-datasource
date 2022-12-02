@@ -275,6 +275,6 @@ The backend driver is based on the implementation of [uber/athenadriver](https:/
 
 ## Async Query Data Support
 
-Async Query Data support enables an asynchronous query handling flow. With Async Query Data support enabled, queries will be handled over multiple requests (starting, checking its status, and fetching the results) instead of having a query be started and resolved over a single request. This is useful for queries that can potentially run for a long time and timeout.
+Async query data support enables an asynchronous query handling flow. With async query data support enabled, queries are handled over multiple requests (starting, checking its status, and fetching the results) instead of starting and resolving a query over a single request. This is useful for queries that can potentially run for a long time and timeout.
 
-To enable async query data support, you need to set feature toggle `athenaAsyncQueryDataSupport` to `true`. Here are instructions to [configure feature toggles](https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#feature_toggles).
+To enable async query data support, you need to set feature toggle `athenaAsyncQueryDataSupport` to `true`. See [Configure feature toggles](https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#feature_toggles) for details.

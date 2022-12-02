@@ -4,13 +4,21 @@ import { DataSource } from './datasource';
 import { AthenaDataSourceOptions, AthenaQuery, defaultQuery, SelectableFormatOptions } from './types';
 import { InlineSegmentGroup } from '@grafana/ui';
 import { FormatSelect, ResourceSelector } from '@grafana/aws-sdk';
+import { RunQueryButtons } from '@grafana/async-query-data';
 import { selectors } from 'tests/selectors';
 import { appendTemplateVariables } from 'utils';
 import SQLEditor from 'SQLEditor';
 
-type Props = QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions> & { hideOptions?: boolean };
+type Props = QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions> & {
+  hideOptions?: boolean;
+  hideRunQueryButtons?: boolean;
+};
 
 type QueryProperties = 'regions' | 'catalogs' | 'databases' | 'tables' | 'columns';
+
+function isQueryValid(query: AthenaQuery) {
+  return !!query.rawSQL;
+}
 
 export function QueryEditor(props: Props) {
   const queryWithDefaults = {
@@ -62,9 +70,6 @@ export function QueryEditor(props: Props) {
         break;
     }
     props.onChange(newQuery);
-    if (props.onRunQuery) {
-      props.onRunQuery();
-    }
   };
 
   return (
@@ -128,23 +133,24 @@ export function QueryEditor(props: Props) {
           {!props.hideOptions && (
             <>
               <h6>Frames</h6>
-              <FormatSelect
-                query={props.query}
-                options={SelectableFormatOptions}
-                onChange={props.onChange}
-                onRunQuery={props.onRunQuery}
-              />
+              <FormatSelect query={props.query} options={SelectableFormatOptions} onChange={props.onChange} />
             </>
           )}
         </div>
 
         <div style={{ minWidth: '400px', marginLeft: '10px', flex: 1 }}>
-          <SQLEditor
-            query={queryWithDefaults}
-            onRunQuery={props.onRunQuery}
-            onChange={props.onChange}
-            datasource={props.datasource}
-          />
+          <SQLEditor query={queryWithDefaults} onChange={props.onChange} datasource={props.datasource} />
+          {!props.hideRunQueryButtons && props?.app !== 'explore' && (
+            <div style={{ marginTop: 8 }}>
+              <RunQueryButtons
+                onRunQuery={props.onRunQuery}
+                onCancelQuery={props.datasource.cancel}
+                state={props.data?.state}
+                query={props.query}
+                isQueryValid={isQueryValid}
+              />
+            </div>
+          )}
         </div>
       </InlineSegmentGroup>
     </>

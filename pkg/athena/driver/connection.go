@@ -5,9 +5,14 @@ import (
 	"database/sql/driver"
 	"fmt"
 
+	"github.com/aws/aws-sdk-go/service/athena"
 	"github.com/grafana/athena-datasource/pkg/athena/api"
+	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 	sqlAPI "github.com/grafana/grafana-aws-sdk/pkg/sql/api"
+	"github.com/grafana/grafana-plugin-sdk-go/backend"
 )
+
+var _ awsds.AsyncDB = &conn{}
 
 type conn struct {
 	api    *api.API
@@ -20,26 +25,54 @@ func newConnection(api *api.API) *conn {
 	}
 }
 
-func (c *conn) QueryContext(ctx context.Context, query string, _ []driver.NamedValue) (driver.Rows, error) {
+func (c *conn) StartQuery(ctx context.Context, query string, args ...interface{}) (string, error) {
 	output, err := c.api.Execute(ctx, &sqlAPI.ExecuteQueryInput{Query: query})
 	if err != nil {
-		return nil, err
+		return "", err
 	}
-
-	if err := sqlAPI.WaitOnQuery(ctx, c.api, output); err != nil {
-		return nil, err
-	}
-
-	return NewRows(ctx, c.api.Client, output.ID)
+	return output.ID, nil
 }
 
-// called by CheckHealth to determine if auth config is set up properly
+func (c *conn) GetQueryID(ctx context.Context, query string, args ...interface{}) (bool, string, error) {
+	return c.api.GetQueryID(ctx, query, args)
+}
+
+func (c *conn) QueryStatus(ctx context.Context, queryID string) (awsds.QueryStatus, error) {
+	status, err := c.api.Status(ctx, &sqlAPI.ExecuteQueryOutput{ID: queryID})
+	if err != nil {
+		return awsds.QueryUnknown, err
+	}
+	var returnStatus awsds.QueryStatus
+	switch status.State {
+	case athena.QueryExecutionStateQueued:
+		returnStatus = awsds.QuerySubmitted
+	case athena.QueryExecutionStateRunning:
+		returnStatus = awsds.QueryRunning
+	case athena.QueryExecutionStateSucceeded:
+		returnStatus = awsds.QueryFinished
+	case athena.QueryExecutionStateCancelled:
+		returnStatus = awsds.QueryCanceled
+	case athena.QueryExecutionStateFailed:
+		returnStatus = awsds.QueryFailed
+	}
+	backend.Logger.Debug("QueryStatus", "state", status.State, "queryID", queryID)
+	return returnStatus, nil
+}
+
+func (c *conn) CancelQuery(ctx context.Context, queryID string) error {
+	return c.api.Stop(&sqlAPI.ExecuteQueryOutput{ID: queryID})
+
+}
+
+func (c *conn) GetRows(ctx context.Context, queryID string) (driver.Rows, error) {
+	return NewRows(ctx, c.api.Client, queryID)
+}
+
 func (c *conn) Ping(ctx context.Context) error {
-	rows, err := c.QueryContext(ctx, "SELECT 1", []driver.NamedValue{})
+	_, err := c.api.Execute(ctx, &sqlAPI.ExecuteQueryInput{Query: "SELECT 1"})
 	if err != nil {
 		return err
 	}
-	defer rows.Close()
 	return nil
 }
 

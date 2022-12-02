@@ -26,7 +26,7 @@ To access data source settings:
 | `Catalog (datasource)`       | Athena catalog. The list of catalogs will be retrieved automatically.                                                                                                                                                                                                                                                                                                             |
 | `Database`                   | Name of the database within the catalog.                                                                                                                                                                                                                                                                                                                                          |
 | `Workgroup`                  | Workgroup to use.                                                                                                                                                                                                                                                                                                                                                                 |
-| `Output Location`             | AWS S3 bucket to store execution outputs. If not specified, the default query result location from the Workgroup configuration will be used. Please note that if [`Override client-side settings`](https://docs.aws.amazon.com/athena/latest/ug/workgroups-settings-override.html?icmpid=docs_console_unmapped) is enabled in the AWS console, `Output Location` will be ignored. |
+| `Output Location`            | AWS S3 bucket to store execution outputs. If not specified, the default query result location from the Workgroup configuration will be used. Please note that if [`Override client-side settings`](https://docs.aws.amazon.com/athena/latest/ug/workgroups-settings-override.html?icmpid=docs_console_unmapped) is enabled in the AWS console, `Output Location` will be ignored. |
 
 ## Authentication
 
@@ -272,3 +272,9 @@ The backend driver is based on the implementation of [uber/athenadriver](https:/
 - Configure and use [Templates and variables](https://grafana.com/docs/grafana/latest/variables/).
 - Add [Transformations](https://grafana.com/docs/grafana/latest/panels/transformations/).
 - Set up alerting; refer to [Alerts overview](https://grafana.com/docs/grafana/latest/alerting/).
+
+## Async Query Data Support
+
+Async query data support enables an asynchronous query handling flow. With async query data support enabled, queries are handled over multiple requests (starting, checking its status, and fetching the results) instead of starting and resolving a query over a single request. This is useful for queries that can potentially run for a long time and timeout.
+
+To enable async query data support, you need to set feature toggle `athenaAsyncQueryDataSupport` to `true`. See [Configure feature toggles](https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#feature_toggles) for details.

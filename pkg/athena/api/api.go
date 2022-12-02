@@ -73,6 +73,13 @@ func (c *API) Execute(ctx context.Context, input *api.ExecuteQueryInput) (*api.E
 	return &api.ExecuteQueryOutput{ID: *output.QueryExecutionId}, nil
 }
 
+// GetQueryID always returns not found. To actually check if the query has already been called would require calling
+// ListQueryExecutions, which has a limit of 5 calls per second. This leads to throttling when there are many panels
+// and/or many query executions to page through
+func (c *API) GetQueryID(ctx context.Context, query string, args ...interface{}) (bool, string, error) {
+	return false, "", nil
+}
+
 func (c *API) Status(ctx aws.Context, output *api.ExecuteQueryOutput) (*api.ExecuteQueryStatus, error) {
 	statusResp, err := c.Client.GetQueryExecutionWithContext(ctx, &athena.GetQueryExecutionInput{
 		QueryExecutionId: aws.String(output.ID),
@@ -84,7 +91,7 @@ func (c *API) Status(ctx aws.Context, output *api.ExecuteQueryOutput) (*api.Exec
 	var finished bool
 	state := *statusResp.QueryExecution.Status.State
 	switch state {
-	case athena.QueryExecutionStateFailed:
+	case athena.QueryExecutionStateFailed, athena.QueryExecutionStateCancelled:
 		finished = true
 		err = errors.New(*statusResp.QueryExecution.Status.StateChangeReason)
 	case athena.QueryExecutionStateSucceeded:
@@ -97,6 +104,10 @@ func (c *API) Status(ctx aws.Context, output *api.ExecuteQueryOutput) (*api.Exec
 		State:    state,
 		Finished: finished,
 	}, err
+}
+
+func (c *API) CancelQuery(ctx context.Context, options sqlds.Options, queryID string) error {
+	return c.Stop(&api.ExecuteQueryOutput{ID: queryID})
 }
 
 func (c *API) Stop(output *api.ExecuteQueryOutput) error {

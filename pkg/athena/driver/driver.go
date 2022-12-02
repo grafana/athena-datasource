@@ -8,8 +8,10 @@ import (
 	"sync"
 
 	"github.com/grafana/athena-datasource/pkg/athena/api"
+	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 	sqlAPI "github.com/grafana/grafana-aws-sdk/pkg/sql/api"
 	sqlDriver "github.com/grafana/grafana-aws-sdk/pkg/sql/driver"
+	asyncSQLDriver "github.com/grafana/grafana-aws-sdk/pkg/sql/driver/async"
 )
 
 const DriverName string = "athena"
@@ -23,25 +25,29 @@ var (
 type Driver struct {
 	name       string
 	api        *api.API
-	connection *conn
+	asyncDB    *conn
+	connection *asyncSQLDriver.Conn
 }
 
 // Open returns a new driver.Conn using already existing settings
 func (d *Driver) Open(_ string) (driver.Conn, error) {
-	d.connection = newConnection(d.api)
 	return d.connection, nil
 }
 
 func (d *Driver) Closed() bool {
-	return d.connection == nil || d.connection.closed
+	return d.connection == nil || d.asyncDB.closed
 }
 
 func (d *Driver) OpenDB() (*sql.DB, error) {
 	return sql.Open(d.name, "")
 }
 
+func (d *Driver) GetAsyncDB() (awsds.AsyncDB, error) {
+	return d.asyncDB, nil
+}
+
 // New registers a new driver with a unique name
-func New(dsAPI sqlAPI.AWSAPI) (sqlDriver.Driver, error) {
+func New(dsAPI sqlAPI.AWSAPI) (asyncSQLDriver.Driver, error) {
 	// The API is stored as a generic object but we need to parse it as a Athena API
 	if reflect.TypeOf(dsAPI) != reflect.TypeOf(&api.API{}) {
 		return nil, fmt.Errorf("wrong API type")
@@ -51,6 +57,13 @@ func New(dsAPI sqlAPI.AWSAPI) (sqlDriver.Driver, error) {
 	name := fmt.Sprintf("%s-%d", DriverName, openFromSessionCount)
 	openFromSessionMutex.Unlock()
 	d := &Driver{api: dsAPI.(*api.API), name: name}
+	d.asyncDB = newConnection(d.api)
+	d.connection = asyncSQLDriver.NewConnection(d.asyncDB)
 	sql.Register(name, d)
 	return d, nil
+}
+
+// NewSync registers a new synchronous driver with a unique name
+func NewSync(dsAPI sqlAPI.AWSAPI) (sqlDriver.Driver, error) {
+	return New(dsAPI)
 }

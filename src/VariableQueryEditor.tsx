@@ -5,5 +5,5 @@ import { DataSource } from 'datasource';
 import { QueryEditor } from 'QueryEditor';
 
 export function VariableQueryCodeEditor(props: QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions>) {
-  return <QueryEditor {...props} hideOptions={true} />;
+  return <QueryEditor {...props} hideOptions hideRunQueryButtons />;
 }

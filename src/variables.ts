@@ -5,7 +5,7 @@ import { assign } from 'lodash';
 import { DataSource } from './datasource';
 import { AthenaQuery, defaultQuery } from './types';
 
-export class AthenaVariableSupport extends CustomVariableSupport<DataSource, AthenaQuery> {
+export class AthenaVariableSupport extends CustomVariableSupport<DataSource, AthenaQuery, AthenaQuery> {
   constructor(private readonly datasource: DataSource) {
     super();
     this.datasource = datasource;

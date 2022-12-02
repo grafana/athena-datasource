@@ -70,7 +70,7 @@ export const mockDatasource = new DataSource({
 export const mockQuery: AthenaQuery = {
   connectionArgs: { region: defaultKey, catalog: defaultKey, database: defaultKey },
   format: 1,
-  rawSQL: '',
+  rawSQL: 'SELECT * FROM table',
   refId: '',
   table: undefined,
   column: undefined,

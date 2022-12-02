@@ -31,6 +31,8 @@ export interface AthenaQuery extends SQLQuery {
   };
   table?: string;
   column?: string;
+
+  queryID?: string;
 }
 
 export const defaultKey = '__default';

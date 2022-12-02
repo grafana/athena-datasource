@@ -7,7 +7,7 @@ import { AthenaQuery } from 'types';
 
 interface RawEditorProps {
   query: AthenaQuery;
-  onRunQuery: () => void;
+  onRunQuery?: () => void;
   onChange: (q: AthenaQuery) => void;
   datasource: DataSource;
 }
@@ -44,7 +44,6 @@ export default function SQLEditor({ query, datasource, onRunQuery, onChange }: R
   return (
     <SQLCodeEditor
       query={query.rawSQL}
-      onBlur={() => onRunQuery()}
       onChange={(rawSQL) => onChange({ ...queryRef.current, rawSQL })}
       language={{
         id: 'sql',

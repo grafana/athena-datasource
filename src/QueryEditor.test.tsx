@@ -14,19 +14,21 @@ const q = mockQuery;
 
 const mockGetVariables = jest.fn().mockReturnValue([]);
 
-jest.spyOn(runtime, 'getTemplateSrv').mockImplementation(() => ({
-  getVariables: mockGetVariables,
-  replace: jest.fn(),
-  containsTemplate: jest.fn(),
-  updateTimeRange: jest.fn(),
-}));
-
 jest.spyOn(ds, 'getVariables').mockImplementation(mockGetVariables);
 
 jest.mock('@grafana/experimental', () => ({
   ...jest.requireActual<typeof experimental>('@grafana/experimental'),
   SQLEditor: function SQLEditor() {
     return <></>;
+  },
+}));
+
+jest.mock('@grafana/runtime', () => ({
+  ...jest.requireActual<typeof runtime>('@grafana/runtime'),
+  config: {
+    featureToggles: {
+      athenaAsyncQueryDataSupport: true,
+    },
   },
 }));
 

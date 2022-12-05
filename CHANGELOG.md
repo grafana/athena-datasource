@@ -1,12 +1,17 @@
 # Changelog
 
+## 2.3.1
+
+- Hide the stop button when async query data support is not enabled https://github.com/grafana/athena-datasource/pull/193
+- Interpolate query properties with variables only if property is set https://github.com/grafana/athena-datasource/pull/194
+
 ## 2.3.0
 
-- Add Async Query Data Support
+- Add Async Query Data Support https://github.com/grafana/athena-datasource/pull/174
 
 ## 2.2.3
 
-- Update @grafana dependencies to v8.5.10
+- Update @grafana dependencies to v8.5.10 https://github.com/grafana/athena-datasource/pull/191
 
 ## 2.2.2
 

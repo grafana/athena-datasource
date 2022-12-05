@@ -68,8 +68,8 @@ export class DataSource extends DatasourceWithAsyncBackend<AthenaQuery, AthenaDa
       query.connectionArgs.region = this.templateSrv.replace(query.connectionArgs.region, options.scopedVars);
       query.connectionArgs.catalog = this.templateSrv.replace(query.connectionArgs.catalog, options.scopedVars);
       query.connectionArgs.database = this.templateSrv.replace(query.connectionArgs.database, options.scopedVars);
-      query.table = this.templateSrv.replace(query.table, options.scopedVars);
-      query.column = this.templateSrv.replace(query.column, options.scopedVars);
+      query.table = query.table ? this.templateSrv.replace(query.table, options.scopedVars) : undefined;
+      query.column = query.column ? this.templateSrv.replace(query.column, options.scopedVars) : undefined;
       return query;
     });
 

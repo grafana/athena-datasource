@@ -2494,10 +2494,10 @@
   dependencies:
     tslib "2.4.0"
 
-"@grafana/async-query-data@0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@grafana/async-query-data/-/async-query-data-0.0.3.tgz#735781519bf045fe1c5ba0735561c9e6945ecc38"
-  integrity sha512-HRZb6Yq4Ve5R38B4dsJu0zWgttROunT1daWOqsAdvEBuP02mUoqaB8Jf/QK/6rjvZJ9Qve8gl5iI3zHEdN0HMA==
+"@grafana/async-query-data@0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@grafana/async-query-data/-/async-query-data-0.0.4.tgz#e706439eb7af507344929ff8473c85794f2adaf0"
+  integrity sha512-EhWRofcBpwETO081zL5lXSVUbGrc4OU4YxswqeY5jhzsB8xFFOGh8GF+Z5Qeqdr+JBYjpOGsh+KaQwXlZZufAQ==
   dependencies:
     tslib "^2.4.1"
 

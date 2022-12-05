@@ -3,6 +3,7 @@ import { QueryEditorProps, SelectableValue } from '@grafana/data';
 import { DataSource } from './datasource';
 import { AthenaDataSourceOptions, AthenaQuery, defaultQuery, SelectableFormatOptions } from './types';
 import { InlineSegmentGroup } from '@grafana/ui';
+import { config } from '@grafana/runtime';
 import { FormatSelect, ResourceSelector } from '@grafana/aws-sdk';
 import { RunQueryButtons } from '@grafana/async-query-data';
 import { selectors } from 'tests/selectors';
@@ -144,7 +145,7 @@ export function QueryEditor(props: Props) {
             <div style={{ marginTop: 8 }}>
               <RunQueryButtons
                 onRunQuery={props.onRunQuery}
-                onCancelQuery={props.datasource.cancel}
+                onCancelQuery={config.featureToggles.athenaAsyncQueryDataSupport ? props.datasource.cancel : undefined}
                 state={props.data?.state}
                 query={props.query}
                 isQueryValid={isQueryValid}

@@ -134,6 +134,14 @@ describe('AthenaDatasource', () => {
       expect(queries[0]).toBe(defaultQuery);
     });
 
+    it('should not add additional properties to the query', async () => {
+      const request = { ...queryRequest, targets: [{ ...defaultQuery, column: undefined }] };
+      const queries = ctx.ds.buildQuery(request, request.targets);
+
+      expect(queries).toHaveLength(1);
+      expect(queries[0]).toEqual({ ...defaultQuery, column: undefined });
+    });
+
     it('should return query with template variables replaced', async () => {
       queryRequest.targets = [
         {

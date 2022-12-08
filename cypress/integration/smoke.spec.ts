@@ -5,7 +5,7 @@ import TEST_DASHBOARD from './testDashboard.json';
 
 const e2eSelectors = e2e.getSelectors(selectors.components);
 
-/**
+/*
 To run these e2e tests:
 - first make sure you have access to the internal grafana athena cluster
 - set up a copy of your credentials in a provisioning/datasource/aws-athena.yaml file

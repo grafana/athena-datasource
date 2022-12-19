@@ -80,14 +80,13 @@ e2e.scenario({
         e2e.components.PageToolbar.item('Dashboard settings').click();
         e2e.components.Tab.title('Annotations').click();
         e2e.pages.Dashboard.Settings.Annotations.List.addAnnotationCTAV2().click();
-        e2e.pages.Dashboard.Settings.Annotations.Settings.name().clear().type('e2e test annotation');
-        e2e.components.DataSourcePicker.inputV2().click().type(`${dataSourceName}{enter}`);
 
         // Wait for the monaco editor to finish lazy loading
         const monacoLoadingText = 'Loading...';
         e2eSelectors.QueryEditor.CodeEditor.container().should('be.visible').should('have.text', monacoLoadingText);
         e2eSelectors.QueryEditor.CodeEditor.container().should('be.visible').should('not.have.text', monacoLoadingText);
 
+        e2e.pages.Dashboard.Settings.Annotations.Settings.name().clear().type('e2e test annotation');
         e2eSelectors.QueryEditor.CodeEditor.container()
           .click({ force: true })
           .type(`{selectall} select * from cloudfront_logs where bytes < 100`);

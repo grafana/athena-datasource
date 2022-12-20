@@ -27,6 +27,8 @@ type AthenaProvision = {
   datasources: AthenaDatasourceConfig[];
 };
 
+const dataSourceName = 'e2e-athena-datasource';
+
 e2e.scenario({
   describeName: 'Smoke tests',
   itName: 'Login, create data source, dashboard with panel',
@@ -37,8 +39,7 @@ e2e.scenario({
         const datasource = AthenaProvisions[0].datasources[0];
 
         e2e.flows.addDataSource({
-          name: 'e2e-athena-datasource',
-          checkHealth: false,
+          name: dataSourceName,
           expectedAlertMessage: 'Data source is working',
           form: () => {
             e2eSelectors.ConfigEditor.AuthenticationProvider.input().type('Access & secret key').type('{enter}');
@@ -74,33 +75,34 @@ e2e.scenario({
             from: '2021-09-08 00:00:00',
             to: '2021-09-08 12:00:00',
           },
-          // TODO: reenable annotations
-          // From grafana 8.3.x the aria-labels from the dashboard settings links
-          // were removed so the selectors to open the Annotations settings are broken.
-          // annotations: [
-          //   {
-          //     dataSource: 'e2e-athena-datasource',
-          //     name: 'e2e test annotation',
-          //     dataSourceForm: () => {
-          //       e2eSelectors.QueryEditor.CodeEditor.container()
-          //         .click({ force: true })
-          //         .type(`{selectall} select * from cloudfront_logs where bytes < 100`);
-
-          //       e2e()
-          //         .get('.filter-table')
-          //         .contains('time')
-          //         .parent()
-          //         .find('input')
-          //         .click({ force: true })
-          //         .type('date (time)')
-          //         .type('{enter}');
-          //     },
-          //   },
-          // ],
         });
+
+        e2e.components.PageToolbar.item('Dashboard settings').click();
+        e2e.components.Tab.title('Annotations').click();
+        e2e.pages.Dashboard.Settings.Annotations.List.addAnnotationCTAV2().click();
+
+        // Wait for the monaco editor to finish lazy loading
+        const monacoLoadingText = 'Loading...';
+        e2eSelectors.QueryEditor.CodeEditor.container().should('be.visible').should('have.text', monacoLoadingText);
+        e2eSelectors.QueryEditor.CodeEditor.container().should('be.visible').should('not.have.text', monacoLoadingText);
+
+        e2e.pages.Dashboard.Settings.Annotations.Settings.name().clear().type('e2e test annotation');
+        e2eSelectors.QueryEditor.CodeEditor.container()
+          .click({ force: true })
+          .type(`{selectall} select * from cloudfront_logs where bytes < 100`);
+        e2e()
+          .get('.filter-table')
+          .contains('time')
+          .parent()
+          .find('input')
+          .click({ force: true })
+          .type('date (time)')
+          .type('{enter}');
+        e2e.components.PageToolbar.item('Go Back').click();
 
         e2e.flows.addPanel({
           visitDashboardAtStart: false,
+          dataSourceName,
           queriesForm: () => {
             // Change database selection for query
             e2eSelectors.ConfigEditor.database.input().click({ force: true });
@@ -144,7 +146,7 @@ ORDER BY 1
           },
         });
 
-        e2e.flows.importDashboard(TEST_DASHBOARD, 1000, true);
+        e2e.flows.importDashboard(TEST_DASHBOARD);
       });
   },
 });

@@ -11,11 +11,6 @@ interface TestContext {
 
 describe('AthenaDatasource', () => {
   const ctx: TestContext = {} as TestContext;
-  const backendSrv = {
-    get: (url: string, params?: any, requestId?: string) => {},
-    post: (url: string, data?: any) => {},
-  };
-
   const mockGetVariables = jest.fn().mockReturnValue([]);
 
   jest.spyOn(runtime, 'getTemplateSrv').mockImplementation(() => ({
@@ -61,61 +56,76 @@ describe('AthenaDatasource', () => {
       jsonData: { defaultRegion: 'testRegion', catalog: 'testCatalog', database: 'testDatabase' },
     } as unknown as DataSourceInstanceSettings<AthenaDataSourceOptions>;
     ctx.ds = new DataSource(ctx.instanceSettings);
-    runtime.setBackendSrv(backendSrv as runtime.BackendSrv);
+    ctx.ds.getResource = jest.fn().mockImplementation((path: string) => {
+      switch (path) {
+        case 'regions':
+          return Promise.resolve(setupRegionsResponse());
+      }
+      return Promise.resolve([]);
+    });
+
+    ctx.ds.postResource = jest.fn().mockImplementation((path: string) => {
+      switch (path) {
+        case 'catalogs':
+          return Promise.resolve(setupCatalogsResponse());
+        case 'databases':
+          return Promise.resolve(setupDatabasesResponse());
+        case 'tables':
+          return Promise.resolve(setupTablesResponse());
+        case 'columns':
+          return Promise.resolve(setupColumnsResponse());
+      }
+      return Promise.resolve([]);
+    });
   });
 
   describe('When performing getRegions', () => {
     it('should return a list of regions', async () => {
       const response = setupRegionsResponse();
-      backendSrv.get = jest.fn(() => Promise.resolve(response));
       const regionsResponse = await ctx.ds.getRegions();
 
       expect(regionsResponse).toHaveLength(response.length);
-      expect(regionsResponse).toBe(response);
+      expect(regionsResponse).toEqual(response);
     });
   });
 
   describe('When performing getCatalogs', () => {
     it('should return a list of catalogs', async () => {
       const response = setupCatalogsResponse();
-      backendSrv.post = jest.fn(() => Promise.resolve(response));
       const catalogsResponse = await ctx.ds.getCatalogs(defaultQuery);
 
       expect(catalogsResponse).toHaveLength(response.length);
-      expect(catalogsResponse).toBe(response);
+      expect(catalogsResponse).toEqual(response);
     });
   });
 
   describe('When performing getDatabases', () => {
     it('should return a list of databases', async () => {
       const response = setupDatabasesResponse();
-      backendSrv.post = jest.fn(() => Promise.resolve(response));
       const databasesResponse = await ctx.ds.getDatabases(defaultQuery);
 
       expect(databasesResponse).toHaveLength(response.length);
-      expect(databasesResponse).toBe(response);
+      expect(databasesResponse).toEqual(response);
     });
   });
 
   describe('When performing getTables', () => {
     it('should return a list of tables', async () => {
       const response = setupTablesResponse();
-      backendSrv.post = jest.fn(() => Promise.resolve(response));
       const tablesResponse = await ctx.ds.getTables(defaultQuery);
 
       expect(tablesResponse).toHaveLength(response.length);
-      expect(tablesResponse).toBe(response);
+      expect(tablesResponse).toEqual(response);
     });
   });
 
   describe('When performing getColumns', () => {
     it('should return a list of columns', async () => {
       const response = setupColumnsResponse();
-      backendSrv.post = jest.fn(() => Promise.resolve(response));
       const columnsResponse = await ctx.ds.getColumns(defaultQuery);
 
       expect(columnsResponse).toHaveLength(response.length);
-      expect(columnsResponse).toBe(response);
+      expect(columnsResponse).toEqual(response);
     });
   });
 

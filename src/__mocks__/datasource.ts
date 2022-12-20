@@ -37,6 +37,7 @@ export const mockDatasource = new DataSource({
   type: 'athena-datasource',
   name: 'Athena Data Source',
   access: 'proxy',
+  readOnly: false,
   jsonData: {
     defaultRegion: 'us-east-2',
     catalog: 'aws-catalog',

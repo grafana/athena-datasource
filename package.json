@@ -23,7 +23,8 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@grafana/async-query-data": "0.0.4",
-    "@grafana/experimental": "^0.0.2-canary.39"
+    "@grafana/experimental": "^0.0.2-canary.39",
+    "eslint-plugin-jsx-a11y": "^6.6.1"
   },
   "devDependencies": {
     "@babel/core": "^7.16.7",

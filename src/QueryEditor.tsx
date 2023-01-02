@@ -1,7 +1,7 @@
 import React from 'react';
 import { QueryEditorProps, SelectableValue } from '@grafana/data';
 import { DataSource } from './datasource';
-import { AthenaDataSourceOptions, AthenaQuery, defaultQuery, SelectableFormatOptions } from './types';
+import { AthenaDataSourceOptions, AthenaQuery, SelectableFormatOptions } from './types';
 import { InlineSegmentGroup } from '@grafana/ui';
 import { config } from '@grafana/runtime';
 import { FormatSelect, ResourceSelector } from '@grafana/aws-sdk';
@@ -22,36 +22,23 @@ function isQueryValid(query: AthenaQuery) {
 }
 
 export function QueryEditor(props: Props) {
-  const queryWithDefaults = {
-    ...defaultQuery,
-    ...props.query,
-    connectionArgs: {
-      ...defaultQuery.connectionArgs,
-      ...props.query.connectionArgs,
-    },
-  };
+  const { datasource, query, hideOptions, hideRunQueryButtons, data, onRunQuery, onChange } = props;
 
-  const templateVariables = props.datasource.getVariables();
+  const templateVariables = datasource.getVariables();
 
   const fetchRegions = () =>
-    props.datasource.getRegions().then((regions) => appendTemplateVariables(templateVariables, regions));
+    datasource.getRegions().then((regions) => appendTemplateVariables(templateVariables, regions));
   const fetchCatalogs = () =>
-    props.datasource
-      .getCatalogs(queryWithDefaults)
-      .then((catalogs) => appendTemplateVariables(templateVariables, catalogs));
+    datasource.getCatalogs(query).then((catalogs) => appendTemplateVariables(templateVariables, catalogs));
   const fetchDatabases = () =>
-    props.datasource
-      .getDatabases(queryWithDefaults)
-      .then((databases) => appendTemplateVariables(templateVariables, databases));
+    datasource.getDatabases(query).then((databases) => appendTemplateVariables(templateVariables, databases));
   const fetchTables = () =>
-    props.datasource.getTables(queryWithDefaults).then((tables) => appendTemplateVariables(templateVariables, tables));
+    datasource.getTables(query).then((tables) => appendTemplateVariables(templateVariables, tables));
   const fetchColumns = () =>
-    props.datasource
-      .getColumns(queryWithDefaults)
-      .then((columns) => appendTemplateVariables(templateVariables, columns));
+    datasource.getColumns(query).then((columns) => appendTemplateVariables(templateVariables, columns));
 
-  const onChange = (prop: QueryProperties) => (e: SelectableValue<string> | null) => {
-    const newQuery = { ...props.query };
+  const onChangeResource = (prop: QueryProperties) => (e: SelectableValue<string> | null) => {
+    const newQuery = { ...query };
     const value = e?.value;
     switch (prop) {
       case 'regions':
@@ -70,7 +57,7 @@ export function QueryEditor(props: Props) {
         newQuery.column = value;
         break;
     }
-    props.onChange(newQuery);
+    onChange(newQuery);
   };
 
   return (
@@ -78,42 +65,42 @@ export function QueryEditor(props: Props) {
       <InlineSegmentGroup>
         <div className="gf-form-group">
           <ResourceSelector
-            onChange={onChange('regions')}
+            onChange={onChangeResource('regions')}
             fetch={fetchRegions}
-            value={queryWithDefaults.connectionArgs.region ?? null}
-            default={props.datasource.defaultRegion}
+            value={query.connectionArgs.region ?? null}
+            default={datasource.defaultRegion}
             label={selectors.components.ConfigEditor.region.input}
             data-testid={selectors.components.ConfigEditor.region.wrapper}
             labelWidth={11}
             className="width-12"
           />
           <ResourceSelector
-            onChange={onChange('catalogs')}
+            onChange={onChangeResource('catalogs')}
             fetch={fetchCatalogs}
-            value={queryWithDefaults.connectionArgs.catalog ?? null}
-            default={props.datasource.defaultCatalog}
-            dependencies={[queryWithDefaults.connectionArgs.region]}
+            value={query.connectionArgs.catalog ?? null}
+            default={datasource.defaultCatalog}
+            dependencies={[query.connectionArgs.region]}
             label={selectors.components.ConfigEditor.catalog.input}
             data-testid={selectors.components.ConfigEditor.catalog.wrapper}
             labelWidth={11}
             className="width-12"
           />
           <ResourceSelector
-            onChange={onChange('databases')}
+            onChange={onChangeResource('databases')}
             fetch={fetchDatabases}
-            value={queryWithDefaults.connectionArgs.database ?? null}
-            default={props.datasource.defaultDatabase}
-            dependencies={[queryWithDefaults.connectionArgs.catalog]}
+            value={query.connectionArgs.database ?? null}
+            default={datasource.defaultDatabase}
+            dependencies={[query.connectionArgs.catalog]}
             label={selectors.components.ConfigEditor.database.input}
             data-testid={selectors.components.ConfigEditor.database.wrapper}
             labelWidth={11}
             className="width-12"
           />
           <ResourceSelector
-            onChange={onChange('tables')}
+            onChange={onChangeResource('tables')}
             fetch={fetchTables}
-            value={props.query.table || null}
-            dependencies={[queryWithDefaults.connectionArgs.database]}
+            value={query.table || null}
+            dependencies={[query.connectionArgs.database]}
             tooltip="Use the selected table with the $__table macro"
             label={selectors.components.ConfigEditor.table.input}
             data-testid={selectors.components.ConfigEditor.table.wrapper}
@@ -121,33 +108,33 @@ export function QueryEditor(props: Props) {
             className="width-12"
           />
           <ResourceSelector
-            onChange={onChange('columns')}
+            onChange={onChangeResource('columns')}
             fetch={fetchColumns}
-            value={props.query.column || null}
-            dependencies={[queryWithDefaults.table]}
+            value={query.column || null}
+            dependencies={[query.table]}
             tooltip="Use the selected column with the $__column macro"
             label={selectors.components.ConfigEditor.column.input}
             data-testid={selectors.components.ConfigEditor.column.wrapper}
             labelWidth={11}
             className="width-12"
           />
-          {!props.hideOptions && (
+          {!hideOptions && (
             <>
               <h6>Frames</h6>
-              <FormatSelect query={props.query} options={SelectableFormatOptions} onChange={props.onChange} />
+              <FormatSelect query={query} options={SelectableFormatOptions} onChange={props.onChange} />
             </>
           )}
         </div>
 
         <div style={{ minWidth: '400px', marginLeft: '10px', flex: 1 }}>
-          <SQLEditor query={queryWithDefaults} onChange={props.onChange} datasource={props.datasource} />
-          {!props.hideRunQueryButtons && props?.app !== 'explore' && (
+          <SQLEditor query={query} onChange={props.onChange} datasource={datasource} />
+          {!hideRunQueryButtons && props?.app !== 'explore' && (
             <div style={{ marginTop: 8 }}>
               <RunQueryButtons
-                onRunQuery={props.onRunQuery}
-                onCancelQuery={config.featureToggles.athenaAsyncQueryDataSupport ? props.datasource.cancel : undefined}
-                state={props.data?.state}
-                query={props.query}
+                onRunQuery={onRunQuery}
+                onCancelQuery={config.featureToggles.athenaAsyncQueryDataSupport ? datasource.cancel : undefined}
+                state={data?.state}
+                query={query}
                 isQueryValid={isQueryValid}
               />
             </div>

@@ -37,16 +37,6 @@ export interface AthenaQuery extends SQLQuery {
 
 export const defaultKey = '__default';
 
-export const defaultQuery: Partial<AthenaQuery> = {
-  format: FormatOptions.Table,
-  rawSQL: '',
-  connectionArgs: {
-    region: defaultKey,
-    catalog: defaultKey,
-    database: defaultKey,
-  },
-};
-
 /**
  * These are options configured for each DataSource instance
  */

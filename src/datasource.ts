@@ -1,6 +1,6 @@
 import { DataQueryRequest, DataQueryResponse, DataSourceInstanceSettings, ScopedVars } from '@grafana/data';
 import { config, getTemplateSrv, TemplateSrv } from '@grafana/runtime';
-import { AthenaDataSourceOptions, AthenaQuery } from './types';
+import { AthenaDataSourceOptions, AthenaQuery, defaultKey, FormatOptions } from './types';
 import { AthenaVariableSupport } from './variables';
 import { filterSQLQuery, applySQLTemplateVariables } from '@grafana/aws-sdk';
 import { DatasourceWithAsyncBackend } from '@grafana/async-query-data';
@@ -84,5 +84,18 @@ export class DataSource extends DatasourceWithAsyncBackend<AthenaQuery, AthenaDa
     options.targets = this.buildQuery(options, queries);
 
     return super.query(options);
+  }
+
+  getDefaultQuery(): Partial<AthenaQuery> {
+    console.log('default query');
+    return {
+      format: FormatOptions.Table,
+      rawSQL: '',
+      connectionArgs: {
+        region: defaultKey,
+        catalog: defaultKey,
+        database: defaultKey,
+      },
+    };
   }
 }

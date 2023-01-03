@@ -1,4 +1,4 @@
-import { DataQueryRequest, DataQueryResponse, DataSourceInstanceSettings, ScopedVars } from '@grafana/data';
+import { CoreApp, DataQueryRequest, DataQueryResponse, DataSourceInstanceSettings, ScopedVars } from '@grafana/data';
 import { config, getTemplateSrv, TemplateSrv } from '@grafana/runtime';
 import { AthenaDataSourceOptions, AthenaQuery, defaultKey, FormatOptions } from './types';
 import { AthenaVariableSupport } from './variables';
@@ -86,8 +86,7 @@ export class DataSource extends DatasourceWithAsyncBackend<AthenaQuery, AthenaDa
     return super.query(options);
   }
 
-  getDefaultQuery(): Partial<AthenaQuery> {
-    console.log('default query');
+  getDefaultQuery(_: CoreApp): Omit<AthenaQuery, 'refId'> {
     return {
       format: FormatOptions.Table,
       rawSQL: '',

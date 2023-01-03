@@ -22,7 +22,7 @@ function isQueryValid(query: AthenaQuery) {
 }
 
 export function QueryEditor(props: Props) {
-  const { datasource, query, hideOptions, hideRunQueryButtons, data, onRunQuery, onChange } = props;
+  const { query, datasource } = props;
 
   const templateVariables = datasource.getVariables();
 
@@ -37,7 +37,7 @@ export function QueryEditor(props: Props) {
   const fetchColumns = () =>
     datasource.getColumns(query).then((columns) => appendTemplateVariables(templateVariables, columns));
 
-  const onChangeResource = (prop: QueryProperties) => (e: SelectableValue<string> | null) => {
+  const onChange = (prop: QueryProperties) => (e: SelectableValue<string> | null) => {
     const newQuery = { ...query };
     const value = e?.value;
     switch (prop) {
@@ -57,7 +57,7 @@ export function QueryEditor(props: Props) {
         newQuery.column = value;
         break;
     }
-    onChange(newQuery);
+    props.onChange(newQuery);
   };
 
   return (
@@ -65,7 +65,7 @@ export function QueryEditor(props: Props) {
       <InlineSegmentGroup>
         <div className="gf-form-group">
           <ResourceSelector
-            onChange={onChangeResource('regions')}
+            onChange={onChange('regions')}
             fetch={fetchRegions}
             value={query.connectionArgs.region ?? null}
             default={datasource.defaultRegion}
@@ -75,7 +75,7 @@ export function QueryEditor(props: Props) {
             className="width-12"
           />
           <ResourceSelector
-            onChange={onChangeResource('catalogs')}
+            onChange={onChange('catalogs')}
             fetch={fetchCatalogs}
             value={query.connectionArgs.catalog ?? null}
             default={datasource.defaultCatalog}
@@ -86,7 +86,7 @@ export function QueryEditor(props: Props) {
             className="width-12"
           />
           <ResourceSelector
-            onChange={onChangeResource('databases')}
+            onChange={onChange('databases')}
             fetch={fetchDatabases}
             value={query.connectionArgs.database ?? null}
             default={datasource.defaultDatabase}
@@ -97,7 +97,7 @@ export function QueryEditor(props: Props) {
             className="width-12"
           />
           <ResourceSelector
-            onChange={onChangeResource('tables')}
+            onChange={onChange('tables')}
             fetch={fetchTables}
             value={query.table || null}
             dependencies={[query.connectionArgs.database]}
@@ -108,7 +108,7 @@ export function QueryEditor(props: Props) {
             className="width-12"
           />
           <ResourceSelector
-            onChange={onChangeResource('columns')}
+            onChange={onChange('columns')}
             fetch={fetchColumns}
             value={query.column || null}
             dependencies={[query.table]}
@@ -118,7 +118,7 @@ export function QueryEditor(props: Props) {
             labelWidth={11}
             className="width-12"
           />
-          {!hideOptions && (
+          {!props.hideOptions && (
             <>
               <h6>Frames</h6>
               <FormatSelect query={query} options={SelectableFormatOptions} onChange={props.onChange} />
@@ -128,12 +128,12 @@ export function QueryEditor(props: Props) {
 
         <div style={{ minWidth: '400px', marginLeft: '10px', flex: 1 }}>
           <SQLEditor query={query} onChange={props.onChange} datasource={datasource} />
-          {!hideRunQueryButtons && props?.app !== 'explore' && (
+          {!props.hideRunQueryButtons && props?.app !== 'explore' && (
             <div style={{ marginTop: 8 }}>
               <RunQueryButtons
-                onRunQuery={onRunQuery}
+                onRunQuery={props.onRunQuery}
                 onCancelQuery={config.featureToggles.athenaAsyncQueryDataSupport ? datasource.cancel : undefined}
-                state={data?.state}
+                state={props.data?.state}
                 query={query}
                 isQueryValid={isQueryValid}
               />

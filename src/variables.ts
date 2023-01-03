@@ -1,7 +1,6 @@
 import { Observable } from 'rxjs';
 import { CustomVariableSupport, DataQueryRequest, DataQueryResponse } from '@grafana/data';
 import { VariableQueryCodeEditor } from './VariableQueryEditor';
-import { assign } from 'lodash';
 import { DataSource } from './datasource';
 import { AthenaQuery } from './types';
 
@@ -15,8 +14,6 @@ export class AthenaVariableSupport extends CustomVariableSupport<DataSource, Ath
   editor = VariableQueryCodeEditor;
 
   query(request: DataQueryRequest<AthenaQuery>): Observable<DataQueryResponse> {
-    // fill query params with default data
-    assign(request.targets, [{ ...this.datasource.getDefaultQuery(), ...request.targets[0], refId: 'A' }]);
     return this.datasource.query(request);
   }
 }

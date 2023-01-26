@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.4.0
+
+* Migrate to create-plugin by @iwysiu in https://github.com/grafana/athena-datasource/pull/190
+* Update code coverage version to 0.1.13 by @idastambuk in https://github.com/grafana/athena-datasource/pull/197
+* Re-enable annotations e2e test by @kevinwcyu in https://github.com/grafana/athena-datasource/pull/198
+* A11y: Add a11y lint plugin by @idastambuk in https://github.com/grafana/athena-datasource/pull/199
+* Upgrade grafana-aws-sdk to v0.12.0 by @fridgepoet in https://github.com/grafana/athena-datasource/pull/203
+
 ## 2.3.1
 
 - Hide the stop button when async query data support is not enabled https://github.com/grafana/athena-datasource/pull/193

@@ -3,7 +3,7 @@ module github.com/grafana/athena-datasource
 go 1.16
 
 require (
-	github.com/aws/aws-sdk-go v1.44.57
+	github.com/aws/aws-sdk-go v1.44.189
 	github.com/go-errors/errors v1.4.2 // indirect
 	github.com/google/go-cmp v0.5.8
 	github.com/grafana/grafana-aws-sdk v0.12.0

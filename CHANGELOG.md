@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.5.0
+
+* Upgrade AWS go SDK to latest version by @annerajb in https://github.com/grafana/athena-datasource/pull/208
+
 ## 2.4.0
 
 * Migrate to create-plugin by @iwysiu in https://github.com/grafana/athena-datasource/pull/190

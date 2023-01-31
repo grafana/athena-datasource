@@ -6,6 +6,7 @@ import { filterSQLQuery, applySQLTemplateVariables } from '@grafana/aws-sdk';
 import { DatasourceWithAsyncBackend } from '@grafana/async-query-data';
 import { Observable } from 'rxjs';
 import { cloneDeep } from 'lodash';
+import { annotationSupport } from './annotationSupport';
 
 export class DataSource extends DatasourceWithAsyncBackend<AthenaQuery, AthenaDataSourceOptions> {
   defaultRegion = '';
@@ -23,8 +24,7 @@ export class DataSource extends DatasourceWithAsyncBackend<AthenaQuery, AthenaDa
     this.variables = new AthenaVariableSupport(this);
   }
 
-  // This will support annotation queries for 7.2+
-  annotations = {};
+  annotations = annotationSupport;
 
   filterQuery(target: AthenaQuery) {
     return target.hide !== true && filterSQLQuery(target);

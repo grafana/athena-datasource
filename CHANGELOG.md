@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.6.0
+
+* Hide Run query buttons in annotations in https://github.com/grafana/athena-datasource/pull/211
+* 
 ## 2.5.0
 
 * Upgrade AWS go SDK to latest version by @annerajb in https://github.com/grafana/athena-datasource/pull/208

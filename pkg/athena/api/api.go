@@ -57,6 +57,12 @@ func (c *API) Execute(ctx context.Context, input *api.ExecuteQueryInput) (*api.E
 			Database: aws.String(c.settings.Database),
 		},
 		WorkGroup: aws.String(c.settings.WorkGroup),
+		ResultReuseConfiguration: &athena.ResultReuseConfiguration{
+			ResultReuseByAgeConfiguration: &athena.ResultReuseByAgeConfiguration{
+				Enabled:         aws.Bool(c.settings.ResultReuseEnabled),
+				MaxAgeInMinutes: aws.Int64(c.settings.ResultReuseMaxAgeInMinutes),
+			},
+		},
 	}
 
 	if c.settings.OutputLocation != "" {

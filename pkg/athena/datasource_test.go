@@ -58,7 +58,54 @@ func TestConnection(t *testing.T) {
 				t.Errorf("unexpected region %v", mc.wasCalledWith["region"])
 			}
 		}
+	})
 
+	t.Run("it should call getAsyncDB with the resultReuseEnabled option if one is provided", func(t *testing.T) {
+		mc := mockClient{}
+		ds := AthenaDatasource{
+			awsDS: &mc,
+		}
+
+		fakeConfig := backend.DataSourceInstanceSettings{
+			JSONData: json.RawMessage{},
+		}
+		fakeQueryArgs := json.RawMessage(`{"resultReuseEnabled": true}`)
+		_, err := ds.GetAsyncDB(fakeConfig, fakeQueryArgs)
+
+		if err != nil {
+			t.Errorf("unexpected err, %v", err)
+		}
+		if resultReuseEnabled, ok := mc.wasCalledWith["resultReuseEnabled"]; resultReuseEnabled != "true" {
+			if !ok {
+				t.Errorf("no resultReuseEnabled found")
+			} else {
+				t.Errorf("unexpected resultReuseEnabled %v", mc.wasCalledWith["resultReuseEnabled"])
+			}
+		}
+	})
+
+	t.Run("it should call getAsyncDB with the resultReuseMaxAgeInMinutes option if one is provided", func(t *testing.T) {
+		mc := mockClient{}
+		ds := AthenaDatasource{
+			awsDS: &mc,
+		}
+
+		fakeConfig := backend.DataSourceInstanceSettings{
+			JSONData: json.RawMessage{},
+		}
+		fakeQueryArgs := json.RawMessage(`{"resultReuseMaxAgeInMinutes": 10}`)
+		_, err := ds.GetAsyncDB(fakeConfig, fakeQueryArgs)
+
+		if err != nil {
+			t.Errorf("unexpected err, %v", err)
+		}
+		if resultReuseMaxAgeInMinutes, ok := mc.wasCalledWith["resultReuseMaxAgeInMinutes"]; resultReuseMaxAgeInMinutes != "10" {
+			if !ok {
+				t.Errorf("no resultReuseMaxAgeInMinutes found")
+			} else {
+				t.Errorf("unexpected resultReuseMaxAgeInMinutes %v", mc.wasCalledWith["resultReuseMaxAgeInMinutes"])
+			}
+		}
 	})
 }
 

@@ -3,6 +3,7 @@ package models
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 	"github.com/grafana/grafana-aws-sdk/pkg/sql/models"
@@ -10,13 +11,20 @@ import (
 	"github.com/grafana/sqlds/v2"
 )
 
+var (
+	defaultResultReuseEnabled         = false
+	defaultResultReuseMaxAgeInMinutes = int64(60)
+)
+
 type AthenaDataSourceSettings struct {
 	awsds.AWSDatasourceSettings
-	Config         backend.DataSourceInstanceSettings
-	Database       string `json:"Database"`
-	Catalog        string `json:"Catalog"`
-	WorkGroup      string `json:"WorkGroup"`
-	OutputLocation string `json:"OutputLocation"`
+	Config                     backend.DataSourceInstanceSettings
+	Database                   string `json:"Database"`
+	Catalog                    string `json:"Catalog"`
+	WorkGroup                  string `json:"WorkGroup"`
+	OutputLocation             string `json:"OutputLocation"`
+	ResultReuseEnabled         bool   `json:"ResultReuseEnabled"`
+	ResultReuseMaxAgeInMinutes int64  `json:"ResultReuseMaxAgeInMinutes"`
 }
 
 func New() models.Settings {
@@ -39,7 +47,7 @@ func (s *AthenaDataSourceSettings) Load(config backend.DataSourceInstanceSetting
 }
 
 func (s *AthenaDataSourceSettings) Apply(args sqlds.Options) {
-	region, catalog, database := args["region"], args["catalog"], args["database"]
+	region, catalog, database, resultReuseEnabledString, resultReuseMaxAgeInMinutesString := args["region"], args["catalog"], args["database"], args["resultReuseEnabled"], args["resultReuseMaxAgeInMinutes"]
 	if region != "" {
 		if region == models.DefaultKey {
 			s.Region = s.DefaultRegion
@@ -54,5 +62,19 @@ func (s *AthenaDataSourceSettings) Apply(args sqlds.Options) {
 
 	if database != "" && database != models.DefaultKey {
 		s.Database = database
+	}
+
+	if resultReuseEnabled, err := strconv.ParseBool(resultReuseEnabledString); err != nil {
+		s.ResultReuseEnabled = defaultResultReuseEnabled
+	} else {
+		s.ResultReuseEnabled = resultReuseEnabled
+	}
+
+	if s.ResultReuseEnabled {
+		if resultReuseMaxAgeInMinutes, err := strconv.ParseInt(resultReuseMaxAgeInMinutesString, 10, 64); err != nil {
+			s.ResultReuseMaxAgeInMinutes = defaultResultReuseMaxAgeInMinutes
+		} else {
+			s.ResultReuseMaxAgeInMinutes = resultReuseMaxAgeInMinutes
+		}
 	}
 }

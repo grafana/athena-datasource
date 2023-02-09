@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"fmt"
+	"strconv"
 
 	"github.com/grafana/athena-datasource/pkg/athena/api"
 	"github.com/grafana/athena-datasource/pkg/athena/driver"
@@ -57,7 +59,7 @@ func (s *AthenaDatasource) Settings(_ backend.DataSourceInstanceSettings) sqlds.
 // Connect opens a sql.DB connection using datasource settings
 func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (*sql.DB, error) {
 	s.awsDS.Init(config)
-	args, err := sqlds.ParseOptions(queryArgs)
+	args, err := parseArgs(queryArgs)
 	if err != nil {
 		return nil, err
 	}
@@ -72,7 +74,7 @@ func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings, qu
 
 func (s *AthenaDatasource) GetAsyncDB(config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (awsds.AsyncDB, error) {
 	s.awsDS.Init(config)
-	args, err := sqlds.ParseOptions(queryArgs)
+	args, err := parseArgs(queryArgs)
 	if err != nil {
 		return nil, err
 	}
@@ -158,4 +160,34 @@ func (s *AthenaDatasource) Workgroups(ctx context.Context, options sqlds.Options
 		return nil, err
 	}
 	return api.Workgroups(ctx)
+}
+
+func toString(value interface{}) string {
+	switch v := value.(type) {
+	case string:
+		return v
+	case bool:
+		return strconv.FormatBool(v)
+	case float64:
+		return strconv.FormatFloat(v, 'f', -1, 64)
+	default:
+		return ""
+	}
+}
+
+func parseArgs(queryArgs json.RawMessage) (sqlds.Options, error) {
+	args := map[string]interface{}{}
+	if queryArgs != nil {
+		err := json.Unmarshal(queryArgs, &args)
+		if err != nil {
+			return nil, fmt.Errorf("failed to parse query args: %w", err)
+		}
+	}
+
+	options := sqlds.Options{}
+	for k, v := range args {
+		options[k] = toString(v)
+	}
+
+	return options, nil
 }

@@ -113,7 +113,7 @@ func TestConnection_getRegionKey(t *testing.T) {
 			},
 		},
 		{
-			description: "result reuse optons set to unknown values",
+			description: "result reuse options set to unknown values",
 			settings:    &AthenaDataSourceSettings{},
 			options:     sqlds.Options{"resultReuseEnabled": "true_blah_blah", "resultReuseMaxAgeInMinutes": "10_not_a_number"},
 			expected: AthenaDataSourceSettings{

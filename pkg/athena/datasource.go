@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"strconv"
 
 	"github.com/grafana/athena-datasource/pkg/athena/api"
 	"github.com/grafana/athena-datasource/pkg/athena/driver"
@@ -162,19 +161,6 @@ func (s *AthenaDatasource) Workgroups(ctx context.Context, options sqlds.Options
 	return api.Workgroups(ctx)
 }
 
-func toString(value interface{}) string {
-	switch v := value.(type) {
-	case string:
-		return v
-	case bool:
-		return strconv.FormatBool(v)
-	case float64:
-		return strconv.FormatFloat(v, 'f', -1, 64)
-	default:
-		return ""
-	}
-}
-
 func parseArgs(queryArgs json.RawMessage) (sqlds.Options, error) {
 	args := map[string]interface{}{}
 	if queryArgs != nil {
@@ -186,7 +172,7 @@ func parseArgs(queryArgs json.RawMessage) (sqlds.Options, error) {
 
 	options := sqlds.Options{}
 	for k, v := range args {
-		options[k] = toString(v)
+		options[k] = fmt.Sprintf("%v", v)
 	}
 
 	return options, nil

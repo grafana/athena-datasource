@@ -21,6 +21,12 @@ import (
 	"github.com/grafana/sqlds/v2"
 )
 
+type athenaQueryArgs struct {
+	Region, Catalog, Database  string
+	ResultReuseEnabled         bool
+	ResultReuseMaxAgeInMinutes int64
+}
+
 type awsDSClient interface {
 	Init(config backend.DataSourceInstanceSettings)
 	GetDB(id int64, options sqlds.Options, settingsLoader sqlModels.Loader, apiLoader sqlAPI.Loader, driverLoader awsDriver.Loader) (*sql.DB, error)
@@ -39,6 +45,7 @@ type AthenaDatasourceIface interface {
 	DataCatalogs(ctx context.Context, options sqlds.Options) ([]string, error)
 	Databases(ctx context.Context, options sqlds.Options) ([]string, error)
 	Workgroups(ctx context.Context, options sqlds.Options) ([]string, error)
+	WorkgroupEngineVersion(ctx context.Context, options sqlds.Options) (string, error)
 	Tables(ctx context.Context, options sqlds.Options) ([]string, error)
 	Columns(ctx context.Context, options sqlds.Options) ([]string, error)
 }
@@ -72,6 +79,7 @@ func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings, qu
 }
 
 func (s *AthenaDatasource) GetAsyncDB(config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (awsds.AsyncDB, error) {
+	backend.Logger.Debug("GetAsyncDB", "queryArgs", queryArgs)
 	s.awsDS.Init(config)
 	args, err := parseArgs(queryArgs)
 	if err != nil {
@@ -161,19 +169,27 @@ func (s *AthenaDatasource) Workgroups(ctx context.Context, options sqlds.Options
 	return api.Workgroups(ctx)
 }
 
+func (s *AthenaDatasource) WorkgroupEngineVersion(ctx context.Context, options sqlds.Options) (string, error) {
+	api, err := s.getAPI(ctx, options)
+	if err != nil {
+		return "", err
+	}
+	return api.WorkgroupEngineVersion(ctx, options)
+}
+
 func parseArgs(queryArgs json.RawMessage) (sqlds.Options, error) {
-	args := map[string]interface{}{}
+	args := athenaQueryArgs{}
 	if queryArgs != nil {
 		err := json.Unmarshal(queryArgs, &args)
 		if err != nil {
 			return nil, fmt.Errorf("failed to parse query args: %w", err)
 		}
 	}
-
 	options := sqlds.Options{}
-	for k, v := range args {
-		options[k] = fmt.Sprintf("%v", v)
-	}
-
+	options[models.Region] = args.Region
+	options[models.Catalog] = args.Catalog
+	options[models.Database] = args.Database
+	options[models.ResultReuseEnabled] = fmt.Sprintf("%t", args.ResultReuseEnabled)
+	options[models.ResultReuseMaxAgeInMinutes] = fmt.Sprintf("%d", args.ResultReuseMaxAgeInMinutes)
 	return options, nil
 }

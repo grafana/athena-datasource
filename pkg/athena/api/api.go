@@ -57,12 +57,21 @@ func (c *API) Execute(ctx context.Context, input *api.ExecuteQueryInput) (*api.E
 			Database: aws.String(c.settings.Database),
 		},
 		WorkGroup: aws.String(c.settings.WorkGroup),
-		ResultReuseConfiguration: &athena.ResultReuseConfiguration{
+	}
+
+	version, err := c.WorkgroupEngineVersion(ctx, sqlds.Options{"workgroup": c.settings.WorkGroup})
+
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", api.ExecuteError, err)
+	}
+
+	if workgroupEngineSupportsResultReuse(version) {
+		athenaInput.ResultReuseConfiguration = &athena.ResultReuseConfiguration{
 			ResultReuseByAgeConfiguration: &athena.ResultReuseByAgeConfiguration{
 				Enabled:         aws.Bool(c.settings.ResultReuseEnabled),
 				MaxAgeInMinutes: aws.Int64(c.settings.ResultReuseMaxAgeInMinutes),
 			},
-		},
+		}
 	}
 
 	if c.settings.OutputLocation != "" {
@@ -246,6 +255,18 @@ func (c *API) Workgroups(ctx context.Context) ([]string, error) {
 	return res, nil
 }
 
+func (c *API) Workgroup(ctx context.Context, options sqlds.Options) (string, error) {
+	workgroup := c.getOptionWithDefault(options, "workgroup")
+	out, err := c.Client.GetWorkGroupWithContext(ctx, &athena.GetWorkGroupInput{
+		WorkGroup: aws.String(workgroup),
+	})
+	if err != nil {
+		return "", err
+	}
+
+	return string(*out.WorkGroup.Configuration.EngineVersion.EffectiveEngineVersion), nil
+}
+
 func (c *API) Tables(ctx aws.Context, options sqlds.Options) ([]string, error) {
 	catalog, database := c.getOptionWithDefault(options, "catalog"), c.getOptionWithDefault(options, "database")
 	res := []string{}
@@ -287,4 +308,8 @@ func (c *API) Columns(ctx aws.Context, options sqlds.Options) ([]string, error) 
 		res = append(res, *cat.Name)
 	}
 	return res, nil
+}
+
+func workgroupEngineSupportsResultReuse(version string) bool {
+	return version == "Athena engine version 3"
 }

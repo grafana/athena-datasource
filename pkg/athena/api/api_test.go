@@ -102,6 +102,18 @@ func TestConnection_ListWorkgroups(t *testing.T) {
 	}
 }
 
+func TestConnection_GetWorkgroupVersion(t *testing.T) {
+	expected := "Athena engine version 3"
+	c := &API{Client: &athenaclientmock.MockAthenaClient{WorkgroupEngineVersion: expected}}
+	res, err := c.WorkgroupEngineVersion(context.TODO(), sqlds.Options{"workgroup": "workgroup"})
+	if err != nil {
+		t.Fatalf("unexpected error %v", err)
+	}
+	if !cmp.Equal(expected, res) {
+		t.Errorf("unexpected result: %v", cmp.Diff(expected, res))
+	}
+}
+
 func TestConnection_ListTables(t *testing.T) {
 	expected := []string{"foo"}
 	c := &API{Client: &athenaclientmock.MockAthenaClient{TableMetadataList: expected}}

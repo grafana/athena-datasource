@@ -17,6 +17,7 @@ type AthenaFakeDatasource struct {
 	Resources map[string]map[string][]string
 	// regions -> workgroups
 	Wg              map[string][]string
+	WgEngineVersion map[string]string
 	ExistingTables  map[string]map[string]map[string][]string
 	ExistingColumns map[string]map[string]map[string]map[string][]string
 }
@@ -82,6 +83,14 @@ func (s *AthenaFakeDatasource) Workgroups(ctx context.Context, options sqlds.Opt
 		return nil, fmt.Errorf("missing region %s", region)
 	}
 	return s.Wg[region], nil
+}
+
+func (s *AthenaFakeDatasource) WorkgroupEngineVersion(ctx context.Context, options sqlds.Options) (string, error) {
+	workgroup := options["workgroup"]
+	if _, exists := s.WgEngineVersion[workgroup]; !exists {
+		return "", fmt.Errorf("missing workgroup %s", workgroup)
+	}
+	return s.WgEngineVersion[workgroup], nil
 }
 
 func (s *AthenaFakeDatasource) Tables(ctx context.Context, options sqlds.Options) ([]string, error) {

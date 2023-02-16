@@ -11,9 +11,14 @@ import (
 	"github.com/grafana/sqlds/v2"
 )
 
-var (
+const (
 	defaultResultReuseEnabled         = false
 	defaultResultReuseMaxAgeInMinutes = int64(60)
+	Region                            = "region"
+	Database                          = "database"
+	Catalog                           = "catalog"
+	ResultReuseEnabled                = "resultReuseEnabled"
+	ResultReuseMaxAgeInMinutes        = "resultReuseMaxAgeInMinutes"
 )
 
 type AthenaDataSourceSettings struct {
@@ -47,7 +52,7 @@ func (s *AthenaDataSourceSettings) Load(config backend.DataSourceInstanceSetting
 }
 
 func (s *AthenaDataSourceSettings) Apply(args sqlds.Options) {
-	region, catalog, database, resultReuseEnabledString, resultReuseMaxAgeInMinutesString := args["region"], args["catalog"], args["database"], args["resultReuseEnabled"], args["resultReuseMaxAgeInMinutes"]
+	region, catalog, database, resultReuseEnabledString, resultReuseMaxAgeInMinutesString := args[Region], args[Catalog], args[Database], args[ResultReuseEnabled], args[ResultReuseMaxAgeInMinutes]
 	if region != "" {
 		if region == models.DefaultKey {
 			s.Region = s.DefaultRegion

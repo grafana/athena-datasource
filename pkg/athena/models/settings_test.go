@@ -95,15 +95,6 @@ func TestConnection_getRegionKey(t *testing.T) {
 			},
 		},
 		{
-			description: "result reuse enabled without max age value set uses default max age value",
-			settings:    &AthenaDataSourceSettings{},
-			options:     sqlds.Options{"resultReuseEnabled": "true"},
-			expected: AthenaDataSourceSettings{
-				ResultReuseEnabled:         true,
-				ResultReuseMaxAgeInMinutes: 60,
-			},
-		},
-		{
 			description: "result reuse enabled and max age value set",
 			settings:    &AthenaDataSourceSettings{},
 			options:     sqlds.Options{"resultReuseEnabled": "true", "resultReuseMaxAgeInMinutes": "10"},

@@ -12,13 +12,11 @@ import (
 )
 
 const (
-	defaultResultReuseEnabled         = false
-	defaultResultReuseMaxAgeInMinutes = int64(60)
-	Region                            = "region"
-	Database                          = "database"
-	Catalog                           = "catalog"
-	ResultReuseEnabled                = "resultReuseEnabled"
-	ResultReuseMaxAgeInMinutes        = "resultReuseMaxAgeInMinutes"
+	Region                     = "region"
+	Database                   = "database"
+	Catalog                    = "catalog"
+	ResultReuseEnabled         = "resultReuseEnabled"
+	ResultReuseMaxAgeInMinutes = "resultReuseMaxAgeInMinutes"
 )
 
 type AthenaDataSourceSettings struct {
@@ -69,16 +67,12 @@ func (s *AthenaDataSourceSettings) Apply(args sqlds.Options) {
 		s.Database = database
 	}
 
-	if resultReuseEnabled, err := strconv.ParseBool(resultReuseEnabledString); err != nil {
-		s.ResultReuseEnabled = defaultResultReuseEnabled
-	} else {
+	if resultReuseEnabled, err := strconv.ParseBool(resultReuseEnabledString); err == nil {
 		s.ResultReuseEnabled = resultReuseEnabled
 	}
 
 	if s.ResultReuseEnabled {
-		if resultReuseMaxAgeInMinutes, err := strconv.ParseInt(resultReuseMaxAgeInMinutesString, 10, 64); err != nil {
-			s.ResultReuseMaxAgeInMinutes = defaultResultReuseMaxAgeInMinutes
-		} else {
+		if resultReuseMaxAgeInMinutes, err := strconv.ParseInt(resultReuseMaxAgeInMinutesString, 10, 64); err == nil {
 			s.ResultReuseMaxAgeInMinutes = resultReuseMaxAgeInMinutes
 		}
 	}

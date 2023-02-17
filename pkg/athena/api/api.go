@@ -255,7 +255,7 @@ func (c *API) Workgroups(ctx context.Context) ([]string, error) {
 	return res, nil
 }
 
-func (c *API) Workgroup(ctx context.Context, options sqlds.Options) (string, error) {
+func (c *API) WorkgroupEngineVersion(ctx context.Context, options sqlds.Options) (string, error) {
 	workgroup := c.getOptionWithDefault(options, "workgroup")
 	out, err := c.Client.GetWorkGroupWithContext(ctx, &athena.GetWorkGroupInput{
 		WorkGroup: aws.String(workgroup),

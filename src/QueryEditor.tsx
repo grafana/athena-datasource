@@ -1,10 +1,26 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { config } from '@grafana/runtime';
+<<<<<<< HEAD
 import { QueryEditorProps } from '@grafana/data';
 import { AthenaDataSourceOptions, AthenaQuery } from './types';
 import { DataSource } from './datasource';
 import { QueryEditorForm } from './QueryEditorForm';
 import { QueryEditorHeader } from '@grafana/aws-sdk';
+||||||| parent of cca27f8 (update import)
+import { FormatSelect, ResourceSelector } from '@grafana/aws-sdk';
+import { RunQueryButtons } from '@grafana/async-query-data';
+import { selectors } from 'tests/selectors';
+import { appendTemplateVariables } from 'utils';
+import SQLEditor from 'SQLEditor';
+import { ResultReuse } from 'ResultReuse/ResultReuse';
+=======
+import { FormatSelect, ResourceSelector } from '@grafana/aws-sdk';
+import { RunQueryButtons } from '@grafana/async-query-data';
+import { selectors } from 'tests/selectors';
+import { appendTemplateVariables } from 'utils';
+import SQLEditor from 'SQLEditor';
+import { ResultReuse } from 'ResultReuse';
+>>>>>>> cca27f8 (update import)
 
 export function QueryEditor(props: QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions>) {
   const [dataIsStale, setDataIsStale] = useState(false);

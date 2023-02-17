@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { QueryEditorProps, SelectableValue } from '@grafana/data';
 import { DataSource } from './datasource';
 import { AthenaDataSourceOptions, AthenaQuery, defaultQuery, SelectableFormatOptions } from './types';
@@ -7,6 +7,7 @@ import { FormatSelect, ResourceSelector } from '@grafana/aws-sdk';
 import { selectors } from 'tests/selectors';
 import { appendTemplateVariables } from 'utils';
 import SQLEditor from 'SQLEditor';
+import { ResultReuse } from 'ResultReuse/ResultReuse';
 
 type Props = QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions> & {
   hideOptions?: boolean;
@@ -15,6 +16,13 @@ type Props = QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions> 
 type QueryProperties = 'regions' | 'catalogs' | 'databases' | 'tables' | 'columns';
 
 export function QueryEditorForm(props: Props) {
+  const [resultReuseSupported, setResultReuseSupported] = useState(false);
+  useEffect(() => {
+    const getIsResultReuseSupported = async () => {
+      setResultReuseSupported(await props.datasource.isResultReuseSupported());
+    };
+    getIsResultReuseSupported();
+  }, [props.datasource]);
   const queryWithDefaults = {
     ...defaultQuery,
     ...props.query,
@@ -124,6 +132,7 @@ export function QueryEditorForm(props: Props) {
             labelWidth={11}
             className="width-12"
           />
+          <ResultReuse enabled={resultReuseSupported} query={props.query} onChange={props.onChange} />
           {!props.hideOptions && (
             <>
               <h6>Frames</h6>

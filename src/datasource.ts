@@ -12,6 +12,8 @@ export class DataSource extends DatasourceWithAsyncBackend<AthenaQuery, AthenaDa
   defaultRegion = '';
   defaultCatalog = '';
   defaultDatabase = '';
+  workgroup = '';
+  resultReuseSupported: boolean | undefined;
 
   constructor(
     instanceSettings: DataSourceInstanceSettings<AthenaDataSourceOptions>,
@@ -21,7 +23,27 @@ export class DataSource extends DatasourceWithAsyncBackend<AthenaQuery, AthenaDa
     this.defaultRegion = instanceSettings.jsonData.defaultRegion || '';
     this.defaultCatalog = instanceSettings.jsonData.catalog || '';
     this.defaultDatabase = instanceSettings.jsonData.database || '';
+    this.workgroup = instanceSettings.jsonData.workgroup || '';
     this.variables = new AthenaVariableSupport(this);
+  }
+
+  async isResultReuseSupported() {
+    if (!this.workgroup) {
+      return false;
+    }
+
+    if (this.resultReuseSupported !== undefined) {
+      return this.resultReuseSupported;
+    }
+
+    const version = await this.getWorkgroupEngineVersion();
+    this.resultReuseSupported = this.workgroupEngineSupportsResultReuse(version);
+
+    return this.resultReuseSupported;
+  }
+
+  workgroupEngineSupportsResultReuse(version: string) {
+    return version === 'Athena engine version 3';
   }
 
   annotations = annotationSupport;
@@ -62,6 +84,8 @@ export class DataSource extends DatasourceWithAsyncBackend<AthenaQuery, AthenaDa
       database: this.templateSrv.replace(query.connectionArgs.database),
       table: this.templateSrv.replace(query.table),
     });
+
+  getWorkgroupEngineVersion = () => this.postResource('workgroupEngineVersion', { workgroup: this.workgroup });
 
   buildQuery(options: DataQueryRequest<AthenaQuery>, queries: AthenaQuery[]): AthenaQuery[] {
     const updatedQueries = queries.map((query) => {

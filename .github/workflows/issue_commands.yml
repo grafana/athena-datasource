@@ -1,9 +1,9 @@
 name: Run commands when issues are labeled
 on:
   issues:
-    types: [labeled]
+    types: [labeled, unlabeled]
   pull_request:
-    types: [labeled]
+    types: [labeled, unlabeled]
     branches-ignore: "dependabot/**"
 jobs:
   main:

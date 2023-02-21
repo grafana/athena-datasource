@@ -9,18 +9,23 @@ import (
 	"github.com/grafana/athena-datasource/pkg/athena/models"
 	"github.com/grafana/grafana-aws-sdk/pkg/sql/api"
 	"github.com/grafana/sqlds/v2"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestConnection_Execute(t *testing.T) {
 	expectedID := "foo"
 	c := NewFake(&athenaclientmock.MockAthenaClient{}, &models.AthenaDataSourceSettings{})
 	out, err := c.Execute(context.TODO(), &api.ExecuteQueryInput{Query: expectedID})
-	if err != nil {
-		t.Fatalf("unexpected error %v", err)
-	}
-	if out.ID != expectedID {
-		t.Errorf("unexpected result: %v", cmp.Diff(out.ID, expectedID))
-	}
+	assert.Nil(t, err)
+	assert.Equal(t, expectedID, out.ID)
+}
+
+func TestConnection_Execute_ResultReuseNotEnabledAndMaxAgeInMinutesProvidedDoesNotThrowError(t *testing.T) {
+	expectedID := "foo"
+	c := NewFake(&athenaclientmock.MockAthenaClient{}, &models.AthenaDataSourceSettings{ResultReuseEnabled: false, ResultReuseMaxAgeInMinutes: 60})
+	out, err := c.Execute(context.TODO(), &api.ExecuteQueryInput{Query: expectedID})
+	assert.Nil(t, err)
+	assert.Equal(t, expectedID, out.ID)
 }
 
 func Test_Status(t *testing.T) {

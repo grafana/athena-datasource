@@ -146,3 +146,11 @@ func TestConnection_ListColumnsForTable(t *testing.T) {
 		t.Errorf("unexpected result: %v", cmp.Diff(expected, res))
 	}
 }
+
+func Test_WorkgroupEngineSupportsResultReuse(t *testing.T) {
+	assert.True(t, workgroupEngineSupportsResultReuse("Athena engine version 3"))
+
+	assert.False(t, workgroupEngineSupportsResultReuse("Athena engine version 1"))
+	assert.False(t, workgroupEngineSupportsResultReuse("Athena engine version 2"))
+	assert.False(t, workgroupEngineSupportsResultReuse("some random string"))
+}

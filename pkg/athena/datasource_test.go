@@ -48,16 +48,8 @@ func TestConnection(t *testing.T) {
 		fakeQueryArgs := json.RawMessage(`{"test": "thing", "region": ""}`)
 		_, err := ds.Connect(fakeConfig, fakeQueryArgs)
 
-		if err != nil {
-			t.Errorf("unexpected err, %v", err)
-		}
-		if region, ok := mc.wasCalledWith["region"]; region != "__default" {
-			if !ok {
-				t.Errorf("no region found")
-			} else {
-				t.Errorf("unexpected region %v", mc.wasCalledWith["region"])
-			}
-		}
+		assert.Nil(t, err)
+		assert.Equal(t, "__default", mc.wasCalledWith["region"])
 	})
 
 	t.Run("it should call getAsyncDB with the resultReuseEnabled option if one is provided", func(t *testing.T) {
@@ -88,16 +80,8 @@ func TestConnection(t *testing.T) {
 		fakeQueryArgs := json.RawMessage(`{"resultReuseMaxAgeInMinutes": 10}`)
 		_, err := ds.GetAsyncDB(fakeConfig, fakeQueryArgs)
 
-		if err != nil {
-			t.Errorf("unexpected err, %v", err)
-		}
-		if resultReuseMaxAgeInMinutes, ok := mc.wasCalledWith["resultReuseMaxAgeInMinutes"]; resultReuseMaxAgeInMinutes != "10" {
-			if !ok {
-				t.Errorf("no resultReuseMaxAgeInMinutes found")
-			} else {
-				t.Errorf("unexpected resultReuseMaxAgeInMinutes %v", mc.wasCalledWith["resultReuseMaxAgeInMinutes"])
-			}
-		}
+		assert.Nil(t, err)
+		assert.Equal(t, "10", mc.wasCalledWith["resultReuseMaxAgeInMinutes"])
 	})
 }
 
@@ -110,12 +94,8 @@ func TestColumns(t *testing.T) {
 			"database": "db",
 			"table":    "",
 		})
-		if err != nil {
-			t.Errorf("unexpected error %v", err)
-		}
-		if tables == nil {
-			t.Errorf("unexpected null result")
-		}
+		assert.Nil(t, err)
+		assert.NotNil(t, tables)
 	})
 
 	t.Run("it should call getAPI with the region passed in from args", func(t *testing.T) {
@@ -131,14 +111,6 @@ func TestColumns(t *testing.T) {
 		})
 
 		assert.Error(t, err, "fake api error", "unexpected error: %v", err)
-
-		if region, ok := mc.wasCalledWith["region"]; region != "us-east1" {
-			if !ok {
-				t.Errorf("no region found")
-			} else {
-				t.Errorf("unexpected region %v", mc.wasCalledWith["region"])
-			}
-		}
-
+		assert.Equal(t, "us-east1", mc.wasCalledWith["region"])
 	})
 }

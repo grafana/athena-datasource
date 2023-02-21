@@ -14,7 +14,7 @@ import (
 	sqlModels "github.com/grafana/grafana-aws-sdk/pkg/sql/models"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/sqlds/v2"
-	"gotest.tools/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 type mockClient struct {
@@ -72,16 +72,8 @@ func TestConnection(t *testing.T) {
 		fakeQueryArgs := json.RawMessage(`{"resultReuseEnabled": true}`)
 		_, err := ds.GetAsyncDB(fakeConfig, fakeQueryArgs)
 
-		if err != nil {
-			t.Errorf("unexpected err, %v", err)
-		}
-		if resultReuseEnabled, ok := mc.wasCalledWith["resultReuseEnabled"]; resultReuseEnabled != "true" {
-			if !ok {
-				t.Errorf("no resultReuseEnabled found")
-			} else {
-				t.Errorf("unexpected resultReuseEnabled %v", mc.wasCalledWith["resultReuseEnabled"])
-			}
-		}
+		assert.Nil(t, err)
+		assert.Equal(t, "true", mc.wasCalledWith["resultReuseEnabled"])
 	})
 
 	t.Run("it should call getAsyncDB with the resultReuseMaxAgeInMinutes option if one is provided", func(t *testing.T) {

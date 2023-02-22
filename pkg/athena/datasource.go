@@ -79,7 +79,6 @@ func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings, qu
 }
 
 func (s *AthenaDatasource) GetAsyncDB(config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (awsds.AsyncDB, error) {
-	backend.Logger.Debug("GetAsyncDB", "queryArgs", queryArgs)
 	s.awsDS.Init(config)
 	args, err := parseArgs(queryArgs)
 	if err != nil {
@@ -186,10 +185,20 @@ func parseArgs(queryArgs json.RawMessage) (sqlds.Options, error) {
 		}
 	}
 	options := sqlds.Options{}
-	options[models.Region] = args.Region
-	options[models.Catalog] = args.Catalog
-	options[models.Database] = args.Database
-	options[models.ResultReuseEnabled] = fmt.Sprintf("%t", args.ResultReuseEnabled)
-	options[models.ResultReuseMaxAgeInMinutes] = fmt.Sprintf("%d", args.ResultReuseMaxAgeInMinutes)
+	if args.Region != "" {
+		options[models.Region] = args.Region
+	}
+	if args.Catalog != "" {
+		options[models.Catalog] = args.Catalog
+	}
+	if args.Database != "" {
+		options[models.Database] = args.Database
+	}
+	if args.ResultReuseEnabled {
+		options[models.ResultReuseEnabled] = fmt.Sprintf("%t", args.ResultReuseEnabled)
+	}
+	if args.ResultReuseMaxAgeInMinutes > 0 {
+		options[models.ResultReuseMaxAgeInMinutes] = fmt.Sprintf("%d", args.ResultReuseMaxAgeInMinutes)
+	}
 	return options, nil
 }

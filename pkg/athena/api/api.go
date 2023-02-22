@@ -4,8 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"regexp"
-	"strconv"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/athena"
@@ -17,11 +15,6 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	sdkhttpclient "github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
 	"github.com/grafana/sqlds/v2"
-)
-
-const (
-	engineVersionExpr                        = `^Athena engine version (?P<Version>\d+)$`
-	resultReuseMinimumSupportedEngineVersion = 3
 )
 
 type API struct {
@@ -318,16 +311,5 @@ func (c *API) Columns(ctx aws.Context, options sqlds.Options) ([]string, error) 
 }
 
 func workgroupEngineSupportsResultReuse(version string) bool {
-	r, _ := regexp.Compile(engineVersionExpr)
-	matches := r.FindStringSubmatch(version)
-	if len(matches) == 0 {
-		return false
-	}
-
-	engineVersion, err := strconv.ParseInt(matches[r.SubexpIndex("Version")], 10, 64)
-	if err != nil {
-		return false
-	}
-
-	return engineVersion >= resultReuseMinimumSupportedEngineVersion
+	return version != "Athena engine version 2"
 }

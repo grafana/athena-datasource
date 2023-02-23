@@ -20,6 +20,9 @@ var ds = &fake.AthenaFakeDatasource{
 	Wg: map[string][]string{
 		"us-east-2": {"wg1", "wg2"},
 	},
+	WgEngineVersion: map[string]string{
+		"wg1": "Athena engine version 3",
+	},
 	ExistingTables: map[string]map[string]map[string][]string{
 		"us-east-2": {
 			"catalog": {
@@ -108,6 +111,19 @@ func TestRoutes(t *testing.T) {
 			description:  "wrong region for workgroups",
 			route:        "/workgroups",
 			reqBody:      []byte(`{"region":"us-east-3"}`),
+			expectedCode: http.StatusBadRequest,
+		},
+		{
+			description:    "workgroup engine version",
+			route:          "/workgroupEngineVersion",
+			reqBody:        []byte(`{"workgroup":"wg1"}`),
+			expectedCode:   http.StatusOK,
+			expectedResult: `"Athena engine version 3"`,
+		},
+		{
+			description:  "workgroup engine version missing workgroup",
+			route:        "/workgroupEngineVersion",
+			reqBody:      []byte{},
 			expectedCode: http.StatusBadRequest,
 		},
 	}

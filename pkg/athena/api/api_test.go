@@ -9,18 +9,23 @@ import (
 	"github.com/grafana/athena-datasource/pkg/athena/models"
 	"github.com/grafana/grafana-aws-sdk/pkg/sql/api"
 	"github.com/grafana/sqlds/v2"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestConnection_Execute(t *testing.T) {
 	expectedID := "foo"
 	c := NewFake(&athenaclientmock.MockAthenaClient{}, &models.AthenaDataSourceSettings{})
 	out, err := c.Execute(context.TODO(), &api.ExecuteQueryInput{Query: expectedID})
-	if err != nil {
-		t.Fatalf("unexpected error %v", err)
-	}
-	if out.ID != expectedID {
-		t.Errorf("unexpected result: %v", cmp.Diff(out.ID, expectedID))
-	}
+	assert.Nil(t, err)
+	assert.Equal(t, expectedID, out.ID)
+}
+
+func TestConnection_Execute_ResultReuseNotEnabledAndMaxAgeInMinutesProvidedDoesNotThrowError(t *testing.T) {
+	expectedID := "foo"
+	c := NewFake(&athenaclientmock.MockAthenaClient{}, &models.AthenaDataSourceSettings{ResultReuseEnabled: false, ResultReuseMaxAgeInMinutes: 60})
+	out, err := c.Execute(context.TODO(), &api.ExecuteQueryInput{Query: expectedID})
+	assert.Nil(t, err)
+	assert.Equal(t, expectedID, out.ID)
 }
 
 func Test_Status(t *testing.T) {
@@ -102,6 +107,18 @@ func TestConnection_ListWorkgroups(t *testing.T) {
 	}
 }
 
+func TestConnection_GetWorkgroupVersion(t *testing.T) {
+	expected := "Athena engine version 3"
+	c := &API{Client: &athenaclientmock.MockAthenaClient{WorkgroupEngineVersion: expected}}
+	res, err := c.WorkgroupEngineVersion(context.TODO(), sqlds.Options{"workgroup": "workgroup"})
+	if err != nil {
+		t.Fatalf("unexpected error %v", err)
+	}
+	if !cmp.Equal(expected, res) {
+		t.Errorf("unexpected result: %v", cmp.Diff(expected, res))
+	}
+}
+
 func TestConnection_ListTables(t *testing.T) {
 	expected := []string{"foo"}
 	c := &API{Client: &athenaclientmock.MockAthenaClient{TableMetadataList: expected}}
@@ -128,4 +145,9 @@ func TestConnection_ListColumnsForTable(t *testing.T) {
 	if !cmp.Equal(expected, res) {
 		t.Errorf("unexpected result: %v", cmp.Diff(expected, res))
 	}
+}
+
+func Test_WorkgroupEngineSupportsResultReuse(t *testing.T) {
+	assert.True(t, workgroupEngineSupportsResultReuse("Athena engine version 3"))
+	assert.False(t, workgroupEngineSupportsResultReuse("Athena engine version 2"))
 }

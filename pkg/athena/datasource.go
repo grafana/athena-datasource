@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"fmt"
 
 	"github.com/grafana/athena-datasource/pkg/athena/api"
 	"github.com/grafana/athena-datasource/pkg/athena/driver"
@@ -19,6 +20,12 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/data/sqlutil"
 	"github.com/grafana/sqlds/v2"
 )
+
+type athenaQueryArgs struct {
+	Region, Catalog, Database  string
+	ResultReuseEnabled         bool
+	ResultReuseMaxAgeInMinutes int64
+}
 
 type awsDSClient interface {
 	Init(config backend.DataSourceInstanceSettings)
@@ -38,6 +45,7 @@ type AthenaDatasourceIface interface {
 	DataCatalogs(ctx context.Context, options sqlds.Options) ([]string, error)
 	Databases(ctx context.Context, options sqlds.Options) ([]string, error)
 	Workgroups(ctx context.Context, options sqlds.Options) ([]string, error)
+	WorkgroupEngineVersion(ctx context.Context, options sqlds.Options) (string, error)
 	Tables(ctx context.Context, options sqlds.Options) ([]string, error)
 	Columns(ctx context.Context, options sqlds.Options) ([]string, error)
 }
@@ -57,7 +65,7 @@ func (s *AthenaDatasource) Settings(_ backend.DataSourceInstanceSettings) sqlds.
 // Connect opens a sql.DB connection using datasource settings
 func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (*sql.DB, error) {
 	s.awsDS.Init(config)
-	args, err := sqlds.ParseOptions(queryArgs)
+	args, err := parseArgs(queryArgs)
 	if err != nil {
 		return nil, err
 	}
@@ -72,7 +80,7 @@ func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings, qu
 
 func (s *AthenaDatasource) GetAsyncDB(config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (awsds.AsyncDB, error) {
 	s.awsDS.Init(config)
-	args, err := sqlds.ParseOptions(queryArgs)
+	args, err := parseArgs(queryArgs)
 	if err != nil {
 		return nil, err
 	}
@@ -158,4 +166,39 @@ func (s *AthenaDatasource) Workgroups(ctx context.Context, options sqlds.Options
 		return nil, err
 	}
 	return api.Workgroups(ctx)
+}
+
+func (s *AthenaDatasource) WorkgroupEngineVersion(ctx context.Context, options sqlds.Options) (string, error) {
+	api, err := s.getAPI(ctx, options)
+	if err != nil {
+		return "", err
+	}
+	return api.WorkgroupEngineVersion(ctx, options)
+}
+
+func parseArgs(queryArgs json.RawMessage) (sqlds.Options, error) {
+	args := athenaQueryArgs{}
+	if queryArgs != nil {
+		err := json.Unmarshal(queryArgs, &args)
+		if err != nil {
+			return nil, fmt.Errorf("failed to parse query args: %w", err)
+		}
+	}
+	options := sqlds.Options{}
+	if args.Region != "" {
+		options[models.Region] = args.Region
+	}
+	if args.Catalog != "" {
+		options[models.Catalog] = args.Catalog
+	}
+	if args.Database != "" {
+		options[models.Database] = args.Database
+	}
+	if args.ResultReuseEnabled {
+		options[models.ResultReuseEnabled] = fmt.Sprintf("%t", args.ResultReuseEnabled)
+	}
+	if args.ResultReuseMaxAgeInMinutes > 0 {
+		options[models.ResultReuseMaxAgeInMinutes] = fmt.Sprintf("%d", args.ResultReuseMaxAgeInMinutes)
+	}
+	return options, nil
 }

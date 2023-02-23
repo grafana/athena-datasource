@@ -86,6 +86,39 @@ func TestConnection_getRegionKey(t *testing.T) {
 				},
 			},
 		},
+		{
+			description: "undefined result reuse",
+			settings:    &AthenaDataSourceSettings{},
+			options:     sqlds.Options{},
+			expected: AthenaDataSourceSettings{
+				ResultReuseEnabled: false,
+			},
+		},
+		{
+			description: "result reuse enabled and max age value set",
+			settings:    &AthenaDataSourceSettings{},
+			options:     sqlds.Options{"resultReuseEnabled": "true", "resultReuseMaxAgeInMinutes": "10"},
+			expected: AthenaDataSourceSettings{
+				ResultReuseEnabled:         true,
+				ResultReuseMaxAgeInMinutes: 10,
+			},
+		},
+		{
+			description: "result reuse options set to unknown values",
+			settings:    &AthenaDataSourceSettings{},
+			options:     sqlds.Options{"resultReuseEnabled": "true_blah_blah", "resultReuseMaxAgeInMinutes": "10_not_a_number"},
+			expected: AthenaDataSourceSettings{
+				ResultReuseEnabled: false,
+			},
+		},
+		{
+			description: "result reuse is disabled and max age value is set",
+			settings:    &AthenaDataSourceSettings{},
+			options:     sqlds.Options{"resultReuseEnabled": "false", "resultReuseMaxAgeInMinutes": "10"},
+			expected: AthenaDataSourceSettings{
+				ResultReuseEnabled: false,
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.description, func(t *testing.T) {

@@ -15,14 +15,15 @@ const DESCRIBE_STATEMENT_SUCCEEDED = "DESCRIBE_STATEMENT_FINISHED"
 
 // Define a mock struct to be used in your unit tests of myFunc.
 type MockAthenaClient struct {
-	CalledTimesCounter   int
-	CalledTimesCountDown int
-	Catalogs             []string
-	Databases            []string
-	Workgroups           []string
-	TableMetadataList    []string
-	Columns              []string
-	Cancelled            bool
+	CalledTimesCounter     int
+	CalledTimesCountDown   int
+	Catalogs               []string
+	Databases              []string
+	Workgroups             []string
+	WorkgroupEngineVersion string
+	TableMetadataList      []string
+	Columns                []string
+	Cancelled              bool
 	athenaiface.AthenaAPI
 }
 
@@ -53,6 +54,20 @@ func (m *MockAthenaClient) GetQueryExecutionWithContext(ctx aws.Context, input *
 				State: aws.String(athena.QueryExecutionStateRunning),
 			},
 		}
+	}
+	return output, nil
+}
+
+func (m *MockAthenaClient) GetWorkGroupWithContext(ctx aws.Context, input *athena.GetWorkGroupInput, opts ...request.Option) (*athena.GetWorkGroupOutput, error) {
+	output := &athena.GetWorkGroupOutput{
+		WorkGroup: &athena.WorkGroup{
+			Configuration: &athena.WorkGroupConfiguration{
+				EngineVersion: &athena.EngineVersion{
+					EffectiveEngineVersion: aws.String(m.WorkgroupEngineVersion),
+					SelectedEngineVersion:  aws.String(m.WorkgroupEngineVersion),
+				},
+			},
+		},
 	}
 	return output, nil
 }

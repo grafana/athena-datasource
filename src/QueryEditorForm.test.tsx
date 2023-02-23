@@ -1,6 +1,6 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
-import { QueryEditor } from './QueryEditor';
+import { render, screen } from '@testing-library/react';
+import { QueryEditorForm } from './QueryEditorForm';
 import { mockDatasource, mockQuery } from './__mocks__/datasource';
 import '@testing-library/jest-dom';
 import { select } from 'react-select-event';
@@ -49,7 +49,7 @@ describe('QueryEditor', () => {
     const onChange = jest.fn();
     ds.getResource = jest.fn().mockResolvedValue([ds.defaultRegion, 'foo']);
     ds.getRegions = jest.fn(() => ds.getResource('regions'));
-    render(<QueryEditor {...props} onChange={onChange} />);
+    render(<QueryEditorForm {...props} onChange={onChange} />);
 
     const selectEl = screen.getByLabelText(selectors.components.ConfigEditor.region.input);
     expect(selectEl).toBeInTheDocument();
@@ -67,7 +67,7 @@ describe('QueryEditor', () => {
     const onChange = jest.fn();
     ds.postResource = jest.fn().mockResolvedValue([ds.defaultCatalog, 'foo']);
     ds.getCatalogs = jest.fn((query) => ds.postResource('catalogs', { region: query.connectionArgs.region }));
-    render(<QueryEditor {...props} onChange={onChange} />);
+    render(<QueryEditorForm {...props} onChange={onChange} />);
 
     const selectEl = screen.getByLabelText(selectors.components.ConfigEditor.catalog.input);
     expect(selectEl).toBeInTheDocument();
@@ -88,7 +88,7 @@ describe('QueryEditor', () => {
     ds.getDatabases = jest.fn((query) =>
       ds.postResource('databases', { region: query.connectionArgs.region, catalog: query.connectionArgs.catalog })
     );
-    render(<QueryEditor {...props} onChange={onChange} onRunQuery={onRunQuery} />);
+    render(<QueryEditorForm {...props} onChange={onChange} onRunQuery={onRunQuery} />);
 
     const selectEl = screen.getByLabelText(selectors.components.ConfigEditor.database.input);
     expect(selectEl).toBeInTheDocument();
@@ -114,7 +114,7 @@ describe('QueryEditor', () => {
         database: query.connectionArgs.database,
       })
     );
-    render(<QueryEditor {...props} onChange={onChange} onRunQuery={onRunQuery} />);
+    render(<QueryEditorForm {...props} onChange={onChange} onRunQuery={onRunQuery} />);
 
     const selectEl = screen.getByLabelText('Table');
     expect(selectEl).toBeInTheDocument();
@@ -142,7 +142,7 @@ describe('QueryEditor', () => {
       })
     );
     render(
-      <QueryEditor
+      <QueryEditorForm
         {...props}
         onChange={onChange}
         onRunQuery={onRunQuery}
@@ -167,36 +167,8 @@ describe('QueryEditor', () => {
     expect(onRunQuery).not.toHaveBeenCalled();
   });
 
-  it('run button should be disabled if the query is not valid', () => {
-    render(<QueryEditor {...props} query={{ ...props.query, rawSQL: '' }} />);
-    const runButton = screen.getByRole('button', { name: 'Run' });
-    expect(runButton).toBeDisabled();
-  });
-
-  it('should run queries when the run button is clicked', () => {
-    const onChange = jest.fn();
-    const onRunQuery = jest.fn();
-    render(<QueryEditor {...props} onRunQuery={onRunQuery} onChange={onChange} />);
-    const runButton = screen.getByRole('button', { name: 'Run' });
-    expect(runButton).toBeInTheDocument();
-
-    expect(onRunQuery).not.toBeCalled();
-    fireEvent.click(runButton);
-    expect(onRunQuery).toBeCalledTimes(1);
-  });
-
-  it('stop button should be disabled until run button is clicked', () => {
-    render(<QueryEditor {...props} />);
-    const runButton = screen.getByRole('button', { name: 'Run' });
-    const stopButton = screen.getByRole('button', { name: 'Stop' });
-    expect(stopButton).toBeInTheDocument();
-    expect(stopButton).toBeDisabled();
-    fireEvent.click(runButton);
-    expect(stopButton).not.toBeDisabled();
-  });
-
   it('should display query options by default', async () => {
-    render(<QueryEditor {...props} />);
+    render(<QueryEditorForm {...props} />);
     const selectEl = screen.getByLabelText('Format as');
     expect(selectEl).toBeInTheDocument();
   });

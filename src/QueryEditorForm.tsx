@@ -3,25 +3,18 @@ import { QueryEditorProps, SelectableValue } from '@grafana/data';
 import { DataSource } from './datasource';
 import { AthenaDataSourceOptions, AthenaQuery, defaultQuery, SelectableFormatOptions } from './types';
 import { InlineSegmentGroup } from '@grafana/ui';
-import { config } from '@grafana/runtime';
 import { FormatSelect, ResourceSelector } from '@grafana/aws-sdk';
-import { RunQueryButtons } from '@grafana/async-query-data';
 import { selectors } from 'tests/selectors';
 import { appendTemplateVariables } from 'utils';
 import SQLEditor from 'SQLEditor';
 
 type Props = QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions> & {
   hideOptions?: boolean;
-  hideRunQueryButtons?: boolean;
 };
 
 type QueryProperties = 'regions' | 'catalogs' | 'databases' | 'tables' | 'columns';
 
-function isQueryValid(query: AthenaQuery) {
-  return !!query.rawSQL;
-}
-
-export function QueryEditor(props: Props) {
+export function QueryEditorForm(props: Props) {
   const queryWithDefaults = {
     ...defaultQuery,
     ...props.query,
@@ -141,17 +134,6 @@ export function QueryEditor(props: Props) {
 
         <div style={{ minWidth: '400px', marginLeft: '10px', flex: 1 }}>
           <SQLEditor query={queryWithDefaults} onChange={props.onChange} datasource={props.datasource} />
-          {!props.hideRunQueryButtons && props?.app !== 'explore' && (
-            <div style={{ marginTop: 8 }}>
-              <RunQueryButtons
-                onRunQuery={props.onRunQuery}
-                onCancelQuery={config.featureToggles.athenaAsyncQueryDataSupport ? props.datasource.cancel : undefined}
-                state={props.data?.state}
-                query={props.query}
-                isQueryValid={isQueryValid}
-              />
-            </div>
-          )}
         </div>
       </InlineSegmentGroup>
     </>

@@ -43,7 +43,7 @@ export class DataSource extends DatasourceWithAsyncBackend<AthenaQuery, AthenaDa
   }
 
   workgroupEngineSupportsResultReuse(version: string) {
-    return version === 'Athena engine version 3';
+    return version !== 'Athena engine version 2';
   }
 
   annotations = annotationSupport;

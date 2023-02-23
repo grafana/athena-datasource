@@ -43,9 +43,7 @@ export const ResultReuse = ({ enabled, onChange, query }: ResultReuseProps) => {
 
   return (
     <>
-      <h6>
-        Query result reuse <span className={styles.optional}>(engine version 3 only)</span>
-      </h6>
+      <h6>Query result reuse {!enabled && <span className={styles.optional}>(engine version 3 only)</span>}</h6>
       <InlineField labelWidth={11} disabled={!enabled} label="Enable" aria-label="Enable query result reuse">
         <Checkbox onChange={handleEnabledChange} value={resultReuseEnabled && enabled} />
       </InlineField>

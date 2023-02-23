@@ -44,7 +44,7 @@ beforeEach(() => {
 
 describe('Query Editor', () => {
   it('run button should be disabled if the query is empty', () => {
-    render(<QueryEditor {...props} query={{ ...props.query, rawSQL: '' }} />);
+    render(<QueryEditor {...props} />);
     const runButton = screen.getByRole('button', { name: 'Run query' });
     expect(runButton).toBeDisabled();
   });

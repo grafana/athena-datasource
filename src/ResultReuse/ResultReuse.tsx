@@ -45,14 +45,16 @@ export const ResultReuse = ({ enabled, onChange, query }: ResultReuseProps) => {
     <>
       <h6>Query result reuse {!enabled && <span className={styles.optional}>(engine version 3 only)</span>}</h6>
       <InlineField labelWidth={11} disabled={!enabled} label="Enable" aria-label="Enable query result reuse">
-        <Checkbox onChange={handleEnabledChange} value={resultReuseEnabled && enabled} />
+        <Checkbox id="query-result-reuse-toggle" onChange={handleEnabledChange} value={resultReuseEnabled && enabled} />
       </InlineField>
       <InlineField labelWidth={11} disabled={!enabled} label="TTL (mins)" aria-label="Max age in minutes">
         <Input
+          id="query-result-reuse-ttl"
           className="width-12"
           min={0}
           max={10080}
           onChange={handleTTLChange}
+          onBlur={handleTTLChange}
           type="number"
           value={resultReuseMaxAgeInMinutes}
         />

@@ -4,7 +4,7 @@
   "description": "Use Amazon Athena with Grafana",
   "scripts": {
     "build": "webpack -c ./.config/webpack/webpack.config.ts --env production",
-    "dev": "webpack -w -c ./.config/webpack/webpack.config.ts --env development",
+    "dev": "webpack -c ./.config/webpack/webpack.config.ts --env development",
     "e2e": "yarn cypress install && yarn grafana-e2e run",
     "e2e:open": "grafana-e2e open",
     "e2e:update": "yarn cypress install && yarn grafana-e2e run --update-screenshots",
@@ -17,7 +17,8 @@
     "test:ci": "jest --maxWorkers 4",
     "test:coverage": "jest --coverage",
     "test:coverage:changes": "jest --coverage --changedSince=origin/main",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "watch": "webpack -w -c ./.config/webpack/webpack.config.ts --env development"
   },
   "author": "Grafana Labs",
   "license": "Apache-2.0",

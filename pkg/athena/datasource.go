@@ -85,6 +85,11 @@ func (s *AthenaDatasource) GetAsyncDB(config backend.DataSourceInstanceSettings,
 		return nil, err
 	}
 
+	// athena datasources require a region to establish a connection, we use a default region if none was provided
+	if args["region"] == "" {
+		args["region"] = sqlModels.DefaultKey
+	}
+
 	return s.awsDS.GetAsyncDB(config.ID, args, models.New, api.New, driver.New)
 }
 

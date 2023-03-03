@@ -1,4 +1,9 @@
 # Changelog
+ 
+## 2.7.0
+
+* Add header to Query Editor by @idastambuk in [#217](https://github.com/grafana/athena-datasource/pull/211)
+* Add Query Result Reuse Support to Backend by @kevinwcyu[#214](https://github.com/grafana/athena-datasource/pull/214)
 
 ## 2.6.0
 

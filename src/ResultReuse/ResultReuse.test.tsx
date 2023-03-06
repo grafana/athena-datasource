@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { ResultReuse } from './ResultReuse';
 import { mockQuery } from '__mocks__/datasource';
 
@@ -20,5 +20,37 @@ describe('ResultReuse', () => {
 
     expect(toggle).toBeDisabled();
     expect(ttlInput).toBeDisabled();
+  });
+
+  it('should call `onChange` when toggle is clicked', () => {
+    const onChange = jest.fn();
+    render(<ResultReuse enabled={true} onChange={onChange} query={mockQuery} />);
+    const toggle = screen.getByLabelText('Enable');
+
+    fireEvent.click(toggle);
+
+    expect(onChange).toBeCalledWith({
+      ...mockQuery,
+      connectionArgs: {
+        ...mockQuery.connectionArgs,
+        resultReuseEnabled: true,
+      },
+    });
+  });
+
+  it('should call `onChange` when TTL input is changed', () => {
+    const onChange = jest.fn();
+    render(<ResultReuse enabled={true} onChange={onChange} query={mockQuery} />);
+    const ttlInput = screen.getByLabelText('TTL (mins)');
+
+    fireEvent.change(ttlInput, { target: { value: '10' } });
+
+    expect(onChange).toBeCalledWith({
+      ...mockQuery,
+      connectionArgs: {
+        ...mockQuery.connectionArgs,
+        resultReuseMaxAgeInMinutes: 10,
+      },
+    });
   });
 });

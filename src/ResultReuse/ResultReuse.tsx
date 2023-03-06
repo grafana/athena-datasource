@@ -32,6 +32,7 @@ export const ResultReuse = ({ enabled, onChange, query }: ResultReuseProps) => {
 
   const handleTTLChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.currentTarget;
+
     onChange({
       ...query,
       connectionArgs: {
@@ -41,16 +42,25 @@ export const ResultReuse = ({ enabled, onChange, query }: ResultReuseProps) => {
     });
   };
 
+  const invalidResultReuseMaxAgeInMinutes = resultReuseMaxAgeInMinutes < 0 || resultReuseMaxAgeInMinutes > 10080;
+
   return (
     <>
       <h6>Query result reuse {!enabled && <span className={styles.optional}>(engine version 3 only)</span>}</h6>
-      <InlineField labelWidth={11} disabled={!enabled} label="Enable" aria-label="Enable query result reuse">
+      <InlineField labelWidth={13} disabled={!enabled} label="Enable" aria-label="Enable query result reuse">
         <Checkbox id="query-result-reuse-toggle" onChange={handleEnabledChange} value={resultReuseEnabled && enabled} />
       </InlineField>
-      <InlineField labelWidth={11} disabled={!enabled} label="TTL (mins)" aria-label="Max age in minutes">
+      <InlineField
+        labelWidth={13}
+        disabled={!enabled}
+        invalid={invalidResultReuseMaxAgeInMinutes}
+        label="TTL (mins)"
+        aria-label="Max age in minutes"
+        tooltip="The maximum age for reusing query results in minutes. Minimum 0, maximum 10080."
+      >
         <Input
           id="query-result-reuse-ttl"
-          className="width-12"
+          className="width-11"
           min={0}
           max={10080}
           onChange={handleTTLChange}

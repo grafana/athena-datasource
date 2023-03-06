@@ -52,6 +52,22 @@ func TestConnection(t *testing.T) {
 		assert.Equal(t, "__default", mc.wasCalledWith["region"])
 	})
 
+	t.Run("it should call getAsyncDB with the default region if none is set", func(t *testing.T) {
+		mc := mockClient{}
+		ds := AthenaDatasource{
+			awsDS: &mc,
+		}
+
+		fakeConfig := backend.DataSourceInstanceSettings{
+			JSONData: json.RawMessage{},
+		}
+		fakeQueryArgs := json.RawMessage(`{"test": "thing", "region": ""}`)
+		_, err := ds.GetAsyncDB(fakeConfig, fakeQueryArgs)
+
+		assert.Nil(t, err)
+		assert.Equal(t, "__default", mc.wasCalledWith["region"])
+	})
+
 	t.Run("it should call getAsyncDB with the resultReuseEnabled option if one is provided", func(t *testing.T) {
 		mc := mockClient{}
 		ds := AthenaDatasource{

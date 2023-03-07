@@ -1,5 +1,12 @@
 import { DataSourcePluginOptionsEditorProps, PluginType } from '@grafana/data';
-import { AthenaDataSourceOptions, AthenaDataSourceSecureJsonData, AthenaQuery, defaultKey } from '../types';
+import {
+  AthenaDataSourceOptions,
+  AthenaDataSourceSecureJsonData,
+  AthenaQuery,
+  defaultKey,
+  DEFAULT_RESULT_REUSE_ENABLED,
+  DEFAULT_RESULT_REUSE_MAX_AGE_IN_MINUTES,
+} from '../types';
 import { DataSource } from '../datasource';
 
 export const mockDatasourceOptions: DataSourcePluginOptionsEditorProps<
@@ -67,7 +74,13 @@ export const mockDatasource = new DataSource({
 });
 
 export const mockQuery: AthenaQuery = {
-  connectionArgs: { region: defaultKey, catalog: defaultKey, database: defaultKey },
+  connectionArgs: {
+    region: defaultKey,
+    catalog: defaultKey,
+    database: defaultKey,
+    resultReuseEnabled: DEFAULT_RESULT_REUSE_ENABLED,
+    resultReuseMaxAgeInMinutes: DEFAULT_RESULT_REUSE_MAX_AGE_IN_MINUTES,
+  },
   format: 1,
   rawSQL: 'SELECT * FROM table',
   refId: '',

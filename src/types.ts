@@ -28,6 +28,8 @@ export interface AthenaQuery extends SQLQuery {
     region?: string;
     catalog?: string;
     database?: string;
+    resultReuseEnabled?: boolean;
+    resultReuseMaxAgeInMinutes?: number;
   };
   table?: string;
   column?: string;
@@ -37,6 +39,9 @@ export interface AthenaQuery extends SQLQuery {
 
 export const defaultKey = '__default';
 
+export const DEFAULT_RESULT_REUSE_ENABLED = false;
+export const DEFAULT_RESULT_REUSE_MAX_AGE_IN_MINUTES = 60;
+
 export const defaultQuery: Partial<AthenaQuery> = {
   format: FormatOptions.Table,
   rawSQL: '',
@@ -44,6 +49,8 @@ export const defaultQuery: Partial<AthenaQuery> = {
     region: defaultKey,
     catalog: defaultKey,
     database: defaultKey,
+    resultReuseEnabled: DEFAULT_RESULT_REUSE_ENABLED,
+    resultReuseMaxAgeInMinutes: DEFAULT_RESULT_REUSE_MAX_AGE_IN_MINUTES,
   },
 };
 

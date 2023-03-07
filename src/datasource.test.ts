@@ -53,7 +53,12 @@ describe('AthenaDatasource', () => {
 
     ctx.instanceSettings = {
       name: 'testAthena',
-      jsonData: { defaultRegion: 'testRegion', catalog: 'testCatalog', database: 'testDatabase' },
+      jsonData: {
+        defaultRegion: 'testRegion',
+        catalog: 'testCatalog',
+        database: 'testDatabase',
+        workgroup: 'testWorkgroup',
+      },
     } as unknown as DataSourceInstanceSettings<AthenaDataSourceOptions>;
     ctx.ds = new DataSource(ctx.instanceSettings);
     ctx.ds.getResource = jest.fn().mockImplementation((path: string) => {
@@ -74,6 +79,8 @@ describe('AthenaDatasource', () => {
           return Promise.resolve(setupTablesResponse());
         case 'columns':
           return Promise.resolve(setupColumnsResponse());
+        case 'workgroupEngineVersion':
+          return Promise.resolve(setupWorkgroupEngineVersionResponse());
       }
       return Promise.resolve([]);
     });
@@ -126,6 +133,20 @@ describe('AthenaDatasource', () => {
 
       expect(columnsResponse).toHaveLength(response.length);
       expect(columnsResponse).toEqual(response);
+    });
+  });
+
+  describe('isResultReuseSupported()', () => {
+    it('should support result reuse if athena engine version is greater than or equal to 3', async () => {
+      const workgroupEngineVersionResponse = await ctx.ds.isResultReuseSupported();
+      expect(workgroupEngineVersionResponse).toBeTruthy();
+    });
+
+    it('should not support result reuse if athena engine version is 2', async () => {
+      ctx.ds.postResource = jest.fn().mockResolvedValue('Athena engine version 2');
+
+      const workgroupEngineVersionResponse = await ctx.ds.isResultReuseSupported();
+      expect(workgroupEngineVersionResponse).toBeFalsy();
     });
   });
 
@@ -187,4 +208,8 @@ function setupTablesResponse() {
 
 function setupColumnsResponse() {
   return ['testColumn1', 'testColumn2'];
+}
+
+function setupWorkgroupEngineVersionResponse(version?: string) {
+  return version || 'Athena engine version 3';
 }

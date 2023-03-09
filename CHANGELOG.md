@@ -1,25 +1,29 @@
 # Changelog
- 
+
+## 2.8.0
+
+- Add Query Result Reuse Support to Frontend by @kevinwcyu in [#215](https://github.com/grafana/athena-datasource/pull/215)
+
 ## 2.7.0
 
-* Add header to Query Editor by @idastambuk in [#217](https://github.com/grafana/athena-datasource/pull/211)
-* Add Query Result Reuse Support to Backend by @kevinwcyu in [#214](https://github.com/grafana/athena-datasource/pull/214)
+- Add header to Query Editor by @idastambuk in [#217](https://github.com/grafana/athena-datasource/pull/211)
+- Add Query Result Reuse Support to Backend by @kevinwcyu in [#214](https://github.com/grafana/athena-datasource/pull/214)
 
 ## 2.6.0
 
-* Hide Run query buttons in annotations in https://github.com/grafana/athena-datasource/pull/211
+- Hide Run query buttons in annotations in https://github.com/grafana/athena-datasource/pull/211
 
 ## 2.5.0
 
-* Upgrade AWS go SDK to latest version by @annerajb in https://github.com/grafana/athena-datasource/pull/208
+- Upgrade AWS go SDK to latest version by @annerajb in https://github.com/grafana/athena-datasource/pull/208
 
 ## 2.4.0
 
-* Migrate to create-plugin by @iwysiu in https://github.com/grafana/athena-datasource/pull/190
-* Update code coverage version to 0.1.13 by @idastambuk in https://github.com/grafana/athena-datasource/pull/197
-* Re-enable annotations e2e test by @kevinwcyu in https://github.com/grafana/athena-datasource/pull/198
-* A11y: Add a11y lint plugin by @idastambuk in https://github.com/grafana/athena-datasource/pull/199
-* Upgrade grafana-aws-sdk to v0.12.0 by @fridgepoet in https://github.com/grafana/athena-datasource/pull/203
+- Migrate to create-plugin by @iwysiu in https://github.com/grafana/athena-datasource/pull/190
+- Update code coverage version to 0.1.13 by @idastambuk in https://github.com/grafana/athena-datasource/pull/197
+- Re-enable annotations e2e test by @kevinwcyu in https://github.com/grafana/athena-datasource/pull/198
+- A11y: Add a11y lint plugin by @idastambuk in https://github.com/grafana/athena-datasource/pull/199
+- Upgrade grafana-aws-sdk to v0.12.0 by @fridgepoet in https://github.com/grafana/athena-datasource/pull/203
 
 ## 2.3.1
 

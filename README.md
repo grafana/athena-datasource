@@ -281,6 +281,6 @@ To enable async query data support, you need to set feature toggle `athenaAsyncQ
 
 ## Query Result Reuse
 
-Query result reuse is a feature that allows Athena to reuse query results from previous queries. It can be enabled per query by setting the checking the `Enabled` checkbox under `Query result reuse` section in the query editor. More info on the feature can be found in the [AWS Athena documentation](https://docs.aws.amazon.com/athena/latest/ug/reusing-query-results.html).
+Query result reuse is a feature that allows Athena to reuse query results from previous queries. You can enable it per query by selecting the `Enabled` checkbox under the `Query result reuse` section in the query editor. Learn more in the [AWS Athena documentation](https://docs.aws.amazon.com/athena/latest/ug/reusing-query-results.html).
 
-Note: result reuse requires Athena to be on engine version 3. AWS provides instructions for [Changing Athena engine versions](https://docs.aws.amazon.com/athena/latest/ug/engine-versions-changing.html).
+Note: Result reuse requires Athena to be on engine version 3. AWS provides instructions for [Changing Athena engine versions](https://docs.aws.amazon.com/athena/latest/ug/engine-versions-changing.html).

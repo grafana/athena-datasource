@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.9.0
+
+- Update backend dependencies
+
 ## 2.8.0
 
 - Add Query Result Reuse Support to Frontend by @kevinwcyu in [#215](https://github.com/grafana/athena-datasource/pull/215)

@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.9.1
+
+- Update async-query-data with a fix for errors in [#232](https://github.com/grafana/athena-datasource/pull/232)
 ## 2.9.0
 
 - Update backend dependencies

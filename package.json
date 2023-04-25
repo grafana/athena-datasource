@@ -23,7 +23,7 @@
   "author": "Grafana Labs",
   "license": "Apache-2.0",
   "dependencies": {
-    "@grafana/async-query-data": "0.0.4",
+    "@grafana/async-query-data": "^0.1.6",
     "@grafana/experimental": "^0.0.2-canary.39"
   },
   "devDependencies": {
@@ -53,9 +53,9 @@
     "css-loader": "6.7.1",
     "cypress": "7.7.0",
     "eslint": "^7.32.0",
-    "eslint-plugin-jsx-a11y": "^6.6.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-jsdoc": "^37.7.0",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.26.1",
     "eslint-plugin-react-hooks": "^4.2.0",

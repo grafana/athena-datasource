@@ -2,7 +2,7 @@
 
 ## 2.9.2
 
-- Change grafana-sdk-go version
+- Change grafana-plugin-sdk-go version
 - Update grafana-aws-sdk version to include new region to opt-iin region list https://github.com/grafana/grafana-aws-sdk/pull/80 
 
 ## 2.9.1

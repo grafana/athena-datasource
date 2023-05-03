@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.9.2
+
+- Change grafana-sdk-go version
+- Update grafana-aws-sdk version to include new region to opt-iin region list https://github.com/grafana/grafana-aws-sdk/pull/80 
+
 ## 2.9.1
 
 - Update async-query-data with a fix for errors in [#232](https://github.com/grafana/athena-datasource/pull/232)

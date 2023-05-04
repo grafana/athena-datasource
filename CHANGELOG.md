@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.9.2
+
+- Revert grafana-plugin-sdk-go version to 0.139.0 to fix https://github.com/grafana/athena-datasource/issues/233. Should be same behavior as behavior with no known issues.
+- Update grafana-aws-sdk version to include new region to opt-in region list https://github.com/grafana/grafana-aws-sdk/pull/80 
+
 ## 2.9.1
 
 - Update async-query-data with a fix for errors in [#232](https://github.com/grafana/athena-datasource/pull/232)

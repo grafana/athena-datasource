@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.9.3
+
+- Upgrade grafana/aws-sdk-react to 0.0.46 https://github.com/grafana/athena-datasource/pull/235
+
 ## 2.9.2
 
 - Revert grafana-plugin-sdk-go version to 0.139.0 to fix https://github.com/grafana/athena-datasource/issues/233. Should be same behavior as behavior with no known issues.

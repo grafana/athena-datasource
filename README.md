@@ -1,3 +1,7 @@
+## Grafana 10 breaking change: update Athena datasource plugin to >=2.9.3
+
+Grafana 10.0.0 was shipped with the new React 18 upgrade. Changes in batching of state updates in React 18 cause a bug in the query editor in Athena versions <=2.9.2. If you’re using Grafana@>=10.0.0, please update your plugin to version 2.9.3 or higher in your Grafana instance management console.
+
 # Athena data source for Grafana
 
 The Athena data source plugin allows you to query and visualize Athena data metrics from within Grafana.

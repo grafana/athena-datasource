@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.9.4
+
+- Upgrade Readme.md re: Grafana 10 https://github.com/grafana/athena-datasource/pull/237
+
 ## 2.9.3
 
 - Upgrade grafana/aws-sdk-react to 0.0.46 https://github.com/grafana/athena-datasource/pull/235

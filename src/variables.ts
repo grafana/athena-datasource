@@ -15,8 +15,11 @@ export class AthenaVariableSupport extends CustomVariableSupport<DataSource, Ath
   editor = VariableQueryCodeEditor;
 
   query(request: DataQueryRequest<AthenaQuery>): Observable<DataQueryResponse> {
-    // fill query params with default data
-    assign(request.targets, [{ ...defaultQuery, ...request.targets[0], refId: 'A' }]);
+    assign(request.targets, [{ ...request.targets[0], refId: 'A' }]);
     return this.datasource.query(request);
+  }
+
+  getDefaultQuery() {
+    return defaultQuery;
   }
 }

@@ -2,9 +2,9 @@ package driver
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"reflect"
-	"time"
 
 	"github.com/aws/aws-sdk-go/service/athena"
 	"github.com/aws/aws-sdk-go/service/athena/athenaiface"
@@ -18,8 +18,7 @@ type Rows struct {
 
 func NewRows(ctx context.Context, athenaAPI athenaiface.AthenaAPI, queryID string) (*Rows, error) {
 	config := drv.NewNoOpsConfig()
-	config.SetMissingAsEmptyString(false)
-	config.SetMissingAsDefault(true)
+	config.SetMissingAsNil(true)
 	tracer := drv.NewNoOpsObservability()
 	rows, err := drv.NewRows(ctx, athenaAPI, queryID, config, tracer)
 	if err != nil {
@@ -41,27 +40,27 @@ func (r *Rows) ColumnTypeScanType(index int) reflect.Type {
 
 func (r *Rows) athenaTypeOf(columnInfo *athena.ColumnInfo) (reflect.Type, error) {
 	switch *columnInfo.Type {
-	case "tinyint":
-		return reflect.TypeOf(int8(0)), nil
-	case "smallint":
-		return reflect.TypeOf(int16(0)), nil
+	case "tinyint", "smallint":
+		return reflect.TypeOf(sql.NullInt16{}), nil
 	case "integer":
-		return reflect.TypeOf(int32(0)), nil
+		return reflect.TypeOf(sql.NullInt32{}), nil
 	case "bigint":
-		return reflect.TypeOf(int64(0)), nil
-	case "float", "real":
-		return reflect.TypeOf(float32(0)), nil
-	case "double":
-		return reflect.TypeOf(float64(0)), nil
+		return reflect.TypeOf(sql.NullInt64{}), nil
+	case "float", "real", "double":
+		return reflect.TypeOf(sql.NullFloat64{}), nil
 	case "json", "char", "varchar", "varbinary", "row", "string", "binary",
 		"struct", "interval year to month", "interval day to second", "decimal",
 		"ipaddress", "array", "map", "unknown":
-		return reflect.TypeOf(""), nil
+		return reflect.TypeOf(sql.NullString{}), nil
 	case "boolean":
-		return reflect.TypeOf(false), nil
+		return reflect.TypeOf(sql.NullBool{}), nil
 	case "date", "time", "time with time zone", "timestamp", "timestamp with time zone":
-		return reflect.TypeOf(time.Time{}), nil
+		return reflect.TypeOf(sql.NullTime{}), nil
 	default:
 		return nil, fmt.Errorf("unknown column type `%s`", *columnInfo.Type)
 	}
+}
+
+func (r *Rows) ColumnTypeNullable(index int) (nullable, ok bool) {
+	return true, true
 }

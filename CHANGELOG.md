@@ -3,6 +3,7 @@
 ## 2.9.5
 
 - Fix: allow returning nil for missing values https://github.com/grafana/athena-datasource/pull/241
+- Fix: handle expression queries correctly for async queries https://github.com/grafana/athena-datasource/pull/240
 
 ## 2.9.4
 

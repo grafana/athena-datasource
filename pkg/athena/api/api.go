@@ -307,6 +307,9 @@ func (c *API) Columns(ctx aws.Context, options sqlds.Options) ([]string, error) 
 	for _, cat := range out.TableMetadata.Columns {
 		res = append(res, *cat.Name)
 	}
+	for _, par := range out.TableMetadata.PartitionKeys {
+		res = append(res, *par.Name)
+	}
 	return res, nil
 }
 

@@ -18,5 +18,5 @@ jobs:
         with:
           module: './src/module.ts'
           comment-pr: 'no'
-          fail-if-incompatible: 'no'
+          fail-if-incompatible: 'yes'
           targets: '@grafana/data,@grafana/ui,@grafana/runtime,@grafana/e2e-selectors'

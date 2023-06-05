@@ -62,7 +62,8 @@ From https://go.dev/blog/get-familiar-with-workspaces:
 5. `git clone https://github.com/grafana/sqlds`
 6. `go work init ./athena-datasource ./grafana-aws-sdk ./sqlds`
 7. Make modifications in any of these directories and build the backend in `athena-datasource` with `mage` as usual. The changes in these directories will be taken into account.
-8. Symlink `athena-datasource` to your clone of `github.com/grafana/grafana`'s `data/plugins` directory, e.g. `cd <path to your Grafana repo>/github.com/grafana/grafana/data/plugins && ln -s <path to your workspaces>/athena_workspace/athena-datasource athena-datasource`
+
+If you build Grafana locally, you can for example symlink `athena-datasource` to your clone of `github.com/grafana/grafana`'s `data/plugins` directory, e.g. `cd <path to your Grafana repo>/github.com/grafana/grafana/data/plugins && ln -s <path to your workspaces>/athena_workspace/athena-datasource athena-datasource`
 
 ## Build a release for the Athena data source plugin
 

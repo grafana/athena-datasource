@@ -2,6 +2,7 @@
 
 ## 2.9.6
 
+- Fix: include partitions as columns https://github.com/grafana/athena-datasource/pull/244
 - Fix: update go modules to fix column types being treated as strings https://github.com/grafana/athena-datasource/pull/252
 
 ## 2.9.5

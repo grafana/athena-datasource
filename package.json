@@ -1,6 +1,6 @@
 {
   "name": "grafana-athena-datasource",
-  "version": "2.9.5",
+  "version": "2.9.6",
   "description": "Use Amazon Athena with Grafana",
   "scripts": {
     "build": "webpack -c ./.config/webpack/webpack.config.ts --env production",

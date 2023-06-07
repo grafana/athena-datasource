@@ -48,7 +48,7 @@ Make sure you have the following dependencies installed first:
 
 ## Setting up a go workspace
 
-Setting up go workspace can be helpful when making across modules like `grafana-aws-sdk` and `sqlds` and wanting to see those changes in the Athena data source.
+Setting up go workspace can be helpful when making changes across modules like `grafana-aws-sdk` and `sqlds` and wanting to see those changes reflected in the Athena data source.
 
 From https://go.dev/blog/get-familiar-with-workspaces:
 > Workspaces in Go 1.18 let you work on multiple modules simultaneously without having to edit go.mod files for each module. Each module within a workspace is treated as a main module when resolving dependencies.

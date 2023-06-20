@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.10.0
+
+- Upgrade @grafana/aws-sdk to v0.0.47 to support numeric values when applying template variables to SQL queries
+
 ## 2.9.6
 
 - Fix: include partitions as columns https://github.com/grafana/athena-datasource/pull/244

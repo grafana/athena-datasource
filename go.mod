@@ -1,4 +1,4 @@
-module github.com/grafana/athena-datasource
+module github.com/grafana/athena-datasource/v2
 
 go 1.20
 

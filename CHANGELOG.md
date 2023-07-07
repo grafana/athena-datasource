@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.10.1
+
+- Update dependencies and rebuild lockfile
+
 ## 2.10.0
 
 - Upgrade @grafana/aws-sdk to v0.0.47 to support numeric values when applying template variables to SQL queries

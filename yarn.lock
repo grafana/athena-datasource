@@ -1541,10 +1541,10 @@
   dependencies:
     tslib "^2.4.1"
 
-"@grafana/async-query-data@0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@grafana/async-query-data/-/async-query-data-0.1.6.tgz#2de218afba9a08bdece3d906c67fa51d331fb8e2"
-  integrity sha512-KH6JQiM0JPqP6STk4TCRF36DbNrZxwelDLrDr9tvqYXJ6K7T+Q/7+INtsP9XBZjf4I8No1OeJxYeT5iUUYFxag==
+"@grafana/async-query-data@0.1.9":
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/@grafana/async-query-data/-/async-query-data-0.1.9.tgz#f366247a26f5353dc48ab24e1521fa1bed00f528"
+  integrity sha512-qjWNAM2nhTdrdCLBwfhX4jt783k2lqfzptAz1wqQj6E0mJgzGkSKdomdDwU8ZLtokeld/FT5jqzVXTXb3nKScg==
   dependencies:
     tslib "^2.4.1"
 

@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/grafana/athena-datasource/pkg/athena/api"
 	"github.com/grafana/athena-datasource/pkg/athena/driver"
@@ -25,6 +26,7 @@ type athenaQueryArgs struct {
 	Region, Catalog, Database  string
 	ResultReuseEnabled         bool
 	ResultReuseMaxAgeInMinutes int64
+	Updated                    *time.Time
 }
 
 type awsDSClient interface {
@@ -69,6 +71,7 @@ func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings, qu
 	if err != nil {
 		return nil, err
 	}
+	args["updated"] = config.Updated.String()
 
 	// athena datasources require a region to establish a connection, we use a default region if none was provided
 	if args["region"] == "" {
@@ -84,6 +87,7 @@ func (s *AthenaDatasource) GetAsyncDB(config backend.DataSourceInstanceSettings,
 	if err != nil {
 		return nil, err
 	}
+	args["updated"] = config.Updated.String()
 
 	// athena datasources require a region to establish a connection, we use a default region if none was provided
 	if args["region"] == "" {
@@ -99,8 +103,10 @@ func (s *AthenaDatasource) Converters() (sc []sqlutil.Converter) {
 
 func (s *AthenaDatasource) getAPI(ctx context.Context, options sqlds.Options) (*api.API, error) {
 	id := datasource.GetDatasourceID(ctx)
+	// the lastUpdated time makes sure that we don't use a token for a stale version of the datasource
+	lastUpdated := datasource.GetDatasourceLastUpdatedTime(ctx)
 	// we only require region for getting an api, the rest of the options are used per-query
-	args := sqlds.Options{"region": options["region"]}
+	args := sqlds.Options{"region": options["region"], "updated": lastUpdated}
 	res, err := s.awsDS.GetAPI(id, args, models.New, api.New)
 	if err != nil {
 		return nil, err

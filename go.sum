@@ -271,8 +271,8 @@ github.com/gorilla/mux v1.8.0/go.mod h1:DVbg23sWSpFRCP0SfiEN6jmj59UnW/n46BH5rLB7
 github.com/gorilla/websocket v0.0.0-20170926233335-4201258b820c/go.mod h1:E7qHFY5m1UJ88s3WnNqhKjPHQ0heANvMoAMk2YaljkQ=
 github.com/grafana/athenadriver v0.0.0-20230518203225-a81b0073ac84 h1:RorAX08zpt0qpfsV2fOIs0XKvPT1y0I4h6hleFZ13pA=
 github.com/grafana/athenadriver v0.0.0-20230518203225-a81b0073ac84/go.mod h1:RnKD7+9Aup8iuFfhK+I26U+z137IXWeoLaEZDepd0Eg=
-github.com/grafana/grafana-aws-sdk v0.16.1 h1:R/hMtQP7H0+8nWFoIOApaZj0qstmZM+5Pw0rRzk3A3Y=
-github.com/grafana/grafana-aws-sdk v0.16.1/go.mod h1:rCXLYoMpPqF90U7XqgVJ1HIAopFVF0bB3SXBVEJIm3I=
+github.com/grafana/grafana-aws-sdk v0.17.0 h1:KdTyUzMKw8hq+b7Z8nLIEtXFx5eKpuYnLRaKnCJxk74=
+github.com/grafana/grafana-aws-sdk v0.17.0/go.mod h1:rCXLYoMpPqF90U7XqgVJ1HIAopFVF0bB3SXBVEJIm3I=
 github.com/grafana/grafana-plugin-sdk-go v0.94.0/go.mod h1:3VXz4nCv6wH5SfgB3mlW39s+c+LetqSCjFj7xxPC5+M=
 github.com/grafana/grafana-plugin-sdk-go v0.161.0 h1:UjVjRGQ5cuT4Ok30qUeLW2OhQhx9Whuz9Oz/1KsBvVM=
 github.com/grafana/grafana-plugin-sdk-go v0.161.0/go.mod h1:dPhljkVno3Bg/ZYafMrR/BfYjtCRJD2hU2719Nl3QzM=

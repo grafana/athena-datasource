@@ -283,6 +283,10 @@ Async query data support enables an asynchronous query handling flow. With async
 
 To enable async query data support, you need to set feature toggle `athenaAsyncQueryDataSupport` to `true`. See [Configure feature toggles](https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#feature_toggles) for details.
 
+### Async Query Caching
+
+To enable [query caching](https://grafana.com/docs/grafana/latest/administration/data-source-management/#query-caching) for async queries, you need to be on Grafana version 10.1 or above, and to set the feature toggles `useCachingService` and `awsAsyncQueryCaching` to `true`. You'll also need to [configure query caching](https://grafana.com/docs/grafana/latest/administration/data-source-management/#query-caching) for the specific Athena datasource.
+
 ## Query Result Reuse
 
 Query result reuse is a feature that allows Athena to reuse query results from previous queries. You can enable it per query by selecting the `Enabled` checkbox under the `Query result reuse` section in the query editor. Learn more in the [AWS Athena documentation](https://docs.aws.amazon.com/athena/latest/ug/reusing-query-results.html).

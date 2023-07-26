@@ -17,6 +17,7 @@ const (
 	Catalog                    = "catalog"
 	ResultReuseEnabled         = "resultReuseEnabled"
 	ResultReuseMaxAgeInMinutes = "resultReuseMaxAgeInMinutes"
+	Updated                    = "updated"
 )
 
 type AthenaDataSourceSettings struct {

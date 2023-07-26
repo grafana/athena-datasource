@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"testing"
+	"time"
 
 	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 	sqlAPI "github.com/grafana/grafana-aws-sdk/pkg/sql/api"
@@ -42,14 +43,17 @@ func TestConnection(t *testing.T) {
 			awsDS: &mc,
 		}
 
+		updatedTime := time.Now()
 		fakeConfig := backend.DataSourceInstanceSettings{
 			JSONData: json.RawMessage{},
+			Updated:  updatedTime,
 		}
 		fakeQueryArgs := json.RawMessage(`{"test": "thing", "region": ""}`)
 		_, err := ds.Connect(fakeConfig, fakeQueryArgs)
 
 		assert.Nil(t, err)
 		assert.Equal(t, "__default", mc.wasCalledWith["region"])
+		assert.Equal(t, updatedTime.String(), mc.wasCalledWith["updated"])
 	})
 
 	t.Run("it should call getAsyncDB with the default region if none is set", func(t *testing.T) {
@@ -58,14 +62,17 @@ func TestConnection(t *testing.T) {
 			awsDS: &mc,
 		}
 
+		updatedTime := time.Now()
 		fakeConfig := backend.DataSourceInstanceSettings{
 			JSONData: json.RawMessage{},
+			Updated:  updatedTime,
 		}
 		fakeQueryArgs := json.RawMessage(`{"test": "thing", "region": ""}`)
 		_, err := ds.GetAsyncDB(fakeConfig, fakeQueryArgs)
 
 		assert.Nil(t, err)
 		assert.Equal(t, "__default", mc.wasCalledWith["region"])
+		assert.Equal(t, updatedTime.String(), mc.wasCalledWith["updated"])
 	})
 
 	t.Run("it should call getAsyncDB with the resultReuseEnabled option if one is provided", func(t *testing.T) {
@@ -128,5 +135,7 @@ func TestColumns(t *testing.T) {
 
 		assert.Error(t, err, "fake api error", "unexpected error: %v", err)
 		assert.Equal(t, "us-east1", mc.wasCalledWith["region"])
+		// We can not set the config in the context, but we can confirm that updated is being added
+		assert.Equal(t, "", mc.wasCalledWith["updated"])
 	})
 }

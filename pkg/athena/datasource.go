@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"time"
 
 	"github.com/grafana/athena-datasource/pkg/athena/api"
 	"github.com/grafana/athena-datasource/pkg/athena/driver"
@@ -26,7 +25,6 @@ type athenaQueryArgs struct {
 	Region, Catalog, Database  string
 	ResultReuseEnabled         bool
 	ResultReuseMaxAgeInMinutes int64
-	Updated                    *time.Time
 }
 
 type awsDSClient interface {

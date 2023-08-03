@@ -23,7 +23,7 @@
   "author": "Grafana Labs",
   "license": "Apache-2.0",
   "dependencies": {
-    "@grafana/async-query-data": "0.1.9",
+    "@grafana/async-query-data": "0.1.10",
     "@grafana/experimental": "^0.0.2-canary.39"
   },
   "devDependencies": {

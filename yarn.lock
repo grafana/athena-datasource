@@ -1534,17 +1534,17 @@
   dependencies:
     tslib "^2.4.0"
 
+"@grafana/async-query-data@0.1.10":
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/@grafana/async-query-data/-/async-query-data-0.1.10.tgz#0ecf576b0c72d878bb89aee9d913e2605c485e7d"
+  integrity sha512-3BQFtYjhKqP0WDgHFKHUBGzH6BvTg7aAlSG8rSmQVVYq1N+y+22nPUMZ5LbN/tLrHFVxcOCBGQSEwgN5DnK/YA==
+  dependencies:
+    tslib "^2.4.1"
+
 "@grafana/async-query-data@0.1.4":
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/@grafana/async-query-data/-/async-query-data-0.1.4.tgz#ac24e32822a8032dd1ee10ce7dcb8c2e276c58b0"
   integrity sha512-3d7fm2sf5x/+JKTt4T6MSS/veB2J/YGfQp5Ck0Tbqtc5YIoI0p1JY+vFWfCstEHyVd1H0Ep/q/VSxf4VAs9YKQ==
-  dependencies:
-    tslib "^2.4.1"
-
-"@grafana/async-query-data@0.1.9":
-  version "0.1.9"
-  resolved "https://registry.yarnpkg.com/@grafana/async-query-data/-/async-query-data-0.1.9.tgz#f366247a26f5353dc48ab24e1521fa1bed00f528"
-  integrity sha512-qjWNAM2nhTdrdCLBwfhX4jt783k2lqfzptAz1wqQj6E0mJgzGkSKdomdDwU8ZLtokeld/FT5jqzVXTXb3nKScg==
   dependencies:
     tslib "^2.4.1"
 

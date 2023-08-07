@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.10.2
+
+- Upgrade @grafana/aws-sdk to v0.0.48 to use @grafana/runtime instead of grafanaBootData 
+
 ## 2.10.1
 
 - Update dependencies and rebuild lockfile

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.10.2
+
+- Upgrade @grafana/aws-sdk to v0.0.48 to use @grafana/runtime instead of grafanaBootData [#267](https://github.com/grafana/athena-datasource/pull/267)
+- Remove unused updated field from structs [#263](https://github.com/grafana/athena-datasource/pull/263)
+- Fix connection error when changing access and secret key [#262](https://github.com/grafana/athena-datasource/pull/262)
+
 ## 2.10.1
 
 - Update dependencies and rebuild lockfile

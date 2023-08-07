@@ -60,6 +60,7 @@
     "varbinary",
     "varchar",
     "viant",
-    "Workgroups"
+    "Workgroups",
+    "structs"
   ]
 }

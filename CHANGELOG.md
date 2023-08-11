@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.11.0
+
+- Update grafana-aws-sdk to v0.19.0 to add `il-central-1` to opt-in region list
+
 ## 2.10.2
 
 - Upgrade @grafana/aws-sdk to v0.0.48 to use @grafana/runtime instead of grafanaBootData [#267](https://github.com/grafana/athena-datasource/pull/267)

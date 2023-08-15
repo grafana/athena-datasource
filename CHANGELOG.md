@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.10.3
+
+- Upgrade @grafana/async-query-data to reduce minimum query time https://github.com/grafana/athena-datasource/pull/265
+
 ## 2.10.2
 
 - Upgrade @grafana/aws-sdk to v0.0.48 to use @grafana/runtime instead of grafanaBootData [#267](https://github.com/grafana/athena-datasource/pull/267)

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.11.0
+
+- Update grafana-aws-sdk to v0.19.1 to add `il-central-1` to opt-in region list
+
 ## 2.10.3
 
 - Upgrade @grafana/async-query-data to reduce minimum query time https://github.com/grafana/athena-datasource/pull/265

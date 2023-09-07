@@ -20,5 +20,5 @@ jobs:
       - name: Run Commands
         uses: ./actions/commands
         with:
-          token: ${{secrets.ISSUE_COMMANDS_TOKEN}}
+          token: ${{ secrets.GITHUB_TOKEN }}
           configPath: issue_commands

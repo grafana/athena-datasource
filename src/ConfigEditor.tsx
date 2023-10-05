@@ -1,8 +1,8 @@
-import React, { useState, FormEvent } from 'react';
+import React, { FormEvent, useCallback, useEffect, useState } from 'react';
 import { DataSourcePluginOptionsEditorProps, DataSourceSettings, SelectableValue } from '@grafana/data';
 import { AthenaDataSourceOptions, AthenaDataSourceSecureJsonData, AthenaDataSourceSettings, defaultKey } from './types';
 import { getBackendSrv } from '@grafana/runtime';
-import { InlineInput, ConfigSelect, ConnectionConfig } from '@grafana/aws-sdk';
+import { AwsAuthType, ConfigSelect, ConnectionConfig, InlineInput } from '@grafana/aws-sdk';
 import { selectors } from 'tests/selectors';
 
 type Props = DataSourcePluginOptionsEditorProps<AthenaDataSourceOptions, AthenaDataSourceSecureJsonData>;
@@ -13,6 +13,7 @@ export function ConfigEditor(props: Props) {
   const baseURL = `/api/datasources/${props.options.id}`;
   const resourcesURL = `${baseURL}/resources`;
   const [saved, setSaved] = useState(!!props.options.jsonData.defaultRegion);
+  const [externalId, setExternalId] = useState('');
   const saveOptions = async () => {
     if (saved) {
       return;
@@ -51,6 +52,21 @@ export function ConfigEditor(props: Props) {
     return loadedWorkgroups;
   };
 
+  const fetchExternalId = useCallback(async () => {
+    try {
+      const response = await getBackendSrv().post(resourcesURL + '/externalId', {});
+      setExternalId(response.externalId);
+    } catch {
+      setExternalId('');
+    }
+  }, [resourcesURL]);
+
+  useEffect(() => {
+    if (props.options.jsonData.authType === AwsAuthType.GrafanaAssumeRole) {
+      fetchExternalId();
+    }
+  }, [props.options.jsonData.authType, fetchExternalId]);
+
   const onOptionsChange = (options: DataSourceSettings<AthenaDataSourceOptions, AthenaDataSourceSecureJsonData>) => {
     setSaved(false);
     props.onOptionsChange(options);
@@ -80,7 +96,7 @@ export function ConfigEditor(props: Props) {
 
   return (
     <div className="gf-form-group">
-      <ConnectionConfig {...props} onOptionsChange={onOptionsChange} />
+      <ConnectionConfig {...props} onOptionsChange={onOptionsChange} externalId={externalId} />
       <h3>Athena Details</h3>
       <ConfigSelect
         {...props}

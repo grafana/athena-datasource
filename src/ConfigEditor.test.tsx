@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, act, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { ConfigEditor } from './ConfigEditor';
 import { mockDatasourceOptions } from './__mocks__/datasource';
 import { select } from 'react-select-event';

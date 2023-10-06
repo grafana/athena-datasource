@@ -101,7 +101,7 @@ describe('ConfigEditor', () => {
     });
   });
 
-  it('should fetch and display externalId when the authtype is grafana_assume_role', async () => {
+  it('should fetch and display externalId when the auth type is grafana_assume_role', async () => {
     setUpMockBackendServer({
       put: jest.fn().mockResolvedValue({ datasource: {} }),
       post: jest.fn().mockResolvedValue({ externalId: 'fake-external-id' }),

@@ -184,7 +184,7 @@ func TestRoutes_ExternalId(t *testing.T) {
 		require.Equal(t, http.StatusOK, resp.StatusCode)
 		require.Equal(t, `{"externalId":"a fake external id"}`, string(body))
 	})
-	t.Run("it returns an empty string if there is no externalid set in the env", func(t *testing.T) {
+	t.Run("it returns an empty string if there is no external id set in the env", func(t *testing.T) {
 		rh := setupHandler()
 		resp, body, err := hitRoute(rh, "/externalId", []byte{})
 

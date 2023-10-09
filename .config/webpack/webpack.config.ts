@@ -93,7 +93,7 @@ const config = async (env): Promise<Configuration> => ({
       },
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"]
+        use: ['style-loader', 'css-loader'],
       },
       {
         exclude: /(node_modules)/,
@@ -193,6 +193,10 @@ const config = async (env): Promise<Configuration> => ({
     // handle resolving "rootDir" paths
     modules: [path.resolve(process.cwd(), 'src'), 'node_modules'],
     unsafeCache: true,
+    alias: {
+      react: path.resolve('./node_modules/react'),
+      'react-dom': path.resolve('./node_modules/react-dom'),
+    },
   },
 });
 

@@ -25,16 +25,16 @@ describe('ConfigEditor', () => {
     const onChange = jest.fn();
     render(<ConfigEditor {...props} onOptionsChange={onChange} />);
 
-    const selectEl = screen.getByLabelText(selectors.components.ConfigEditor.catalog.input);
-    expect(selectEl).toBeInTheDocument();
+        const selectEl = screen.getByLabelText(selectors.components.ConfigEditor.catalog.input);
+        expect(selectEl).toBeInTheDocument();
 
     await waitFor(() => select(selectEl, resourceName, { container: document.body }));
 
-    expect(onChange).toHaveBeenCalledWith({
-      ...props.options,
-      jsonData: { ...props.options.jsonData, catalog: resourceName },
-    });
-  });
+        expect(onChange).toHaveBeenCalledWith({
+          ...props.options,
+          jsonData: { ...props.options.jsonData, catalog: resourceName },
+        });
+      });
 
   it('should save and request databases', async () => {
     setUpMockBackendServer({
@@ -45,20 +45,20 @@ describe('ConfigEditor', () => {
     const onChange = jest.fn();
     render(<ConfigEditor {...props} onOptionsChange={onChange} />);
 
-    const d = screen.getByTestId(selectors.components.ConfigEditor.database.wrapper);
-    expect(d).toBeInTheDocument();
-    d.click();
+        const d = screen.getByTestId(selectors.components.ConfigEditor.database.wrapper);
+        expect(d).toBeInTheDocument();
+        d.click();
 
-    const selectEl = screen.getByLabelText(selectors.components.ConfigEditor.database.input);
-    expect(selectEl).toBeInTheDocument();
+        const selectEl = screen.getByLabelText(selectors.components.ConfigEditor.database.input);
+        expect(selectEl).toBeInTheDocument();
 
     await waitFor(() => select(selectEl, resourceName, { container: document.body }));
 
-    expect(onChange).toHaveBeenCalledWith({
-      ...props.options,
-      jsonData: { ...props.options.jsonData, database: resourceName },
-    });
-  });
+        expect(onChange).toHaveBeenCalledWith({
+          ...props.options,
+          jsonData: { ...props.options.jsonData, database: resourceName },
+        });
+      });
 
   it('should save and request workgroups', async () => {
     setUpMockBackendServer({
@@ -69,20 +69,20 @@ describe('ConfigEditor', () => {
     const onChange = jest.fn();
     render(<ConfigEditor {...props} onOptionsChange={onChange} />);
 
-    const d = screen.getByTestId(selectors.components.ConfigEditor.workgroup.wrapper);
-    expect(d).toBeInTheDocument();
-    d.click();
+        const d = screen.getByTestId(selectors.components.ConfigEditor.workgroup.wrapper);
+        expect(d).toBeInTheDocument();
+        d.click();
 
-    const selectEl = screen.getByLabelText(selectors.components.ConfigEditor.workgroup.input);
-    expect(selectEl).toBeInTheDocument();
+        const selectEl = screen.getByLabelText(selectors.components.ConfigEditor.workgroup.input);
+        expect(selectEl).toBeInTheDocument();
 
     await waitFor(() => select(selectEl, resourceName, { container: document.body }));
 
-    expect(onChange).toHaveBeenCalledWith({
-      ...props.options,
-      jsonData: { ...props.options.jsonData, workgroup: resourceName },
-    });
-  });
+        expect(onChange).toHaveBeenCalledWith({
+          ...props.options,
+          jsonData: { ...props.options.jsonData, workgroup: resourceName },
+        });
+      });
 
   it('should use an output location', async () => {
     setUpMockBackendServer({

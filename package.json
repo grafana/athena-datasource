@@ -24,7 +24,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@grafana/async-query-data": "0.1.10",
-    "@grafana/experimental": "^0.0.2-canary.39"
+    "@grafana/experimental": "1.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.16.7",
@@ -36,7 +36,7 @@
     "@grafana/eslint-config": "^6.0.1",
     "@grafana/runtime": "9.3.2",
     "@grafana/tsconfig": "^1.2.0-rc1",
-    "@grafana/ui": "9.3.2",
+    "@grafana/ui": "9.4.14",
     "@swc/core": "^1.2.144",
     "@swc/helpers": "^0.3.6",
     "@swc/jest": "^0.2.20",

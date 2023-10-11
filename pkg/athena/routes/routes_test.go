@@ -129,10 +129,11 @@ func TestRoutes(t *testing.T) {
 			expectedCode: http.StatusBadRequest,
 		},
 		{
-			description:  "externalId",
-			route:        "/externalId",
-			reqBody:      []byte{},
-			expectedCode: http.StatusOK,
+			description:    "externalId",
+			route:          "/externalId",
+			reqBody:        []byte{},
+			expectedCode:   http.StatusOK,
+			expectedResult: `{"externalId":""}`,
 		},
 	}
 	for _, tt := range tests {

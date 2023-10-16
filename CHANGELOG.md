@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.12.0
+
+- Add support for Temporary Credentials [#284] https://github.com/grafana/athena-datasource/pull/284
+
 ## 2.11.1
 
 - Update @grafana/aws-sdk to 0.1.2 to fix bug with temporary credentials

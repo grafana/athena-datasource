@@ -91,7 +91,7 @@ export function QueryEditorForm(props: Props) {
                 width={15}
                 label={selectors.components.ConfigEditor.region.input}
                 data-testid={selectors.components.ConfigEditor.region.wrapper}
-                htmlFor="schema"
+                htmlFor="regions"
               >
                 <ResourceSelector
                   id="regions"
@@ -177,7 +177,7 @@ export function QueryEditorForm(props: Props) {
             </EditorFieldGroup>
             {!props.hideOptions && (
               <EditorFieldGroup>
-                <EditorField label="Format dataframes as" htmlFor="formatAs" width={20}>
+                <EditorField label="Format data frames as" htmlFor="formatAs" width={20}>
                   <FormatSelect
                     newFormStylingEnabled={true}
                     id="formatAs"

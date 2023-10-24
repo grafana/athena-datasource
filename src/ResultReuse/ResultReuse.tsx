@@ -1,6 +1,5 @@
 import React from 'react';
-import { Checkbox, Field, InlineField, Input, Switch, useStyles2 } from '@grafana/ui';
-import { css } from '@emotion/css';
+import { Checkbox, InlineField, Input, Switch } from '@grafana/ui';
 import { AthenaQuery, DEFAULT_RESULT_REUSE_ENABLED, DEFAULT_RESULT_REUSE_MAX_AGE_IN_MINUTES } from '../types';
 import { EditorField } from '@grafana/experimental';
 

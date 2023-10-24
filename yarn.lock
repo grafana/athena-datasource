@@ -1775,13 +1775,20 @@
   dependencies:
     tslib "^2.4.1"
 
+<<<<<<< HEAD
 "@grafana/aws-sdk@0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@grafana/aws-sdk/-/aws-sdk-0.2.0.tgz#61baf365680ea868cc1ccbd9d03ee990e1b75968"
   integrity sha512-MxIKKoeRoCgAWAV9IzSOpQW6DQGTitg/ImNrSv/ugq0hRXDFs879vBbIa92qCxQ3f+FbeBx7Dvl2pVo/tZ5DJw==
+=======
+"@grafana/aws-sdk@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@grafana/aws-sdk/-/aws-sdk-0.3.0.tgz#302fb8841ba870eb89a9195fa6fcb891604539ae"
+  integrity sha512-UyldLMZLoUwYg77VD/hqbXkfrtbh2osQT3WNpybtHQwLwa1qCaIQB7yntVBv1g+eevrOFnhItqOJRMJoXxBYEQ==
+>>>>>>> d7aa888 (Fixing types)
   dependencies:
     "@grafana/async-query-data" "0.1.4"
-    "@grafana/experimental" "1.1.0"
+    "@grafana/experimental" "1.7.0"
 
 "@grafana/data@9.4.14":
   version "9.4.14"
@@ -1862,14 +1869,6 @@
     eslint-plugin-react "7.32.2"
     eslint-plugin-react-hooks "4.6.0"
     typescript "4.8.4"
-
-"@grafana/experimental@1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@grafana/experimental/-/experimental-1.1.0.tgz#36b9644b1e61c782ed42b4805c5e297f2cc3f8bf"
-  integrity sha512-pQhYhw+jB7Q+t8rLcd1jcx91BiFDNslBATJkNIgO9I2Bah+ww+2RH1hUGVoJNPL84vW7WRU7w9k/L7FJs7/L6Q==
-  dependencies:
-    "@types/uuid" "^8.3.3"
-    uuid "^8.3.2"
 
 "@grafana/experimental@1.7.0":
   version "1.7.0"

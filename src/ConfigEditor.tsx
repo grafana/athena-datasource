@@ -16,7 +16,7 @@ export function ConfigEditor(props: Props) {
   const resourcesURL = `${baseURL}/resources`;
   const [saved, setSaved] = useState(!!props.options.jsonData.defaultRegion);
   const [externalId, setExternalId] = useState('');
-
+  // @ts-ignore
   const newFormStylingEnabled = config.featureToggles.awsDatasourcesNewFormStyling;
 
   const saveOptions = async () => {
@@ -101,45 +101,65 @@ export function ConfigEditor(props: Props) {
 
   return (
     <div className="width-30">
-      <ConnectionConfig {...props} onOptionsChange={onOptionsChange} newFormStylingEnabled={newFormStylingEnabled}  externalId={externalId}/>
+      <ConnectionConfig
+        {...props}
+        onOptionsChange={onOptionsChange}
+        newFormStylingEnabled={newFormStylingEnabled}
+        externalId={externalId}
+      />
       {newFormStylingEnabled ? (
         <>
           <Divider />
           <ConfigSection title="Athena Details">
-            <ConfigSelect
-              {...props}
-              id="catalog"
-              value={props.options.jsonData.catalog ?? ''}
-              onChange={onChange('catalog')}
-              fetch={fetchCatalogs}
+            <Field
               label={selectors.components.ConfigEditor.catalog.input}
+              htmlFor="catalog"
               data-testid={selectors.components.ConfigEditor.catalog.wrapper}
-              saveOptions={saveOptions}
-              newFormStylingEnabled={true}
-            />
-            <ConfigSelect
-              {...props}
-              id="database"
-              value={props.options.jsonData.database ?? ''}
-              onChange={onChange('database')}
-              fetch={fetchDatabases}
+            >
+              <ConfigSelect
+                {...props}
+                id="catalog"
+                value={props.options.jsonData.catalog ?? ''}
+                onChange={onChange('catalog')}
+                fetch={fetchCatalogs}
+                label={selectors.components.ConfigEditor.catalog.input}
+                saveOptions={saveOptions}
+                newFormStylingEnabled={true}
+              />
+            </Field>
+            <Field
               label={selectors.components.ConfigEditor.database.input}
+              htmlFor="database"
               data-testid={selectors.components.ConfigEditor.database.wrapper}
-              dependencies={[props.options.jsonData.catalog || '']}
-              saveOptions={saveOptions}
-              newFormStylingEnabled={true}
-            />
-            <ConfigSelect
-              {...props}
-              id="workgroup"
-              value={props.options.jsonData.workgroup ?? ''}
-              onChange={onChange('workgroup')}
-              fetch={fetchWorkgroups}
+            >
+              <ConfigSelect
+                {...props}
+                id="database"
+                value={props.options.jsonData.database ?? ''}
+                onChange={onChange('database')}
+                fetch={fetchDatabases}
+                label={selectors.components.ConfigEditor.database.input}
+                dependencies={[props.options.jsonData.catalog || '']}
+                saveOptions={saveOptions}
+                newFormStylingEnabled={true}
+              />
+            </Field>
+            <Field
               label={selectors.components.ConfigEditor.workgroup.input}
+              htmlFor="workgroup"
               data-testid={selectors.components.ConfigEditor.workgroup.wrapper}
-              saveOptions={saveOptions}
-              newFormStylingEnabled={true}
-            />
+            >
+              <ConfigSelect
+                {...props}
+                id="workgroup"
+                value={props.options.jsonData.workgroup ?? ''}
+                onChange={onChange('workgroup')}
+                fetch={fetchWorkgroups}
+                label={selectors.components.ConfigEditor.workgroup.input}
+                saveOptions={saveOptions}
+                newFormStylingEnabled={true}
+              />
+            </Field>
             <Field
               label={selectors.components.ConfigEditor.OutputLocation.input}
               description="Optional. If not specified, the default query result location from the Workgroup configuration will be used."
@@ -161,6 +181,7 @@ export function ConfigEditor(props: Props) {
           <h3>Athena Details</h3>
           <ConfigSelect
             {...props}
+            id="catalog"
             value={props.options.jsonData.catalog ?? ''}
             onChange={onChange('catalog')}
             fetch={fetchCatalogs}
@@ -170,6 +191,7 @@ export function ConfigEditor(props: Props) {
           />
           <ConfigSelect
             {...props}
+            id="database"
             value={props.options.jsonData.database ?? ''}
             onChange={onChange('database')}
             fetch={fetchDatabases}
@@ -180,6 +202,7 @@ export function ConfigEditor(props: Props) {
           />
           <ConfigSelect
             {...props}
+            id="workgroup"
             value={props.options.jsonData.workgroup ?? ''}
             onChange={onChange('workgroup')}
             fetch={fetchWorkgroups}

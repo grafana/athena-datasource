@@ -22,6 +22,7 @@ export function QueryEditorForm(props: Props) {
   const [resultReuseSupported, setResultReuseSupported] = useState(false);
   const styles = useStyles2(getStyles);
 
+  // @ts-ignore
   const newFormStylingEnabled = config.featureToggles.awsDatasourcesNewFormStyling;
   useEffect(() => {
     const getIsResultReuseSupported = async () => {
@@ -119,8 +120,11 @@ export function QueryEditorForm(props: Props) {
                   newFormStylingEnabled
                 />
               </EditorField>
+              </EditorFieldGroup>
+
+              <EditorFieldGroup>
               <EditorField
-                width={15}
+                width={20}
                 label={selectors.components.ConfigEditor.database.input}
                 data-testid={selectors.components.ConfigEditor.database.wrapper}
                 htmlFor="databases"
@@ -137,7 +141,7 @@ export function QueryEditorForm(props: Props) {
                 />
               </EditorField>
               <EditorField
-                width={15}
+                width={20}
                 label={selectors.components.ConfigEditor.table.input}
                 data-testid={selectors.components.ConfigEditor.table.wrapper}
                 tooltip="Use the selected table with the $__table macro"
@@ -154,7 +158,7 @@ export function QueryEditorForm(props: Props) {
                 />
               </EditorField>
               <EditorField
-                width={15}
+                width={20}
                 label={selectors.components.ConfigEditor.column.input}
                 data-testid={selectors.components.ConfigEditor.column.wrapper}
                 tooltip="Use the selected column with the $__column macro"
@@ -162,6 +166,7 @@ export function QueryEditorForm(props: Props) {
               >
                 <ResourceSelector
                   id="columns"
+                  label={selectors.components.ConfigEditor.column.input}
                   onChange={onChange('columns')}
                   fetch={fetchColumns}
                   value={props.query.column || null}
@@ -189,10 +194,10 @@ export function QueryEditorForm(props: Props) {
               <CollapsableSection
                 className={styles.collapse}
                 label={
-                  <h6>
+                  <p className={styles.collapseTitle}>
                     Query result reuse{' '}
                     {!resultReuseSupported && <span className={styles.optional}>(engine version 3 only)</span>}
-                  </h6>
+                  </p>
                 }
                 isOpen={!!props.query.connectionArgs?.resultReuseEnabled}
               >
@@ -296,6 +301,11 @@ const getStyles = (theme: GrafanaTheme2) => ({
     fontSize: 12,
     fontStyle: 'italic',
     color: theme.colors.text.secondary,
+  }),
+  collapseTitle: css({
+    fontSize: 14,
+    fontWeight: 500,
+    marginBottom: 0,
   }),
   collapse: css({
     alignItems: 'flex-start',

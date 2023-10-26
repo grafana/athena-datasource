@@ -16,8 +16,7 @@ const setUpMockBackendServer = (mockBackendSrv: { put: () => void; post: () => v
 };
 
 describe('ConfigEditor', () => {
-  function run(testName: string) {
-    describe(testName, () => {
+  function run() {
       it('should save and request catalogs', async () => {
         setUpMockBackendServer({
           put: jest.fn().mockResolvedValue({ datasource: {} }),
@@ -184,10 +183,18 @@ describe('ConfigEditor', () => {
         expect(screen.queryByText('External Id is currently unavailable')).toBeInTheDocument();
       });
     }
-    )}
-
-  run('QueryEditorForm with awsDatasourcesNewFormStyling disabled');
-  // @ts-ignore
-  runtime.config.featureToggles.awsDatasourcesNewFormStyling = true;
-  run('QueryEditorForm with awsDatasourcesNewFormStyling enabled');
+    describe('ConfigEditor with awsDatasourcesNewFormStyling feature toggle disabled', () => {
+      beforeAll(() => {
+        // @ts-ignore
+        runtime.config.featureToggles.awsDatasourcesNewFormStyling = false;
+      });
+      run();
+    });
+    describe('ConfigEditor with awsDatasourcesNewFormStyling feature toggle enabled', () => {
+      beforeAll(() => {
+        // @ts-ignore
+        runtime.config.featureToggles.awsDatasourcesNewFormStyling = true;
+      });
+      run();
+    });
 });

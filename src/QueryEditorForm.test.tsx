@@ -47,8 +47,7 @@ beforeEach(() => {
 });
 
 describe('QueryEditor', () => {
-  function run(testName: string) {
-    describe(testName, () => {
+  function run() {
       it('should request regions and use a new one', async () => {
         const onChange = jest.fn();
         ds.getResource = jest.fn().mockResolvedValue([ds.defaultRegion, 'foo']);
@@ -177,14 +176,22 @@ describe('QueryEditor', () => {
       it('should display query options by default', async () => {
         render(<QueryEditorForm {...props} />);
         // @ts-ignore
-        const selectEl = screen.getByLabelText(config.featureToggles.awsDatasourcesNewFormStyling ? 'Format data frames as': 'Format as');
+        const selectEl = screen.getByLabelText(config.featureToggles.awsDatasourcesNewFormStyling ? 'Format dataframes as': 'Format as');
         expect(selectEl).toBeInTheDocument();
       });
-    });
   }
-  run('QueryEditorForm with awsDatasourcesNewFormStyling disabled');
-  // @ts-ignore
-  config.featureToggles.awsDatasourcesNewFormStyling = true;
-  run('QueryEditorForm with awsDatasourcesNewFormStyling enabled');
-
+  describe('QueryEditorForm with awsDatasourcesNewFormStyling feature toggle disabled', () => {
+    beforeAll(() => {
+      // @ts-ignore
+      runtime.config.featureToggles.awsDatasourcesNewFormStyling = false;
+    });
+    run();
+  });
+  describe('QueryEditorForm with awsDatasourcesNewFormStyling feature toggle enabled', () => {
+    beforeAll(() => {
+      // @ts-ignore
+      runtime.config.featureToggles.awsDatasourcesNewFormStyling = true;
+    });
+    run();
+  });
 });

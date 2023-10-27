@@ -180,7 +180,7 @@ describe('QueryEditor', () => {
 
       it('should display query options by default', async () => {
         render(<QueryEditorForm {...props} />);
-        const selectEl = screen.getByLabelText(config.featureToggles.awsDatasourcesNewFormStyling ? 'Format dataframes as': 'Format as');
+        const selectEl = screen.getByLabelText(config.featureToggles.awsDatasourcesNewFormStyling ? 'Format data frames as': 'Format as');
         expect(selectEl).toBeInTheDocument();
       });
   }

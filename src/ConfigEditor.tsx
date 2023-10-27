@@ -16,7 +16,6 @@ export function ConfigEditor(props: Props) {
   const resourcesURL = `${baseURL}/resources`;
   const [saved, setSaved] = useState(!!props.options.jsonData.defaultRegion);
   const [externalId, setExternalId] = useState('');
-  // @ts-ignore
   const newFormStylingEnabled = config.featureToggles.awsDatasourcesNewFormStyling;
 
   const saveOptions = async () => {
@@ -163,12 +162,12 @@ export function ConfigEditor(props: Props) {
             <Field
               label={selectors.components.ConfigEditor.OutputLocation.input}
               description="Optional. If not specified, the default query result location from the Workgroup configuration will be used."
-              placeholder="s3://"
               htmlFor="outputLocation"
             >
               <Input
                 {...props}
                 id="outputLocation"
+                placeholder="s3://"
                 value={props.options.jsonData.outputLocation ?? ''}
                 onChange={onChangeOutputLocation}
                 data-testid={selectors.components.ConfigEditor.OutputLocation.wrapper}

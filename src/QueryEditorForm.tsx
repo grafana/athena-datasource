@@ -21,9 +21,8 @@ type QueryProperties = 'regions' | 'catalogs' | 'databases' | 'tables' | 'column
 export function QueryEditorForm(props: Props) {
   const [resultReuseSupported, setResultReuseSupported] = useState(false);
   const styles = useStyles2(getStyles);
-
-  // @ts-ignore
   const newFormStylingEnabled = config.featureToggles.awsDatasourcesNewFormStyling;
+
   useEffect(() => {
     const getIsResultReuseSupported = async () => {
       setResultReuseSupported(await props.datasource.isResultReuseSupported());

@@ -85,6 +85,6 @@ describe('ResultReuse', () => {
       });
     });
   }
-  run('ResultReuse with awsDatasourcesNewFormStyling disabled');
-  run('ResultReuse with awsDatasourcesNewFormStyling enabled');
+  run('ResultReuse with awsDatasourcesNewFormStyling disabled', false);
+  run('ResultReuse with awsDatasourcesNewFormStyling enabled', true);
 });

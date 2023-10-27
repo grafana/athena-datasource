@@ -10,11 +10,14 @@ import userEvent from '@testing-library/user-event';
 
 const resourceName = 'foo';
 const props = mockDatasourceOptions;
+const originalFormFeatureToggleValue = runtime.config.featureToggles.awsDatasourcesNewFormStyling
 
 const setUpMockBackendServer = (mockBackendSrv: { put: () => void; post: () => void }) => {
   jest.spyOn(runtime, 'getBackendSrv').mockImplementation(() => mockBackendSrv as unknown as runtime.BackendSrv);
 };
-
+const cleanup = () => {
+  runtime.config.featureToggles.awsDatasourcesNewFormStyling = originalFormFeatureToggleValue;
+}
 describe('ConfigEditor', () => {
   function run() {
       it('should save and request catalogs', async () => {
@@ -185,16 +188,20 @@ describe('ConfigEditor', () => {
     }
     describe('ConfigEditor with awsDatasourcesNewFormStyling feature toggle disabled', () => {
       beforeAll(() => {
-        // @ts-ignore
         runtime.config.featureToggles.awsDatasourcesNewFormStyling = false;
       });
+      afterAll(() => {
+        cleanup()
+      })
       run();
     });
     describe('ConfigEditor with awsDatasourcesNewFormStyling feature toggle enabled', () => {
       beforeAll(() => {
-        // @ts-ignore
         runtime.config.featureToggles.awsDatasourcesNewFormStyling = true;
       });
+      afterAll(() => {
+        cleanup()
+      })
       run();
     });
 });

@@ -2,6 +2,7 @@ import React from 'react';
 import { Checkbox, InlineField, Input, Switch } from '@grafana/ui';
 import { AthenaQuery, DEFAULT_RESULT_REUSE_ENABLED, DEFAULT_RESULT_REUSE_MAX_AGE_IN_MINUTES } from '../types';
 import { EditorField } from '@grafana/experimental';
+import { css } from '@emotion/css';
 
 interface ResultReuseProps {
   query: AthenaQuery;
@@ -46,7 +47,7 @@ export const ResultReuse = ({ enabled, onChange, query, newFormStylingEnabled }:
   return (
     <>
       {newFormStylingEnabled ? (
-        <div style={{ display: 'flex' }}>
+        <div className={css({display: 'flex'})}>
           <EditorField className="width-5" disabled={!enabled} label="Enable" htmlFor="query-result-reuse-toggle">
             <Switch
               id="query-result-reuse-toggle"

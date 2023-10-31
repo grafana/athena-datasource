@@ -93,7 +93,7 @@ const config = async (env): Promise<Configuration> => ({
       },
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"]
+        use: ['style-loader', 'css-loader'],
       },
       {
         exclude: /(node_modules)/,

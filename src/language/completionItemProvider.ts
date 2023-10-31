@@ -8,7 +8,7 @@ import {
 import { MACROS } from './macros';
 
 interface CompletionProviderGetterArgs {
-  getTables: (d?: string) => Promise<TableDefinition[]>;
+  getTables: (d: TableIdentifier | null) => Promise<TableDefinition[]>;
   getColumns: (table: string) => Promise<ColumnDefinition[]>;
 }
 
@@ -23,7 +23,7 @@ export const getAthenaCompletionProvider: (args: CompletionProviderGetterArgs) =
         resolve: getTables,
       },
       columns: {
-        resolve: (t: TableIdentifier) => getColumns(t.table!),
+        resolve: (t?: TableIdentifier) => getColumns(t?.table ?? ''),
       },
       supportedMacros: () => MACROS,
     };

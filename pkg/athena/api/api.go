@@ -26,7 +26,7 @@ func New(sessionCache *awsds.SessionCache, settings sqlModels.Settings) (api.AWS
 	athenaSettings := settings.(*models.AthenaDataSourceSettings)
 
 	httpClientProvider := sdkhttpclient.NewProvider()
-	httpClientOptions, err := athenaSettings.Config.HTTPClientOptions()
+	httpClientOptions, err := athenaSettings.Config.HTTPClientOptions(context.TODO())
 	if err != nil {
 		backend.Logger.Error("failed to create HTTP client options", "error", err.Error())
 		return nil, err

@@ -2,8 +2,10 @@ package routes
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/grafana/athena-datasource/pkg/athena"
+	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 	"github.com/grafana/grafana-aws-sdk/pkg/sql/routes"
 )
 
@@ -49,10 +51,22 @@ func (r *(AthenaResourceHandler)) workgroupEngineVersion(rw http.ResponseWriter,
 	routes.SendResources(rw, res, err)
 }
 
+type ExternalIdResponse struct {
+	ExternalId string `json:"externalId"`
+}
+
+func (r *AthenaResourceHandler) externalId(rw http.ResponseWriter, req *http.Request) {
+	res := ExternalIdResponse{
+		ExternalId: os.Getenv(awsds.GrafanaAssumeRoleExternalIdKeyName),
+	}
+	routes.SendResources(rw, res, nil)
+}
+
 func (r *AthenaResourceHandler) Routes() map[string]func(http.ResponseWriter, *http.Request) {
 	routes := r.DefaultRoutes()
 	routes["/catalogs"] = r.catalogs
 	routes["/workgroups"] = r.workgroups
 	routes["/workgroupEngineVersion"] = r.workgroupEngineVersion
+	routes["/externalId"] = r.externalId
 	return routes
 }

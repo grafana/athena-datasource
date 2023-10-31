@@ -9,6 +9,8 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/grafana/athena-datasource/pkg/athena/fake"
+	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
+	"github.com/stretchr/testify/require"
 )
 
 var ds = &fake.AthenaFakeDatasource{
@@ -126,6 +128,13 @@ func TestRoutes(t *testing.T) {
 			reqBody:      []byte{},
 			expectedCode: http.StatusBadRequest,
 		},
+		{
+			description:    "externalId",
+			route:          "/externalId",
+			reqBody:        []byte{},
+			expectedCode:   http.StatusOK,
+			expectedResult: `{"externalId":""}`,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.description, func(t *testing.T) {
@@ -148,4 +157,41 @@ func TestRoutes(t *testing.T) {
 			}
 		})
 	}
+}
+
+func setupHandler() AthenaResourceHandler {
+	rh := AthenaResourceHandler{athena: ds}
+	rh.API = ds
+	return rh
+}
+
+func hitRoute(rh AthenaResourceHandler, route string, reqBody []byte) (*http.Response, []byte, error) {
+	req := httptest.NewRequest("GET", route, bytes.NewReader(reqBody))
+	rw := httptest.NewRecorder()
+	rh.Routes()[route](rw, req)
+	resp := rw.Result()
+	body, err := io.ReadAll(resp.Body)
+	return resp, body, err
+}
+func TestRoutes_ExternalId(t *testing.T) {
+
+	t.Run("it returns an externalId if one is set in the env", func(t *testing.T) {
+		t.Setenv(awsds.GrafanaAssumeRoleExternalIdKeyName, "a fake external id")
+
+		rh := setupHandler()
+		resp, body, err := hitRoute(rh, "/externalId", []byte{})
+
+		require.NoError(t, err)
+		require.Equal(t, http.StatusOK, resp.StatusCode)
+		require.Equal(t, `{"externalId":"a fake external id"}`, string(body))
+	})
+	t.Run("it returns an empty string if there is no external id set in the env", func(t *testing.T) {
+		rh := setupHandler()
+		resp, body, err := hitRoute(rh, "/externalId", []byte{})
+
+		require.NoError(t, err)
+		require.Equal(t, http.StatusOK, resp.StatusCode)
+		require.Equal(t, `{"externalId":""}`, string(body))
+	})
+
 }

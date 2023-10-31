@@ -119,9 +119,9 @@ export function QueryEditorForm(props: Props) {
                   newFormStylingEnabled
                 />
               </EditorField>
-              </EditorFieldGroup>
+            </EditorFieldGroup>
 
-              <EditorFieldGroup>
+            <EditorFieldGroup>
               <EditorField
                 width={20}
                 label={selectors.components.ConfigEditor.database.input}
@@ -190,6 +190,7 @@ export function QueryEditorForm(props: Props) {
           </EditorRow>
           <EditorRow>
             <div className={styles.collapseRow}>
+              {/* temporary solution until we have a collapse section compatible with Editor Fields in grafana/ui */}
               <CollapsableSection
                 className={styles.collapse}
                 label={

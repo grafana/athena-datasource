@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.13.0
+
+- Bump google.golang.org/grpc from 1.54.0 to 1.56.3 in [#294] https://github.com/grafana/athena-datasource/pull/294
+- Bump semver from 5.7.1 to 5.7.2 in [#292] https://github.com/grafana/athena-datasource/pull/292
+- Support Node 18 in [#276] https://github.com/grafana/athena-datasource/pull/276
+
 ## 2.12.0
 
 - Add support for Temporary Credentials [#284] https://github.com/grafana/athena-datasource/pull/284

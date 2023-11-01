@@ -27,6 +27,7 @@
     "gtime",
     "httpclient",
     "Iface",
+    "instancemgmt",
     "ipaddress",
     "Joda's",
     "Messagef",

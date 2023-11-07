@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.13.1
+
+-  Bump google.golang.org/grpc from 1.58.2 to 1.58.3 in [#295] https://github.com/grafana/athena-datasource/pull/295
+-  Bump go.opentelemetry.io/contrib/instrumentation/net/http/httptrace/otelhttptrace from 0.37.0 to 0.44.0 in [#290] https://github.com/grafana/athena-datasource/pull/290
+
+
 ## 2.13.0
 
 - Bump google.golang.org/grpc from 1.54.0 to 1.56.3 in [#294] https://github.com/grafana/athena-datasource/pull/294

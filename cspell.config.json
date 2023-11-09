@@ -63,6 +63,10 @@
     "viant",
     "Workgroups",
     "structs",
-    "Collapsable"
+    "Collapsable",
+    "opentelemetry",
+    "httptrace",
+    "otelhttptrace",
+    "Formstyling"
   ]
 }

@@ -67,6 +67,7 @@
     "opentelemetry",
     "httptrace",
     "otelhttptrace",
-    "Formstyling"
+    "Formstyling",
+    "otelgrpc"
   ]
 }

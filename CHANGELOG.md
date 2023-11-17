@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.13.2
+
+* Bump go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc from 0.45.0 to 0.46.0 by @dependabot in https://github.com/grafana/athena-datasource/pull/298
+* Add debug, underscore to resolutions in package.json by @fridgepoet in https://github.com/grafana/athena-datasource/pull/299
+
 ## 2.13.1
 
 -  Bump google.golang.org/grpc from 1.58.2 to 1.58.3 in [#295] https://github.com/grafana/athena-datasource/pull/295

@@ -212,7 +212,7 @@ export function QueryEditorForm(props: Props) {
           </EditorRow>
           <EditorRow>
             <div style={{ width: '100%' }}>
-              <SQLEditor query={props.query} onChange={props.onChange} datasource={props.datasource} />
+              <SQLEditor query={queryWithDefaults} onChange={props.onChange} datasource={props.datasource} />
             </div>
           </EditorRow>
         </EditorRows>

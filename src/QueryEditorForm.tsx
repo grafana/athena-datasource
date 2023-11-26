@@ -38,6 +38,13 @@ export function QueryEditorForm(props: Props) {
     },
   };
 
+  // Populate the props.query with defaults on mount
+  useEffect(() => {
+    props.onChange(queryWithDefaults);
+    // Run only once
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const templateVariables = props.datasource.getVariables();
 
   const fetchRegions = () =>
@@ -212,7 +219,7 @@ export function QueryEditorForm(props: Props) {
           </EditorRow>
           <EditorRow>
             <div style={{ width: '100%' }}>
-              <SQLEditor query={queryWithDefaults} onChange={props.onChange} datasource={props.datasource} />
+              <SQLEditor query={props.query} onChange={props.onChange} datasource={props.datasource} />
             </div>
           </EditorRow>
         </EditorRows>
@@ -288,7 +295,7 @@ export function QueryEditorForm(props: Props) {
           </div>
 
           <div style={{ minWidth: '400px', marginLeft: '10px', flex: 1 }}>
-            <SQLEditor query={queryWithDefaults} onChange={props.onChange} datasource={props.datasource} />
+            <SQLEditor query={props.query} onChange={props.onChange} datasource={props.datasource} />
           </div>
         </InlineSegmentGroup>
       )}

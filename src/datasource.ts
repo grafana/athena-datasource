@@ -103,8 +103,8 @@ export class DataSource extends DatasourceWithAsyncBackend<AthenaQuery, AthenaDa
   query(options: DataQueryRequest<AthenaQuery>): Observable<DataQueryResponse> {
     options = cloneDeep(options);
 
-    const queries = options.targets.filter((item) => item.hide !== true);
-
+    const queries = options.targets.filter((item) => item.hide !== true && item.rawSQL);
+    
     options.targets = this.buildQuery(options, queries);
 
     return super.query(options);

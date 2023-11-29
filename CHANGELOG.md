@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.13.3
+
+* Query Editor improvements: Update query with defaults on mount and filter out empty queries in [#303](https://github.com/grafana/athena-datasource/pull/30)
+
 ## 2.13.2
 
 * Bump go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc from 0.45.0 to 0.46.0 by @dependabot in https://github.com/grafana/athena-datasource/pull/298

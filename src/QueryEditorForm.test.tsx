@@ -5,7 +5,7 @@ import { mockDatasource, mockQuery } from './__mocks__/datasource';
 import '@testing-library/jest-dom';
 import { select } from 'react-select-event';
 import { selectors } from 'tests/selectors';
-import { defaultKey } from 'types';
+import { defaultKey, defaultQuery } from 'types';
 import * as runtime from '@grafana/runtime';
 import * as experimental from '@grafana/experimental';
 import { config } from '@grafana/runtime';
@@ -183,6 +183,10 @@ describe('QueryEditor', () => {
         const selectEl = screen.getByLabelText(config.featureToggles.awsDatasourcesNewFormStyling ? 'Format data frames as': 'Format as');
         expect(selectEl).toBeInTheDocument();
       });
+      it('should update query with defaults on mount', () => {
+        render(<QueryEditorForm {...props} />);
+        expect(props.onChange).toHaveBeenCalledWith({...defaultQuery, ...props.query})
+      })
   }
   describe('QueryEditorForm with awsDatasourcesNewFormStyling feature toggle disabled', () => {
     beforeAll(() => {

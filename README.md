@@ -8,33 +8,42 @@ The Athena data source plugin allows you to query and visualize Athena data metr
 
 This topic explains options, variables, querying, and other options specific to this data source. Refer to [Add a data source](https://grafana.com/docs/grafana/latest/datasources/add-a-data-source/) for instructions on how to add a data source to Grafana.
 
+## Installation
+
+### Grafana Cloud
+
+If you do not have a [Grafana Cloud](https://grafana.com/cloud) account, you can sign up for one [here](https://grafana.com/cloud/grafana).
+
+1. Click on the `Install plugin` button on the [AWS Athena page on Grafana.com](https://grafana.com/grafana/plugins/grafana-athena-datasource/). This will automatically add the plugin to your Grafana instance. It might take up to 30 seconds to install.
+
+2. Login to your Hosted Grafana instance (go to your instances page in your profile): `https://grafana.com/orgs/<yourUserName>/instances` and the AWS Athena data source will be installed.
+
 ## Configure the data source in Grafana
 
-To access data source settings:
+To configure the Athena data source in Grafana, toggle the menu, open **Connections**, then click **Data Sources** and then either
 
-1. Hover your mouse over the **Configuration** (gear) icon.
-1. Click **Data sources**, and then click the AWS Athena data source.
+* click **Add new data source**, and then click the AWS Athena data source, if you do not have the AWS Athena data source or
+* click Athena if you already have the AWS Athena data source.
 
 | Name                         | Description                                                                                                                                                                                                                                                                                                                                                                       |
 | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `Name`                       | The data source name. This is how you refer to the data source in panels and queries.                                                                                                                                                                                                                                                                                             |
 | `Default`                    | Default data source means that it will be pre-selected for new panels.                                                                                                                                                                                                                                                                                                            |
-| `Auth Provider`              | Specify the provider to get credentials.                                                                                                                                                                                                                                                                                                                                          |
-| `Access Key ID`              | If `Access & secret key` is selected, specify the Access Key of the security credentials to use.                                                                                                                                                                                                                                                                                  |
-| `Secret Access Key`          | If `Access & secret key` is selected, specify the Secret Key of the security credentials to use.                                                                                                                                                                                                                                                                                  |
-| `Credentials Profile Name`   | Specify the name of the profile to use (if you use `~/.aws/credentials` file), leave blank for default.                                                                                                                                                                                                                                                                           |
+| `Authentication Provider`    | Specify which AWS Credentials chain to  use.                                                                                                                                                                                                                                                                                                                                          |
 | `Assume Role Arn` (optional) | Specify the ARN of the role to assume.                                                                                                                                                                                                                                                                                                                                            |
 | `External ID` (optional)     | If you are assuming a role in another account, that has been created with an external ID, specify the external ID here.                                                                                                                                                                                                                                                           |
 | `Endpoint` (optional)        | Optionally, specify a custom endpoint for the service.                                                                                                                                                                                                                                                                                                                            |
 | `Default Region`             | Region in which the cluster is deployed.                                                                                                                                                                                                                                                                                                                                          |
-| `Catalog (datasource)`       | Athena catalog. The list of catalogs will be retrieved automatically.                                                                                                                                                                                                                                                                                                             |
+| `Data Source`                | Athena catalog. The list of catalogs will be retrieved automatically.                                                                                                                                                                                                                                                                                                             |
 | `Database`                   | Name of the database within the catalog.                                                                                                                                                                                                                                                                                                                                          |
 | `Workgroup`                  | Workgroup to use.                                                                                                                                                                                                                                                                                                                                                                 |
 | `Output Location`            | AWS S3 bucket to store execution outputs. If not specified, the default query result location from the Workgroup configuration will be used. Please note that if [`Override client-side settings`](https://docs.aws.amazon.com/athena/latest/ug/workgroups-settings-override.html?icmpid=docs_console_unmapped) is enabled in the AWS console, `Output Location` will be ignored. |
 
 ## Authentication
 
-For authentication options and configuration details, see [AWS authentication](https://grafana.com/docs/grafana/next/datasources/aws-cloudwatch/aws-authentication/) topic.
+Open source Grafana enables the 'AWS SDK Default', 'Credentials file', and 'Access and secret key' authentication provider methods by default. Grafana Cloud enables 'Access and secret' by default. See [select an authentication method](https://grafana.com/docs/grafana/next/datasources/aws-cloudwatch/aws-authentication/#select-an-authentication-method) for more details.
+
+For more information about authentication options and configuration details, see [AWS authentication](https://grafana.com/docs/grafana/next/datasources/aws-cloudwatch/aws-authentication/) topic.
 
 ### IAM policies
 

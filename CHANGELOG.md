@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.13.4
+
+* Update README.md: Updates installation, configuration and authentication in [#300](https://github.com/grafana/athena-datasource/pull/300)
+* Bump grafana-aws-sdk from v0.19.1 to v0.19.3 in [#304](https://github.com/grafana/athena-datasource/pull/304)
+
 ## 2.13.3
 
 * Query Editor improvements: Update query with defaults on mount and filter out empty queries in [#303](https://github.com/grafana/athena-datasource/pull/30)

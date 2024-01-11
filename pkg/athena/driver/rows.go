@@ -8,6 +8,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/service/athena"
 	"github.com/aws/aws-sdk-go/service/athena/athenaiface"
+	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	drv "github.com/uber/athenadriver/go"
 )
@@ -39,6 +40,7 @@ func (r *Rows) ColumnTypeScanType(index int) reflect.Type {
 }
 
 func (r *Rows) athenaTypeOf(columnInfo *athena.ColumnInfo) (reflect.Type, error) {
+	backend.Logger.Warn("typeof", "name", columnInfo.Name, "nullable", columnInfo.Nullable)
 	switch *columnInfo.Type {
 	case "tinyint", "smallint":
 		return reflect.TypeOf(sql.NullInt16{}), nil

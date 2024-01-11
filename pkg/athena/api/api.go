@@ -14,7 +14,7 @@ import (
 	sqlModels "github.com/grafana/grafana-aws-sdk/pkg/sql/models"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	sdkhttpclient "github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
-	"github.com/grafana/sqlds/v2"
+	"github.com/grafana/sqlds/v3"
 )
 
 type API struct {
@@ -122,11 +122,11 @@ func (c *API) Status(ctx aws.Context, output *api.ExecuteQueryOutput) (*api.Exec
 }
 
 func (c *API) CancelQuery(ctx context.Context, options sqlds.Options, queryID string) error {
-	return c.Stop(&api.ExecuteQueryOutput{ID: queryID})
+	return c.Stop(ctx, &api.ExecuteQueryOutput{ID: queryID})
 }
 
-func (c *API) Stop(output *api.ExecuteQueryOutput) error {
-	_, err := c.Client.StopQueryExecution(&athena.StopQueryExecutionInput{
+func (c *API) Stop(ctx context.Context, output *api.ExecuteQueryOutput) error {
+	_, err := c.Client.StopQueryExecutionWithContext(ctx, &athena.StopQueryExecutionInput{
 		QueryExecutionId: &output.ID,
 	})
 	if err != nil {

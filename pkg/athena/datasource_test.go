@@ -14,7 +14,7 @@ import (
 	asyncDriver "github.com/grafana/grafana-aws-sdk/pkg/sql/driver/async"
 	sqlModels "github.com/grafana/grafana-aws-sdk/pkg/sql/models"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
-	"github.com/grafana/sqlds/v2"
+	"github.com/grafana/sqlds/v3"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -49,7 +49,7 @@ func TestConnection(t *testing.T) {
 			Updated:  updatedTime,
 		}
 		fakeQueryArgs := json.RawMessage(`{"test": "thing", "region": ""}`)
-		_, err := ds.Connect(fakeConfig, fakeQueryArgs)
+		_, err := ds.Connect(context.Background(), fakeConfig, fakeQueryArgs)
 
 		assert.Nil(t, err)
 		assert.Equal(t, "__default", mc.wasCalledWith["region"])

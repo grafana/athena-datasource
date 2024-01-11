@@ -60,7 +60,7 @@ func (c *conn) QueryStatus(ctx context.Context, queryID string) (awsds.QueryStat
 }
 
 func (c *conn) CancelQuery(ctx context.Context, queryID string) error {
-	return c.api.Stop(&sqlAPI.ExecuteQueryOutput{ID: queryID})
+	return c.api.Stop(ctx, &sqlAPI.ExecuteQueryOutput{ID: queryID})
 
 }
 

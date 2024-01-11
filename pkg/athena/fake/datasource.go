@@ -9,7 +9,7 @@ import (
 	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/data/sqlutil"
-	"github.com/grafana/sqlds/v2"
+	"github.com/grafana/sqlds/v3"
 )
 
 type AthenaFakeDatasource struct {
@@ -22,7 +22,7 @@ type AthenaFakeDatasource struct {
 	ExistingColumns map[string]map[string]map[string]map[string][]string
 }
 
-func (s *AthenaFakeDatasource) Settings(_ backend.DataSourceInstanceSettings) sqlds.DriverSettings {
+func (s *AthenaFakeDatasource) Settings(_ context.Context, _ backend.DataSourceInstanceSettings) sqlds.DriverSettings {
 	return sqlds.DriverSettings{}
 }
 
@@ -30,7 +30,7 @@ func (s *AthenaFakeDatasource) Converters() (sc []sqlutil.Converter) {
 	return sc
 }
 
-func (s *AthenaFakeDatasource) Connect(config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (*sql.DB, error) {
+func (s *AthenaFakeDatasource) Connect(ctx context.Context, config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (*sql.DB, error) {
 	return &sql.DB{}, nil
 }
 

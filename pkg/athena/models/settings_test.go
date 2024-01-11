@@ -6,7 +6,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 	"github.com/grafana/grafana-aws-sdk/pkg/sql/models"
-	"github.com/grafana/sqlds/v2"
+	"github.com/grafana/sqlds/v3"
 )
 
 func TestConnection_getRegionKey(t *testing.T) {

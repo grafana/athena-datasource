@@ -5,6 +5,7 @@ export enum FormatOptions {
   TimeSeries,
   Table,
   Logs,
+  Multi = 4,
 }
 
 export const SelectableFormatOptions: Array<SelectableValue<FormatOptions>> = [
@@ -19,6 +20,10 @@ export const SelectableFormatOptions: Array<SelectableValue<FormatOptions>> = [
   {
     label: 'Logs',
     value: FormatOptions.Logs,
+  },
+  {
+    label: 'Multi',
+    value: FormatOptions.Multi,
   },
 ];
 

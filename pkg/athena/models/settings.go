@@ -8,7 +8,7 @@ import (
 	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 	"github.com/grafana/grafana-aws-sdk/pkg/sql/models"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
-	"github.com/grafana/sqlds/v2"
+	"github.com/grafana/sqlds/v3"
 )
 
 const (

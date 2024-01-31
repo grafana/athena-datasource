@@ -18,7 +18,7 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 	"github.com/grafana/grafana-plugin-sdk-go/data/sqlutil"
-	"github.com/grafana/sqlds/v2"
+	"github.com/grafana/sqlds/v3"
 )
 
 type athenaQueryArgs struct {
@@ -54,7 +54,7 @@ func New() AthenaDatasourceIface {
 	return &AthenaDatasource{awsDS: datasource.New()}
 }
 
-func (s *AthenaDatasource) Settings(_ backend.DataSourceInstanceSettings) sqlds.DriverSettings {
+func (s *AthenaDatasource) Settings(ctx context.Context, _ backend.DataSourceInstanceSettings) sqlds.DriverSettings {
 	return sqlds.DriverSettings{
 		FillMode: &data.FillMissing{
 			Mode: data.FillModeNull,
@@ -63,7 +63,7 @@ func (s *AthenaDatasource) Settings(_ backend.DataSourceInstanceSettings) sqlds.
 }
 
 // Connect opens a sql.DB connection using datasource settings
-func (s *AthenaDatasource) Connect(config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (*sql.DB, error) {
+func (s *AthenaDatasource) Connect(ctx context.Context, config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (*sql.DB, error) {
 	s.awsDS.Init(config)
 	args, err := parseArgs(queryArgs)
 	if err != nil {

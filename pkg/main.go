@@ -25,7 +25,7 @@ func main() {
 	// for an InstanceFactoryFunc in grafana-plugin-sdk-go
 	// TODO: Remove this function and create a NewDatasource method with Context in grafana-aws-sdk, see https://github.com/grafana/oss-plugin-partnerships/issues/648
 	newDatasourceForUpgradedPluginSdk := func(ctx context.Context, settings backend.DataSourceInstanceSettings) (instancemgmt.Instance, error) {
-		return ds.NewDatasource(settings)
+		return ds.NewDatasource(ctx, settings)
 	}
 
 	if err := datasource.Manage(

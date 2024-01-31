@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.13.5
+
+* Update grafana/aws-sdk-go to 0.22.0 in [#309](https://github.com/grafana/athena-datasource/pull/309)
+
 ## 2.13.4
 
 * Update README.md: Updates installation, configuration and authentication in [#300](https://github.com/grafana/athena-datasource/pull/300)

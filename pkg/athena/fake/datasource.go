@@ -22,7 +22,7 @@ type AthenaFakeDatasource struct {
 	ExistingColumns map[string]map[string]map[string]map[string][]string
 }
 
-func (s *AthenaFakeDatasource) Settings(ctx context.Context, _ backend.DataSourceInstanceSettings) sqlds.DriverSettings {
+func (s *AthenaFakeDatasource) Settings(_ context.Context, _ backend.DataSourceInstanceSettings) sqlds.DriverSettings {
 	return sqlds.DriverSettings{}
 }
 
@@ -30,11 +30,11 @@ func (s *AthenaFakeDatasource) Converters() (sc []sqlutil.Converter) {
 	return sc
 }
 
-func (s *AthenaFakeDatasource) Connect(ctx context.Context, config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (*sql.DB, error) {
+func (s *AthenaFakeDatasource) Connect(_ context.Context, _ backend.DataSourceInstanceSettings, _ json.RawMessage) (*sql.DB, error) {
 	return &sql.DB{}, nil
 }
 
-func (s *AthenaFakeDatasource) GetAsyncDB(config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (awsds.AsyncDB, error) {
+func (s *AthenaFakeDatasource) GetAsyncDB(_ backend.DataSourceInstanceSettings, _ json.RawMessage) (awsds.AsyncDB, error) {
 	return nil, nil
 }
 
@@ -42,19 +42,19 @@ func (s *AthenaFakeDatasource) Macros() sqlds.Macros {
 	return sqlds.Macros{}
 }
 
-func (s *AthenaFakeDatasource) Regions(ctx context.Context) ([]string, error) {
+func (s *AthenaFakeDatasource) Regions(_ context.Context) ([]string, error) {
 	return []string{}, nil
 }
 
-func (s *AthenaFakeDatasource) CancelQuery(ctx context.Context, options sqlds.Options, queryID string) error {
+func (s *AthenaFakeDatasource) CancelQuery(_ context.Context, _ sqlds.Options, _ string) error {
 	return nil
 }
 
-func (s *AthenaFakeDatasource) Schemas(ctx context.Context, options sqlds.Options) ([]string, error) {
+func (s *AthenaFakeDatasource) Schemas(_ context.Context, _ sqlds.Options) ([]string, error) {
 	return []string{}, nil
 }
 
-func (s *AthenaFakeDatasource) DataCatalogs(ctx context.Context, options sqlds.Options) ([]string, error) {
+func (s *AthenaFakeDatasource) DataCatalogs(_ context.Context, options sqlds.Options) ([]string, error) {
 	region := options["region"]
 	catalogs := []string{}
 	if _, exists := s.Resources[region]; !exists {
@@ -66,7 +66,7 @@ func (s *AthenaFakeDatasource) DataCatalogs(ctx context.Context, options sqlds.O
 	return catalogs, nil
 }
 
-func (s *AthenaFakeDatasource) Databases(ctx context.Context, options sqlds.Options) ([]string, error) {
+func (s *AthenaFakeDatasource) Databases(_ context.Context, options sqlds.Options) ([]string, error) {
 	region, catalog := options["region"], options["catalog"]
 	if _, exists := s.Resources[region]; !exists {
 		return nil, fmt.Errorf("missing region %s", region)
@@ -77,7 +77,7 @@ func (s *AthenaFakeDatasource) Databases(ctx context.Context, options sqlds.Opti
 	return s.Resources[region][catalog], nil
 }
 
-func (s *AthenaFakeDatasource) Workgroups(ctx context.Context, options sqlds.Options) ([]string, error) {
+func (s *AthenaFakeDatasource) Workgroups(_ context.Context, options sqlds.Options) ([]string, error) {
 	region := options["region"]
 	if _, exists := s.Wg[region]; !exists {
 		return nil, fmt.Errorf("missing region %s", region)
@@ -85,7 +85,7 @@ func (s *AthenaFakeDatasource) Workgroups(ctx context.Context, options sqlds.Opt
 	return s.Wg[region], nil
 }
 
-func (s *AthenaFakeDatasource) WorkgroupEngineVersion(ctx context.Context, options sqlds.Options) (string, error) {
+func (s *AthenaFakeDatasource) WorkgroupEngineVersion(_ context.Context, options sqlds.Options) (string, error) {
 	workgroup := options["workgroup"]
 	if _, exists := s.WgEngineVersion[workgroup]; !exists {
 		return "", fmt.Errorf("missing workgroup %s", workgroup)
@@ -93,12 +93,12 @@ func (s *AthenaFakeDatasource) WorkgroupEngineVersion(ctx context.Context, optio
 	return s.WgEngineVersion[workgroup], nil
 }
 
-func (s *AthenaFakeDatasource) Tables(ctx context.Context, options sqlds.Options) ([]string, error) {
+func (s *AthenaFakeDatasource) Tables(_ context.Context, options sqlds.Options) ([]string, error) {
 	region, catalog, database := options["region"], options["catalog"], options["database"]
 	return s.ExistingTables[region][catalog][database], nil
 }
 
-func (s *AthenaFakeDatasource) Columns(ctx context.Context, options sqlds.Options) ([]string, error) {
+func (s *AthenaFakeDatasource) Columns(_ context.Context, options sqlds.Options) ([]string, error) {
 	region, catalog, database, table := options["region"], options["catalog"], options["database"], options["table"]
 	return s.ExistingColumns[region][catalog][database][table], nil
 }

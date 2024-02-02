@@ -54,7 +54,7 @@ func New() AthenaDatasourceIface {
 	return &AthenaDatasource{awsDS: datasource.New()}
 }
 
-func (s *AthenaDatasource) Settings(ctx context.Context, _ backend.DataSourceInstanceSettings) sqlds.DriverSettings {
+func (s *AthenaDatasource) Settings(_ context.Context, _ backend.DataSourceInstanceSettings) sqlds.DriverSettings {
 	return sqlds.DriverSettings{
 		FillMode: &data.FillMissing{
 			Mode: data.FillModeNull,
@@ -63,7 +63,7 @@ func (s *AthenaDatasource) Settings(ctx context.Context, _ backend.DataSourceIns
 }
 
 // Connect opens a sql.DB connection using datasource settings
-func (s *AthenaDatasource) Connect(ctx context.Context, config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (*sql.DB, error) {
+func (s *AthenaDatasource) Connect(_ context.Context, config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (*sql.DB, error) {
 	s.awsDS.Init(config)
 	args, err := parseArgs(queryArgs)
 	if err != nil {
@@ -120,7 +120,7 @@ func (s *AthenaDatasource) CancelQuery(ctx context.Context, options sqlds.Option
 	return api.CancelQuery(ctx, options, queryID)
 }
 
-func (s *AthenaDatasource) Schemas(ctx context.Context, options sqlds.Options) ([]string, error) {
+func (s *AthenaDatasource) Schemas(_ context.Context, options sqlds.Options) ([]string, error) {
 	// Athena uses an approach known as schema-on-read
 	// Ref: https://docs.aws.amazon.com/athena/latest/ug/creating-tables.html
 	return []string{}, nil

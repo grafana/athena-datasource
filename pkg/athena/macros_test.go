@@ -5,7 +5,8 @@ import (
 	"time"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
-	"github.com/grafana/sqlds/v2"
+	"github.com/grafana/grafana-plugin-sdk-go/data/sqlutil"
+	"github.com/grafana/sqlds/v3"
 	"github.com/pkg/errors"
 )
 
@@ -13,7 +14,7 @@ func Test_macros(t *testing.T) {
 	tests := []struct {
 		description string
 		macro       string
-		query       *sqlds.Query
+		query       *sqlutil.Query
 		args        []string
 		expected    string
 		expectedErr error
@@ -21,7 +22,7 @@ func Test_macros(t *testing.T) {
 		{
 			"time group",
 			"timeGroup",
-			&sqlds.Query{},
+			&sqlutil.Query{},
 			[]string{"starttime", "'1m'"},
 			`FROM_UNIXTIME(FLOOR(TO_UNIXTIME(starttime)/60)*60)`,
 			nil,
@@ -29,7 +30,7 @@ func Test_macros(t *testing.T) {
 		{
 			"time group parsing time",
 			"timeGroup",
-			&sqlds.Query{},
+			&sqlutil.Query{},
 			[]string{"starttime", "'1m'", "'yyyy-MM-dd HH:mm:ss'"},
 			`FROM_UNIXTIME(FLOOR(TO_UNIXTIME(TIMESTAMP starttime)/60)*60)`,
 			nil,
@@ -37,7 +38,7 @@ func Test_macros(t *testing.T) {
 		{
 			"time group parsing custom time",
 			"timeGroup",
-			&sqlds.Query{},
+			&sqlutil.Query{},
 			[]string{"starttime", "'1m'", "'yyyy-MM-dd'T'HH:mm:ss''Z'"},
 			`FROM_UNIXTIME(FLOOR(TO_UNIXTIME(parse_datetime(starttime,'yyyy-MM-dd'T'HH:mm:ss''Z'))/60)*60)`,
 			nil,
@@ -45,7 +46,7 @@ func Test_macros(t *testing.T) {
 		{
 			"wrong args for time group",
 			"timeGroup",
-			&sqlds.Query{},
+			&sqlutil.Query{},
 			[]string{},
 			"",
 			sqlds.ErrorBadArgumentCount,
@@ -53,7 +54,7 @@ func Test_macros(t *testing.T) {
 		{
 			"parse time",
 			"parseTime",
-			&sqlds.Query{},
+			&sqlutil.Query{},
 			[]string{"starttime", "'yyyy-MM-dd HH:mm:ss'"},
 			`TIMESTAMP starttime`,
 			nil,
@@ -61,7 +62,7 @@ func Test_macros(t *testing.T) {
 		{
 			"time filter without format",
 			"timeFilter",
-			&sqlds.Query{
+			&sqlutil.Query{
 				TimeRange: backend.TimeRange{
 					From: time.Date(2021, 6, 23, 0, 0, 0, 0, &time.Location{}),
 					To:   time.Date(2021, 6, 23, 1, 0, 0, 0, &time.Location{}),
@@ -74,7 +75,7 @@ func Test_macros(t *testing.T) {
 		{
 			"time filter with default format",
 			"timeFilter",
-			&sqlds.Query{
+			&sqlutil.Query{
 				TimeRange: backend.TimeRange{
 					From: time.Date(2021, 6, 23, 0, 0, 0, 0, &time.Location{}),
 					To:   time.Date(2021, 6, 23, 1, 0, 0, 0, &time.Location{}),
@@ -87,7 +88,7 @@ func Test_macros(t *testing.T) {
 		{
 			"time filter with a custom format",
 			"timeFilter",
-			&sqlds.Query{
+			&sqlutil.Query{
 				TimeRange: backend.TimeRange{
 					From: time.Date(2021, 6, 23, 0, 0, 0, 0, &time.Location{}),
 					To:   time.Date(2021, 6, 23, 1, 0, 0, 0, &time.Location{}),
@@ -100,7 +101,7 @@ func Test_macros(t *testing.T) {
 		{
 			"wrong args for time filter",
 			"timeFilter",
-			&sqlds.Query{},
+			&sqlutil.Query{},
 			[]string{},
 			"",
 			sqlds.ErrorBadArgumentCount,
@@ -108,7 +109,7 @@ func Test_macros(t *testing.T) {
 		{
 			"raw time from",
 			"rawTimeFrom",
-			&sqlds.Query{
+			&sqlutil.Query{
 				TimeRange: backend.TimeRange{
 					From: time.Date(2021, 6, 23, 0, 0, 0, 0, &time.Location{}),
 					To:   time.Date(2021, 6, 23, 1, 0, 0, 0, &time.Location{}),
@@ -121,7 +122,7 @@ func Test_macros(t *testing.T) {
 		{
 			"time from filter",
 			"timeFrom",
-			&sqlds.Query{
+			&sqlutil.Query{
 				TimeRange: backend.TimeRange{
 					From: time.Date(2021, 6, 23, 0, 0, 0, 0, &time.Location{}),
 					To:   time.Date(2021, 6, 23, 1, 0, 0, 0, &time.Location{}),
@@ -134,7 +135,7 @@ func Test_macros(t *testing.T) {
 		{
 			"raw time to",
 			"rawTimeTo",
-			&sqlds.Query{
+			&sqlutil.Query{
 				TimeRange: backend.TimeRange{
 					From: time.Date(2021, 6, 23, 0, 0, 0, 0, &time.Location{}),
 					To:   time.Date(2021, 6, 23, 1, 0, 0, 0, &time.Location{}),
@@ -147,7 +148,7 @@ func Test_macros(t *testing.T) {
 		{
 			"time to filter",
 			"timeTo",
-			&sqlds.Query{
+			&sqlutil.Query{
 				TimeRange: backend.TimeRange{
 					From: time.Date(2021, 6, 23, 0, 0, 0, 0, &time.Location{}),
 					To:   time.Date(2021, 6, 23, 1, 0, 0, 0, &time.Location{}),
@@ -160,7 +161,7 @@ func Test_macros(t *testing.T) {
 		{
 			"unix time filter",
 			"unixEpochFilter",
-			&sqlds.Query{
+			&sqlutil.Query{
 				TimeRange: backend.TimeRange{
 					From: time.Date(2021, 6, 23, 0, 0, 0, 0, &time.Location{}),
 					To:   time.Date(2021, 6, 23, 1, 0, 0, 0, &time.Location{}),
@@ -173,7 +174,7 @@ func Test_macros(t *testing.T) {
 		{
 			"unix time group filter",
 			"unixEpochGroup",
-			&sqlds.Query{
+			&sqlutil.Query{
 				TimeRange: backend.TimeRange{
 					From: time.Date(2021, 6, 23, 0, 0, 0, 0, &time.Location{}),
 					To:   time.Date(2021, 6, 23, 1, 0, 0, 0, &time.Location{}),

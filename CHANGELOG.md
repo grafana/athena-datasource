@@ -1,24 +1,28 @@
 # Changelog
 
+## 2.13.5
+
+- Update grafana-aws-sdk from v0.19.3 to v0.23.0 and sqlds from v2.3.10 to v3.2.0 in [#310](https://github.com/grafana/athena-datasource/pull/310)
+- Update @grafana/async-query-data from 0.1.10 to 0.1.11 in [#311](https://github.com/grafana/athena-datasource/pull/311)
+
 ## 2.13.4
 
-* Update README.md: Updates installation, configuration and authentication in [#300](https://github.com/grafana/athena-datasource/pull/300)
-* Bump grafana-aws-sdk from v0.19.1 to v0.19.3 in [#304](https://github.com/grafana/athena-datasource/pull/304)
+- Update README.md: Updates installation, configuration and authentication in [#300](https://github.com/grafana/athena-datasource/pull/300)
+- Bump grafana-aws-sdk from v0.19.1 to v0.19.3 in [#304](https://github.com/grafana/athena-datasource/pull/304)
 
 ## 2.13.3
 
-* Query Editor improvements: Update query with defaults on mount and filter out empty queries in [#303](https://github.com/grafana/athena-datasource/pull/30)
+- Query Editor improvements: Update query with defaults on mount and filter out empty queries in [#303](https://github.com/grafana/athena-datasource/pull/30)
 
 ## 2.13.2
 
-* Bump go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc from 0.45.0 to 0.46.0 by @dependabot in https://github.com/grafana/athena-datasource/pull/298
-* Add debug, underscore to resolutions in package.json by @fridgepoet in https://github.com/grafana/athena-datasource/pull/299
+- Bump go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc from 0.45.0 to 0.46.0 by @dependabot in https://github.com/grafana/athena-datasource/pull/298
+- Add debug, underscore to resolutions in package.json by @fridgepoet in https://github.com/grafana/athena-datasource/pull/299
 
 ## 2.13.1
 
--  Bump google.golang.org/grpc from 1.58.2 to 1.58.3 in [#295] https://github.com/grafana/athena-datasource/pull/295
--  Bump go.opentelemetry.io/contrib/instrumentation/net/http/httptrace/otelhttptrace from 0.37.0 to 0.44.0 in [#290] https://github.com/grafana/athena-datasource/pull/290
-
+- Bump google.golang.org/grpc from 1.58.2 to 1.58.3 in [#295] https://github.com/grafana/athena-datasource/pull/295
+- Bump go.opentelemetry.io/contrib/instrumentation/net/http/httptrace/otelhttptrace from 0.37.0 to 0.44.0 in [#290] https://github.com/grafana/athena-datasource/pull/290
 
 ## 2.13.0
 

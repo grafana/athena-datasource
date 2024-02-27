@@ -40,7 +40,7 @@ func (r *AthenaResourceHandler) workgroups(rw http.ResponseWriter, req *http.Req
 	routes.SendResources(rw, res, err)
 }
 
-func (r *(AthenaResourceHandler)) workgroupEngineVersion(rw http.ResponseWriter, req *http.Request) {
+func (r *AthenaResourceHandler) workgroupEngineVersion(rw http.ResponseWriter, req *http.Request) {
 	reqBody, err := routes.ParseBody(req.Body)
 	if err != nil {
 		rw.WriteHeader(http.StatusBadRequest)

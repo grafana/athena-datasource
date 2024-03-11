@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.13.6
+- Fix: Rebuild the datasource when settings change in [#314](https://github.com/grafana/athena-datasource/pull/314)
+- Bring in [security fixes in go 1.21.8](https://groups.google.com/g/golang-announce/c/5pwGVUPoMbg)
+- Remove outdated release instructions from CONTRIBUTING.md
+
 ## 2.13.5
 
 - Update grafana-aws-sdk from v0.19.3 to v0.23.0 and sqlds from v2.3.10 to v3.2.0 in [#310](https://github.com/grafana/athena-datasource/pull/310)

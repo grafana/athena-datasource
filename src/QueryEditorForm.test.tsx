@@ -29,7 +29,6 @@ jest.mock('@grafana/runtime', () => ({
   ...jest.requireActual<typeof runtime>('@grafana/runtime'),
   config: {
     featureToggles: {
-      athenaAsyncQueryDataSupport: true,
       awsDatasourcesNewFormStyling: false,
     },
   },

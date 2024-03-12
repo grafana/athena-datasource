@@ -1,5 +1,5 @@
 import { DataQueryRequest, DataQueryResponse, DataSourceInstanceSettings, ScopedVars } from '@grafana/data';
-import { config, getTemplateSrv, TemplateSrv } from '@grafana/runtime';
+import { getTemplateSrv, TemplateSrv } from '@grafana/runtime';
 import { AthenaDataSourceOptions, AthenaQuery } from './types';
 import { AthenaVariableSupport } from './variables';
 import { filterSQLQuery, applySQLTemplateVariables } from '@grafana/aws-sdk';
@@ -19,7 +19,7 @@ export class DataSource extends DatasourceWithAsyncBackend<AthenaQuery, AthenaDa
     instanceSettings: DataSourceInstanceSettings<AthenaDataSourceOptions>,
     private readonly templateSrv: TemplateSrv = getTemplateSrv()
   ) {
-    super(instanceSettings, config.featureToggles.athenaAsyncQueryDataSupport);
+    super(instanceSettings);
     this.defaultRegion = instanceSettings.jsonData.defaultRegion || '';
     this.defaultCatalog = instanceSettings.jsonData.catalog || '';
     this.defaultDatabase = instanceSettings.jsonData.database || '';

@@ -12,7 +12,7 @@ export function QueryEditor(props: QueryEditorProps<DataSource, AthenaQuery, Ath
         <QueryEditorHeader<DataSource, AthenaQuery, AthenaDataSourceOptions>
           {...props}
           enableRunButton={!!props.query.rawSQL}
-          showAsyncQueryButtons={true}
+          showAsyncQueryButtons
           cancel={props.datasource.cancel}
         />
       )}

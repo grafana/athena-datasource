@@ -1,5 +1,6 @@
 import { DataQueryRequest, DataSourceInstanceSettings, dateTime } from '@grafana/data';
 import * as runtime from '@grafana/runtime';
+import { DatasourceWithAsyncBackend } from '@grafana/async-query-data';
 import { AthenaDataSourceOptions, AthenaQuery, FormatOptions } from 'types';
 import { of } from 'rxjs';
 
@@ -189,10 +190,11 @@ describe('AthenaDatasource', () => {
       expect(queries[0].connectionArgs.region).toEqual('replaced');
     });
   });
+
   it('should not run query if query is empty', async () => {
     const mockedSuperQuery = jest
-      .spyOn(runtime.DataSourceWithBackend.prototype, 'query')
-      .mockImplementation((request: DataQueryRequest<AthenaQuery>) => of());
+      .spyOn(DatasourceWithAsyncBackend.prototype, 'query')
+      .mockImplementation((_: DataQueryRequest<AthenaQuery>) => of({ data: [] }));
 
     const request = { ...queryRequest, targets: [{ ...defaultQuery, rawSQL: '' }] };
     ctx.ds.query(request);

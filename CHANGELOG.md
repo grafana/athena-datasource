@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.14.0
+- Remove the athenaAsyncQuerySupport feature toggle + styling improvements in [#316](https://github.com/grafana/athena-datasource/pull/316)
+
 ## 2.13.6
 - Fix: Rebuild the datasource when settings change in [#314](https://github.com/grafana/athena-datasource/pull/314)
 - Bring in [security fixes in go 1.21.8](https://groups.google.com/g/golang-announce/c/5pwGVUPoMbg)

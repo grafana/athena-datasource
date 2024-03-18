@@ -194,7 +194,7 @@ describe('AthenaDatasource', () => {
   it('should not run query if query is empty', async () => {
     const mockedSuperQuery = jest
       .spyOn(DatasourceWithAsyncBackend.prototype, 'query')
-      .mockImplementation((_: DataQueryRequest<AthenaQuery>) => of({ data: [] }));
+      .mockImplementation(() => of({ data: [] }));
 
     const request = { ...queryRequest, targets: [{ ...defaultQuery, rawSQL: '' }] };
     ctx.ds.query(request);

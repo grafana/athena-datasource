@@ -1,11 +1,12 @@
 import React, { FormEvent, useCallback, useEffect, useState } from 'react';
-import { DataSourcePluginOptionsEditorProps, DataSourceSettings, SelectableValue } from '@grafana/data';
+import { DataSourcePluginOptionsEditorProps, DataSourceSettings, GrafanaTheme2, SelectableValue } from '@grafana/data';
 import { AthenaDataSourceOptions, AthenaDataSourceSecureJsonData, AthenaDataSourceSettings, defaultKey } from './types';
 import { config, getBackendSrv } from '@grafana/runtime';
 import { AwsAuthType, ConfigSelect, ConnectionConfig, Divider, InlineInput } from '@grafana/aws-sdk';
 import { selectors } from 'tests/selectors';
 import { ConfigSection } from '@grafana/experimental';
-import { Field, Input } from '@grafana/ui';
+import { Field, Input, useStyles2 } from '@grafana/ui';
+import { css } from '@emotion/css';
 
 type Props = DataSourcePluginOptionsEditorProps<AthenaDataSourceOptions, AthenaDataSourceSecureJsonData>;
 
@@ -17,7 +18,8 @@ export function ConfigEditor(props: Props) {
   const [saved, setSaved] = useState(!!props.options.jsonData.defaultRegion);
   const [externalId, setExternalId] = useState('');
   const newFormStylingEnabled = config.featureToggles.awsDatasourcesNewFormStyling;
-
+  const styles = useStyles2(getStyles);
+  
   const saveOptions = async () => {
     if (saved) {
       return;
@@ -99,7 +101,7 @@ export function ConfigEditor(props: Props) {
   };
 
   return (
-    <div className="width-30">
+    <div className={styles.formStyles}>
       <ConnectionConfig
         {...props}
         onOptionsChange={onOptionsChange}
@@ -223,3 +225,9 @@ export function ConfigEditor(props: Props) {
     </div>
   );
 }
+
+const getStyles = (theme: GrafanaTheme2) => ({
+  formStyles: css({
+    maxWidth: theme.spacing(50),
+  }),
+});

@@ -1,0 +1,52 @@
+{
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
+  "type": "datasource",
+  "name": "Amazon Athena",
+  "id": "grafana-athena-datasource",
+  "metrics": true,
+  "backend": true,
+  "executable": "gpx_athena",
+  "alerting": true,
+  "annotations": true,
+  "includes": [
+    {
+      "type": "dashboard",
+      "name": "Cost Usage Report Monitoring",
+      "path": "dashboards/cur-monitoring.json"
+    },
+    {
+      "type": "dashboard",
+      "name": "Amazon VPC Flow Logs",
+      "path": "dashboards/vpc-flow-logs.json"
+    }
+  ],
+  "info": {
+    "description": "Use Amazon Athena with Grafana",
+    "author": {
+      "name": "Grafana Labs",
+      "url": "https://grafana.com"
+    },
+    "keywords": ["datasource", "athena", "aws", "cloud provider", "logs", "sql"],
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "links": [
+      {
+        "name": "Website",
+        "url": "https://github.com/grafana/athena-datasource"
+      },
+      {
+        "name": "License",
+        "url": "https://github.com/grafana/athena-datasource/blob/master/LICENSE"
+      }
+    ],
+    "screenshots": [],
+    "version": "2.14.1",
+    "updated": "2024-04-16"
+  },
+  "dependencies": {
+    "grafanaDependency": ">=8.0.0",
+    "plugins": []
+  }
+}

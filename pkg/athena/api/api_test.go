@@ -15,7 +15,7 @@ import (
 func TestConnection_Execute(t *testing.T) {
 	expectedID := "foo"
 	c := NewFake(&athenaclientmock.MockAthenaClient{}, &models.AthenaDataSourceSettings{})
-	out, err := c.Execute(context.TODO(), &api.ExecuteQueryInput{Query: expectedID})
+	out, err := c.Execute(context.Background(), &api.ExecuteQueryInput{Query: expectedID})
 	assert.Nil(t, err)
 	assert.Equal(t, expectedID, out.ID)
 }
@@ -23,7 +23,7 @@ func TestConnection_Execute(t *testing.T) {
 func TestConnection_Execute_ResultReuseNotEnabledAndMaxAgeInMinutesProvidedDoesNotThrowError(t *testing.T) {
 	expectedID := "foo"
 	c := NewFake(&athenaclientmock.MockAthenaClient{}, &models.AthenaDataSourceSettings{ResultReuseEnabled: false, ResultReuseMaxAgeInMinutes: 60})
-	out, err := c.Execute(context.TODO(), &api.ExecuteQueryInput{Query: expectedID})
+	out, err := c.Execute(context.Background(), &api.ExecuteQueryInput{Query: expectedID})
 	assert.Nil(t, err)
 	assert.Equal(t, expectedID, out.ID)
 }
@@ -60,7 +60,7 @@ func Test_Status(t *testing.T) {
 					CalledTimesCountDown: tt.calledTimesCountDown,
 				},
 			}
-			status, err := c.Status(context.TODO(), &api.ExecuteQueryOutput{ID: tt.status})
+			status, err := c.Status(context.Background(), &api.ExecuteQueryOutput{ID: tt.status})
 			if err != nil && tt.status == "" {
 				t.Errorf("unexpected error %v", err)
 			}
@@ -74,7 +74,7 @@ func Test_Status(t *testing.T) {
 func TestConnection_ListDataCatalogs(t *testing.T) {
 	expectedCatalogs := []string{"foo"}
 	c := &API{Client: &athenaclientmock.MockAthenaClient{Catalogs: expectedCatalogs}}
-	catalogs, err := c.DataCatalogs(context.TODO())
+	catalogs, err := c.DataCatalogs(context.Background())
 	if err != nil {
 		t.Fatalf("unexpected error %v", err)
 	}
@@ -86,7 +86,7 @@ func TestConnection_ListDataCatalogs(t *testing.T) {
 func TestConnection_ListDatabases(t *testing.T) {
 	expected := []string{"foo"}
 	c := &API{Client: &athenaclientmock.MockAthenaClient{Databases: expected}}
-	res, err := c.Databases(context.TODO(), sqlds.Options{})
+	res, err := c.Databases(context.Background(), sqlds.Options{})
 	if err != nil {
 		t.Fatalf("unexpected error %v", err)
 	}
@@ -98,7 +98,7 @@ func TestConnection_ListDatabases(t *testing.T) {
 func TestConnection_ListWorkgroups(t *testing.T) {
 	expected := []string{"foo"}
 	c := &API{Client: &athenaclientmock.MockAthenaClient{Workgroups: expected}}
-	res, err := c.Workgroups(context.TODO())
+	res, err := c.Workgroups(context.Background())
 	if err != nil {
 		t.Fatalf("unexpected error %v", err)
 	}
@@ -110,7 +110,7 @@ func TestConnection_ListWorkgroups(t *testing.T) {
 func TestConnection_GetWorkgroupVersion(t *testing.T) {
 	expected := "Athena engine version 3"
 	c := &API{Client: &athenaclientmock.MockAthenaClient{WorkgroupEngineVersion: expected}}
-	res, err := c.WorkgroupEngineVersion(context.TODO(), sqlds.Options{"workgroup": "workgroup"})
+	res, err := c.WorkgroupEngineVersion(context.Background(), sqlds.Options{"workgroup": "workgroup"})
 	if err != nil {
 		t.Fatalf("unexpected error %v", err)
 	}
@@ -122,7 +122,7 @@ func TestConnection_GetWorkgroupVersion(t *testing.T) {
 func TestConnection_ListTables(t *testing.T) {
 	expected := []string{"foo"}
 	c := &API{Client: &athenaclientmock.MockAthenaClient{TableMetadataList: expected}}
-	res, err := c.Tables(context.TODO(), sqlds.Options{"catalog": "catalog", "database": "database"})
+	res, err := c.Tables(context.Background(), sqlds.Options{"catalog": "catalog", "database": "database"})
 	if err != nil {
 		t.Fatalf("unexpected error %v", err)
 	}
@@ -134,7 +134,7 @@ func TestConnection_ListTables(t *testing.T) {
 func TestConnection_ListColumnsForTable(t *testing.T) {
 	expected := []string{"foo"}
 	c := &API{Client: &athenaclientmock.MockAthenaClient{Columns: expected}}
-	res, err := c.Columns(context.TODO(), sqlds.Options{
+	res, err := c.Columns(context.Background(), sqlds.Options{
 		"catalog":  "catalog",
 		"database": "database",
 		"table":    "table",

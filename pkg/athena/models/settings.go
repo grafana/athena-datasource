@@ -1,6 +1,7 @@
 package models
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"strconv"
@@ -30,7 +31,7 @@ type AthenaDataSourceSettings struct {
 	ResultReuseMaxAgeInMinutes int64  `json:"ResultReuseMaxAgeInMinutes"`
 }
 
-func New() models.Settings {
+func New(_ context.Context) models.Settings {
 	return &AthenaDataSourceSettings{}
 }
 

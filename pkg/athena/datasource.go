@@ -44,6 +44,8 @@ type AthenaDatasourceIface interface {
 	Columns(ctx context.Context, options sqlds.Options) ([]string, error)
 }
 
+// Loader fulfills the datasource.Loader interface from grafana-aws-sdk. This
+// replaces the former approach of passing around functions.
 type Loader struct{}
 
 func (l Loader) LoadSettings(ctx context.Context) sqlModels.Settings {
@@ -55,6 +57,7 @@ func (l Loader) LoadAPI(ctx context.Context, cache *awsds.SessionCache, settings
 }
 
 func (l Loader) LoadDriver(ctx context.Context, awsapi sqlAPI.AWSAPI) (awsDriver.Driver, error) {
+	// The async driver serves both functions
 	return driver.New(ctx, awsapi)
 }
 

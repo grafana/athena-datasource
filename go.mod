@@ -4,12 +4,10 @@ go 1.21
 
 toolchain go1.21.0
 
-replace github.com/grafana/grafana-aws-sdk => github.com/grafana/grafana-aws-sdk v0.25.2-0.20240521134039-65047541bce5
-
 require (
 	github.com/aws/aws-sdk-go v1.51.31
 	github.com/google/go-cmp v0.6.0
-	github.com/grafana/grafana-aws-sdk v0.23.0
+	github.com/grafana/grafana-aws-sdk v0.26.0
 	github.com/grafana/grafana-plugin-sdk-go v0.228.0
 	github.com/grafana/sqlds/v3 v3.2.0
 	github.com/pkg/errors v0.9.1

@@ -27,14 +27,8 @@ type athenaQueryArgs struct {
 	ResultReuseMaxAgeInMinutes int64
 }
 
-type awsDSClient interface {
-	Init(config backend.DataSourceInstanceSettings)
-	GetDB(id int64, options sqlds.Options, settingsLoader sqlModels.Loader, apiLoader sqlAPI.Loader, driverLoader awsDriver.Loader) (*sql.DB, error)
-	GetAsyncDB(id int64, options sqlds.Options, settingsLoader sqlModels.Loader, apiLoader sqlAPI.Loader, driverLoader asyncDriver.Loader) (awsds.AsyncDB, error)
-	GetAPI(id int64, options sqlds.Options, settingsLoader sqlModels.Loader, apiLoader sqlAPI.Loader) (sqlAPI.AWSAPI, error)
-}
 type AthenaDatasource struct {
-	awsDS awsDSClient
+	awsDS datasource.AWSClient
 }
 
 type AthenaDatasourceIface interface {
@@ -50,8 +44,29 @@ type AthenaDatasourceIface interface {
 	Columns(ctx context.Context, options sqlds.Options) ([]string, error)
 }
 
+// Loader fulfills the datasource.Loader interface from grafana-aws-sdk. This
+// replaces the former approach of passing around functions.
+type Loader struct{}
+
+func (l Loader) LoadSettings(ctx context.Context) sqlModels.Settings {
+	return models.New(ctx)
+}
+
+func (l Loader) LoadAPI(ctx context.Context, cache *awsds.SessionCache, settings sqlModels.Settings) (sqlAPI.AWSAPI, error) {
+	return api.New(ctx, cache, settings)
+}
+
+func (l Loader) LoadDriver(ctx context.Context, awsapi sqlAPI.AWSAPI) (awsDriver.Driver, error) {
+	// The async driver serves both functions
+	return driver.New(ctx, awsapi)
+}
+
+func (l Loader) LoadAsyncDriver(ctx context.Context, awsapi sqlAPI.AWSAPI) (asyncDriver.Driver, error) {
+	return driver.New(ctx, awsapi)
+}
+
 func New() AthenaDatasourceIface {
-	return &AthenaDatasource{awsDS: datasource.New()}
+	return &AthenaDatasource{awsDS: datasource.New(Loader{})}
 }
 
 func (s *AthenaDatasource) Settings(_ context.Context, _ backend.DataSourceInstanceSettings) sqlds.DriverSettings {
@@ -63,7 +78,7 @@ func (s *AthenaDatasource) Settings(_ context.Context, _ backend.DataSourceInsta
 }
 
 // Connect opens a sql.DB connection using datasource settings
-func (s *AthenaDatasource) Connect(_ context.Context, config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (*sql.DB, error) {
+func (s *AthenaDatasource) Connect(ctx context.Context, config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (*sql.DB, error) {
 	s.awsDS.Init(config)
 	args, err := parseArgs(queryArgs)
 	if err != nil {
@@ -76,10 +91,10 @@ func (s *AthenaDatasource) Connect(_ context.Context, config backend.DataSourceI
 		args["region"] = sqlModels.DefaultKey
 	}
 
-	return s.awsDS.GetDB(config.ID, args, models.New, api.New, driver.NewSync)
+	return s.awsDS.GetDB(ctx, config.ID, args)
 }
 
-func (s *AthenaDatasource) GetAsyncDB(config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (awsds.AsyncDB, error) {
+func (s *AthenaDatasource) GetAsyncDB(ctx context.Context, config backend.DataSourceInstanceSettings, queryArgs json.RawMessage) (awsds.AsyncDB, error) {
 	s.awsDS.Init(config)
 	args, err := parseArgs(queryArgs)
 	if err != nil {
@@ -92,7 +107,7 @@ func (s *AthenaDatasource) GetAsyncDB(config backend.DataSourceInstanceSettings,
 		args["region"] = sqlModels.DefaultKey
 	}
 
-	return s.awsDS.GetAsyncDB(config.ID, args, models.New, api.New, driver.New)
+	return s.awsDS.GetAsyncDB(ctx, config.ID, args)
 }
 
 func (s *AthenaDatasource) Converters() (sc []sqlutil.Converter) {
@@ -105,7 +120,7 @@ func (s *AthenaDatasource) getAPI(ctx context.Context, options sqlds.Options) (*
 	lastUpdated := datasource.GetDatasourceLastUpdatedTime(ctx)
 	// we only require region for getting an api, the rest of the options are used per-query
 	args := sqlds.Options{"region": options["region"], "updated": lastUpdated}
-	res, err := s.awsDS.GetAPI(id, args, models.New, api.New)
+	res, err := s.awsDS.GetAPI(ctx, id, args)
 	if err != nil {
 		return nil, err
 	}
@@ -113,76 +128,76 @@ func (s *AthenaDatasource) getAPI(ctx context.Context, options sqlds.Options) (*
 }
 
 func (s *AthenaDatasource) CancelQuery(ctx context.Context, options sqlds.Options, queryID string) error {
-	api, err := s.getAPI(ctx, options)
+	athenaAPI, err := s.getAPI(ctx, options)
 	if err != nil {
 		return err
 	}
-	return api.CancelQuery(ctx, options, queryID)
+	return athenaAPI.CancelQuery(ctx, options, queryID)
 }
 
-func (s *AthenaDatasource) Schemas(_ context.Context, options sqlds.Options) ([]string, error) {
+func (s *AthenaDatasource) Schemas(_ context.Context, _ sqlds.Options) ([]string, error) {
 	// Athena uses an approach known as schema-on-read
 	// Ref: https://docs.aws.amazon.com/athena/latest/ug/creating-tables.html
 	return []string{}, nil
 }
 
 func (s *AthenaDatasource) Tables(ctx context.Context, options sqlds.Options) ([]string, error) {
-	api, err := s.getAPI(ctx, options)
+	athenaAPI, err := s.getAPI(ctx, options)
 	if err != nil {
 		return nil, err
 	}
-	return api.Tables(ctx, options)
+	return athenaAPI.Tables(ctx, options)
 }
 
 func (s *AthenaDatasource) Columns(ctx context.Context, options sqlds.Options) ([]string, error) {
 	if options["table"] == "" {
 		return []string{}, nil
 	}
-	api, err := s.getAPI(ctx, options)
+	athenaAPI, err := s.getAPI(ctx, options)
 	if err != nil {
 		return nil, err
 	}
-	return api.Columns(ctx, options)
+	return athenaAPI.Columns(ctx, options)
 }
 
 func (s *AthenaDatasource) Regions(ctx context.Context) ([]string, error) {
-	api, err := s.getAPI(ctx, sqlds.Options{})
+	athenaAPI, err := s.getAPI(ctx, sqlds.Options{})
 	if err != nil {
 		return nil, err
 	}
-	return api.Regions(ctx)
+	return athenaAPI.Regions(ctx)
 }
 
 func (s *AthenaDatasource) DataCatalogs(ctx context.Context, options sqlds.Options) ([]string, error) {
-	api, err := s.getAPI(ctx, options)
+	athenaAPI, err := s.getAPI(ctx, options)
 	if err != nil {
 		return nil, err
 	}
-	return api.DataCatalogs(ctx)
+	return athenaAPI.DataCatalogs(ctx)
 }
 
 func (s *AthenaDatasource) Databases(ctx context.Context, options sqlds.Options) ([]string, error) {
-	api, err := s.getAPI(ctx, options)
+	athenaAPI, err := s.getAPI(ctx, options)
 	if err != nil {
 		return nil, err
 	}
-	return api.Databases(ctx, options)
+	return athenaAPI.Databases(ctx, options)
 }
 
 func (s *AthenaDatasource) Workgroups(ctx context.Context, options sqlds.Options) ([]string, error) {
-	api, err := s.getAPI(ctx, options)
+	athenaAPI, err := s.getAPI(ctx, options)
 	if err != nil {
 		return nil, err
 	}
-	return api.Workgroups(ctx)
+	return athenaAPI.Workgroups(ctx)
 }
 
 func (s *AthenaDatasource) WorkgroupEngineVersion(ctx context.Context, options sqlds.Options) (string, error) {
-	api, err := s.getAPI(ctx, options)
+	athenaAPI, err := s.getAPI(ctx, options)
 	if err != nil {
 		return "", err
 	}
-	return api.WorkgroupEngineVersion(ctx, options)
+	return athenaAPI.WorkgroupEngineVersion(ctx, options)
 }
 
 func parseArgs(queryArgs json.RawMessage) (sqlds.Options, error) {

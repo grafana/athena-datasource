@@ -34,7 +34,7 @@ func (s *AthenaFakeDatasource) Connect(_ context.Context, _ backend.DataSourceIn
 	return &sql.DB{}, nil
 }
 
-func (s *AthenaFakeDatasource) GetAsyncDB(_ backend.DataSourceInstanceSettings, _ json.RawMessage) (awsds.AsyncDB, error) {
+func (s *AthenaFakeDatasource) GetAsyncDB(_ context.Context, _ backend.DataSourceInstanceSettings, _ json.RawMessage) (awsds.AsyncDB, error) {
 	return nil, nil
 }
 

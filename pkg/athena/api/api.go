@@ -22,11 +22,11 @@ type API struct {
 	settings *models.AthenaDataSourceSettings
 }
 
-func New(sessionCache *awsds.SessionCache, settings sqlModels.Settings) (api.AWSAPI, error) {
+func New(ctx context.Context, sessionCache *awsds.SessionCache, settings sqlModels.Settings) (api.AWSAPI, error) {
 	athenaSettings := settings.(*models.AthenaDataSourceSettings)
 
 	httpClientProvider := sdkhttpclient.NewProvider()
-	httpClientOptions, err := athenaSettings.Config.HTTPClientOptions(context.TODO()) // TODO: Context needs to be added, see https://github.com/grafana/oss-plugin-partnerships/issues/648
+	httpClientOptions, err := athenaSettings.Config.HTTPClientOptions(ctx)
 	if err != nil {
 		backend.Logger.Error("failed to create HTTP client options", "error", err.Error())
 		return nil, err

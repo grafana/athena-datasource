@@ -10,9 +10,6 @@ import (
 
 	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 	sqlAPI "github.com/grafana/grafana-aws-sdk/pkg/sql/api"
-	awsDriver "github.com/grafana/grafana-aws-sdk/pkg/sql/driver"
-	asyncDriver "github.com/grafana/grafana-aws-sdk/pkg/sql/driver/async"
-	sqlModels "github.com/grafana/grafana-aws-sdk/pkg/sql/models"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/sqlds/v3"
 	"github.com/stretchr/testify/assert"
@@ -22,16 +19,16 @@ type mockClient struct {
 	wasCalledWith sqlds.Options
 }
 
-func (m *mockClient) Init(config backend.DataSourceInstanceSettings) {}
-func (m *mockClient) GetDB(id int64, options sqlds.Options, settingsLoader sqlModels.Loader, apiLoader sqlAPI.Loader, driverLoader awsDriver.Loader) (*sql.DB, error) {
+func (m *mockClient) Init(_ backend.DataSourceInstanceSettings) {}
+func (m *mockClient) GetDB(_ context.Context, _ int64, options sqlds.Options) (*sql.DB, error) {
 	m.wasCalledWith = options
 	return nil, nil
 }
-func (m *mockClient) GetAsyncDB(id int64, options sqlds.Options, settingsLoader sqlModels.Loader, apiLoader sqlAPI.Loader, driverLoader asyncDriver.Loader) (awsds.AsyncDB, error) {
+func (m *mockClient) GetAsyncDB(_ context.Context, _ int64, options sqlds.Options) (awsds.AsyncDB, error) {
 	m.wasCalledWith = options
 	return nil, nil
 }
-func (m *mockClient) GetAPI(id int64, options sqlds.Options, settingsLoader sqlModels.Loader, apiLoader sqlAPI.Loader) (sqlAPI.AWSAPI, error) {
+func (m *mockClient) GetAPI(_ context.Context, _ int64, options sqlds.Options) (sqlAPI.AWSAPI, error) {
 	m.wasCalledWith = options
 	return nil, errors.New("fake api error")
 }
@@ -68,7 +65,7 @@ func TestConnection(t *testing.T) {
 			Updated:  updatedTime,
 		}
 		fakeQueryArgs := json.RawMessage(`{"test": "thing", "region": ""}`)
-		_, err := ds.GetAsyncDB(fakeConfig, fakeQueryArgs)
+		_, err := ds.GetAsyncDB(context.Background(), fakeConfig, fakeQueryArgs)
 
 		assert.Nil(t, err)
 		assert.Equal(t, "__default", mc.wasCalledWith["region"])
@@ -85,7 +82,7 @@ func TestConnection(t *testing.T) {
 			JSONData: json.RawMessage{},
 		}
 		fakeQueryArgs := json.RawMessage(`{"resultReuseEnabled": true}`)
-		_, err := ds.GetAsyncDB(fakeConfig, fakeQueryArgs)
+		_, err := ds.GetAsyncDB(context.Background(), fakeConfig, fakeQueryArgs)
 
 		assert.Nil(t, err)
 		assert.Equal(t, "true", mc.wasCalledWith["resultReuseEnabled"])
@@ -101,7 +98,7 @@ func TestConnection(t *testing.T) {
 			JSONData: json.RawMessage{},
 		}
 		fakeQueryArgs := json.RawMessage(`{"resultReuseMaxAgeInMinutes": 10}`)
-		_, err := ds.GetAsyncDB(fakeConfig, fakeQueryArgs)
+		_, err := ds.GetAsyncDB(context.Background(), fakeConfig, fakeQueryArgs)
 
 		assert.Nil(t, err)
 		assert.Equal(t, "10", mc.wasCalledWith["resultReuseMaxAgeInMinutes"])
@@ -111,7 +108,7 @@ func TestConnection(t *testing.T) {
 func TestColumns(t *testing.T) {
 	t.Run("it should return an empty list if the table is not set", func(t *testing.T) {
 		ds := AthenaDatasource{}
-		tables, err := ds.Columns(context.TODO(), sqlds.Options{
+		tables, err := ds.Columns(context.Background(), sqlds.Options{
 			"region":   "us-east1",
 			"catalog":  "cat",
 			"database": "db",
@@ -126,7 +123,7 @@ func TestColumns(t *testing.T) {
 		ds := AthenaDatasource{
 			awsDS: &mc,
 		}
-		_, err := ds.Columns(context.TODO(), sqlds.Options{
+		_, err := ds.Columns(context.Background(), sqlds.Options{
 			"region":   "us-east1",
 			"catalog":  "cat",
 			"database": "db",

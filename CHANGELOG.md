@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.15.0
+- Update for added context in grafana-aws-sdk by @njvrzm in [#326](https://github.com/grafana/athena-datasource/pull/326)
+
 ## 2.14.1
 
 - Bump @grafana/aws-sdk from v0.3.1 to v0.3.3 in [#321](https://github.com/grafana/athena-datasource/pull/321)

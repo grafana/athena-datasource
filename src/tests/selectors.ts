@@ -45,7 +45,7 @@ export const Components = {
   },
   QueryEditor: {
     CodeEditor: {
-      container: 'Code editor container',
+      container: 'data-testid Code editor container',
     },
     TableView: {
       input: 'toggle-table-view',

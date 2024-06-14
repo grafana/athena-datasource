@@ -52,7 +52,7 @@ describe('ResultReuse', () => {
 
         fireEvent.click(toggle);
 
-        expect(onChange).toBeCalledWith({
+        expect(onChange).toHaveBeenCalledWith({
           ...mockQuery,
           connectionArgs: {
             ...mockQuery.connectionArgs,
@@ -75,7 +75,7 @@ describe('ResultReuse', () => {
 
         fireEvent.change(ttlInput, { target: { value: '10' } });
 
-        expect(onChange).toBeCalledWith({
+        expect(onChange).toHaveBeenCalledWith({
           ...mockQuery,
           connectionArgs: {
             ...mockQuery.connectionArgs,

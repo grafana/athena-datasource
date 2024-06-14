@@ -19,7 +19,7 @@ export function ConfigEditor(props: Props) {
   const [externalId, setExternalId] = useState('');
   const newFormStylingEnabled = config.featureToggles.awsDatasourcesNewFormStyling;
   const styles = useStyles2(getStyles);
-  
+
   const saveOptions = async () => {
     if (saved) {
       return;
@@ -100,6 +100,8 @@ export function ConfigEditor(props: Props) {
     });
   };
 
+  const { onOptionsChange: _, ...inputProps } = props;
+
   return (
     <div className={styles.formStyles}>
       <ConnectionConfig
@@ -167,7 +169,7 @@ export function ConfigEditor(props: Props) {
               htmlFor="outputLocation"
             >
               <Input
-                {...props}
+                {...inputProps}
                 id="outputLocation"
                 placeholder="s3://"
                 value={props.options.jsonData.outputLocation ?? ''}

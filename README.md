@@ -241,7 +241,7 @@ datasources:
     type: grafana-athena-datasource
     jsonData:
       authType: keys
-      defaultRegion: euu-west-2
+      defaultRegion: eu-west-2
       catalog: AwsDataCatalog
       database: '<your athena database>'
       workgroup: '<your athena workgroup>'

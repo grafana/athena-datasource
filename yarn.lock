@@ -1856,10 +1856,10 @@
   dependencies:
     tslib "^2.4.1"
 
-"@grafana/aws-sdk@0.3.4":
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/@grafana/aws-sdk/-/aws-sdk-0.3.4.tgz#e41584ad96b64ab8a2e38b9fabc3ed0c63803b54"
-  integrity sha512-rVmrNFTv3uu9wrs2CfbXhEWDb+WnnAbfiYFqOn8Xpm7J/yvYX88Ibx+D5MUZrHrRBvcot6SEHihQvFo/CEFnkg==
+"@grafana/aws-sdk@0.3.5":
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/@grafana/aws-sdk/-/aws-sdk-0.3.5.tgz#eadf9a608016bc2dc093a80ec5ffbba4dd6fa489"
+  integrity sha512-WzB5uRIlzF0u6YRC7JbzeORbLNPZIZBpZoNkgobka2kranQHD/iJpdcYuVhyfI9Ca+lcTej9fPKnaUOnR2dlnQ==
   dependencies:
     "@grafana/async-query-data" "0.1.4"
     "@grafana/experimental" "1.7.0"

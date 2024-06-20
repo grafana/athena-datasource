@@ -242,12 +242,12 @@ datasources:
     jsonData:
       authType: keys
       defaultRegion: eu-west-2
-    secureJsonData:
-      accessKey: '<your access key>'
-      secretKey: '<your secret key>'
       catalog: AwsDataCatalog
       database: '<your athena database>'
       workgroup: '<your athena workgroup>'
+    secureJsonData:
+      accessKey: '<your access key>'
+      secretKey: '<your secret key>'
 ```
 
 ### Using AWS SDK Default and ARN of IAM Role to Assume

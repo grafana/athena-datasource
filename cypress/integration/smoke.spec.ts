@@ -57,7 +57,7 @@ e2e.scenario({
             // Catalogs
             e2eSelectors.ConfigEditor.catalog.input().click({ force: true });
             // wait for it to load
-            e2eSelectors.ConfigEditor.catalog.wrapper().first().contains(datasource.jsonData.catalog);
+            e2eSelectors.ConfigEditor.catalog.wrapper().contains(datasource.jsonData.catalog);
             e2eSelectors.ConfigEditor.catalog.input().type(datasource.jsonData.catalog).type('{enter}');
             // Databases
             e2eSelectors.ConfigEditor.database.input().click({ force: true });

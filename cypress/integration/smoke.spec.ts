@@ -29,11 +29,6 @@ type AthenaProvision = {
 
 const dataSourceName = 'e2e-athena-datasource';
 
-Cypress.on('fail', (error, runnable) => {
-  console.log(Cypress.$('body').html());
-  throw error;
-});
-
 e2e.scenario({
   describeName: 'Smoke tests',
   itName: 'Login, create data source, dashboard with panel',

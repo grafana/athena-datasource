@@ -1,10 +1,19 @@
 # Changelog
 
-## 2.15.0
+## 2.16.1
+
+- Chore: update dependencies in [#332](https://github.com/grafana/athena-datasource/pull/332)
+
+## 2.16.0
+
 - Plugin.json: update schema reference URL by @leventebalogh in [#328](https://github.com/grafana/athena-datasource/pull/328)
 - add stalebot to issues by @katebrenner in [#329](https://github.com/grafana/athena-datasource/pull/329)
 - docs: fix 'Using accessKey and secretKey' example by @kstevensonnv in [#331](https://github.com/grafana/athena-datasource/pull/331)
 - chore: replace GetSession with GetSessionWithAuthSettings by @njvrzm in [#333](https://github.com/grafana/athena-datasource/pull/333)
+
+## 2.15.0
+
+- Update for added context in grafana-aws-sdk by @njvrzm in [#326](https://github.com/grafana/athena-datasource/pull/326)
 
 ## 2.14.1
 

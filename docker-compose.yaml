@@ -3,10 +3,12 @@ version: '3.0'
 services:
   grafana:
     container_name: 'grafana-athena-datasource'
+    platform: 'linux/amd64'
     build:
       context: ./.config
       args:
-        grafana_version: ${GRAFANA_VERSION:-10.0.0}
+        grafana_image: ${GRAFANA_IMAGE:-grafana-enterprise}
+        grafana_version: ${GRAFANA_VERSION:-10.3.6}
     ports:
       - 3000:3000/tcp
     volumes:

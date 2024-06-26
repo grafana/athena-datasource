@@ -37,7 +37,7 @@ func New(ctx context.Context, sessionCache *awsds.SessionCache, settings sqlMode
 		return nil, err
 	}
 
-	authSettings, _ := awsds.ReadAuthSettingsFromContext(ctx)
+	authSettings := awsds.ReadAuthSettings(ctx)
 	sess, err := sessionCache.GetSessionWithAuthSettings(awsds.GetSessionConfig{
 		HTTPClient:    httpClient,
 		Settings:      athenaSettings.AWSDatasourceSettings,

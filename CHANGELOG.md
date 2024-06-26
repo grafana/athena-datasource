@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.16.2
+
+- Fix: use ReadAuthSettings to get authSettings in [#339](https://github.com/grafana/athena-datasource/pull/339)
+
 ## 2.16.1
 
 - Chore: update dependencies in [#332](https://github.com/grafana/athena-datasource/pull/332)

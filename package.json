@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.21.4",
-    "@grafana/aws-sdk": "0.3.5",
+    "@grafana/aws-sdk": "0.4.0",
     "@grafana/e2e": "10.3.6",
     "@grafana/e2e-selectors": "10.3.6",
     "@grafana/eslint-config": "^7.0.0",

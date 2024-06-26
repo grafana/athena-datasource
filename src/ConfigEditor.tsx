@@ -1,8 +1,8 @@
 import React, { FormEvent, useCallback, useEffect, useState } from 'react';
 import { DataSourcePluginOptionsEditorProps, DataSourceSettings, GrafanaTheme2, SelectableValue } from '@grafana/data';
 import { AthenaDataSourceOptions, AthenaDataSourceSecureJsonData, AthenaDataSourceSettings, defaultKey } from './types';
-import { config, getBackendSrv } from '@grafana/runtime';
-import { AwsAuthType, ConfigSelect, ConnectionConfig, Divider, InlineInput } from '@grafana/aws-sdk';
+import { getBackendSrv } from '@grafana/runtime';
+import { AwsAuthType, ConfigSelect, ConnectionConfig, Divider } from '@grafana/aws-sdk';
 import { selectors } from 'tests/selectors';
 import { ConfigSection } from '@grafana/experimental';
 import { Field, Input, useStyles2 } from '@grafana/ui';
@@ -17,7 +17,6 @@ export function ConfigEditor(props: Props) {
   const resourcesURL = `${baseURL}/resources`;
   const [saved, setSaved] = useState(!!props.options.jsonData.defaultRegion);
   const [externalId, setExternalId] = useState('');
-  const newFormStylingEnabled = config.featureToggles.awsDatasourcesNewFormStyling;
   const styles = useStyles2(getStyles);
 
   const saveOptions = async () => {
@@ -104,84 +103,14 @@ export function ConfigEditor(props: Props) {
 
   return (
     <div className={styles.formStyles}>
-      <ConnectionConfig
-        {...props}
-        onOptionsChange={onOptionsChange}
-        newFormStylingEnabled={newFormStylingEnabled}
-        externalId={externalId}
-      />
-      {newFormStylingEnabled ? (
-        <>
-          <Divider />
-          <ConfigSection title="Athena Details">
-            <Field
-              label={selectors.components.ConfigEditor.catalog.input}
-              htmlFor="catalog"
-              data-testid={selectors.components.ConfigEditor.catalog.wrapper}
-            >
-              <ConfigSelect
-                {...props}
-                id="catalog"
-                value={props.options.jsonData.catalog ?? ''}
-                onChange={onChange('catalog')}
-                fetch={fetchCatalogs}
-                label={selectors.components.ConfigEditor.catalog.input}
-                saveOptions={saveOptions}
-                newFormStylingEnabled={true}
-              />
-            </Field>
-            <Field
-              label={selectors.components.ConfigEditor.database.input}
-              htmlFor="database"
-              data-testid={selectors.components.ConfigEditor.database.wrapper}
-            >
-              <ConfigSelect
-                {...props}
-                id="database"
-                value={props.options.jsonData.database ?? ''}
-                onChange={onChange('database')}
-                fetch={fetchDatabases}
-                label={selectors.components.ConfigEditor.database.input}
-                dependencies={[props.options.jsonData.catalog || '']}
-                saveOptions={saveOptions}
-                newFormStylingEnabled={true}
-              />
-            </Field>
-            <Field
-              label={selectors.components.ConfigEditor.workgroup.input}
-              htmlFor="workgroup"
-              data-testid={selectors.components.ConfigEditor.workgroup.wrapper}
-            >
-              <ConfigSelect
-                {...props}
-                id="workgroup"
-                value={props.options.jsonData.workgroup ?? ''}
-                onChange={onChange('workgroup')}
-                fetch={fetchWorkgroups}
-                label={selectors.components.ConfigEditor.workgroup.input}
-                saveOptions={saveOptions}
-                newFormStylingEnabled={true}
-              />
-            </Field>
-            <Field
-              label={selectors.components.ConfigEditor.OutputLocation.input}
-              description="Optional. If not specified, the default query result location from the Workgroup configuration will be used."
-              htmlFor="outputLocation"
-            >
-              <Input
-                {...inputProps}
-                id="outputLocation"
-                placeholder="s3://"
-                value={props.options.jsonData.outputLocation ?? ''}
-                onChange={onChangeOutputLocation}
-                data-testid={selectors.components.ConfigEditor.OutputLocation.wrapper}
-              />
-            </Field>
-          </ConfigSection>
-        </>
-      ) : (
-        <>
-          <h3>Athena Details</h3>
+      <ConnectionConfig {...props} onOptionsChange={onOptionsChange} externalId={externalId} />
+      <Divider />
+      <ConfigSection title="Athena Details">
+        <Field
+          label={selectors.components.ConfigEditor.catalog.input}
+          htmlFor="catalog"
+          data-testid={selectors.components.ConfigEditor.catalog.wrapper}
+        >
           <ConfigSelect
             {...props}
             id="catalog"
@@ -189,9 +118,14 @@ export function ConfigEditor(props: Props) {
             onChange={onChange('catalog')}
             fetch={fetchCatalogs}
             label={selectors.components.ConfigEditor.catalog.input}
-            data-testid={selectors.components.ConfigEditor.catalog.wrapper}
             saveOptions={saveOptions}
           />
+        </Field>
+        <Field
+          label={selectors.components.ConfigEditor.database.input}
+          htmlFor="database"
+          data-testid={selectors.components.ConfigEditor.database.wrapper}
+        >
           <ConfigSelect
             {...props}
             id="database"
@@ -199,10 +133,15 @@ export function ConfigEditor(props: Props) {
             onChange={onChange('database')}
             fetch={fetchDatabases}
             label={selectors.components.ConfigEditor.database.input}
-            data-testid={selectors.components.ConfigEditor.database.wrapper}
             dependencies={[props.options.jsonData.catalog || '']}
             saveOptions={saveOptions}
           />
+        </Field>
+        <Field
+          label={selectors.components.ConfigEditor.workgroup.input}
+          htmlFor="workgroup"
+          data-testid={selectors.components.ConfigEditor.workgroup.wrapper}
+        >
           <ConfigSelect
             {...props}
             id="workgroup"
@@ -210,20 +149,24 @@ export function ConfigEditor(props: Props) {
             onChange={onChange('workgroup')}
             fetch={fetchWorkgroups}
             label={selectors.components.ConfigEditor.workgroup.input}
-            data-testid={selectors.components.ConfigEditor.workgroup.wrapper}
             saveOptions={saveOptions}
           />
-          <InlineInput
-            {...props}
+        </Field>
+        <Field
+          label={selectors.components.ConfigEditor.OutputLocation.input}
+          description="Optional. If not specified, the default query result location from the Workgroup configuration will be used."
+          htmlFor="outputLocation"
+        >
+          <Input
+            {...inputProps}
+            id="outputLocation"
+            placeholder="s3://"
             value={props.options.jsonData.outputLocation ?? ''}
             onChange={onChangeOutputLocation}
-            label={selectors.components.ConfigEditor.OutputLocation.input}
             data-testid={selectors.components.ConfigEditor.OutputLocation.wrapper}
-            tooltip="Optional. If not specified, the default query result location from the Workgroup configuration will be used."
-            placeholder="s3://"
           />
-        </>
-      )}
+        </Field>
+      </ConfigSection>
     </div>
   );
 }

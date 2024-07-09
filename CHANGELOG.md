@@ -1,8 +1,12 @@
 # Changelog
 
+## 2.17.1
+
+- Update grafana/aws-sdk to get new regions in [#341](https://github.com/grafana/athena-datasource/pull/341)
+
 ## 2.17.0
 
--  Migrate to new form styling in config and query editors  in [#337](https://github.com/grafana/athena-datasource/pull/337)
+- Migrate to new form styling in config and query editors in [#337](https://github.com/grafana/athena-datasource/pull/337)
 
 ## 2.16.2
 

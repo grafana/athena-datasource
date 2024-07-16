@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/grafana/grafana-plugin-sdk-go/experimental/errorsource"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/athena"
@@ -110,6 +111,7 @@ func (c *API) Status(ctx aws.Context, output *api.ExecuteQueryOutput) (*api.Exec
 	case athena.QueryExecutionStateFailed, athena.QueryExecutionStateCancelled:
 		finished = true
 		err = errors.New(*statusResp.QueryExecution.Status.StateChangeReason)
+		err = errorsource.DownstreamError(err, true)
 	case athena.QueryExecutionStateSucceeded:
 		finished = true
 	default:

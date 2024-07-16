@@ -20,6 +20,7 @@
     "datasource",
     "datasources",
     "datetime",
+    "errorsource",
     "eventtime",
     "fridgepoet",
     "gotest",

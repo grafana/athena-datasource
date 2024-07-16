@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/grafana/grafana-plugin-sdk-go/experimental/errorsource"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/athena"
@@ -109,7 +110,10 @@ func (c *API) Status(ctx aws.Context, output *api.ExecuteQueryOutput) (*api.Exec
 	switch state {
 	case athena.QueryExecutionStateFailed, athena.QueryExecutionStateCancelled:
 		finished = true
-		err = errors.New(*statusResp.QueryExecution.Status.StateChangeReason)
+		err = errorsource.DownstreamError(
+			errors.New(*statusResp.QueryExecution.Status.StateChangeReason),
+			false,
+		)
 	case athena.QueryExecutionStateSucceeded:
 		finished = true
 	default:
@@ -131,7 +135,7 @@ func (c *API) Stop(output *api.ExecuteQueryOutput) error {
 		QueryExecutionId: &output.ID,
 	})
 	if err != nil {
-		return fmt.Errorf("%w: unable to stop query", err)
+		return errorsource.DownstreamError(fmt.Errorf("%w: unable to stop query", err), false)
 	}
 	return nil
 }
@@ -194,7 +198,7 @@ func (c *API) DataCatalogs(ctx context.Context) ([]string, error) {
 			NextToken: nextToken,
 		})
 		if err != nil {
-			return nil, err
+			return nil, errorsource.DownstreamError(err, false)
 		}
 		nextToken = out.NextToken
 		for _, cat := range out.DataCatalogsSummary {
@@ -221,7 +225,7 @@ func (c *API) Databases(ctx aws.Context, options sqlds.Options) ([]string, error
 			CatalogName: aws.String(catalog),
 		})
 		if err != nil {
-			return nil, err
+			return nil, errorsource.DownstreamError(err, false)
 		}
 		nextToken = out.NextToken
 		for _, cat := range out.DatabaseList {
@@ -243,7 +247,7 @@ func (c *API) Workgroups(ctx context.Context) ([]string, error) {
 			NextToken: nextToken,
 		})
 		if err != nil {
-			return nil, err
+			return nil, errorsource.DownstreamError(err, false)
 		}
 		nextToken = out.NextToken
 		for _, cat := range out.WorkGroups {
@@ -262,7 +266,7 @@ func (c *API) WorkgroupEngineVersion(ctx context.Context, options sqlds.Options)
 		WorkGroup: aws.String(workgroup),
 	})
 	if err != nil {
-		return "", err
+		return "", errorsource.DownstreamError(err, false)
 	}
 
 	return string(*out.WorkGroup.Configuration.EngineVersion.EffectiveEngineVersion), nil
@@ -280,7 +284,7 @@ func (c *API) Tables(ctx aws.Context, options sqlds.Options) ([]string, error) {
 			NextToken:    nextToken,
 		})
 		if err != nil {
-			return nil, err
+			return nil, errorsource.DownstreamError(err, false)
 		}
 		nextToken = out.NextToken
 		for _, cat := range out.TableMetadataList {
@@ -303,7 +307,7 @@ func (c *API) Columns(ctx aws.Context, options sqlds.Options) ([]string, error) 
 		TableName:    aws.String(table),
 	})
 	if err != nil {
-		return nil, err
+		return nil, errorsource.DownstreamError(err, false)
 	}
 	for _, cat := range out.TableMetadata.Columns {
 		res = append(res, *cat.Name)

@@ -64,7 +64,7 @@ func (c *API) Execute(ctx context.Context, input *api.ExecuteQueryInput) (*api.E
 	version, err := c.WorkgroupEngineVersion(ctx, sqlds.Options{"workgroup": c.settings.WorkGroup})
 
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", api.ExecuteError, err)
+		return nil, errorsource.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err), false)
 	}
 
 	if workgroupEngineSupportsResultReuse(version) {
@@ -84,7 +84,7 @@ func (c *API) Execute(ctx context.Context, input *api.ExecuteQueryInput) (*api.E
 
 	output, err := c.Client.StartQueryExecutionWithContext(ctx, athenaInput)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", api.ExecuteError, err)
+		return nil, errorsource.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err), false)
 	}
 
 	return &api.ExecuteQueryOutput{ID: *output.QueryExecutionId}, nil
@@ -102,7 +102,7 @@ func (c *API) Status(ctx aws.Context, output *api.ExecuteQueryOutput) (*api.Exec
 		QueryExecutionId: aws.String(output.ID),
 	})
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", api.ExecuteError, err)
+		return nil, errorsource.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err), false)
 	}
 
 	var finished bool

@@ -23,7 +23,7 @@ If you do not have a [Grafana Cloud](https://grafana.com/cloud) account, you can
 To configure the Amazon Athena data source in Grafana, toggle the menu, open **Connections**, then click **Data Sources** and then either:
 
 * If you do not have the Amazon Athena data source, click **Add new data source**, and then click the Amazon Athena data source.
-* Click Athena if you already have the AWS Athena data source.
+* If you already have an Amazon Athena data source, select the one you want to configure.
 
 | Name                         | Description                                                                                                                                                                                                                                                                                                                                                                       |
 | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

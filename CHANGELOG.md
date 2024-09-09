@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.17.2
+
+- Bump dependencies in [#347](https://github.com/grafana/athena-datasource/pull/347), [#365](https://github.com/grafana/athena-datasource/pull/365), [#360](https://github.com/grafana/athena-datasource/pull/360), [#361](https://github.com/grafana/athena-datasource/pull/361), [#359](https://github.com/grafana/athena-datasource/pull/359), [#358](https://github.com/grafana/athena-datasource/pull/358), [#357](https://github.com/grafana/athena-datasource/pull/357), [#355](https://github.com/grafana/athena-datasource/pull/355), [#348](https://github.com/grafana/athena-datasource/pull/348), [#351](https://github.com/grafana/athena-datasource/pull/351), [#365](https://github.com/grafana/athena-datasource/pull/365)
+- Add errorsource in [#344](https://github.com/grafana/athena-datasource/pull/344)
+
 ## 2.17.1
 
 - Update grafana/aws-sdk to get new regions in [#341](https://github.com/grafana/athena-datasource/pull/341)

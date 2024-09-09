@@ -9,7 +9,7 @@ import (
 	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 	"github.com/grafana/grafana-aws-sdk/pkg/sql/models"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
-	"github.com/grafana/sqlds/v3"
+	"github.com/grafana/sqlds/v4"
 )
 
 const (
@@ -36,7 +36,7 @@ func New(_ context.Context) models.Settings {
 }
 
 func (s *AthenaDataSourceSettings) Load(config backend.DataSourceInstanceSettings) error {
-	if config.JSONData != nil && len(config.JSONData) > 1 {
+	if len(config.JSONData) > 1 {
 		if err := json.Unmarshal(config.JSONData, s); err != nil {
 			return fmt.Errorf("could not unmarshal DatasourceSettings json: %w", err)
 		}

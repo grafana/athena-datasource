@@ -1,10 +1,10 @@
-## Grafana 10 breaking change: update Athena datasource plugin to >=2.9.3
+## Grafana 10 breaking change: update Amazon Athena data source plugin to >=2.9.3
 
-Grafana 10.0.0 was shipped with the new React 18 upgrade. Changes in batching of state updates in React 18 cause a bug in the query editor in Athena versions <=2.9.2. If you’re using Grafana@>=10.0.0, please update your plugin to version 2.9.3 or higher in your Grafana instance management console.
+Grafana 10.0.0 was shipped with the new React 18 upgrade. Changes in batching of state updates in React 18 cause a bug in the query editor in Amazon Athena versions <=2.9.2. If you’re using Grafana@>=10.0.0, please update your plugin to version 2.9.3 or higher in your Grafana instance management console.
 
-# Athena data source for Grafana
+# Amazon Athena data source for Grafana
 
-The Athena data source plugin allows you to query and visualize Athena data metrics from within Grafana.
+The Amazon Athena data source plugin allows you to query and visualize Amazon Athena data metrics from within Grafana.
 
 This topic explains options, variables, querying, and other options specific to this data source. Refer to [Add a data source](https://grafana.com/docs/grafana/latest/datasources/add-a-data-source/) for instructions on how to add a data source to Grafana.
 
@@ -14,16 +14,16 @@ This topic explains options, variables, querying, and other options specific to 
 
 If you do not have a [Grafana Cloud](https://grafana.com/cloud) account, you can sign up for one [here](https://grafana.com/cloud/grafana).
 
-1. Click on the `Install plugin` button on the [AWS Athena page on Grafana.com](https://grafana.com/grafana/plugins/grafana-athena-datasource/). This will automatically add the plugin to your Grafana instance. It might take up to 30 seconds to install.
+1. Click on the `Install plugin` button on the [Amazon Athena page on Grafana.com](https://grafana.com/grafana/plugins/grafana-athena-datasource/). This will automatically add the plugin to your Grafana instance. It might take up to 30 seconds to install.
 
-2. Login to your Hosted Grafana instance (go to your instances page in your profile): `https://grafana.com/orgs/<yourUserName>/instances` and the AWS Athena data source will be installed.
+2. Login to your Hosted Grafana instance (go to your instances page in your profile): `https://grafana.com/orgs/<yourUserName>/instances` and the Amazon Athena data source will be installed.
 
 ## Configure the data source in Grafana
 
-To configure the Athena data source in Grafana, toggle the menu, open **Connections**, then click **Data Sources** and then either
+To configure the Amazon Athena data source in Grafana, toggle the menu, open **Connections**, then click **Data Sources** and then either:
 
-* click **Add new data source**, and then click the AWS Athena data source, if you do not have the AWS Athena data source or
-* click Athena if you already have the AWS Athena data source.
+* If you do not have the Amazon Athena data source, click **Add new data source**, and then click the Amazon Athena data source.
+* If you already have an Amazon Athena data source, select the one you want to configure.
 
 | Name                         | Description                                                                                                                                                                                                                                                                                                                                                                       |
 | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -47,11 +47,11 @@ For more information about authentication options and configuration details, see
 
 ### IAM policies
 
-Grafana needs permissions granted via IAM to be able to read Athena metrics. You can attach these permissions to IAM roles and utilize Grafana's built-in support for assuming roles. Note that you will need to [configure the required policy](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_create.html) before adding the data source to Grafana.
+Grafana needs permissions granted via IAM to be able to read Amazon Athena metrics. You can attach these permissions to IAM roles and utilize Grafana's built-in support for assuming roles. Note that you will need to [configure the required policy](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_create.html) before adding the data source to Grafana.
 
-Depending on the source of the data you'd query with Athena, you may need different permissions. AWS provides some predefined policies that you can check [here](https://docs.aws.amazon.com/athena/latest/ug/managed-policies.html).
+Depending on the source of the data you'd query with Amazon Athena, you may need different permissions. AWS provides some predefined policies that you can check [here](https://docs.aws.amazon.com/athena/latest/ug/managed-policies.html).
 
-This is an example of a minimal policy you can use to query Athena. It is based on the [`AmazonAthenaFullAccess`](https://docs.aws.amazon.com/athena/latest/ug/managed-policies.html#amazonathenafullaccess-managed-policy) policy, without write permissions when possible, since Grafana should be used as read-only:
+This is an example of a minimal policy you can use to query Amazon Athena. It is based on the [`AmazonAthenaFullAccess`](https://docs.aws.amazon.com/athena/latest/ug/managed-policies.html#amazonathenafullaccess-managed-policy) policy, without write permissions when possible, since Grafana should be used as read-only:
 
 > **NOTE**: Update the ARN of the S3 bucket if you are using a custom one.
 
@@ -116,9 +116,9 @@ This is an example of a minimal policy you can use to query Athena. It is based 
 }
 ```
 
-## Query Athena data
+## Query Amazon Athena data
 
-The provided query editor is a standard SQL query editor. Grafana includes some macros to help with writing more complex timeseries queries.
+The provided query editor is a standard SQL query editor. Grafana includes some macros to help with writing more complex time-series queries.
 
 #### Macros
 
@@ -134,12 +134,12 @@ The provided query editor is a standard SQL query editor. Grafana includes some 
 | `$__timeGroup(column, '1m', format)` | `$__timeGroup` groups timestamps so that there is only 1 point for every period on the graph. The third argument is used to optionally parse the column from a varchar to a timestamp with a specific format.                                                                                                                                                                                                                                                            | `$__timeGroup(time,'5m','yyyy-MM-dd''T''HH:mm:ss.SSSSSS''Z')`                                                                                                                                                                                                                                                                      | `FROM_UNIXTIME(FLOOR(TO_UNIXTIME(parse_datetime(time,'yyyy-MM-dd''T''HH:mm:ss.SSSSSS''Z'))/300)*300)`                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | `$__unixEpochFilter(column)`         | `$__unixEpochFilter` achieves the same than `$__timeFilter` but when the time is a UNIX timestamp.                                                                                                                                                                                                                                                                                                                                                                       | `$__unixEpochFilter(time)`                                                                                                                                                                                                                                                                                                         | `time BETWEEN 1637228322 AND 1637232700`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | `$__unixEpochGroup(column, '1m')`    | `$__unixEpochGroup` achieves the same than `$__timeGroup` but when the time is a UNIX timestamp.                                                                                                                                                                                                                                                                                                                                                                         | `$__unixEpochGroup(time, '5m')`                                                                                                                                                                                                                                                                                                    | `FROM_UNIXTIME(FLOOR(time/300)*300)`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `$__table`                           | `$__table` returns the table selected in the Table selector                                                                                                                                                                                                                                                                                                                                                                                                              | `$__table`                                                                                                                                                                                                                                                                                                                         | `my_table`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| `$__column`                          | `$__column` returns the column selected in the Column selector (it requires a table)                                                                                                                                                                                                                                                                                                                                                                                     | `$__column`                                                                                                                                                                                                                                                                                                                        | `col1`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `$__table`                           | `$__table` returns the table selected in the Table selector.                                                                                                                                                                                                                                                                                                                                                                                                              | `$__table`                                                                                                                                                                                                                                                                                                                         | `my_table`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `$__column`                          | `$__column` returns the column selected in the Column selector (it requires a table).                                                                                                                                                                                                                                                                                                                                                                                     | `$__column`                                                                                                                                                                                                                                                                                                                        | `col1`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 
-#### Table Visualization
+#### Table visualization
 
-Most queries in Athena will be best represented by a table visualization. Any query will display data in a table. Any query that returns results will display data in a table..
+Most queries in Amazon Athena are best represented by a table visualization. Any query will display data in a table, and any query that returns results will display data in a table.
 
 This example returns results for a table visualization:
 
@@ -147,30 +147,30 @@ This example returns results for a table visualization:
 SELECT {column_1}, {column_2} FROM {table};
 ```
 
-#### Timeseries and Graph visualizations
+#### Time series and graph visualizations
 
-Time series ad graph visualizations, you must:
+For time series ad graph visualizations, you must:
 
 - Select a column with a `date` or `datetime` type. The `date` column must be in ascending order (using `ORDER BY column ASC`).
 - Also select a numeric column.
 
 #### Inspecting the query
 
-Grafana supports macros that Athena does not, which means a query might not work when copied and pasted directly into Athena. To view the full interpolated query, which works directly in Athena, click the **Query Inspector** button. The full query is displayed under the **Query** tab.
+Grafana supports macros that Amazon Athena does not, which means a query might not work when copied and pasted directly into Amazon Athena. To view the full interpolated query which works directly in Amazon Athena, click the **Query Inspector** button. The full query is displayed under the **Query** tab.
 
 ### Templates and variables
 
-To add a new Athena query variable, refer to [Add a query variable](https://grafana.com/docs/grafana/latest/variables/variable-types/add-query-variable/).
+To add a new Amazon Athena query variable, refer to [Add a query variable](https://grafana.com/docs/grafana/latest/variables/variable-types/add-query-variable/).
 
-Any value queried from an Athena table can be used as a variable.
+Any value queried from an Amazon Athena table can be used as a variable.
 
-To display a custom display name for a variable, you can use a query such as `SELECT hostname AS text, id AS value FROM MyTable`. In this case the variable value field must be a string type or cast to a string type. 
+To display a custom display name for a variable, you can use a query such as `SELECT hostname AS text, id AS value FROM MyTable`. In this case, the variable value field must be a string type or cast to a string type. 
 
-After creating a variable, you can use it in your Athena queries by using [Variable syntax](https://grafana.com/docs/grafana/latest/variables/syntax/). For more information about variables, refer to [Templates and variables](https://grafana.com/docs/grafana/latest/variables/).
+After creating a variable, you can use it in your Amazon Athena queries by using [Variable syntax](https://grafana.com/docs/grafana/latest/variables/syntax/). For more information about variables, refer to [Templates and variables](https://grafana.com/docs/grafana/latest/variables/).
 
 ### Annotations
 
-[Annotations](https://grafana.com/docs/grafana/latest/dashboards/annotations/) allow you to overlay rich event information on top of graphs. You can add annotations by clicking on panels or by adding annotation queries via the Dashboard menu / Annotations view.
+[Annotations](https://grafana.com/docs/grafana/latest/dashboards/annotations/) allow you to overlay rich event information on top of graphs. You can add annotations by clicking on panels or by adding annotation queries via the Dashboard menu/Annotations view.
 
 **Example query to automatically add annotations:**
 
@@ -194,9 +194,9 @@ The following table represents the values of the columns taken into account to r
 | `text`    | Event description field.                                                                                                          |
 | `tags`    | Optional field name to use for event tags as a comma separated string.                                                            |
 
-## Provision Athena data source
+## Provision the Amazon Athena data source
 
-You can configure the Athena data source using configuration files with Grafana's provisioning system or using Grafana's [Datasource JSON API](https://grafana.com/docs/grafana/latest/http_api/data_source/#create-a-data-source)
+You can configure the Amazon Athena data source using configuration files with Grafana's provisioning system or using Grafana's [data source JSON API](https://grafana.com/docs/grafana/latest/http_api/data_source/#create-a-data-source)
 . For more information, refer to the [provisioning docs page](https://grafana.com/docs/grafana/latest/administration/provisioning/).
 
 Here are some provisioning examples.
@@ -252,7 +252,7 @@ datasources:
       secretKey: '<your secret key>'
 ```
 
-### Using AWS SDK Default and ARN of IAM Role to Assume
+### Using AWS SDK default and ARN of IAM role to assume
 
 ```yaml
 apiVersion: 1
@@ -279,7 +279,7 @@ jsonData:
 
 ### Acknowledgment
 
-The backend driver is based on the implementation of [uber/athenadriver](https://github.com/uber/athenadriver), which provides a fully-featured driver for AWS Athena.
+The backend driver is based on the implementation of [uber/athenadriver](https://github.com/uber/athenadriver), which provides a fully-featured driver for Amazon Athena.
 
 ## Get the most out of the plugin
 
@@ -288,18 +288,20 @@ The backend driver is based on the implementation of [uber/athenadriver](https:/
 - Add [Transformations](https://grafana.com/docs/grafana/latest/panels/transformations/).
 - Set up alerting; refer to [Alerts overview](https://grafana.com/docs/grafana/latest/alerting/).
 
-## Async Query Data Support
+## Async query data support
 
 Async query data support enables an asynchronous query handling flow. Queries are handled over multiple requests (starting, checking its status, and fetching the results) instead of starting and resolving a query over a single request. This is useful for queries that can potentially run for a long time and timeout.
 
-Async query data support is enabled by default in all Athena datasources.
+Async query data support is enabled by default in all Amazon Athena data sources.
 
-### Async Query Caching
+### Async query caching
 
-To enable [query caching](https://grafana.com/docs/grafana/latest/administration/data-source-management/#query-caching) for async queries, you need to be on Grafana version 10.1 or above, and to set the feature toggles `useCachingService` and `awsAsyncQueryCaching` to `true`. You'll also need to [configure query caching](https://grafana.com/docs/grafana/latest/administration/data-source-management/#query-caching) for the specific Athena datasource.
+To enable [query caching](https://grafana.com/docs/grafana/latest/administration/data-source-management/#query-caching) for async queries, you need to be on Grafana version 10.1 or above, and to set the feature toggles `useCachingService` and `awsAsyncQueryCaching` to `true`. You'll also need to [configure query caching](https://grafana.com/docs/grafana/latest/administration/data-source-management/#query-caching) for the specific Amazon Athena data source.
 
-## Query Result Reuse
+## Query result reuse
 
-Query result reuse is a feature that allows Athena to reuse query results from previous queries. You can enable it per query by selecting the `Enabled` checkbox under the `Query result reuse` section in the query editor. Learn more in the [AWS Athena documentation](https://docs.aws.amazon.com/athena/latest/ug/reusing-query-results.html).
+Query result reuse is a feature that allows Amazon Athena to reuse query results from previous queries. You can enable it per query by selecting the `Enabled` checkbox under the `Query result reuse` section in the query editor. Learn more in the [Amazon Athena documentation](https://docs.aws.amazon.com/athena/latest/ug/reusing-query-results.html).
 
-Note: Result reuse requires Athena to be on engine version 3. AWS provides instructions for [Changing Athena engine versions](https://docs.aws.amazon.com/athena/latest/ug/engine-versions-changing.html).
+{{< admonition type="note" >}}
+Note: Result reuse requires Amazon Athena to be on engine version 3. AWS provides instructions for [Changing Amazon Athena engine versions](https://docs.aws.amazon.com/athena/latest/ug/engine-versions-changing.html).
+{{< /admonition >}}

@@ -1,15 +1,14 @@
 module github.com/grafana/athena-datasource
 
 go 1.21
-
-toolchain go1.21.0
+toolchain go1.23.1
 
 require (
 	github.com/aws/aws-sdk-go v1.55.5
 	github.com/google/go-cmp v0.6.0
 	github.com/grafana/grafana-aws-sdk v0.31.0
 	github.com/grafana/grafana-plugin-sdk-go v0.247.0
-	github.com/grafana/sqlds/v4 v4.1.0
+	github.com/grafana/sqlds/v4 v4.1.1
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.9.0
 	github.com/uber/athenadriver v1.1.14-0.20210910155546-e1e4a4cd6895

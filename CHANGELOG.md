@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.17.3
+
+- Update Athena to Amazon Athena
+- fix: don't check slice nilness before length check in [#385](https://github.com/grafana/athena-datasource/pull/385)
+chore: add manual "combine PRs" action in [#386](https://github.com/grafana/athena-datasource/pull/3586)
+- Bump dependencies in [#352](https://github.com/grafana/athena-datasource/pull/352),[#362](https://github.com/grafana/athena-datasource/pull/362), [#363](https://github.com/grafana/athena-datasource/pull/363), [#364](https://github.com/grafana/athena-datasource/pull/364),[#368](https://github.com/grafana/athena-datasource/pull/368), [#370](https://github.com/grafana/athena-datasource/pull/370), [#372](https://github.com/grafana/athena-datasource/pull/372), [#373](https://github.com/grafana/athena-datasource/pull/373), [#376](https://github.com/grafana/athena-datasource/pull/376), [#379](https://github.com/grafana/athena-datasource/pull/379), [#380](https://github.com/grafana/athena-datasource/pull/380), [#382](https://github.com/grafana/athena-datasource/pull/382), [#385](https://github.com/grafana/athena-datasource/pull/385),[#386](https://github.com/grafana/athena-datasource/pull/386), [#388](https://github.com/grafana/athena-datasource/pull/388), [#391](https://github.com/grafana/athena-datasource/pull/391), [#393](https://github.com/grafana/athena-datasource/pull/393),[#395](https://github.com/grafana/athena-datasource/pull/395), [#397](https://github.com/grafana/athena-datasource/pull/397), [#398](https://github.com/grafana/athena-datasource/pull/398)[#399](https://github.com/grafana/athena-datasource/pull/399), [#400](https://github.com/grafana/athena-datasource/pull/400), [#402](https://github.com/grafana/athena-datasource/pull/402), [#403](https://github.com/grafana/athena-datasource/pull/403)
+
 ## 2.17.2
 
 - Bump dependencies in [#347](https://github.com/grafana/athena-datasource/pull/347), [#365](https://github.com/grafana/athena-datasource/pull/365), [#360](https://github.com/grafana/athena-datasource/pull/360), [#361](https://github.com/grafana/athena-datasource/pull/361), [#359](https://github.com/grafana/athena-datasource/pull/359), [#358](https://github.com/grafana/athena-datasource/pull/358), [#357](https://github.com/grafana/athena-datasource/pull/357), [#355](https://github.com/grafana/athena-datasource/pull/355), [#348](https://github.com/grafana/athena-datasource/pull/348), [#351](https://github.com/grafana/athena-datasource/pull/351), [#365](https://github.com/grafana/athena-datasource/pull/365)

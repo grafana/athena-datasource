@@ -18,7 +18,7 @@ updates:
     schedule:
       interval: 'daily'
     ignore:
-      - dependency-name: "@grafana/e2e*
+      - dependency-name: "@grafana/e2e*"
     groups:
       dependencies:
         patterns:

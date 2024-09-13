@@ -75,6 +75,7 @@
     "httptrace",
     "otelhttptrace",
     "Formstyling",
-    "otelgrpc"
+    "otelgrpc",
+    "nilness"
   ]
 }

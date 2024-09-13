@@ -18,4 +18,5 @@ jobs:
         uses: github/combine-prs@v5.1.0
         with:
           labels: combined-pr
+          pr_title: "Dependabot updates"
           branch_prefix: dependabot # the default, just for clarity

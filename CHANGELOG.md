@@ -5,8 +5,33 @@
 - Update Athena to Amazon Athena
 - fix: don't check slice nilness before length check in [#385](https://github.com/grafana/athena-datasource/pull/385)
 chore: add manual "combine PRs" action in [#386](https://github.com/grafana/athena-datasource/pull/3586)
-- Bump dependencies in [#352](https://github.com/grafana/athena-datasource/pull/352),[#362](https://github.com/grafana/athena-datasource/pull/362), [#363](https://github.com/grafana/athena-datasource/pull/363), [#364](https://github.com/grafana/athena-datasource/pull/364),[#368](https://github.com/grafana/athena-datasource/pull/368), [#370](https://github.com/grafana/athena-datasource/pull/370), [#372](https://github.com/grafana/athena-datasource/pull/372), [#373](https://github.com/grafana/athena-datasource/pull/373), [#376](https://github.com/grafana/athena-datasource/pull/376), [#379](https://github.com/grafana/athena-datasource/pull/379), [#380](https://github.com/grafana/athena-datasource/pull/380), [#382](https://github.com/grafana/athena-datasource/pull/382), [#385](https://github.com/grafana/athena-datasource/pull/385),[#386](https://github.com/grafana/athena-datasource/pull/386), [#388](https://github.com/grafana/athena-datasource/pull/388), [#391](https://github.com/grafana/athena-datasource/pull/391), [#393](https://github.com/grafana/athena-datasource/pull/393),[#395](https://github.com/grafana/athena-datasource/pull/395), [#397](https://github.com/grafana/athena-datasource/pull/397), [#398](https://github.com/grafana/athena-datasource/pull/398)[#399](https://github.com/grafana/athena-datasource/pull/399), [#400](https://github.com/grafana/athena-datasource/pull/400), [#402](https://github.com/grafana/athena-datasource/pull/402), [#403](https://github.com/grafana/athena-datasource/pull/403)
-
+- Dependabot updates (some merged via combined PRs):
+  - [#352](https://github.com/grafana/athena-datasource/pull/352): Bump github.com/aws/aws-sdk-go from 1.51.31 to 1.55.5
+  - [#362](https://github.com/grafana/athena-datasource/pull/362): Bump typescript from 5.4.5 to 5.5.4
+  - [#363](https://github.com/grafana/athena-datasource/pull/363): Bump eslint-plugin-prettier from 5.1.3 to 5.2.1
+  - [#364](https://github.com/grafana/athena-datasource/pull/364): Bump sass-loader from 14.2.1 to 16.0.1
+  - [#368](https://github.com/grafana/athena-datasource/pull/368): Bump micromatch from 4.0.7 to 4.0.8
+  - [#370](https://github.com/grafana/athena-datasource/pull/370): Bump the dependencies group across 1 directory with 8 updates
+  - [#372](https://github.com/grafana/athena-datasource/pull/372): Bump github.com/grafana/grafana-plugin-sdk-go from 0.228.0 to 0.245.0
+  - [#373](https://github.com/grafana/athena-datasource/pull/373): Bump webpack from 5.92.1 to 5.94.0
+  - [#376](https://github.com/grafana/athena-datasource/pull/376): Bump @testing-library/react from 16.0.0 to 16.0.1
+  - [#379](https://github.com/grafana/athena-datasource/pull/379): Bump @types/node from 22.5.0 to 22.5.3
+  - [#380](https://github.com/grafana/athena-datasource/pull/380): Bump github.com/grafana/grafana-plugin-sdk-go from 0.245.0 to 0.246.0
+  - [#382](https://github.com/grafana/athena-datasource/pull/382): Bump cypress from 9.5.1 to 12.17.4
+  - [#388](https://github.com/grafana/athena-datasource/pull/388): Bump github.com/grafana/grafana-plugin-sdk-go from 0.246.0 to 0.247.0
+  - [#393](https://github.com/grafana/athena-datasource/pull/393): Bump @emotion/css from 11.10.6 to 11.13.0
+  - [#395](https://github.com/grafana/athena-datasource/pull/395): Bump typescript from 5.5.4 to 5.6.2
+  - [#397](https://github.com/grafana/athena-datasource/pull/397): Bump github.com/grafana/grafana-plugin-sdk-go from 0.247.0 to 0.248.0
+  - [#398](https://github.com/grafana/athena-datasource/pull/398): Bump path-to-regexp from 1.8.0 to 1.9.0
+  - [#400](https://github.com/grafana/athena-datasource/pull/400): Bump the dependencies group across 1 directory with 4 updates
+  - [#383](https://github.com/grafana/athena-datasource/pull/383): Bump eslint-plugin-jsx-a11y from 6.9.0 to 6.10.0
+  - [#381](https://github.com/grafana/athena-datasource/pull/381): Bump sass from 1.77.8 to 1.78.0
+  - [#374](https://github.com/grafana/athena-datasource/pull/374): Bump github.com/grafana/sqlds/v4 from 4.1.0 to 4.1.1
+  - [#366](https://github.com/grafana/athena-datasource/pull/366): Bump prettier from 3.3.2 to 3.3.3
+  - [#350](https://github.com/grafana/athena-datasource/pull/350): Bump actions/setup-node from 3 to 4
+  - [#349](https://github.com/grafana/athena-datasource/pull/349): Bump tibdex/github-app-token from 1.8.0 to 2.1.0
+  - [#392](https://github.com/grafana/athena-datasource/pull/392): Bump @swc/helpers from 0.5.11 to 0.5.13
+  
 ## 2.17.2
 
 - Bump dependencies in [#347](https://github.com/grafana/athena-datasource/pull/347), [#365](https://github.com/grafana/athena-datasource/pull/365), [#360](https://github.com/grafana/athena-datasource/pull/360), [#361](https://github.com/grafana/athena-datasource/pull/361), [#359](https://github.com/grafana/athena-datasource/pull/359), [#358](https://github.com/grafana/athena-datasource/pull/358), [#357](https://github.com/grafana/athena-datasource/pull/357), [#355](https://github.com/grafana/athena-datasource/pull/355), [#348](https://github.com/grafana/athena-datasource/pull/348), [#351](https://github.com/grafana/athena-datasource/pull/351), [#365](https://github.com/grafana/athena-datasource/pull/365)

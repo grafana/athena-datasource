@@ -92,8 +92,8 @@ github.com/grafana/athenadriver v0.0.0-20230518203225-a81b0073ac84 h1:RorAX08zpt
 github.com/grafana/athenadriver v0.0.0-20230518203225-a81b0073ac84/go.mod h1:RnKD7+9Aup8iuFfhK+I26U+z137IXWeoLaEZDepd0Eg=
 github.com/grafana/dataplane/sdata v0.0.9 h1:AGL1LZnCUG4MnQtnWpBPbQ8ZpptaZs14w6kE/MWfg7s=
 github.com/grafana/dataplane/sdata v0.0.9/go.mod h1:Jvs5ddpGmn6vcxT7tCTWAZ1mgi4sbcdFt9utQx5uMAU=
-github.com/grafana/grafana-aws-sdk v0.31.0 h1:mQ+4g+i21S3W09T6y8ZDDvC6vS4p7MfJSChQ5AJJ5lo=
-github.com/grafana/grafana-aws-sdk v0.31.0/go.mod h1:+Nuq2CrKyzbg5PLtXb3f4SOacEIGXw/kuw4FWEoNG+8=
+github.com/grafana/grafana-aws-sdk v0.31.1 h1:uKmKNqZzFwHB+WerE30sjB3m09OE4Zj1s6zjS5V5sNg=
+github.com/grafana/grafana-aws-sdk v0.31.1/go.mod h1:+Nuq2CrKyzbg5PLtXb3f4SOacEIGXw/kuw4FWEoNG+8=
 github.com/grafana/grafana-plugin-sdk-go v0.248.0 h1:wXseE6exRWfjUlqDr/ArocK1EPm8x/mhBdtL0AlIa5M=
 github.com/grafana/grafana-plugin-sdk-go v0.248.0/go.mod h1:sEi0wRVTvpxyB0KaMNbhPM74OnDMwVpah97usm6QXEM=
 github.com/grafana/otel-profiling-go v0.5.1 h1:stVPKAFZSa7eGiqbYuG25VcqYksR6iWvF3YH66t4qL8=

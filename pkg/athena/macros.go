@@ -7,6 +7,7 @@ import (
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend/gtime"
 	"github.com/grafana/grafana-plugin-sdk-go/data/sqlutil"
+	"github.com/grafana/grafana-plugin-sdk-go/experimental/errorsource"
 	"github.com/grafana/sqlds/v4"
 	"github.com/pkg/errors"
 	"github.com/viant/toolbox"
@@ -28,12 +29,12 @@ func parseTime(target, format string) string {
 
 func parseTimeGroup(query *sqlutil.Query, args []string) (time.Duration, string, error) {
 	if len(args) < 2 {
-		return 0, "", errors.WithMessagef(sqlds.ErrorBadArgumentCount, "macro $__timeGroup needs time column and interval")
+		return 0, "", errorsource.DownstreamError(errors.WithMessagef(sqlds.ErrorBadArgumentCount, "macro $__timeGroup needs time column and interval"), false)
 	}
 
 	interval, err := gtime.ParseInterval(strings.Trim(args[1], `'`))
 	if err != nil {
-		return 0, "", fmt.Errorf("error parsing interval %v", args[1])
+		return 0, "", errorsource.DownstreamError(fmt.Errorf("error parsing interval %v", args[1]), false)
 	}
 
 	timeVar := args[0]
@@ -62,7 +63,7 @@ func macroUnixEpochGroup(query *sqlutil.Query, args []string) (string, error) {
 
 func macroParseTime(query *sqlutil.Query, args []string) (string, error) {
 	if len(args) < 1 {
-		return "", errors.WithMessagef(sqlds.ErrorBadArgumentCount, "expected at least one argument")
+		return "", errorsource.DownstreamError(errors.WithMessagef(sqlds.ErrorBadArgumentCount, "expected at least one argument"), false)
 	}
 
 	var (
@@ -79,7 +80,7 @@ func macroParseTime(query *sqlutil.Query, args []string) (string, error) {
 
 func macroTimeFilter(query *sqlutil.Query, args []string) (string, error) {
 	if len(args) < 1 {
-		return "", errors.WithMessagef(sqlds.ErrorBadArgumentCount, "expected at least one argument")
+		return "", errorsource.DownstreamError(errors.WithMessagef(sqlds.ErrorBadArgumentCount, "expected at least one argument"), false)
 	}
 
 	var (
@@ -99,7 +100,7 @@ func macroTimeFilter(query *sqlutil.Query, args []string) (string, error) {
 
 func macroUnixEpochFilter(query *sqlutil.Query, args []string) (string, error) {
 	if len(args) != 1 {
-		return "", errors.WithMessagef(sqlds.ErrorBadArgumentCount, "expected one argument")
+		return "", errorsource.DownstreamError(errors.WithMessagef(sqlds.ErrorBadArgumentCount, "expected one argument"), false)
 	}
 
 	var (
@@ -140,7 +141,7 @@ func macroRawTimeTo(query *sqlutil.Query, args []string) (string, error) {
 
 func macroDateFilter(query *sqlutil.Query, args []string) (string, error) {
 	if len(args) != 1 {
-		return "", errors.WithMessagef(sqlds.ErrorBadArgumentCount, "expected 1 argument, received %d", len(args))
+		return "", errorsource.DownstreamError(errors.WithMessagef(sqlds.ErrorBadArgumentCount, "expected 1 argument, received %d", len(args)), false)
 	}
 
 	var (

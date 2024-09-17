@@ -34,7 +34,7 @@ func parseTimeGroup(query *sqlutil.Query, args []string) (time.Duration, string,
 
 	interval, err := gtime.ParseInterval(strings.Trim(args[1], `'`))
 	if err != nil {
-		return 0, "", errorsource.DownstreamError(fmt.Errorf("error parsing interval %v", args[1]), false)
+		return 0, "", errors.WithMessagef(err, fmt.Sprintf("error parsing interval %v", args[1]))
 	}
 
 	timeVar := args[0]

@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased changes
+- Dependabot updates
+  - Bump github.com/grafana/grafana-plugin-sdk-go from 0.248.0 to 0.250.0
+  - Bump github.com/grafana/grafana-aws-sdk from 0.31.0 to 0.31.2
+  - Bump @types/node from 22.5.3 to 22.5.5
+  - Bump @babel/core from 7.24.7 to 7.25.2
+  - Bump @swc/helpers from 0.5.11 to 0.5.13
+  - Bump @testing-library/jest-dom and @types/testing-library__jest-dom 
+
 ## 2.17.3
 
 - Update Athena to Amazon Athena

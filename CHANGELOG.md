@@ -1,6 +1,7 @@
 # Changelog
 
-## Unreleased changes
+## 2.17.4
+- Mark errors when interpolating macros errors as downstream in [#410](https://github.com/grafana/athena-datasource/pull/410)
 - Dependabot updates
   - Bump github.com/grafana/grafana-plugin-sdk-go from 0.248.0 to 0.250.0
   - Bump github.com/grafana/grafana-aws-sdk from 0.31.0 to 0.31.2

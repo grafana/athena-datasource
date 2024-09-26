@@ -77,6 +77,8 @@
     "Formstyling",
     "otelgrpc",
     "tibdex",
-    "nilness"
+    "nilness",
+    "lefthook",
+    "gofmt"
   ]
 }

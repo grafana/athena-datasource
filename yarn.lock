@@ -7877,6 +7877,72 @@ lazy-ass@^1.6.0:
   resolved "https://registry.yarnpkg.com/lazy-ass/-/lazy-ass-1.6.0.tgz#7999655e8646c17f089fdd187d150d3324d54513"
   integrity sha512-cc8oEVoctTvsFZ/Oje/kGnHbpWHYBe8IAJe4C0QNc3t8uM/0Y8+erSz/7Y1ALuXTEZTMvxXwO6YbX1ey3ujiZw==
 
+lefthook-darwin-arm64@1.7.15:
+  version "1.7.15"
+  resolved "https://registry.yarnpkg.com/lefthook-darwin-arm64/-/lefthook-darwin-arm64-1.7.15.tgz#8592cc67fa291d77e803ca27217ed22ee96ae451"
+  integrity sha512-o8JgCnLM7UgF9g0MwarHJFoj6aVSSkUInHpsQZegV1c7CVQY/LIXgSeAWRb9XBvuUjByJ/HiHFMp9/hAALTwxQ==
+
+lefthook-darwin-x64@1.7.15:
+  version "1.7.15"
+  resolved "https://registry.yarnpkg.com/lefthook-darwin-x64/-/lefthook-darwin-x64-1.7.15.tgz#97581cff055e6e71045128bf8122f1b58e23c017"
+  integrity sha512-nrdoex0icmXYl7AAvG7WtfEzjQtX/kWvM88jPu/gijH6VhAjp110Y8VScB7rWOcApb5kNNeqd1nKMAFgZ8KhAg==
+
+lefthook-freebsd-arm64@1.7.15:
+  version "1.7.15"
+  resolved "https://registry.yarnpkg.com/lefthook-freebsd-arm64/-/lefthook-freebsd-arm64-1.7.15.tgz#b3782811cf3f07acdabf2d9f78556c932c2d3296"
+  integrity sha512-zl1TPynklJZZ/YsWb2H0gfErQbey318i2W85wIKGEk8kC2UzOgYTuPffnfi7kANei9ntZnhvGgilc6tqYOPuGQ==
+
+lefthook-freebsd-x64@1.7.15:
+  version "1.7.15"
+  resolved "https://registry.yarnpkg.com/lefthook-freebsd-x64/-/lefthook-freebsd-x64-1.7.15.tgz#080cbf8c6177ad34ecf7dd20bc4b27cb8fca4f09"
+  integrity sha512-/gKPwhWhZ3Q/efGs73/qw6nyR4WCT74oSTgn8wabAJO5+T/2FXTKzo7IiKkQmScmY5OcnD/0teJbJZ17VWSSOg==
+
+lefthook-linux-arm64@1.7.15:
+  version "1.7.15"
+  resolved "https://registry.yarnpkg.com/lefthook-linux-arm64/-/lefthook-linux-arm64-1.7.15.tgz#705f4cb92a8a2b0edecf87ec5b165182a6befe68"
+  integrity sha512-re2f8WmYw19n8ojit0rnKbERAzD1/iCpU/Y8anXOjD/ROw/cpSfO88uKQrUCNY9Rp4XLtkkp9oDJs3Eg7JS7vA==
+
+lefthook-linux-x64@1.7.15:
+  version "1.7.15"
+  resolved "https://registry.yarnpkg.com/lefthook-linux-x64/-/lefthook-linux-x64-1.7.15.tgz#210d929b94c7b6032420fd14c8e4896d44f64e69"
+  integrity sha512-Kj6ieTlhFGlbPDyVFeOb296MS9x/Jj5y/xTPLBM+EKbdsTJSvUYu5FdtEWfhpLyWmPfkZtULHcTQE1hoo9Q4Cg==
+
+lefthook-openbsd-arm64@1.7.15:
+  version "1.7.15"
+  resolved "https://registry.yarnpkg.com/lefthook-openbsd-arm64/-/lefthook-openbsd-arm64-1.7.15.tgz#b0c10633e913e4b20de57e8089d7b0488f1cf453"
+  integrity sha512-85amE23mJ4BC9OThLkt+QCeVwue2Cr0ezN9LSwP0h8+royyj7YRcSu0VM/Et3B9LO50T2bpdI9norOqTcPZ9yA==
+
+lefthook-openbsd-x64@1.7.15:
+  version "1.7.15"
+  resolved "https://registry.yarnpkg.com/lefthook-openbsd-x64/-/lefthook-openbsd-x64-1.7.15.tgz#9a8e9f4b5dfbd63fcdd7110c7e4fb47d7a33ec5b"
+  integrity sha512-vXx/PpcalFgdvqkoHLI4KTGZp0ti+VCCL7RqDTA6n+GZpxPTWEXSOz3GuwNALX93Dn6MOYQYktKtXADwy24fcA==
+
+lefthook-windows-arm64@1.7.15:
+  version "1.7.15"
+  resolved "https://registry.yarnpkg.com/lefthook-windows-arm64/-/lefthook-windows-arm64-1.7.15.tgz#ed41bdf80f5e8737c81758b78b177f34898b31a2"
+  integrity sha512-jPKdQOLWQLRPO3VfI3ptpmdQBBsXTwaCLKXMo/gcSyU0xE/ltPD4QqvHzTAFJo00VcKRHjv9QeH69qhENjJtjw==
+
+lefthook-windows-x64@1.7.15:
+  version "1.7.15"
+  resolved "https://registry.yarnpkg.com/lefthook-windows-x64/-/lefthook-windows-x64-1.7.15.tgz#2460a3d5c455af56075e8cfc42ab76c04c84e037"
+  integrity sha512-tlkSU669+b64AsqytGy1W3au7h8kFjt5ejLhTkErJpylTqThZIHm/GI0wUmpX+ud8kekM+9j407dweAHYOQ1XA==
+
+lefthook@^1.7.15:
+  version "1.7.15"
+  resolved "https://registry.yarnpkg.com/lefthook/-/lefthook-1.7.15.tgz#58c9f5513211a1c75768ee640a6267a32e354ba0"
+  integrity sha512-HW2mYkhg0a3RH2t57+ZJwacJiSIuDEhsXQAaCw6iGeN7zowdUV7g5QtnRdFdPkaK2eaNFpG6Rp0GsTrl/v0gNg==
+  optionalDependencies:
+    lefthook-darwin-arm64 "1.7.15"
+    lefthook-darwin-x64 "1.7.15"
+    lefthook-freebsd-arm64 "1.7.15"
+    lefthook-freebsd-x64 "1.7.15"
+    lefthook-linux-arm64 "1.7.15"
+    lefthook-linux-x64 "1.7.15"
+    lefthook-openbsd-arm64 "1.7.15"
+    lefthook-openbsd-x64 "1.7.15"
+    lefthook-windows-arm64 "1.7.15"
+    lefthook-windows-x64 "1.7.15"
+
 lerc@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/lerc/-/lerc-3.0.0.tgz#36f36fbd4ba46f0abf4833799fff2e7d6865f5cb"
@@ -10239,16 +10305,7 @@ string-template@~0.2.1:
   resolved "https://registry.yarnpkg.com/string-template/-/string-template-0.2.1.tgz#42932e598a352d01fc22ec3367d9d84eec6c9add"
   integrity sha512-Yptehjogou2xm4UJbxJ4CxgZx12HBfeystp0y3x7s4Dj32ltVVG1Gg8YhKjHZkHicuKpZX/ffilA8505VbUbpw==
 
-"string-width-cjs@npm:string-width@^4.2.0":
-  version "4.2.3"
-  resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
-  integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
-  dependencies:
-    emoji-regex "^8.0.0"
-    is-fullwidth-code-point "^3.0.0"
-    strip-ansi "^6.0.1"
-
-string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
+"string-width-cjs@npm:string-width@^4.2.0", string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
@@ -10332,14 +10389,7 @@ string_decoder@~1.1.1:
   dependencies:
     safe-buffer "~5.1.0"
 
-"strip-ansi-cjs@npm:strip-ansi@^6.0.1":
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
-  integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
-  dependencies:
-    ansi-regex "^5.0.1"
-
-strip-ansi@^6.0.0, strip-ansi@^6.0.1:
+"strip-ansi-cjs@npm:strip-ansi@^6.0.1", strip-ansi@^6.0.0, strip-ansi@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
   integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
@@ -11192,7 +11242,7 @@ workerpool@6.2.1:
   resolved "https://registry.yarnpkg.com/workerpool/-/workerpool-6.2.1.tgz#46fc150c17d826b86a008e5a4508656777e9c343"
   integrity sha512-ILEIE97kDZvF9Wb9f6h5aXK4swSlKGUcOEGiIYb2OOu/IrDU9iwj0fD//SsA6E5ibwJxpEvhullJY4Sl4GcpAw==
 
-"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0":
+"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0", wrap-ansi@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
   integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
@@ -11205,15 +11255,6 @@ wrap-ansi@^6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-6.2.0.tgz#e9393ba07102e6c91a3b221478f0257cd2856e53"
   integrity sha512-r6lPcBGxZXlIcymEu7InxDMhdW0KDxpLgoFLcguasxCaJ/SOIZwINatK9KY/tf+ZrlywOKU0UDj3ATXUBfxJXA==
-  dependencies:
-    ansi-styles "^4.0.0"
-    string-width "^4.1.0"
-    strip-ansi "^6.0.0"
-
-wrap-ansi@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
-  integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
   dependencies:
     ansi-styles "^4.0.0"
     string-width "^4.1.0"

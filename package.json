@@ -40,7 +40,7 @@
     "@grafana/e2e-selectors": "10.3.6",
     "@grafana/eslint-config": "^7.0.0",
     "@grafana/tsconfig": "^2.0.0",
-    "@swc/core": "^1.7.26",
+    "@swc/core": "^1.7.28",
     "@swc/helpers": "^0.5.13",
     "@swc/jest": "^0.2.36",
     "@testing-library/jest-dom": "6.5.0",

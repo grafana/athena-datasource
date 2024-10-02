@@ -26,7 +26,7 @@
       "name": "Grafana Labs",
       "url": "https://grafana.com"
     },
-    "keywords": ["datasource", "athena", "aws", "cloud provider", "logs", "sql"],
+    "keywords": ["datasource", "athena", "aws", "amazon", "cloud provider", "logs", "sql"],
     "logos": {
       "small": "img/logo.svg",
       "large": "img/logo.svg"

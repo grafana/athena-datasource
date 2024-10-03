@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { css } from '@emotion/css';
 import { GrafanaTheme2, QueryEditorProps, SelectableValue } from '@grafana/data';
 import { DataSource } from './datasource';
-import { AthenaDataSourceOptions, AthenaQuery, defaultQuery, SelectableFormatOptions } from './types';
+import {
+  AthenaDataSourceOptions,
+  AthenaQuery,
+  defaultQuery,
+  QueryEditorFieldType,
+  SelectableFormatOptions,
+} from './types';
 import { CollapsableSection, useStyles2 } from '@grafana/ui';
 import { FormatSelect, ResourceSelector } from '@grafana/aws-sdk';
 import { selectors } from 'tests/selectors';
@@ -14,14 +20,6 @@ import { EditorField, EditorFieldGroup, EditorRow, EditorRows } from '@grafana/e
 type Props = QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions> & {
   hideOptions?: boolean;
 };
-
-enum QueryEditorFieldType {
-  Regions = 'regions',
-  Catalogs = 'catalogs',
-  Databases = 'databases',
-  Tables = 'tables',
-  Columns = 'columns',
-}
 
 export function QueryEditorForm(props: Props) {
   const [resultReuseSupported, setResultReuseSupported] = useState(false);

@@ -6,7 +6,7 @@ import { mockDatasource, mockQuery } from './__mocks__/datasource';
 import '@testing-library/jest-dom';
 import { select } from 'react-select-event';
 import { selectors } from 'tests/selectors';
-import { defaultKey, defaultQuery } from 'types';
+import { defaultKey, defaultQuery, QueryEditorFieldType } from 'types';
 import * as experimental from '@grafana/experimental';
 
 const ds = mockDatasource;
@@ -39,7 +39,7 @@ describe('QueryEditor', () => {
   it('should request regions and use a new one', async () => {
     const onChange = jest.fn();
     ds.getResource = jest.fn().mockResolvedValue([ds.defaultRegion, 'foo']);
-    ds.getRegions = jest.fn(() => ds.getResource('regions'));
+    ds.getRegions = jest.fn(() => ds.getResource(QueryEditorFieldType.Regions));
     render(<QueryEditorForm {...props} onChange={onChange} />);
 
     const selectEl = screen.getByLabelText(selectors.components.ConfigEditor.region.input);
@@ -48,7 +48,7 @@ describe('QueryEditor', () => {
 
     await select(selectEl, 'foo', { container: document.body });
 
-    expect(ds.getResource).toHaveBeenCalledWith('regions');
+    expect(ds.getResource).toHaveBeenCalledWith(QueryEditorFieldType.Regions);
     expect(onChange).toHaveBeenCalledWith({
       ...q,
       connectionArgs: { ...q.connectionArgs, region: 'foo' },
@@ -58,7 +58,9 @@ describe('QueryEditor', () => {
   it('should request catalogs and use a new one', async () => {
     const onChange = jest.fn();
     ds.postResource = jest.fn().mockResolvedValue([ds.defaultCatalog, 'foo']);
-    ds.getCatalogs = jest.fn((query) => ds.postResource('catalogs', { region: query.connectionArgs.region }));
+    ds.getCatalogs = jest.fn((query) =>
+      ds.postResource(QueryEditorFieldType.Catalogs, { region: query.connectionArgs.region })
+    );
     render(<QueryEditorForm {...props} onChange={onChange} />);
 
     const selectEl = screen.getByLabelText(selectors.components.ConfigEditor.catalog.input);
@@ -67,7 +69,7 @@ describe('QueryEditor', () => {
 
     await select(selectEl, 'foo', { container: document.body });
 
-    expect(ds.postResource).toHaveBeenCalledWith('catalogs', { region: defaultKey });
+    expect(ds.postResource).toHaveBeenCalledWith(QueryEditorFieldType.Catalogs, { region: defaultKey });
     expect(onChange).toHaveBeenCalledWith({
       ...q,
       connectionArgs: { ...q.connectionArgs, catalog: 'foo' },
@@ -79,7 +81,10 @@ describe('QueryEditor', () => {
     const onRunQuery = jest.fn();
     ds.postResource = jest.fn().mockResolvedValue([ds.defaultDatabase, 'foo']);
     ds.getDatabases = jest.fn((query) =>
-      ds.postResource('databases', { region: query.connectionArgs.region, catalog: query.connectionArgs.catalog })
+      ds.postResource(QueryEditorFieldType.Databases, {
+        region: query.connectionArgs.region,
+        catalog: query.connectionArgs.catalog,
+      })
     );
     render(<QueryEditorForm {...props} onChange={onChange} onRunQuery={onRunQuery} />);
 
@@ -89,7 +94,10 @@ describe('QueryEditor', () => {
 
     await select(selectEl, 'foo', { container: document.body });
 
-    expect(ds.postResource).toHaveBeenCalledWith('databases', { region: defaultKey, catalog: defaultKey });
+    expect(ds.postResource).toHaveBeenCalledWith(QueryEditorFieldType.Databases, {
+      region: defaultKey,
+      catalog: defaultKey,
+    });
     expect(onChange).toHaveBeenCalledWith({
       ...q,
       connectionArgs: { ...q.connectionArgs, database: 'foo' },
@@ -102,7 +110,7 @@ describe('QueryEditor', () => {
     const onRunQuery = jest.fn();
     ds.postResource = jest.fn().mockResolvedValue(['foo']);
     ds.getTables = jest.fn((query) =>
-      ds.postResource('tables', {
+      ds.postResource(QueryEditorFieldType.Tables, {
         region: query.connectionArgs.region,
         catalog: query.connectionArgs.catalog,
         database: query.connectionArgs.database,
@@ -116,7 +124,7 @@ describe('QueryEditor', () => {
     await select(selectEl, 'foo', { container: document.body });
 
     expect(ds.postResource).toHaveBeenCalledWith(
-      'tables',
+      QueryEditorFieldType.Tables,
       expect.objectContaining({ region: defaultKey, catalog: defaultKey, database: defaultKey })
     );
     expect(onChange).toHaveBeenCalledWith({
@@ -131,7 +139,7 @@ describe('QueryEditor', () => {
     const onRunQuery = jest.fn();
     ds.postResource = jest.fn().mockResolvedValue(['columnName']);
     ds.getColumns = jest.fn((query) =>
-      ds.postResource('columns', {
+      ds.postResource(QueryEditorFieldType.Columns, {
         region: query.connectionArgs.region,
         catalog: query.connectionArgs.catalog,
         database: query.connectionArgs.database,
@@ -153,7 +161,7 @@ describe('QueryEditor', () => {
     await select(selectEl, 'columnName', { container: document.body });
 
     expect(ds.postResource).toHaveBeenCalledWith(
-      'columns',
+      QueryEditorFieldType.Columns,
       expect.objectContaining({ region: defaultKey, catalog: defaultKey, database: defaultKey, table: 'tableName' })
     );
     expect(onChange).toHaveBeenCalledWith({

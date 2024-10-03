@@ -7,6 +7,14 @@ export enum FormatOptions {
   Logs,
 }
 
+export enum QueryEditorFieldType {
+  Regions = 'regions',
+  Catalogs = 'catalogs',
+  Databases = 'databases',
+  Tables = 'tables',
+  Columns = 'columns',
+}
+
 export const SelectableFormatOptions: Array<SelectableValue<FormatOptions>> = [
   {
     label: 'Time Series',

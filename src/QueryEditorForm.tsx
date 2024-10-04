@@ -40,6 +40,17 @@ export function QueryEditorForm(props: Props) {
     },
   };
 
+  /*
+    State used force the component to re-render when fetching
+    editor field options so they show up in the select component
+  */
+  const [needsUpdate, setNeedsUpdate] = useState(false);
+  useEffect(() => {
+    if (needsUpdate) {
+      setNeedsUpdate(false);
+    }
+  }, [needsUpdate]);
+
   // Populate the props.query with defaults on mount
   useEffect(() => {
     props.onChange(queryWithDefaults);
@@ -49,22 +60,31 @@ export function QueryEditorForm(props: Props) {
 
   const templateVariables = props.datasource.getVariables();
 
-  const fetchRegions = () =>
-    props.datasource.getRegions().then((regions) => appendTemplateVariables(templateVariables, regions));
-  const fetchCatalogs = () =>
-    props.datasource
+  const fetchRegions = async () =>
+    await props.datasource
+      .getRegions()
+      .then((regions) => appendTemplateVariables(templateVariables, regions))
+      .finally(() => setNeedsUpdate(true));
+  const fetchCatalogs = async () =>
+    await props.datasource
       .getCatalogs(queryWithDefaults)
-      .then((catalogs) => appendTemplateVariables(templateVariables, catalogs));
-  const fetchDatabases = () =>
-    props.datasource
+      .then((catalogs) => appendTemplateVariables(templateVariables, catalogs))
+      .finally(() => setNeedsUpdate(true));
+  const fetchDatabases = async () =>
+    await props.datasource
       .getDatabases(queryWithDefaults)
-      .then((databases) => appendTemplateVariables(templateVariables, databases));
-  const fetchTables = () =>
-    props.datasource.getTables(queryWithDefaults).then((tables) => appendTemplateVariables(templateVariables, tables));
-  const fetchColumns = () =>
-    props.datasource
+      .then((databases) => appendTemplateVariables(templateVariables, databases))
+      .finally(() => setNeedsUpdate(true));
+  const fetchTables = async () =>
+    await props.datasource
+      .getTables(queryWithDefaults)
+      .then((tables) => appendTemplateVariables(templateVariables, tables))
+      .finally(() => setNeedsUpdate(true));
+  const fetchColumns = async () =>
+    await props.datasource
       .getColumns(queryWithDefaults)
-      .then((columns) => appendTemplateVariables(templateVariables, columns));
+      .then((columns) => appendTemplateVariables(templateVariables, columns))
+      .finally(() => setNeedsUpdate(true));
 
   const onChange = (prop: QueryEditorFieldType) => (e: SelectableValue<string> | null) => {
     const newQuery = { ...props.query };

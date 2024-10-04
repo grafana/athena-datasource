@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { css } from '@emotion/css';
 import { GrafanaTheme2, QueryEditorProps, SelectableValue } from '@grafana/data';
 import { DataSource } from './datasource';
-import { AthenaDataSourceOptions, AthenaQuery, defaultQuery, SelectableFormatOptions } from './types';
+import {
+  AthenaDataSourceOptions,
+  AthenaQuery,
+  defaultQuery,
+  QueryEditorFieldType,
+  SelectableFormatOptions,
+} from './types';
 import { CollapsableSection, useStyles2 } from '@grafana/ui';
 import { FormatSelect, ResourceSelector } from '@grafana/aws-sdk';
 import { selectors } from 'tests/selectors';
@@ -14,8 +20,6 @@ import { EditorField, EditorFieldGroup, EditorRow, EditorRows } from '@grafana/e
 type Props = QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions> & {
   hideOptions?: boolean;
 };
-
-type QueryProperties = 'regions' | 'catalogs' | 'databases' | 'tables' | 'columns';
 
 export function QueryEditorForm(props: Props) {
   const [resultReuseSupported, setResultReuseSupported] = useState(false);
@@ -36,6 +40,17 @@ export function QueryEditorForm(props: Props) {
     },
   };
 
+  /*
+    State used force the component to re-render when fetching
+    editor field options so they show up in the select component
+  */
+  const [needsUpdate, setNeedsUpdate] = useState(false);
+  useEffect(() => {
+    if (needsUpdate) {
+      setNeedsUpdate(false);
+    }
+  }, [needsUpdate]);
+
   // Populate the props.query with defaults on mount
   useEffect(() => {
     props.onChange(queryWithDefaults);
@@ -45,40 +60,49 @@ export function QueryEditorForm(props: Props) {
 
   const templateVariables = props.datasource.getVariables();
 
-  const fetchRegions = () =>
-    props.datasource.getRegions().then((regions) => appendTemplateVariables(templateVariables, regions));
-  const fetchCatalogs = () =>
-    props.datasource
+  const fetchRegions = async () =>
+    await props.datasource
+      .getRegions()
+      .then((regions) => appendTemplateVariables(templateVariables, regions))
+      .finally(() => setNeedsUpdate(true));
+  const fetchCatalogs = async () =>
+    await props.datasource
       .getCatalogs(queryWithDefaults)
-      .then((catalogs) => appendTemplateVariables(templateVariables, catalogs));
-  const fetchDatabases = () =>
-    props.datasource
+      .then((catalogs) => appendTemplateVariables(templateVariables, catalogs))
+      .finally(() => setNeedsUpdate(true));
+  const fetchDatabases = async () =>
+    await props.datasource
       .getDatabases(queryWithDefaults)
-      .then((databases) => appendTemplateVariables(templateVariables, databases));
-  const fetchTables = () =>
-    props.datasource.getTables(queryWithDefaults).then((tables) => appendTemplateVariables(templateVariables, tables));
-  const fetchColumns = () =>
-    props.datasource
+      .then((databases) => appendTemplateVariables(templateVariables, databases))
+      .finally(() => setNeedsUpdate(true));
+  const fetchTables = async () =>
+    await props.datasource
+      .getTables(queryWithDefaults)
+      .then((tables) => appendTemplateVariables(templateVariables, tables))
+      .finally(() => setNeedsUpdate(true));
+  const fetchColumns = async () =>
+    await props.datasource
       .getColumns(queryWithDefaults)
-      .then((columns) => appendTemplateVariables(templateVariables, columns));
+      .then((columns) => appendTemplateVariables(templateVariables, columns))
+      .finally(() => setNeedsUpdate(true));
 
-  const onChange = (prop: QueryProperties) => (e: SelectableValue<string> | null) => {
+  const onChange = (prop: QueryEditorFieldType) => (e: SelectableValue<string> | null) => {
     const newQuery = { ...props.query };
     const value = e?.value;
     switch (prop) {
-      case 'regions':
+      case QueryEditorFieldType.Regions:
         newQuery.connectionArgs = { ...newQuery.connectionArgs, region: value };
         break;
-      case 'catalogs':
+      case QueryEditorFieldType.Catalogs:
         newQuery.connectionArgs = { ...newQuery.connectionArgs, catalog: value };
         break;
-      case 'databases':
+      case QueryEditorFieldType.Databases:
         newQuery.connectionArgs = { ...newQuery.connectionArgs, database: value };
         break;
-      case 'tables':
+      case QueryEditorFieldType.Tables:
         newQuery.table = value;
         break;
-      case 'columns':
+      case QueryEditorFieldType.Columns:
         newQuery.column = value;
         break;
     }
@@ -93,11 +117,11 @@ export function QueryEditorForm(props: Props) {
             width={15}
             label={selectors.components.ConfigEditor.region.input}
             data-testid={selectors.components.ConfigEditor.region.wrapper}
-            htmlFor="regions"
+            htmlFor={QueryEditorFieldType.Regions}
           >
             <ResourceSelector
-              id="regions"
-              onChange={onChange('regions')}
+              id={QueryEditorFieldType.Regions}
+              onChange={onChange(QueryEditorFieldType.Regions)}
               fetch={fetchRegions}
               value={queryWithDefaults.connectionArgs.region ?? null}
               default={props.datasource.defaultRegion}
@@ -108,11 +132,11 @@ export function QueryEditorForm(props: Props) {
             width={15}
             label={selectors.components.ConfigEditor.catalog.input}
             data-testid={selectors.components.ConfigEditor.catalog.wrapper}
-            htmlFor="catalogs"
+            htmlFor={QueryEditorFieldType.Catalogs}
           >
             <ResourceSelector
-              id="catalogs"
-              onChange={onChange('catalogs')}
+              id={QueryEditorFieldType.Catalogs}
+              onChange={onChange(QueryEditorFieldType.Catalogs)}
               fetch={fetchCatalogs}
               value={queryWithDefaults.connectionArgs.catalog ?? null}
               default={props.datasource.defaultCatalog}
@@ -127,11 +151,11 @@ export function QueryEditorForm(props: Props) {
             width={20}
             label={selectors.components.ConfigEditor.database.input}
             data-testid={selectors.components.ConfigEditor.database.wrapper}
-            htmlFor="databases"
+            htmlFor={QueryEditorFieldType.Databases}
           >
             <ResourceSelector
-              id="databases"
-              onChange={onChange('databases')}
+              id={QueryEditorFieldType.Databases}
+              onChange={onChange(QueryEditorFieldType.Databases)}
               fetch={fetchDatabases}
               value={queryWithDefaults.connectionArgs.database ?? null}
               default={props.datasource.defaultDatabase}
@@ -144,11 +168,11 @@ export function QueryEditorForm(props: Props) {
             label={selectors.components.ConfigEditor.table.input}
             data-testid={selectors.components.ConfigEditor.table.wrapper}
             tooltip="Use the selected table with the $__table macro"
-            htmlFor="tables"
+            htmlFor={QueryEditorFieldType.Tables}
           >
             <ResourceSelector
-              id="tables"
-              onChange={onChange('tables')}
+              id={QueryEditorFieldType.Tables}
+              onChange={onChange(QueryEditorFieldType.Tables)}
               fetch={fetchTables}
               value={props.query.table || null}
               dependencies={[queryWithDefaults.connectionArgs.database]}
@@ -160,12 +184,12 @@ export function QueryEditorForm(props: Props) {
             label={selectors.components.ConfigEditor.column.input}
             data-testid={selectors.components.ConfigEditor.column.wrapper}
             tooltip="Use the selected column with the $__column macro"
-            htmlFor="columns"
+            htmlFor={QueryEditorFieldType.Columns}
           >
             <ResourceSelector
-              id="columns"
+              id={QueryEditorFieldType.Columns}
               label={selectors.components.ConfigEditor.column.input}
-              onChange={onChange('columns')}
+              onChange={onChange(QueryEditorFieldType.Columns)}
               fetch={fetchColumns}
               value={props.query.column || null}
               dependencies={[queryWithDefaults.table]}
@@ -203,7 +227,7 @@ export function QueryEditorForm(props: Props) {
         </div>
       </EditorRow>
       <EditorRow>
-        <div style={{ width: '100%' }}>
+        <div className={styles.sqlEditor}>
           <SQLEditor query={props.query} onChange={props.onChange} datasource={props.datasource} />
         </div>
       </EditorRow>
@@ -235,5 +259,8 @@ const getStyles = (theme: GrafanaTheme2) => ({
     '*[id^="collapse-content-"]': {
       padding: 'unset',
     },
+  }),
+  sqlEditor: css({
+    width: '100%',
   }),
 });

@@ -8,21 +8,29 @@ updates:
   - package-ecosystem: 'gomod'
     directory: '/'
     schedule:
-      interval: 'daily'
+      interval: 'weekly'
+    groups:
+      all-dependencies:
+        patterns:
+          - '*'
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
-      interval: 'daily'
+      interval: 'weekly'
+    groups:
+      all-dependencies:
+        patterns:
+          - '*'
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
-      interval: 'daily'
+      interval: 'weekly'
     ignore:
       - dependency-name: "@grafana/e2e*"
     groups:
-      dependencies:
+      grafana-dependencies:
         patterns:
           - '@grafana/*'
-      dev-dependencies:
+      all-dependencies:
         patterns:
-          - '@grafana/e2e*'
+          - '*'

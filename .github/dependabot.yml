@@ -28,9 +28,6 @@ updates:
     ignore:
       - dependency-name: "@grafana/e2e*"
     groups:
-      grafana-dependencies:
-        patterns:
-          - '@grafana/*'
       all-dependencies:
         patterns:
           - '*'

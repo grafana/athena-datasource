@@ -2,10 +2,10 @@
 
 ## 2.17.5
 
-- Bugfix: Bump uber/athenadriver to 1.1.15 (#448)
-- Chore: group dependabot updates and use a weekly interval (#443)
-- Query Editor: Fix field options not loading in (#437)
-- Chore: Update plugin.json keywords (#434)
+- Bugfix: Bump uber/athenadriver to 1.1.15 in #448
+- Chore: group dependabot updates and use a weekly interval in #443
+- Query Editor: Fix field options not loading in #437
+- Chore: Update plugin.json keywords in #434
 - Dependabot updates
  - Bump @types/node from 22.7.2 to 22.7.5
  - Bump @babel/core from 7.25.2 to 7.25.7

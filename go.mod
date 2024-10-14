@@ -12,7 +12,7 @@ require (
 	github.com/grafana/sqlds/v4 v4.1.2
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.9.0
-	github.com/uber/athenadriver v1.1.14-0.20210910155546-e1e4a4cd6895
+	github.com/uber/athenadriver v1.1.15
 	github.com/viant/toolbox v0.37.0
 	gotest.tools v2.2.0+incompatible
 )
@@ -132,5 +132,3 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-replace github.com/uber/athenadriver => github.com/grafana/athenadriver v0.0.0-20230518203225-a81b0073ac84

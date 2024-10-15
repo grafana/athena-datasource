@@ -11,25 +11,27 @@
  - Bump @babel/core from 7.25.2 to 7.25.7
  - Bump @emotion/css from 11.13.0 to 11.13.4
  - Updates @grafana/data from 11.2.1 to 11.2.2
- - Updates @grafana/experimental from 2.1.0 to 2.1.1
+ - Updates @grafana/experimental from 2.1.0 to 2.1.2
  - Updates @grafana/runtime from 11.2.1 to 11.2.2
  - Updates @grafana/schema from 11.2.1 to 11.2.2
  - Updates @grafana/ui from 11.2.1 to 11.2.2
  - Updates @grafana/aws-sdk from 0.4.2 to 0.5.0
  - Bump webpack from 5.94.0 to 5.95.0 
- - Bump sass from 1.79.3 to 1.79.4 
+ - Bump sass from 1.79.3 to 1.79.5 
  - Bump lefthook from 1.7.17 to 1.7.18
  - Bump github.com/grafana/sqlds/v4 from 4.1.1 to 4.1.2
  - Bump github.com/grafana/grafana-aws-sdk from 0.31.2 to 0.31.3 
  - Bump @types/lodash from 4.17.7 to 4.17.10 
- - Bump @swc/core from 1.7.26 to 1.7.28 (#426)
+ - Bump @swc/core from 1.7.26 to 1.7.35 (#426)
  - Bump @types/node from 22.5.5 to 22.7.2 (#425)
  - Bump lefthook from 1.7.16 to 1.7.17 (#424)
  - Bump @types/jest from 29.5.12 to 29.5.13 
  - Bump lefthook from 1.7.15 to 1.7.16 
  - Bump sass-loader from 16.0.1 to 16.0.2 
- - Bump cspell from 8.14.2 to 8.14.4 
- - Bump github.com/grafana/grafana-plugin-sdk-go from 0.250.2 to 0.251.0 
+ - Bump cspell from 8.14.2 to 8.15.2 
+ - Bump github.com/grafana/grafana-plugin-sdk-go from 0.250.2 to 0.251.0
+ - Bump github/combine-prs from 5.1.0 to 5.2.0
+ - Bump typescript from 5.6.2 to 5.6.3
 
 ## 2.17.4
 - Mark errors when interpolating macros errors as downstream in [#410](https://github.com/grafana/athena-datasource/pull/410)

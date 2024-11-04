@@ -7,9 +7,9 @@ toolchain go1.23.1
 require (
 	github.com/aws/aws-sdk-go v1.55.5
 	github.com/google/go-cmp v0.6.0
-	github.com/grafana/grafana-aws-sdk v0.31.3
-	github.com/grafana/grafana-plugin-sdk-go v0.256.0
-	github.com/grafana/sqlds/v4 v4.1.2
+	github.com/grafana/grafana-aws-sdk v0.31.4
+	github.com/grafana/grafana-plugin-sdk-go v0.258.0
+	github.com/grafana/sqlds/v4 v4.1.3
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.9.0
 	github.com/uber/athenadriver v1.1.15
@@ -100,9 +100,9 @@ require (
 	github.com/viant/xunsafe v0.9.3 // indirect
 	github.com/xwb1989/sqlparser v0.0.0-20180606152119-120387863bf2 // indirect
 	github.com/zeebo/xxh3 v1.0.2 // indirect
-	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.53.0 // indirect
-	go.opentelemetry.io/contrib/instrumentation/net/http/httptrace/otelhttptrace v0.53.0 // indirect
-	go.opentelemetry.io/contrib/propagators/jaeger v1.29.0 // indirect
+	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.56.0 // indirect
+	go.opentelemetry.io/contrib/instrumentation/net/http/httptrace/otelhttptrace v0.56.0 // indirect
+	go.opentelemetry.io/contrib/propagators/jaeger v1.31.0 // indirect
 	go.opentelemetry.io/contrib/samplers/jaegerremote v0.25.0 // indirect
 	go.opentelemetry.io/otel v1.31.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.31.0 // indirect

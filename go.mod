@@ -7,7 +7,7 @@ toolchain go1.23.1
 require (
 	github.com/aws/aws-sdk-go v1.55.5
 	github.com/google/go-cmp v0.6.0
-	github.com/grafana/grafana-aws-sdk v0.31.3
+	github.com/grafana/grafana-aws-sdk v0.31.4
 	github.com/grafana/grafana-plugin-sdk-go v0.259.2
 	github.com/grafana/sqlds/v4 v4.1.4
 	github.com/pkg/errors v0.9.1

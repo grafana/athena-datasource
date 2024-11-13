@@ -6,7 +6,6 @@ import (
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/data/sqlutil"
-	"github.com/grafana/sqlds/v4"
 	"github.com/pkg/errors"
 )
 
@@ -49,7 +48,7 @@ func Test_macros(t *testing.T) {
 			&sqlutil.Query{},
 			[]string{},
 			"",
-			sqlds.ErrorBadArgumentCount,
+			sqlutil.ErrorBadArgumentCount,
 		},
 		{
 			"parse time",
@@ -104,7 +103,7 @@ func Test_macros(t *testing.T) {
 			&sqlutil.Query{},
 			[]string{},
 			"",
-			sqlds.ErrorBadArgumentCount,
+			sqlutil.ErrorBadArgumentCount,
 		},
 		{
 			"raw time from",

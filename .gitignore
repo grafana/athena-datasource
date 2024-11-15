@@ -38,3 +38,8 @@ cypress/videos/
 # vscode
 .vscode
 __debug_bin
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/

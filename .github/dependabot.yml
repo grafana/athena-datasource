@@ -10,7 +10,7 @@ updates:
     schedule:
       interval: 'weekly'
     groups:
-      all-dependencies:
+      all-go-dependencies:
         patterns:
           - '*'
   - package-ecosystem: 'github-actions'
@@ -18,7 +18,7 @@ updates:
     schedule:
       interval: 'weekly'
     groups:
-      all-dependencies:
+      all-github-action-dependencies:
         patterns:
           - '*'
   - package-ecosystem: 'npm'
@@ -26,8 +26,8 @@ updates:
     schedule:
       interval: 'weekly'
     ignore:
-      - dependency-name: "@grafana/e2e*"
+      - dependency-name: '@grafana/e2e*'
     groups:
-      all-dependencies:
+      all-node-dependencies:
         patterns:
           - '*'

@@ -4,28 +4,35 @@
 
 - Bump sqlds and grafana-plugin-sdk-go for error source improvements in [#462](https://github.com/grafana/athena-datasource/pull/462)
 - Dependabot updates
+  - @emotion/css from 11.13.4 to 11.13.5
   - @grafana/async-query-data from 0.2.0 to 0.3.0
-  - @grafana/data from 11.2.2 to 11.3.0
+  - @grafana/data from 11.2.2 to 11.3.1
   - @grafana/eslint-config from 7.0.0 to 8.0.0
-  - @grafana/runtime from 11.2.2 to 11.3.0
-  - @grafana/schema from 11.2.2 to 11.3.0
+  - @grafana/experimental from 2.1.2 to 2.1.4
+  - @grafana/runtime from 11.2.2 to 11.3.1
+  - @grafana/schema from 11.2.2 to 11.3.1
+  - @grafana/ui from 11.3.0 to 11.3.1
   - tslib from 2.7.0 to 2.8.1
   - @babel/core from 7.25.8 to 7.26.0
-  - @swc/core from 1.7.35 to 1.9.2
+  - @swc/core from 1.7.35 to 1.9.3
   - @swc/helpers from 0.5.13 to 0.5.15
   - @swc/jest from 0.2.36 to 0.2.37
   - @testing-library/jest-dom from 6.5.0 to 6.6.3
   - @types/jest from 29.5.13 to 29.5.14
   - @types/lodash from 4.17.10 to 4.17.13
-  - @types/node from 22.7.5 to 22.9.0
+  - @types/node from 22.7.5 to 22.9.3
   - cross-spawn from 7.0.3 to 7.0.6
   - cspell from 8.15.2 to 8.16.0
   - eslint-plugin-jsx-a11y from 6.10.0 to 6.10.2
   - lefthook from 1.7.18 to 1.8.4
+  - react-router-dom from 6.28.0 to 7.0.1
   - sass from 1.79.5 to 1.81.0
   - sass-loader from 16.0.2 to 16.0.3
+  - typescript from 5.6.3 to 5.7.2
   - webpack from 5.95.0 to 5.96.1
   - github.com/grafana/grafana-aws-sdk from 0.31.3 to 0.31.4
+  - github.com/grafana/grafana-plugin-sdk-go from 0.259.2 to 0.259.4
+  - github.com/stretchr/testify from 1.9.0 to 1.10.0
 
 ## 2.17.5
 

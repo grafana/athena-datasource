@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { QueryEditor } from 'QueryEditor';
 import React from 'react';
 import { mockDatasource, mockQuery } from './__mocks__/datasource';
-import * as experimental from '@grafana/plugin-ui';
+import * as pluginUi from '@grafana/plugin-ui';
 
 const ds = mockDatasource;
 const q = { ...mockQuery, rawSQL: '' };
@@ -11,8 +11,8 @@ const mockGetVariables = jest.fn().mockReturnValue([]);
 
 jest.spyOn(ds, 'getVariables').mockImplementation(mockGetVariables);
 
-jest.mock('@grafana/experimental', () => ({
-  ...jest.requireActual<typeof experimental>('@grafana/experimental'),
+jest.mock('@grafana/plugin-ui', () => ({
+  ...jest.requireActual<typeof pluginUi>('@grafana/plugin-ui'),
   SQLEditor: function SQLEditor(props: any) {
     return (
       <input {...props} data-testid="codeEditor" onChange={(event: any) => props.onChange(event.target.value)}></input>

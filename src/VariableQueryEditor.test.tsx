@@ -4,7 +4,7 @@ import { VariableQueryCodeEditor } from './VariableQueryEditor';
 import { mockDatasource, mockQuery } from './__mocks__/datasource';
 import '@testing-library/jest-dom';
 import * as runtime from '@grafana/runtime';
-import * as experimental from '@grafana/plugin-ui';
+import * as pluginUi from '@grafana/plugin-ui';
 
 const ds = mockDatasource;
 const q = mockQuery;
@@ -20,8 +20,8 @@ jest.spyOn(runtime, 'getTemplateSrv').mockImplementation(() => ({
 
 jest.spyOn(ds, 'getVariables').mockImplementation(mockGetVariables);
 
-jest.mock('@grafana/experimental', () => ({
-  ...jest.requireActual<typeof experimental>('@grafana/experimental'),
+jest.mock('@grafana/plugin-ui', () => ({
+  ...jest.requireActual<typeof pluginUi>('@grafana/plugin-ui'),
   SQLEditor: function SQLEditor() {
     return <></>;
   },

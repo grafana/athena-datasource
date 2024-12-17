@@ -1,6 +1,6 @@
 ## Compatibility
 
-AWS Athena datasource plugin >=3.0.0 is not compatible with Grafana versions <=10.3.x dui to a breaking change in UI components.
+AWS Athena datasource plugin >=3.0.0 is not compatible with Grafana versions <=10.3.x due to a breaking change in UI components.
 
 # Amazon Athena data source for Grafana
 

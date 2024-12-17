@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.0.0
+
+- Replace @grafana/experimental with @grafana/plugin-ui in [#477](https://github.com/grafana/athena-datasource/pull/477)
+
 ## 2.18.0
 
 - Bump sqlds and grafana-plugin-sdk-go for error source improvements in [#462](https://github.com/grafana/athena-datasource/pull/462)

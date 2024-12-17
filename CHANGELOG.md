@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.0.0
+
+- Replace @grafana/experimental with @grafana/plugin-ui in [#477](https://github.com/grafana/athena-datasource/pull/477)
+
 ## 2.19.0
 
 - Add PDC support in [#478](https://github.com/grafana/athena-datasource/pull/478)

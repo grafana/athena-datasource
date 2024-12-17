@@ -24,6 +24,7 @@
     "@grafana/async-query-data": "0.4.0",
     "@grafana/data": "^11.4.0",
     "@grafana/experimental": "2.1.6",
+    "@grafana/plugin-ui": "^0.9.3",
     "@grafana/runtime": "^11.4.0",
     "@grafana/schema": "11.4.0",
     "@grafana/ui": "^11.2.0",

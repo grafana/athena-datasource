@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { QueryEditor } from 'QueryEditor';
 import React from 'react';
 import { mockDatasource, mockQuery } from './__mocks__/datasource';
-import * as experimental from '@grafana/experimental';
+import * as experimental from '@grafana/plugin-ui';
 
 const ds = mockDatasource;
 const q = { ...mockQuery, rawSQL: '' };

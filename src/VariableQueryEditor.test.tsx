@@ -4,7 +4,7 @@ import { VariableQueryCodeEditor } from './VariableQueryEditor';
 import { mockDatasource, mockQuery } from './__mocks__/datasource';
 import '@testing-library/jest-dom';
 import * as runtime from '@grafana/runtime';
-import * as experimental from '@grafana/experimental';
+import * as experimental from '@grafana/plugin-ui';
 
 const ds = mockDatasource;
 const q = mockQuery;

@@ -1,4 +1,4 @@
-import { SQLEditor as SQLCodeEditor } from '@grafana/experimental';
+import { SQLEditor as SQLCodeEditor } from '@grafana/plugin-ui';
 import { DataSource } from 'datasource';
 import { getAthenaCompletionProvider } from 'language/completionItemProvider';
 import { TABLE_MACRO } from 'language/macros';

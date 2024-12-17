@@ -7,7 +7,7 @@ import '@testing-library/jest-dom';
 import { select } from 'react-select-event';
 import { selectors } from 'tests/selectors';
 import { defaultKey, defaultQuery, QueryEditorFieldType } from 'types';
-import * as experimental from '@grafana/experimental';
+import * as experimental from '@grafana/plugin-ui';
 
 const ds = mockDatasource;
 const q = mockQuery;

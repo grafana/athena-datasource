@@ -15,7 +15,7 @@ import { selectors } from 'tests/selectors';
 import { appendTemplateVariables } from 'utils';
 import SQLEditor from 'SQLEditor';
 import { ResultReuse } from 'ResultReuse/ResultReuse';
-import { EditorField, EditorFieldGroup, EditorRow, EditorRows } from '@grafana/experimental';
+import { EditorField, EditorFieldGroup, EditorRow, EditorRows } from '@grafana/plugin-ui';
 
 type Props = QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions> & {
   hideOptions?: boolean;

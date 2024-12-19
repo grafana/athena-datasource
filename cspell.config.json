@@ -80,6 +80,7 @@
     "tibdex",
     "nilness",
     "lefthook",
-    "gofmt"
+    "gofmt",
+    "additionaleventdata"
   ]
 }

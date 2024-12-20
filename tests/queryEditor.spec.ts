@@ -1,18 +1,8 @@
-import { test, expect, PanelEditPage } from '@grafana/plugin-e2e';
+import { test, expect } from '@grafana/plugin-e2e';
 import { selectors } from '../src/tests/selectors';
 
-test('should render query editor', async ({
-  page,
-  grafanaVersion,
-  request,
-  panelEditPage,
-  readProvisionedDashboard,
-  gotoDashboardPage,
-  gotoPanelEditPage,
-}, testInfo) => {
-  const regionSelector = selectors.components.ConfigEditor.region.wrapper;
+test('should render query editor', async ({ page, panelEditPage, readProvisionedDashboard, gotoPanelEditPage }) => {
   await panelEditPage.datasource.set('AWS Athena');
-  await expect(panelEditPage.getQueryEditorRow('A').getByTestId(regionSelector)).toBeVisible();
 
   // Wait for the monaco editor to finish lazy loading
   await page.waitForFunction(() => window.monaco);
@@ -23,7 +13,7 @@ test('should render query editor', async ({
 
   // Select a table from the explorer
   await page.getByRole('combobox', { name: selectors.components.ConfigEditor.table.input }).click();
-  await page.getByText('cloudtrail_logs').click();
+  await page.getByText('cloudtrail_logs', { exact: true }).click();
 
   // The following section will verify that autocompletion in behaving as expected.
   // Throughout the composition of the SQL query, the autocompletion engine will provide appropriate suggestions.

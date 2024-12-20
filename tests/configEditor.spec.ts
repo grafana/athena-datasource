@@ -1,6 +1,5 @@
 import { test, expect } from '@grafana/plugin-e2e';
 import { selectors } from '../src/tests/selectors';
-import { DatasourceWithAsyncBackend } from '@grafana/async-query-data';
 import { AthenaDataSourceOptions, AthenaDataSourceSecureJsonData } from '../src/types';
 test('should render config editor', async ({ createDataSourceConfigPage, readProvisionedDataSource, page }) => {
   const datasource = await readProvisionedDataSource<AthenaDataSourceOptions, AthenaDataSourceSecureJsonData>({
@@ -17,7 +16,7 @@ test('should render config editor', async ({ createDataSourceConfigPage, readPro
     await page.getByLabel(selectors.components.ConfigEditor.AccessKey.input).fill(datasource.secureJsonData.accessKey);
     await page.getByLabel(selectors.components.ConfigEditor.SecretKey.input).fill(datasource.secureJsonData.secretKey);
   } else {
-    throw new Error('Missing one of secureJsonData: accessKey, secretKey in the datasource');
+    throw new Error('Missing one of secureJsonData: accessKey, secretKey in the datasource configuration');
   }
   expect(page.getByLabel(selectors.components.ConfigEditor.AccessKey.input)).toBeVisible();
   expect(page.getByLabel(selectors.components.ConfigEditor.SecretKey.input)).toBeVisible();
@@ -26,14 +25,15 @@ test('should render config editor', async ({ createDataSourceConfigPage, readPro
     await page.getByRole('combobox', { name: selectors.components.ConfigEditor.DefaultRegion.input }).click();
     await page.getByText(defaultRegion).click();
     // Catalogs
+    const catalogDropdown = page.getByRole('combobox', { name: selectors.components.ConfigEditor.catalog.input });
     await page.getByRole('combobox', { name: selectors.components.ConfigEditor.catalog.input }).click();
-    await page.getByText(catalog).click();
+    await page.getByText(catalog, { exact: true }).click();
     // Databases
     await page.getByRole('combobox', { name: selectors.components.ConfigEditor.database.input }).click();
     await page.getByText(database).click();
     // Workgroups
     await page.getByRole('combobox', { name: selectors.components.ConfigEditor.workgroup.input }).click();
-    await page.getByText(workgroup).click();
+    await page.getByText(workgroup, { exact: true }).click();
   } else {
     throw new Error('Missing one of default data: defaultRegion, catalog, database, workgroup in the datasource');
   }

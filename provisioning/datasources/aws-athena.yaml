@@ -15,8 +15,8 @@ datasources:
       authType: keys
       defaultRegion: us-east-2
       catalog: AwsDataCatalog
-      database: some-db
-      workgroup: some-workgroup
+      database: cloud-datasources-db
+      workgroup: cloud-datasources
     secureJsonData:
       accessKey: $ACCESS_KEY
       secretKey: $SECRET_KEY

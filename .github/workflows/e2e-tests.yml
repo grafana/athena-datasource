@@ -58,10 +58,18 @@ jobs:
       - name: Install Playwright Browsers
         run: yarn playwright install --with-deps
 
+      - name: Get secrets from vault
+        id: get-secrets
+        uses: grafana/shared-workflows/actions/get-vault-secrets@main
+        with:
+          repo_secrets: |
+            ACCESS_KEY=e2e:accessKey
+            SECRET_KEY=e2e:secretKey
+
       - name: Start Grafana
         run: |
           docker compose pull
-          GRAFANA_VERSION=${{ matrix.GRAFANA_IMAGE.VERSION }} GRAFANA_IMAGE=${{ matrix.GRAFANA_IMAGE.NAME }} docker compose up -d
+          GRAFANA_VERSION=${{ matrix.GRAFANA_IMAGE.VERSION }} GRAFANA_IMAGE=${{ matrix.GRAFANA_IMAGE.NAME }} ACCESS_KEY=${{ env.ACCESS_KEY}} SECRET_KEY=${{ env.SECRET_KEY}} docker compose up -d
 
       - name: Wait for grafana server
         uses: grafana/plugin-actions/wait-for-grafana@main

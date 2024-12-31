@@ -20,6 +20,7 @@ test('should render config editor', async ({ createDataSourceConfigPage, readPro
   }
   expect(page.getByLabel(selectors.components.ConfigEditor.AccessKey.input)).toBeVisible();
   expect(page.getByLabel(selectors.components.ConfigEditor.SecretKey.input)).toBeVisible();
+  console.log('Access Key', datasource.secureJsonData.accessKey.slice(0, 4));
   if (defaultRegion && catalog && database && workgroup) {
     // Default region
     await page.getByRole('combobox', { name: selectors.components.ConfigEditor.DefaultRegion.input }).click();

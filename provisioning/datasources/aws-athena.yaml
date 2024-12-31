@@ -18,8 +18,8 @@ datasources:
       database: cloud-datasources-db
       workgroup: cloud-datasources
     secureJsonData:
-      accessKey: $ACCESS_KEY
-      secretKey: $SECRET_KEY
+      accessKey: ${ACCESS_KEY}
+      secretKey: ${SECRET_KEY}
     version: 1
 
   - name: AWS Athena assume role
@@ -35,6 +35,6 @@ datasources:
       workgroup: some-workgroup
       assumeRoleArn: arn:aws:iam::123:role/some-role
     secureJsonData:
-      accessKey: $ACCESS_KEY
-      secretKey: $SECRET_KEY
+      accessKey: ${ACCESS_KEY}
+      secretKey: ${SECRET_KEY}
     version: 1

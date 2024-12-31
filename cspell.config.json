@@ -81,6 +81,7 @@
     "nilness",
     "lefthook",
     "gofmt",
-    "additionaleventdata"
+    "additionaleventdata",
+    "combobox"
   ]
 }

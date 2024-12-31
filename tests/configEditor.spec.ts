@@ -13,6 +13,8 @@ test('should render config editor', async ({ createDataSourceConfigPage, readPro
   await page.getByText('Access & secret key').click();
   if (datasource.secureJsonData?.accessKey && datasource.secureJsonData?.secretKey) {
     // Authenticate
+    console.log('Access Key', datasource.secureJsonData.accessKey.slice(0, 4));
+    console.log('JSON data', JSON.stringify(datasource.jsonData));
     await page.getByLabel(selectors.components.ConfigEditor.AccessKey.input).fill(datasource.secureJsonData.accessKey);
     await page.getByLabel(selectors.components.ConfigEditor.SecretKey.input).fill(datasource.secureJsonData.secretKey);
   } else {
@@ -20,7 +22,6 @@ test('should render config editor', async ({ createDataSourceConfigPage, readPro
   }
   expect(page.getByLabel(selectors.components.ConfigEditor.AccessKey.input)).toBeVisible();
   expect(page.getByLabel(selectors.components.ConfigEditor.SecretKey.input)).toBeVisible();
-  console.log('Access Key', datasource.secureJsonData.accessKey.slice(0, 4));
   if (defaultRegion && catalog && database && workgroup) {
     // Default region
     await page.getByRole('combobox', { name: selectors.components.ConfigEditor.DefaultRegion.input }).click();

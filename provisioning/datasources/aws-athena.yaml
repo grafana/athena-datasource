@@ -11,12 +11,9 @@ datasources:
   - name: AWS Athena
     type: grafana-athena-datasource
     uid: P7DC3E4760CFAC4ACE
+    editable: true
     jsonData:
       authType: keys
-      defaultRegion: us-east-2
-      catalog: AwsDataCatalog
-      database: cloud-datasources-db
-      workgroup: cloud-datasources
     secureJsonData:
       accessKey: $ACCESS_KEY
       secretKey: $SECRET_KEY

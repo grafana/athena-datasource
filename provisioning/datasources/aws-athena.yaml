@@ -13,6 +13,7 @@ datasources:
     uid: P7DC3E4760CFAC4ACE
     editable: true
     jsonData:
+      defaultRegion: us-east-2
       authType: keys
     secureJsonData:
       accessKey: $ACCESS_KEY

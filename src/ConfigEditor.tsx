@@ -1,11 +1,12 @@
 import React, { FormEvent, useCallback, useEffect, useState } from 'react';
 import { DataSourcePluginOptionsEditorProps, DataSourceSettings, GrafanaTheme2, SelectableValue } from '@grafana/data';
 import { AthenaDataSourceOptions, AthenaDataSourceSecureJsonData, AthenaDataSourceSettings, defaultKey } from './types';
-import { getBackendSrv } from '@grafana/runtime';
+import { config, getBackendSrv } from '@grafana/runtime';
 import { AwsAuthType, ConfigSelect, ConnectionConfig, Divider } from '@grafana/aws-sdk';
 import { selectors } from 'tests/selectors';
 import { ConfigSection } from '@grafana/experimental';
-import { Field, Input, useStyles2 } from '@grafana/ui';
+import { Field, Input, SecureSocksProxySettings, useStyles2 } from '@grafana/ui';
+import { gte } from 'semver';
 import { css } from '@emotion/css';
 
 type Props = DataSourcePluginOptionsEditorProps<AthenaDataSourceOptions, AthenaDataSourceSecureJsonData>;
@@ -104,6 +105,9 @@ export function ConfigEditor(props: Props) {
   return (
     <div className={styles.formStyles}>
       <ConnectionConfig {...props} onOptionsChange={onOptionsChange} externalId={externalId} />
+      {config.secureSocksDSProxyEnabled && gte(config.buildInfo.version, '10.0.0') && (
+        <SecureSocksProxySettings options={props.options} onOptionsChange={onOptionsChange} />
+      )}
       <Divider />
       <ConfigSection title="Athena Details">
         <Field

@@ -27,6 +27,10 @@ updates:
       interval: 'weekly'
     ignore:
       - dependency-name: '@grafana/e2e*'
+      - dependency-name: 'react'
+        update-types: ["version-update:semver-major"]
+      - dependency-name: 'react-dom'
+        update-types: ["version-update:semver-major"]
     groups:
       all-node-dependencies:
         patterns:

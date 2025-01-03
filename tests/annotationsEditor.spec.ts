@@ -2,7 +2,6 @@ import { expect, test } from '@grafana/plugin-e2e';
 import { selectors } from '../src/tests/selectors';
 
 test('should render annotations editor', async ({ annotationEditPage, page }) => {
-  const regionSelector = selectors.components.ConfigEditor.region.wrapper;
   await annotationEditPage.datasource.set('AWS Athena');
 
   // Wait for the monaco editor to finish lazy loading

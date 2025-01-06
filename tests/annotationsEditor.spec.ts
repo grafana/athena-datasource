@@ -13,5 +13,5 @@ test('should render annotations editor', async ({ annotationEditPage, page }) =>
   const table = page.locator('.filter-table');
   const timeDropdown = table.getByText('time', { exact: true }).locator('..').locator('input').locator('..');
   await timeDropdown.click();
-  expect(page.getByText('date (time)', { exact: true })).toBeVisible();
+  await expect(page.getByText('date (time)', { exact: true })).toBeVisible();
 });

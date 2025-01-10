@@ -11,7 +11,7 @@ test('should render annotations editor', async ({ annotationEditPage, page }) =>
   await page.keyboard.insertText(`select * from cloudfront_logs where bytes < 100`);
   await expect(annotationEditPage.runQuery()).toBeOK();
   const table = page.locator('.filter-table');
-  const timeDropdown = table.getByText('time', { exact: true }).locator('..').locator('input').locator('..');
-  await timeDropdown.click();
+  const timeDropdown = page.getByText('time, or the first time field', { exact: true });
+  await timeDropdown.click({ force: true });
   await expect(page.getByText('date (time)', { exact: true })).toBeVisible();
 });

@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.19.0
+
+- Add PDC support in [#478](https://github.com/grafana/athena-datasource/pull/478)
+- Bump the all-node-dependencies group across 1 directory with 4 updates in [$484](https://github.com/grafana/athena-datasource/pull/484)
+- Bump node dependencies with 20 updates, ignore react and react-dom major updates in dependabot in [#481](https://github.com/grafana/athena-datasource/pull/481)
+- Bump the all-go-dependencies group across 1 directory with 3 updates in [#479](https://github.com/grafana/athena-datasource/pull/479)
+
 ## 2.18.0
 
 - Bump sqlds and grafana-plugin-sdk-go for error source improvements in [#462](https://github.com/grafana/athena-datasource/pull/462)

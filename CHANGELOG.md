@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.19.1
+
+- Bump the all-go-dependencies group with 2 updates in [#488](https://github.com/grafana/athena-datasource/pull/488)
+- Bump the all-node-dependencies group with 4 updates in [#489](https://github.com/grafana/athena-datasource/pull/489)
+
 ## 2.19.0
 
 - Add PDC support in [#478](https://github.com/grafana/athena-datasource/pull/478)

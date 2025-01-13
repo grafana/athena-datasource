@@ -2047,7 +2047,7 @@
   resolved "https://registry.yarnpkg.com/@swc/core-win32-x64-msvc/-/core-win32-x64-msvc-1.10.7.tgz#84d6ed82b2f19bc00b868c9747f03ea6661d8023"
   integrity sha512-TBf4clpDBjF/UUnkKrT0/th76/zwvudk5wwobiTFqDywMApHip5O0VpBgZ+4raY2TM8k5+ujoy7bfHb22zu17Q==
 
-"@swc/core@^1.7.36":
+"@swc/core@^1.10.4":
   version "1.10.7"
   resolved "https://registry.yarnpkg.com/@swc/core/-/core-1.10.7.tgz#736a5bbf0db7628cb2de3eac871e331f9a27e60b"
   integrity sha512-py91kjI1jV5D5W/Q+PurBdGsdU5TFbrzamP7zSCqLdMcHkKi3rQEM5jkQcZr0MXXSJTaayLxS3MWYTBIkzPDrg==
@@ -2071,14 +2071,14 @@
   resolved "https://registry.yarnpkg.com/@swc/counter/-/counter-0.1.3.tgz#cc7463bd02949611c6329596fccd2b0ec782b0e9"
   integrity sha512-e2BR4lsJkkRlKZ/qCHPw9ZaSxc0MVUd7gtbtaB7aMvHeJVYe8sOB8DBZkP2DtISHGSku9sCK6T6cnY0CtXrOCQ==
 
-"@swc/helpers@^0.5.0", "@swc/helpers@^0.5.13":
+"@swc/helpers@^0.5.0", "@swc/helpers@^0.5.15":
   version "0.5.15"
   resolved "https://registry.yarnpkg.com/@swc/helpers/-/helpers-0.5.15.tgz#79efab344c5819ecf83a43f3f9f811fc84b516d7"
   integrity sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==
   dependencies:
     tslib "^2.8.0"
 
-"@swc/jest@^0.2.36":
+"@swc/jest@^0.2.37":
   version "0.2.37"
   resolved "https://registry.yarnpkg.com/@swc/jest/-/jest-0.2.37.tgz#9c2aaf22c87682aa968016e3e4843d1a25cae6bd"
   integrity sha512-CR2BHhmXKGxTiFr21DYPRHQunLkX3mNIFGFkxBGji6r9uyIR5zftTOVYj1e0sFNMV2H7mf/+vpaglqaryBtqfQ==
@@ -2120,7 +2120,7 @@
     lz-string "^1.5.0"
     pretty-format "^27.0.2"
 
-"@testing-library/jest-dom@*":
+"@testing-library/jest-dom@*", "@testing-library/jest-dom@6.6.3":
   version "6.6.3"
   resolved "https://registry.yarnpkg.com/@testing-library/jest-dom/-/jest-dom-6.6.3.tgz#26ba906cf928c0f8172e182c6fe214eb4f9f2bd2"
   integrity sha512-IteBhl4XqYNkM54f4ejhLRJiZNqcSCoXUOG2CPK7qbD322KjQozM4kHQOfkG2oln9b9HTYqs+Sae8vBATubxxA==
@@ -2133,23 +2133,10 @@
     lodash "^4.17.21"
     redent "^3.0.0"
 
-"@testing-library/jest-dom@6.6.2":
-  version "6.6.2"
-  resolved "https://registry.yarnpkg.com/@testing-library/jest-dom/-/jest-dom-6.6.2.tgz#8186aa9a07263adef9cc5a59a4772db8c31f4a5b"
-  integrity sha512-P6GJD4yqc9jZLbe98j/EkyQDTPgqftohZF5FBkHY5BUERZmcf4HeO2k0XaefEg329ux2p21i1A1DmyQ1kKw2Jw==
-  dependencies:
-    "@adobe/css-tools" "^4.4.0"
-    aria-query "^5.0.0"
-    chalk "^3.0.0"
-    css.escape "^1.5.1"
-    dom-accessibility-api "^0.6.3"
-    lodash "^4.17.21"
-    redent "^3.0.0"
-
-"@testing-library/react@16.0.1":
-  version "16.0.1"
-  resolved "https://registry.yarnpkg.com/@testing-library/react/-/react-16.0.1.tgz#29c0ee878d672703f5e7579f239005e4e0faa875"
-  integrity sha512-dSmwJVtJXmku+iocRhWOUFbrERC76TX2Mnf0ATODz8brzAZrMBbzLwQixlBSanZxR6LddK3eiwpSFZgDET1URg==
+"@testing-library/react@16.1.0":
+  version "16.1.0"
+  resolved "https://registry.yarnpkg.com/@testing-library/react/-/react-16.1.0.tgz#aa0c61398bac82eaf89776967e97de41ac742d71"
+  integrity sha512-Q2ToPvg0KsVL0ohND9A3zLJWcOXXcO8IDu3fj11KhNt0UlCWyFyvnCIBkd12tidB2lkiVRG8VFqdhcqhqnAQtg==
   dependencies:
     "@babel/runtime" "^7.12.5"
 

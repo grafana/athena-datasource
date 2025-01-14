@@ -10,6 +10,7 @@
     "go.sum",
     "mage_output_file.go",
     "go.mod",
+    ".gitignore"
   ],
   "words": [
     "athenaclientmock",
@@ -79,6 +80,9 @@
     "tibdex",
     "nilness",
     "lefthook",
-    "gofmt"
+    "gofmt",
+    "additionaleventdata",
+    "combobox",
+    "jackspeak"
   ]
 }

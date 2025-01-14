@@ -1,4 +1,4 @@
-import { MacroType } from '@grafana/experimental';
+import { MacroType } from '@grafana/plugin-ui';
 
 const COLUMN = 'column',
   RELATIVE_TIME_STRING = "'1m'",

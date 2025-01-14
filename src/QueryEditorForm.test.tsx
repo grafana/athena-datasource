@@ -7,7 +7,7 @@ import '@testing-library/jest-dom';
 import { select } from 'react-select-event';
 import { selectors } from 'tests/selectors';
 import { defaultKey, defaultQuery, QueryEditorFieldType } from 'types';
-import * as experimental from '@grafana/experimental';
+import * as pluginUi from '@grafana/plugin-ui';
 
 const ds = mockDatasource;
 const q = mockQuery;
@@ -16,8 +16,8 @@ const mockGetVariables = jest.fn().mockReturnValue([]);
 
 jest.spyOn(ds, 'getVariables').mockImplementation(mockGetVariables);
 
-jest.mock('@grafana/experimental', () => ({
-  ...jest.requireActual<typeof experimental>('@grafana/experimental'),
+jest.mock('@grafana/plugin-ui', () => ({
+  ...jest.requireActual<typeof pluginUi>('@grafana/plugin-ui'),
   SQLEditor: function SQLEditor() {
     return <></>;
   },

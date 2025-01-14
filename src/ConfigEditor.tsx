@@ -4,7 +4,7 @@ import { AthenaDataSourceOptions, AthenaDataSourceSecureJsonData, AthenaDataSour
 import { config, getBackendSrv } from '@grafana/runtime';
 import { AwsAuthType, ConfigSelect, ConnectionConfig, Divider } from '@grafana/aws-sdk';
 import { selectors } from 'tests/selectors';
-import { ConfigSection } from '@grafana/experimental';
+import { ConfigSection } from '@grafana/plugin-ui';
 import { Field, Input, SecureSocksProxySettings, useStyles2 } from '@grafana/ui';
 import { gte } from 'semver';
 import { css } from '@emotion/css';

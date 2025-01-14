@@ -1,5 +1,16 @@
 # Changelog
 
+## 3.0.0
+
+- Replace @grafana/experimental with @grafana/plugin-ui in [#477](https://github.com/grafana/athena-datasource/pull/477)
+- Dependabot updates: 
+  - github.com/grafana/grafana-plugin-sdk-go from 0.260.3 to 0.261.0
+  - github.com/grafana/sqlds/v4 from 4.1.5 to 4.1.6
+  - Updates @swc/core from 1.10.4 to 1.10.7
+  - glob from 11.0.0 to 11.0.1
+  - lefthook from 1.10.1 to 1.10.4
+  - typescript from 5.7.2 to 5.7.3
+
 ## 2.19.0
 
 - Add PDC support in [#478](https://github.com/grafana/athena-datasource/pull/478)

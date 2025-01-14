@@ -1,6 +1,6 @@
-## Grafana 10 breaking change: update Amazon Athena data source plugin to >=2.9.3
+## Compatibility
 
-Grafana 10.0.0 was shipped with the new React 18 upgrade. Changes in batching of state updates in React 18 cause a bug in the query editor in Amazon Athena versions <=2.9.2. If you’re using Grafana@>=10.0.0, please update your plugin to version 2.9.3 or higher in your Grafana instance management console.
+AWS Athena datasource plugin >=3.0.0 is not compatible with Grafana versions <=10.4.x due to a breaking change in UI components.
 
 # Amazon Athena data source for Grafana
 

@@ -82,6 +82,7 @@
     "lefthook",
     "gofmt",
     "additionaleventdata",
-    "combobox"
+    "combobox",
+    "jackspeak"
   ]
 }

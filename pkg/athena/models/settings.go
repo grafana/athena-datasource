@@ -28,7 +28,7 @@ type AthenaDataSourceSettings struct {
 	WorkGroup                  string `json:"WorkGroup"`
 	OutputLocation             string `json:"OutputLocation"`
 	ResultReuseEnabled         bool   `json:"ResultReuseEnabled"`
-	ResultReuseMaxAgeInMinutes int64  `json:"ResultReuseMaxAgeInMinutes"`
+	ResultReuseMaxAgeInMinutes int32  `json:"ResultReuseMaxAgeInMinutes"`
 }
 
 func New(_ context.Context) models.Settings {
@@ -73,8 +73,8 @@ func (s *AthenaDataSourceSettings) Apply(args sqlds.Options) {
 	}
 
 	if s.ResultReuseEnabled {
-		if resultReuseMaxAgeInMinutes, err := strconv.ParseInt(resultReuseMaxAgeInMinutesString, 10, 64); err == nil {
-			s.ResultReuseMaxAgeInMinutes = resultReuseMaxAgeInMinutes
+		if resultReuseMaxAgeInMinutes, err := strconv.ParseInt(resultReuseMaxAgeInMinutesString, 10, 32); err == nil {
+			s.ResultReuseMaxAgeInMinutes = int32(resultReuseMaxAgeInMinutes)
 		}
 	}
 }

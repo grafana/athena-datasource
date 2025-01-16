@@ -16,6 +16,7 @@
     "athenaclientmock",
     "athenadriver",
     "athenaiface",
+    "athenatypes",
     "AWSAPI",
     "awsds",
     "Codeowners",

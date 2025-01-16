@@ -4,8 +4,8 @@ import (
 	"context"
 	"database/sql/driver"
 	"fmt"
+	athenatypes "github.com/aws/aws-sdk-go-v2/service/athena/types"
 
-	"github.com/aws/aws-sdk-go/service/athena"
 	"github.com/grafana/athena-datasource/pkg/athena/api"
 	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 	sqlAPI "github.com/grafana/grafana-aws-sdk/pkg/sql/api"
@@ -43,16 +43,16 @@ func (c *conn) QueryStatus(ctx context.Context, queryID string) (awsds.QueryStat
 		return awsds.QueryUnknown, err
 	}
 	var returnStatus awsds.QueryStatus
-	switch status.State {
-	case athena.QueryExecutionStateQueued:
+	switch athenatypes.QueryExecutionState(status.State) {
+	case athenatypes.QueryExecutionStateQueued:
 		returnStatus = awsds.QuerySubmitted
-	case athena.QueryExecutionStateRunning:
+	case athenatypes.QueryExecutionStateRunning:
 		returnStatus = awsds.QueryRunning
-	case athena.QueryExecutionStateSucceeded:
+	case athenatypes.QueryExecutionStateSucceeded:
 		returnStatus = awsds.QueryFinished
-	case athena.QueryExecutionStateCancelled:
+	case athenatypes.QueryExecutionStateCancelled:
 		returnStatus = awsds.QueryCanceled
-	case athena.QueryExecutionStateFailed:
+	case athenatypes.QueryExecutionStateFailed:
 		returnStatus = awsds.QueryFailed
 	}
 	backend.Logger.Debug("QueryStatus", "state", status.State, "queryID", queryID)

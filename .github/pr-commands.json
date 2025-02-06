@@ -1,0 +1,21 @@
+[
+  {
+    "type": "author",
+    "name": "pr/external",
+    "notMemberOf": {
+      "org": "grafana"
+    },
+    "ignoreList": ["renovate[bot]", "dependabot[bot]", "grafana-delivery-bot[bot]", "grafanabot"],
+    "action": "updateLabel",
+    "addLabel": "pr/external"
+  },
+  {
+    "type": "label",
+    "name": "pr/external",
+    "action": "addToProject",
+    "addToProject": {
+      "url": "https://github.com/orgs/grafana/projects/97",
+      "column": "Incoming"
+    }
+  }
+]

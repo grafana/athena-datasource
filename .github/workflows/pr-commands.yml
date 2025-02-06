@@ -1,0 +1,31 @@
+name: PR automation
+on:
+  pull_request_target:
+    types:
+      - labeled
+      - opened
+concurrency:
+  group: pr-commands-${{ github.event.number }}
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Actions
+        uses: actions/checkout@v4
+        with:
+          repository: 'grafana/grafana-github-actions'
+          path: ./actions
+          ref: main
+      - name: Install Actions
+        run: npm install --production --prefix ./actions
+      - name: 'Generate token'
+        id: generate_token
+        uses: tibdex/github-app-token@3beb63f4bd073e61482598c45c71c1019b59b73a
+        with:
+          app_id: ${{ secrets.AWS_DS_TOKEN_CREATOR_ID }}
+          private_key: ${{ secrets.AWS_DS_TOKEN_CREATOR_PEM }}
+      - name: Run Commands
+        uses: ./actions/commands
+        with:
+          token: ${{ steps.generate_token.outputs.token }}
+          configPath: pr-commands

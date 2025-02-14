@@ -11,6 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/athena"
 	"github.com/grafana/athena-datasource/pkg/athena/models"
+	"github.com/grafana/grafana-aws-sdk/pkg/awsauth"
 	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 	"github.com/grafana/grafana-aws-sdk/pkg/sql/api"
 	sqlModels "github.com/grafana/grafana-aws-sdk/pkg/sql/models"
@@ -37,7 +38,7 @@ type API struct {
 	settings *models.AthenaDataSourceSettings
 }
 
-func New(ctx context.Context, sessionCache *awsds.SessionCache, settings sqlModels.Settings) (api.AWSAPI, error) {
+func New(ctx context.Context, _ *awsds.SessionCache, settings sqlModels.Settings) (api.AWSAPI, error) {
 	athenaSettings := settings.(*models.AthenaDataSourceSettings)
 
 	httpClientProvider := sdkhttpclient.NewProvider()
@@ -51,17 +52,28 @@ func New(ctx context.Context, sessionCache *awsds.SessionCache, settings sqlMode
 		backend.Logger.Error("failed to create HTTP client", "error", err.Error())
 		return nil, err
 	}
+	region := athenaSettings.Region
+	if region == "" || region == "default" {
+		region = athenaSettings.DefaultRegion
+	}
 
-	provider, err := sessionCache.CredentialsProviderV2(ctx, awsds.GetSessionConfig{
-		HTTPClient:    httpClient,
-		Settings:      athenaSettings.AWSDatasourceSettings,
-		UserAgentName: aws.String("Athena"),
+	cfg, err := awsauth.NewConfigProvider().GetConfig(ctx, awsauth.Settings{
+		LegacyAuthType:     athenaSettings.AuthType,
+		AccessKey:          athenaSettings.AccessKey,
+		SecretKey:          athenaSettings.SecretKey,
+		Region:             region,
+		CredentialsProfile: athenaSettings.Profile,
+		AssumeRoleARN:      athenaSettings.AssumeRoleARN,
+		Endpoint:           athenaSettings.Endpoint,
+		ExternalID:         athenaSettings.ExternalID,
+		HTTPClient:         httpClient,
+		UserAgent:          "athena",
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	return &API{Client: athena.New(athena.Options{Credentials: provider, Region: athenaSettings.Region}), settings: athenaSettings}, nil
+	return &API{Client: athena.NewFromConfig(cfg), settings: athenaSettings}, nil
 }
 
 func (c *API) Execute(ctx context.Context, input *api.ExecuteQueryInput) (*api.ExecuteQueryOutput, error) {

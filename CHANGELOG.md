@@ -1,9 +1,16 @@
 # Changelog
 
+## 3.0.1
+
+- Bump github.com/grafana/grafana-plugin-sdk-go from 0.263.0 to 0.265.0 in the all-go-dependencies group in [#501](https://github.com/grafana/athena-datasource/pull/501)
+- Bump github.com/grafana/grafana-plugin-sdk-go from 0.262.0 to 0.263.0 in the all-go-dependencies group in [#496](https://github.com/grafana/athena-datasource/pull/496)
+- Bump the all-node-dependencies group with 10 updates in [#495](https://github.com/grafana/athena-datasource/pull/495)
+- Bump the all-go-dependencies group with 4 updates [#493](https://github.com/grafana/athena-datasource/pull/493)
+
 ## 3.0.0
 
 - Replace @grafana/experimental with @grafana/plugin-ui in [#477](https://github.com/grafana/athena-datasource/pull/477)
-- Dependabot updates: 
+- Dependabot updates:
   - github.com/grafana/grafana-plugin-sdk-go from 0.260.3 to 0.261.0
   - github.com/grafana/sqlds/v4 from 4.1.5 to 4.1.6
   - Updates @swc/core from 1.10.4 to 1.10.7

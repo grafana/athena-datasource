@@ -2,12 +2,17 @@ package api
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"testing"
 
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/google/go-cmp/cmp"
 	athenaclientmock "github.com/grafana/athena-datasource/pkg/athena/api/mock"
 	"github.com/grafana/athena-datasource/pkg/athena/models"
+	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 	"github.com/grafana/grafana-aws-sdk/pkg/sql/api"
+	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/sqlds/v4"
 	"github.com/stretchr/testify/assert"
 )
@@ -28,12 +33,29 @@ func TestConnection_Execute_ResultReuseNotEnabledAndMaxAgeInMinutesProvidedDoesN
 	assert.Equal(t, expectedID, out.ID)
 }
 
+func TestExecute_InternalServerErrorReturnsQueryFailedInternalStatus(t *testing.T) {
+	c := NewFake(&athenaclientmock.MockAthenaClient{CalledTimesCountDown: 1}, &models.AthenaDataSourceSettings{})
+	_, err := c.Execute(context.Background(), &api.ExecuteQueryInput{Query: athenaclientmock.FAKE_INTERNAL_ERROR})
+	assert.NotNil(t, err)
+	expectedErr := &awsds.QueryExecutionError{Cause: awsds.QueryFailedInternal, Err: backend.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, athenaclientmock.AthenaInternalServerErrorMock))}
+	assert.Equal(t, err, expectedErr)
+}
+func TestExecute__UserErrorReturnsQueryFailedUserErrorStatus(t *testing.T) {
+	c := NewFake(&athenaclientmock.MockAthenaClient{CalledTimesCountDown: 1}, &models.AthenaDataSourceSettings{})
+	_, err := c.Execute(context.Background(), &api.ExecuteQueryInput{Query: athenaclientmock.FAKE_USER_ERROR})
+	assert.NotNil(t, err)
+	expectedErr := &awsds.QueryExecutionError{Cause: awsds.QueryFailedUser, Err: backend.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, athenaclientmock.AthenaUserErrorMock))}
+	assert.Equal(t, err, expectedErr)
+}
+
 func Test_Status(t *testing.T) {
 	tests := []struct {
 		description          string
 		calledTimesCountDown int
 		status               string
 		finished             bool
+		errorCategory        *int64
+		expectedError        error
 	}{
 		{
 			description:          "success",
@@ -47,6 +69,23 @@ func Test_Status(t *testing.T) {
 			finished:             true,
 		},
 		{
+			description:          "error",
+			calledTimesCountDown: 1,
+			finished:             true,
+			status:               athenaclientmock.DESCRIBE_STATEMENT_FAILED,
+			errorCategory:        aws.Int64(1),
+			expectedError:        &awsds.QueryExecutionError{Cause: awsds.QueryFailedInternal, Err: backend.DownstreamError(errors.New(athenaclientmock.DESCRIBE_STATEMENT_FAILED))},
+		},
+
+		{
+			description:          "error",
+			calledTimesCountDown: 1,
+			finished:             true,
+			status:               athenaclientmock.DESCRIBE_STATEMENT_FAILED,
+			errorCategory:        aws.Int64(2),
+			expectedError:        &awsds.QueryExecutionError{Cause: awsds.QueryFailedUser, Err: backend.DownstreamError(errors.New(athenaclientmock.DESCRIBE_STATEMENT_FAILED))},
+		},
+		{
 			description:          "pending",
 			calledTimesCountDown: 2,
 			finished:             false,
@@ -58,11 +97,16 @@ func Test_Status(t *testing.T) {
 				settings: &models.AthenaDataSourceSettings{},
 				Client: &athenaclientmock.MockAthenaClient{
 					CalledTimesCountDown: tt.calledTimesCountDown,
-				},
-			}
+					ErrorCategory:        tt.errorCategory,
+				}}
 			status, err := c.Status(context.Background(), &api.ExecuteQueryOutput{ID: tt.status})
-			if err != nil && tt.status == "" {
-				t.Errorf("unexpected error %v", err)
+			if err != nil {
+				if tt.status == "" {
+					t.Errorf("unexpected error %v", err)
+				}
+				if tt.expectedError != nil {
+					assert.Equal(t, err, tt.expectedError)
+				}
 			}
 			if status.Finished != tt.finished {
 				t.Errorf("expecting status.Finished to be %v but got %v", tt.finished, status.Finished)

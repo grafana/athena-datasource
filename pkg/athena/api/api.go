@@ -63,7 +63,7 @@ func (c *API) Execute(ctx context.Context, input *api.ExecuteQueryInput) (*api.E
 	version, err := c.WorkgroupEngineVersion(ctx, sqlds.Options{"workgroup": c.settings.WorkGroup})
 
 	if err != nil {
-		return nil, backend.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err))
+		return nil, getExecuteError(err)
 	}
 
 	if workgroupEngineSupportsResultReuse(version) {
@@ -83,12 +83,7 @@ func (c *API) Execute(ctx context.Context, input *api.ExecuteQueryInput) (*api.E
 
 	output, err := c.Client.StartQueryExecutionWithContext(ctx, athenaInput)
 	if err != nil {
-		if _, ok := err.(*athena.InvalidRequestException); ok {
-			return nil, &awsds.QueryExecutionError{Cause: awsds.QueryFailedUser, Err: backend.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err))}
-		} else if _, ok := err.(*athena.InternalServerException); ok {
-			return nil, &awsds.QueryExecutionError{Cause: awsds.QueryFailedInternal, Err: backend.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err))}
-		}
-		return nil, backend.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err))
+		return nil, getExecuteError(err)
 	}
 
 	return &api.ExecuteQueryOutput{ID: *output.QueryExecutionId}, nil
@@ -283,7 +278,7 @@ func (c *API) WorkgroupEngineVersion(ctx context.Context, options sqlds.Options)
 		WorkGroup: aws.String(workgroup),
 	})
 	if err != nil {
-		return "", backend.DownstreamError(err)
+		return "", err
 	}
 
 	return string(*out.WorkGroup.Configuration.EngineVersion.EffectiveEngineVersion), nil
@@ -337,4 +332,13 @@ func (c *API) Columns(ctx aws.Context, options sqlds.Options) ([]string, error) 
 
 func workgroupEngineSupportsResultReuse(version string) bool {
 	return version != "Athena engine version 2"
+}
+
+func getExecuteError(err error) error {
+	if _, ok := err.(*athena.InvalidRequestException); ok {
+		return &awsds.QueryExecutionError{Cause: awsds.QueryFailedUser, Err: backend.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err))}
+	} else if _, ok := err.(*athena.InternalServerException); ok {
+		return &awsds.QueryExecutionError{Cause: awsds.QueryFailedInternal, Err: backend.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err))}
+	}
+	return backend.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err))
 }

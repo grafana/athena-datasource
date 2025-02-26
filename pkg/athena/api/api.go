@@ -14,7 +14,6 @@ import (
 	sqlModels "github.com/grafana/grafana-aws-sdk/pkg/sql/models"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	sdkhttpclient "github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
-	"github.com/grafana/grafana-plugin-sdk-go/experimental/errorsource"
 	"github.com/grafana/sqlds/v4"
 )
 
@@ -64,7 +63,7 @@ func (c *API) Execute(ctx context.Context, input *api.ExecuteQueryInput) (*api.E
 	version, err := c.WorkgroupEngineVersion(ctx, sqlds.Options{"workgroup": c.settings.WorkGroup})
 
 	if err != nil {
-		return nil, errorsource.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err), false)
+		return nil, getExecuteError(err)
 	}
 
 	if workgroupEngineSupportsResultReuse(version) {
@@ -84,7 +83,7 @@ func (c *API) Execute(ctx context.Context, input *api.ExecuteQueryInput) (*api.E
 
 	output, err := c.Client.StartQueryExecutionWithContext(ctx, athenaInput)
 	if err != nil {
-		return nil, errorsource.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err), false)
+		return nil, getExecuteError(err)
 	}
 
 	return &api.ExecuteQueryOutput{ID: *output.QueryExecutionId}, nil
@@ -102,7 +101,7 @@ func (c *API) Status(ctx aws.Context, output *api.ExecuteQueryOutput) (*api.Exec
 		QueryExecutionId: aws.String(output.ID),
 	})
 	if err != nil {
-		return nil, errorsource.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err), false)
+		return nil, backend.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err))
 	}
 
 	var finished bool
@@ -110,10 +109,23 @@ func (c *API) Status(ctx aws.Context, output *api.ExecuteQueryOutput) (*api.Exec
 	switch state {
 	case athena.QueryExecutionStateFailed, athena.QueryExecutionStateCancelled:
 		finished = true
-		err = errorsource.DownstreamError(
-			errors.New(*statusResp.QueryExecution.Status.StateChangeReason),
-			false,
-		)
+		err = backend.DownstreamError(
+			errors.New(*statusResp.QueryExecution.Status.StateChangeReason))
+
+		// if internal athena error (error category 1), return an error with cause FailedInternal
+		// which will be converted to response.error.status 500 in grafana/aws-sdk/awsds
+		// similarly for error category 2 and status 400
+		// https://docs.aws.amazon.com/athena/latest/APIReference/API_AthenaError.html
+		errorCategory := statusResp.QueryExecution.Status.AthenaError.ErrorCategory
+		if errorCategory != nil {
+			switch *errorCategory {
+			case 1:
+				err = &awsds.QueryExecutionError{Cause: awsds.QueryFailedInternal, Err: err}
+			case 2:
+				err = &awsds.QueryExecutionError{Cause: awsds.QueryFailedUser, Err: err}
+			}
+		}
+
 	case athena.QueryExecutionStateSucceeded:
 		finished = true
 	default:
@@ -135,7 +147,7 @@ func (c *API) Stop(output *api.ExecuteQueryOutput) error {
 		QueryExecutionId: &output.ID,
 	})
 	if err != nil {
-		return errorsource.DownstreamError(fmt.Errorf("%w: unable to stop query", err), false)
+		return backend.DownstreamError(fmt.Errorf("%w: unable to stop query", err))
 	}
 	return nil
 }
@@ -198,7 +210,7 @@ func (c *API) DataCatalogs(ctx context.Context) ([]string, error) {
 			NextToken: nextToken,
 		})
 		if err != nil {
-			return nil, errorsource.DownstreamError(err, false)
+			return nil, backend.DownstreamError(err)
 		}
 		nextToken = out.NextToken
 		for _, cat := range out.DataCatalogsSummary {
@@ -225,7 +237,7 @@ func (c *API) Databases(ctx aws.Context, options sqlds.Options) ([]string, error
 			CatalogName: aws.String(catalog),
 		})
 		if err != nil {
-			return nil, errorsource.DownstreamError(err, false)
+			return nil, backend.DownstreamError(err)
 		}
 		nextToken = out.NextToken
 		for _, cat := range out.DatabaseList {
@@ -247,7 +259,7 @@ func (c *API) Workgroups(ctx context.Context) ([]string, error) {
 			NextToken: nextToken,
 		})
 		if err != nil {
-			return nil, errorsource.DownstreamError(err, false)
+			return nil, backend.DownstreamError(err)
 		}
 		nextToken = out.NextToken
 		for _, cat := range out.WorkGroups {
@@ -266,7 +278,7 @@ func (c *API) WorkgroupEngineVersion(ctx context.Context, options sqlds.Options)
 		WorkGroup: aws.String(workgroup),
 	})
 	if err != nil {
-		return "", errorsource.DownstreamError(err, false)
+		return "", err
 	}
 
 	return string(*out.WorkGroup.Configuration.EngineVersion.EffectiveEngineVersion), nil
@@ -284,7 +296,7 @@ func (c *API) Tables(ctx aws.Context, options sqlds.Options) ([]string, error) {
 			NextToken:    nextToken,
 		})
 		if err != nil {
-			return nil, errorsource.DownstreamError(err, false)
+			return nil, backend.DownstreamError(err)
 		}
 		nextToken = out.NextToken
 		for _, cat := range out.TableMetadataList {
@@ -307,7 +319,7 @@ func (c *API) Columns(ctx aws.Context, options sqlds.Options) ([]string, error) 
 		TableName:    aws.String(table),
 	})
 	if err != nil {
-		return nil, errorsource.DownstreamError(err, false)
+		return nil, backend.DownstreamError(err)
 	}
 	for _, cat := range out.TableMetadata.Columns {
 		res = append(res, *cat.Name)
@@ -320,4 +332,13 @@ func (c *API) Columns(ctx aws.Context, options sqlds.Options) ([]string, error) 
 
 func workgroupEngineSupportsResultReuse(version string) bool {
 	return version != "Athena engine version 2"
+}
+
+func getExecuteError(err error) error {
+	if _, ok := err.(*athena.InvalidRequestException); ok {
+		return &awsds.QueryExecutionError{Cause: awsds.QueryFailedUser, Err: backend.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err))}
+	} else if _, ok := err.(*athena.InternalServerException); ok {
+		return &awsds.QueryExecutionError{Cause: awsds.QueryFailedInternal, Err: backend.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err))}
+	}
+	return backend.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err))
 }

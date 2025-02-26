@@ -17,6 +17,7 @@ const DESCRIBE_STATEMENT_SUCCEEDED = "DESCRIBE_STATEMENT_FINISHED"
 type MockAthenaClient struct {
 	CalledTimesCounter     int
 	CalledTimesCountDown   int
+	ErrorCategory          *int64
 	Catalogs               []string
 	Databases              []string
 	Workgroups             []string
@@ -39,7 +40,11 @@ func (m *MockAthenaClient) GetQueryExecutionWithContext(ctx aws.Context, input *
 				Status: &athena.QueryExecutionStatus{
 					State:             aws.String(athena.QueryExecutionStateFailed),
 					StateChangeReason: aws.String(DESCRIBE_STATEMENT_FAILED),
+					AthenaError:       &athena.AthenaError{ErrorCategory: nil},
 				},
+			}
+			if m.ErrorCategory != nil {
+				output.QueryExecution.Status.AthenaError.ErrorCategory = m.ErrorCategory
 			}
 		} else {
 			output.QueryExecution = &athena.QueryExecution{
@@ -74,6 +79,11 @@ func (m *MockAthenaClient) GetWorkGroupWithContext(ctx aws.Context, input *athen
 
 const FAKE_ERROR = "FAKE_ERROR"
 const FAKE_SUCCESS = "FAKE_SUCCESS"
+const FAKE_INTERNAL_ERROR = "FAKE_INTERNAL_ERROR"
+const FAKE_USER_ERROR = "FAKE_USER_ERROR"
+
+var AthenaInternalServerErrorMock = &athena.InternalServerException{Message_: aws.String("Internal Server Error")}
+var AthenaUserErrorMock = &athena.InvalidRequestException{Message_: aws.String("Syntax error in SQL statement")}
 
 func (m *MockAthenaClient) StartQueryExecutionWithContext(ctx aws.Context, input *athena.StartQueryExecutionInput, opts ...request.Option) (*athena.StartQueryExecutionOutput, error) {
 	output := &athena.StartQueryExecutionOutput{
@@ -81,6 +91,12 @@ func (m *MockAthenaClient) StartQueryExecutionWithContext(ctx aws.Context, input
 	}
 	if *input.QueryString == FAKE_ERROR {
 		return nil, errors.New(FAKE_ERROR)
+	}
+	if *input.QueryString == FAKE_INTERNAL_ERROR {
+		return nil, AthenaInternalServerErrorMock
+	}
+	if *input.QueryString == FAKE_USER_ERROR {
+		return nil, AthenaUserErrorMock
 	}
 
 	return output, nil

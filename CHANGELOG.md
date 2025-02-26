@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.1.0
+
+- Implement QueryExecutionError to log downstream error cause in the error response in [#506](https://github.com/grafana/athena-datasource/pull/506)
+- Dependabot: 
+  - Bump github.com/google/go-cmp from 0.6.0 to 0.7.0 in the all-go-dependencies group across 1 directory in [#510](https://github.com/grafana/athena-datasource/pull/510)
+  - Bump the all-node-dependencies group with 8 updates in [#509](https://github.com/grafana/athena-datasource/pull/509)
+  - Bump the all-node-dependencies group across 1 directory with 21 updates in [#507](https://github.com/grafana/athena-datasource/pull/507)
+  - Bump github.com/grafana/grafana-plugin-sdk-go from 0.265.0 to 0.266.0 in the all-go-dependencies group in [#504](https://github.com/grafana/athena-datasource/pull/504)
+  - Bump dompurify from 3.2.3 to 3.2.4 in the npm_and_yarn group in [#503](https://github.com/grafana/athena-datasource/pull/503)
+
 ## 3.0.1
 
 - Bump github.com/grafana/grafana-plugin-sdk-go from 0.263.0 to 0.265.0 in the all-go-dependencies group in [#501](https://github.com/grafana/athena-datasource/pull/501)

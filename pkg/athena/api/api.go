@@ -116,7 +116,7 @@ func (c *API) Status(ctx aws.Context, output *api.ExecuteQueryOutput) (*api.Exec
 		// which will be converted to response.error.status 500 in grafana/aws-sdk/awsds
 		// similarly for error category 2 and status 400
 		// https://docs.aws.amazon.com/athena/latest/APIReference/API_AthenaError.html
-		errorCategory := statusResp.QueryExecution.Status.AthenaError.ErrorCategory
+		errorCategory := getErrorCategory(statusResp)
 		if errorCategory != nil {
 			switch *errorCategory {
 			case 1:
@@ -341,4 +341,14 @@ func getExecuteError(err error) error {
 		return &awsds.QueryExecutionError{Cause: awsds.QueryFailedInternal, Err: backend.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err))}
 	}
 	return backend.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err))
+}
+
+func getErrorCategory(errorOutput *athena.GetQueryExecutionOutput) *int64 {
+	if errorOutput == nil ||
+		errorOutput.QueryExecution == nil ||
+		errorOutput.QueryExecution.Status == nil ||
+		errorOutput.QueryExecution.Status.AthenaError == nil {
+		return nil
+	}
+	return errorOutput.QueryExecution.Status.AthenaError.ErrorCategory
 }

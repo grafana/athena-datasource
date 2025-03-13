@@ -12,6 +12,7 @@ import (
 
 const DESCRIBE_STATEMENT_FAILED = "DESCRIBE_STATEMENT_FAILED"
 const DESCRIBE_STATEMENT_SUCCEEDED = "DESCRIBE_STATEMENT_FINISHED"
+const UNEXPECTED_ERROR = "UNEXPECTED_ERROR"
 
 // Define a mock struct to be used in your unit tests of myFunc.
 type MockAthenaClient struct {
@@ -35,7 +36,15 @@ func (m *MockAthenaClient) GetQueryExecutionWithContext(ctx aws.Context, input *
 
 	output := &athena.GetQueryExecutionOutput{}
 	if m.CalledTimesCountDown == 0 {
-		if *input.QueryExecutionId == DESCRIBE_STATEMENT_FAILED {
+		if *input.QueryExecutionId == UNEXPECTED_ERROR {
+			output.QueryExecution = &athena.QueryExecution{
+				Status: &athena.QueryExecutionStatus{
+					State:             aws.String(athena.QueryExecutionStateFailed),
+					StateChangeReason: aws.String(UNEXPECTED_ERROR),
+					AthenaError:       nil,
+				},
+			}
+		} else if *input.QueryExecutionId == DESCRIBE_STATEMENT_FAILED {
 			output.QueryExecution = &athena.QueryExecution{
 				Status: &athena.QueryExecutionStatus{
 					State:             aws.String(athena.QueryExecutionStateFailed),

@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.1
+
+- Bugfix: Make sure Athena error object is not nil in [#516](https://github.com/grafana/athena-datasource/pull/516)
+
 ## 3.1.0
 
 - Implement QueryExecutionError to log downstream error cause in the error response in [#506](https://github.com/grafana/athena-datasource/pull/506)

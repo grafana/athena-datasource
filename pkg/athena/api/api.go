@@ -152,7 +152,7 @@ func (c *API) Status(ctx context.Context, output *api.ExecuteQueryOutput) (*api.
 			}
 		}
 
-	case athena.QueryExecutionStateSucceeded:
+	case athenatypes.QueryExecutionStateSucceeded:
 		finished = true
 	default:
 		finished = false
@@ -359,15 +359,18 @@ func workgroupEngineSupportsResultReuse(version string) bool {
 }
 
 func getExecuteError(err error) error {
-	if _, ok := err.(*athena.InvalidRequestException); ok {
+	var invalidRequest *athenatypes.InvalidRequestException
+	if errors.As(err, &invalidRequest) {
 		return &awsds.QueryExecutionError{Cause: awsds.QueryFailedUser, Err: backend.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err))}
-	} else if _, ok := err.(*athena.InternalServerException); ok {
+	}
+	var internalError *athenatypes.InternalServerException
+	if errors.As(err, &internalError) {
 		return &awsds.QueryExecutionError{Cause: awsds.QueryFailedInternal, Err: backend.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err))}
 	}
 	return backend.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err))
 }
 
-func getErrorCategory(errorOutput *athena.GetQueryExecutionOutput) *int64 {
+func getErrorCategory(errorOutput *athena.GetQueryExecutionOutput) *int32 {
 	if errorOutput == nil ||
 		errorOutput.QueryExecution == nil ||
 		errorOutput.QueryExecution.Status == nil ||

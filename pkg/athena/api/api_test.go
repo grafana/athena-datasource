@@ -55,7 +55,7 @@ func Test_Status(t *testing.T) {
 		calledTimesCountDown int
 		status               string
 		finished             bool
-		errorCategory        *int64
+		errorCategory        *int32
 		expectedError        error
 	}{
 		{
@@ -81,7 +81,7 @@ func Test_Status(t *testing.T) {
 			calledTimesCountDown: 1,
 			finished:             true,
 			status:               athenaclientmock.DESCRIBE_STATEMENT_FAILED,
-			errorCategory:        aws.Int64(1),
+			errorCategory:        aws.Int32(1),
 			expectedError:        &awsds.QueryExecutionError{Cause: awsds.QueryFailedInternal, Err: backend.DownstreamError(errors.New(athenaclientmock.DESCRIBE_STATEMENT_FAILED))},
 		},
 
@@ -90,7 +90,7 @@ func Test_Status(t *testing.T) {
 			calledTimesCountDown: 1,
 			finished:             true,
 			status:               athenaclientmock.DESCRIBE_STATEMENT_FAILED,
-			errorCategory:        aws.Int64(2),
+			errorCategory:        aws.Int32(2),
 			expectedError:        &awsds.QueryExecutionError{Cause: awsds.QueryFailedUser, Err: backend.DownstreamError(errors.New(athenaclientmock.DESCRIBE_STATEMENT_FAILED))},
 		},
 		{

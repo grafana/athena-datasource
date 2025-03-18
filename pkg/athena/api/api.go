@@ -4,11 +4,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	athenatypes "github.com/aws/aws-sdk-go-v2/service/athena/types"
+	"github.com/grafana/athena-datasource/pkg/athena/api/mock"
+	drv "github.com/uber/athenadriver/go"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/athena"
-	"github.com/aws/aws-sdk-go/service/athena/athenaiface"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/athena"
 	"github.com/grafana/athena-datasource/pkg/athena/models"
+	"github.com/grafana/grafana-aws-sdk/pkg/awsauth"
 	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 	"github.com/grafana/grafana-aws-sdk/pkg/sql/api"
 	sqlModels "github.com/grafana/grafana-aws-sdk/pkg/sql/models"
@@ -17,12 +20,25 @@ import (
 	"github.com/grafana/sqlds/v4"
 )
 
+type Client interface {
+	drv.AthenaClient
+
+	athena.ListDataCatalogsAPIClient
+	athena.ListDatabasesAPIClient
+	athena.ListWorkGroupsAPIClient
+	athena.ListTableMetadataAPIClient
+
+	GetTableMetadata(context.Context, *athena.GetTableMetadataInput, ...func(*athena.Options)) (*athena.GetTableMetadataOutput, error)
+}
+
+var _ Client = &mock.MockAthenaClient{}
+
 type API struct {
-	Client   athenaiface.AthenaAPI
+	Client   Client
 	settings *models.AthenaDataSourceSettings
 }
 
-func New(ctx context.Context, sessionCache *awsds.SessionCache, settings sqlModels.Settings) (api.AWSAPI, error) {
+func New(ctx context.Context, _ *awsds.SessionCache, settings sqlModels.Settings) (api.AWSAPI, error) {
 	athenaSettings := settings.(*models.AthenaDataSourceSettings)
 
 	httpClientProvider := sdkhttpclient.NewProvider()
@@ -36,24 +52,34 @@ func New(ctx context.Context, sessionCache *awsds.SessionCache, settings sqlMode
 		backend.Logger.Error("failed to create HTTP client", "error", err.Error())
 		return nil, err
 	}
+	region := athenaSettings.Region
+	if region == "" || region == "default" {
+		region = athenaSettings.DefaultRegion
+	}
 
-	authSettings := awsds.ReadAuthSettings(ctx)
-	sess, err := sessionCache.GetSessionWithAuthSettings(awsds.GetSessionConfig{
-		HTTPClient:    httpClient,
-		Settings:      athenaSettings.AWSDatasourceSettings,
-		UserAgentName: aws.String("Athena"),
-	}, *authSettings)
+	cfg, err := awsauth.NewConfigProvider().GetConfig(ctx, awsauth.Settings{
+		LegacyAuthType:     athenaSettings.AuthType,
+		AccessKey:          athenaSettings.AccessKey,
+		SecretKey:          athenaSettings.SecretKey,
+		Region:             region,
+		CredentialsProfile: athenaSettings.Profile,
+		AssumeRoleARN:      athenaSettings.AssumeRoleARN,
+		Endpoint:           athenaSettings.Endpoint,
+		ExternalID:         athenaSettings.ExternalID,
+		HTTPClient:         httpClient,
+		UserAgent:          "athena",
+	})
 	if err != nil {
 		return nil, err
 	}
 
-	return &API{Client: athena.New(sess), settings: athenaSettings}, nil
+	return &API{Client: athena.NewFromConfig(cfg), settings: athenaSettings}, nil
 }
 
 func (c *API) Execute(ctx context.Context, input *api.ExecuteQueryInput) (*api.ExecuteQueryOutput, error) {
 	athenaInput := &athena.StartQueryExecutionInput{
 		QueryString: aws.String(input.Query),
-		QueryExecutionContext: &athena.QueryExecutionContext{
+		QueryExecutionContext: &athenatypes.QueryExecutionContext{
 			Catalog:  aws.String(c.settings.Catalog),
 			Database: aws.String(c.settings.Database),
 		},
@@ -67,21 +93,21 @@ func (c *API) Execute(ctx context.Context, input *api.ExecuteQueryInput) (*api.E
 	}
 
 	if workgroupEngineSupportsResultReuse(version) {
-		athenaInput.ResultReuseConfiguration = &athena.ResultReuseConfiguration{
-			ResultReuseByAgeConfiguration: &athena.ResultReuseByAgeConfiguration{
-				Enabled:         aws.Bool(c.settings.ResultReuseEnabled),
-				MaxAgeInMinutes: aws.Int64(c.settings.ResultReuseMaxAgeInMinutes),
+		athenaInput.ResultReuseConfiguration = &athenatypes.ResultReuseConfiguration{
+			ResultReuseByAgeConfiguration: &athenatypes.ResultReuseByAgeConfiguration{
+				Enabled:         c.settings.ResultReuseEnabled,
+				MaxAgeInMinutes: aws.Int32(c.settings.ResultReuseMaxAgeInMinutes),
 			},
 		}
 	}
 
 	if c.settings.OutputLocation != "" {
-		athenaInput.ResultConfiguration = &athena.ResultConfiguration{
+		athenaInput.ResultConfiguration = &athenatypes.ResultConfiguration{
 			OutputLocation: aws.String(c.settings.OutputLocation),
 		}
 	}
 
-	output, err := c.Client.StartQueryExecutionWithContext(ctx, athenaInput)
+	output, err := c.Client.StartQueryExecution(ctx, athenaInput)
 	if err != nil {
 		return nil, getExecuteError(err)
 	}
@@ -96,8 +122,8 @@ func (c *API) GetQueryID(ctx context.Context, query string, args ...interface{})
 	return false, "", nil
 }
 
-func (c *API) Status(ctx aws.Context, output *api.ExecuteQueryOutput) (*api.ExecuteQueryStatus, error) {
-	statusResp, err := c.Client.GetQueryExecutionWithContext(ctx, &athena.GetQueryExecutionInput{
+func (c *API) Status(ctx context.Context, output *api.ExecuteQueryOutput) (*api.ExecuteQueryStatus, error) {
+	statusResp, err := c.Client.GetQueryExecution(ctx, &athena.GetQueryExecutionInput{
 		QueryExecutionId: aws.String(output.ID),
 	})
 	if err != nil {
@@ -105,9 +131,9 @@ func (c *API) Status(ctx aws.Context, output *api.ExecuteQueryOutput) (*api.Exec
 	}
 
 	var finished bool
-	state := *statusResp.QueryExecution.Status.State
+	state := statusResp.QueryExecution.Status.State
 	switch state {
-	case athena.QueryExecutionStateFailed, athena.QueryExecutionStateCancelled:
+	case athenatypes.QueryExecutionStateFailed, athenatypes.QueryExecutionStateCancelled:
 		finished = true
 		err = backend.DownstreamError(
 			errors.New(*statusResp.QueryExecution.Status.StateChangeReason))
@@ -126,14 +152,14 @@ func (c *API) Status(ctx aws.Context, output *api.ExecuteQueryOutput) (*api.Exec
 			}
 		}
 
-	case athena.QueryExecutionStateSucceeded:
+	case athenatypes.QueryExecutionStateSucceeded:
 		finished = true
 	default:
 		finished = false
 	}
 	return &api.ExecuteQueryStatus{
 		ID:       output.ID,
-		State:    state,
+		State:    string(state),
 		Finished: finished,
 	}, err
 }
@@ -143,7 +169,7 @@ func (c *API) CancelQuery(ctx context.Context, options sqlds.Options, queryID st
 }
 
 func (c *API) Stop(output *api.ExecuteQueryOutput) error {
-	_, err := c.Client.StopQueryExecution(&athena.StopQueryExecutionInput{
+	_, err := c.Client.StopQueryExecution(context.TODO(), &athena.StopQueryExecutionInput{
 		QueryExecutionId: &output.ID,
 	})
 	if err != nil {
@@ -179,7 +205,7 @@ var standardRegions = []string{
 	"us-west-2",
 }
 
-func (c *API) Regions(aws.Context) ([]string, error) {
+func (c *API) Regions(_ context.Context) ([]string, error) {
 	return standardRegions, nil
 }
 
@@ -206,7 +232,7 @@ func (c *API) DataCatalogs(ctx context.Context) ([]string, error) {
 	var nextToken *string
 	isFinished := false
 	for !isFinished {
-		out, err := c.Client.ListDataCatalogsWithContext(ctx, &athena.ListDataCatalogsInput{
+		out, err := c.Client.ListDataCatalogs(ctx, &athena.ListDataCatalogsInput{
 			NextToken: nextToken,
 		})
 		if err != nil {
@@ -223,7 +249,7 @@ func (c *API) DataCatalogs(ctx context.Context) ([]string, error) {
 	return res, nil
 }
 
-func (c *API) Databases(ctx aws.Context, options sqlds.Options) ([]string, error) {
+func (c *API) Databases(ctx context.Context, options sqlds.Options) ([]string, error) {
 	catalog := c.getOptionWithDefault(options, "catalog")
 	res := []string{}
 	var nextToken *string
@@ -232,7 +258,7 @@ func (c *API) Databases(ctx aws.Context, options sqlds.Options) ([]string, error
 		catalog = c.settings.Catalog
 	}
 	for !isFinished {
-		out, err := c.Client.ListDatabasesWithContext(ctx, &athena.ListDatabasesInput{
+		out, err := c.Client.ListDatabases(ctx, &athena.ListDatabasesInput{
 			NextToken:   nextToken,
 			CatalogName: aws.String(catalog),
 		})
@@ -255,7 +281,7 @@ func (c *API) Workgroups(ctx context.Context) ([]string, error) {
 	var nextToken *string
 	isFinished := false
 	for !isFinished {
-		out, err := c.Client.ListWorkGroupsWithContext(ctx, &athena.ListWorkGroupsInput{
+		out, err := c.Client.ListWorkGroups(ctx, &athena.ListWorkGroupsInput{
 			NextToken: nextToken,
 		})
 		if err != nil {
@@ -274,23 +300,21 @@ func (c *API) Workgroups(ctx context.Context) ([]string, error) {
 
 func (c *API) WorkgroupEngineVersion(ctx context.Context, options sqlds.Options) (string, error) {
 	workgroup := c.getOptionWithDefault(options, "workgroup")
-	out, err := c.Client.GetWorkGroupWithContext(ctx, &athena.GetWorkGroupInput{
-		WorkGroup: aws.String(workgroup),
-	})
+	out, err := c.Client.GetWorkGroup(ctx, &athena.GetWorkGroupInput{WorkGroup: aws.String(workgroup)})
 	if err != nil {
 		return "", err
 	}
 
-	return string(*out.WorkGroup.Configuration.EngineVersion.EffectiveEngineVersion), nil
+	return *out.WorkGroup.Configuration.EngineVersion.EffectiveEngineVersion, nil
 }
 
-func (c *API) Tables(ctx aws.Context, options sqlds.Options) ([]string, error) {
+func (c *API) Tables(ctx context.Context, options sqlds.Options) ([]string, error) {
 	catalog, database := c.getOptionWithDefault(options, "catalog"), c.getOptionWithDefault(options, "database")
 	res := []string{}
 	var nextToken *string
 	isFinished := false
 	for !isFinished {
-		out, err := c.Client.ListTableMetadataWithContext(ctx, &athena.ListTableMetadataInput{
+		out, err := c.Client.ListTableMetadata(ctx, &athena.ListTableMetadataInput{
 			CatalogName:  aws.String(catalog),
 			DatabaseName: aws.String(database),
 			NextToken:    nextToken,
@@ -309,11 +333,11 @@ func (c *API) Tables(ctx aws.Context, options sqlds.Options) ([]string, error) {
 	return res, nil
 }
 
-func (c *API) Columns(ctx aws.Context, options sqlds.Options) ([]string, error) {
+func (c *API) Columns(ctx context.Context, options sqlds.Options) ([]string, error) {
 	catalog, database := c.getOptionWithDefault(options, "catalog"), c.getOptionWithDefault(options, "database")
 	table := options["table"]
 	res := []string{}
-	out, err := c.Client.GetTableMetadataWithContext(ctx, &athena.GetTableMetadataInput{
+	out, err := c.Client.GetTableMetadata(ctx, &athena.GetTableMetadataInput{
 		CatalogName:  aws.String(catalog),
 		DatabaseName: aws.String(database),
 		TableName:    aws.String(table),
@@ -335,15 +359,18 @@ func workgroupEngineSupportsResultReuse(version string) bool {
 }
 
 func getExecuteError(err error) error {
-	if _, ok := err.(*athena.InvalidRequestException); ok {
+	var invalidRequest *athenatypes.InvalidRequestException
+	if errors.As(err, &invalidRequest) {
 		return &awsds.QueryExecutionError{Cause: awsds.QueryFailedUser, Err: backend.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err))}
-	} else if _, ok := err.(*athena.InternalServerException); ok {
+	}
+	var internalError *athenatypes.InternalServerException
+	if errors.As(err, &internalError) {
 		return &awsds.QueryExecutionError{Cause: awsds.QueryFailedInternal, Err: backend.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err))}
 	}
 	return backend.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err))
 }
 
-func getErrorCategory(errorOutput *athena.GetQueryExecutionOutput) *int64 {
+func getErrorCategory(errorOutput *athena.GetQueryExecutionOutput) *int32 {
 	if errorOutput == nil ||
 		errorOutput.QueryExecution == nil ||
 		errorOutput.QueryExecution.Status == nil ||

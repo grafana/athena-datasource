@@ -88,8 +88,8 @@ const FAKE_SUCCESS = "FAKE_SUCCESS"
 const FAKE_INTERNAL_ERROR = "FAKE_INTERNAL_ERROR"
 const FAKE_USER_ERROR = "FAKE_USER_ERROR"
 
-var AthenaInternalServerErrorMock = &athena.InternalServerException{Message_: aws.String("Internal Server Error")}
-var AthenaUserErrorMock = &athena.InvalidRequestException{Message_: aws.String("Syntax error in SQL statement")}
+var AthenaInternalServerErrorMock = &athenatypes.InternalServerException{Message: aws.String("Internal Server Error")}
+var AthenaUserErrorMock = &athenatypes.InvalidRequestException{Message: aws.String("Syntax error in SQL statement")}
 
 func (m *MockAthenaClient) StartQueryExecution(_ context.Context, input *athena.StartQueryExecutionInput, _ ...func(*athena.Options)) (*athena.StartQueryExecutionOutput, error) {
 	output := &athena.StartQueryExecutionOutput{

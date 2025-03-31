@@ -3,11 +3,9 @@ package mock
 import (
 	"context"
 	"errors"
-
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/request"
-	"github.com/aws/aws-sdk-go/service/athena"
-	"github.com/aws/aws-sdk-go/service/athena/athenaiface"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/athena"
+	athenatypes "github.com/aws/aws-sdk-go-v2/service/athena/types"
 )
 
 const DESCRIBE_STATEMENT_FAILED = "DESCRIBE_STATEMENT_FAILED"
@@ -18,7 +16,7 @@ const UNEXPECTED_ERROR = "UNEXPECTED_ERROR"
 type MockAthenaClient struct {
 	CalledTimesCounter     int
 	CalledTimesCountDown   int
-	ErrorCategory          *int64
+	ErrorCategory          *int32
 	Catalogs               []string
 	Databases              []string
 	Workgroups             []string
@@ -26,10 +24,9 @@ type MockAthenaClient struct {
 	TableMetadataList      []string
 	Columns                []string
 	Cancelled              bool
-	athenaiface.AthenaAPI
 }
 
-func (m *MockAthenaClient) GetQueryExecutionWithContext(ctx aws.Context, input *athena.GetQueryExecutionInput, opts ...request.Option) (*athena.GetQueryExecutionOutput, error) {
+func (m *MockAthenaClient) GetQueryExecution(_ context.Context, input *athena.GetQueryExecutionInput, _ ...func(*athena.Options)) (*athena.GetQueryExecutionOutput, error) {
 	// mock response/functionality
 	m.CalledTimesCountDown--
 	m.CalledTimesCounter++
@@ -37,46 +34,46 @@ func (m *MockAthenaClient) GetQueryExecutionWithContext(ctx aws.Context, input *
 	output := &athena.GetQueryExecutionOutput{}
 	if m.CalledTimesCountDown == 0 {
 		if *input.QueryExecutionId == UNEXPECTED_ERROR {
-			output.QueryExecution = &athena.QueryExecution{
-				Status: &athena.QueryExecutionStatus{
-					State:             aws.String(athena.QueryExecutionStateFailed),
+			output.QueryExecution = &athenatypes.QueryExecution{
+				Status: &athenatypes.QueryExecutionStatus{
+					State:             athenatypes.QueryExecutionStateFailed,
 					StateChangeReason: aws.String(UNEXPECTED_ERROR),
 					AthenaError:       nil,
 				},
 			}
 		} else if *input.QueryExecutionId == DESCRIBE_STATEMENT_FAILED {
-			output.QueryExecution = &athena.QueryExecution{
-				Status: &athena.QueryExecutionStatus{
-					State:             aws.String(athena.QueryExecutionStateFailed),
+			output.QueryExecution = &athenatypes.QueryExecution{
+				Status: &athenatypes.QueryExecutionStatus{
+					State:             athenatypes.QueryExecutionStateFailed,
 					StateChangeReason: aws.String(DESCRIBE_STATEMENT_FAILED),
-					AthenaError:       &athena.AthenaError{ErrorCategory: nil},
+					AthenaError:       &athenatypes.AthenaError{ErrorCategory: nil},
 				},
 			}
 			if m.ErrorCategory != nil {
 				output.QueryExecution.Status.AthenaError.ErrorCategory = m.ErrorCategory
 			}
 		} else {
-			output.QueryExecution = &athena.QueryExecution{
-				Status: &athena.QueryExecutionStatus{
-					State: aws.String(athena.QueryExecutionStateSucceeded),
+			output.QueryExecution = &athenatypes.QueryExecution{
+				Status: &athenatypes.QueryExecutionStatus{
+					State: athenatypes.QueryExecutionStateSucceeded,
 				},
 			}
 		}
 	} else {
-		output.QueryExecution = &athena.QueryExecution{
-			Status: &athena.QueryExecutionStatus{
-				State: aws.String(athena.QueryExecutionStateRunning),
+		output.QueryExecution = &athenatypes.QueryExecution{
+			Status: &athenatypes.QueryExecutionStatus{
+				State: athenatypes.QueryExecutionStateRunning,
 			},
 		}
 	}
 	return output, nil
 }
 
-func (m *MockAthenaClient) GetWorkGroupWithContext(ctx aws.Context, input *athena.GetWorkGroupInput, opts ...request.Option) (*athena.GetWorkGroupOutput, error) {
+func (m *MockAthenaClient) GetWorkGroup(_ context.Context, _ *athena.GetWorkGroupInput, _ ...func(*athena.Options)) (*athena.GetWorkGroupOutput, error) {
 	output := &athena.GetWorkGroupOutput{
-		WorkGroup: &athena.WorkGroup{
-			Configuration: &athena.WorkGroupConfiguration{
-				EngineVersion: &athena.EngineVersion{
+		WorkGroup: &athenatypes.WorkGroup{
+			Configuration: &athenatypes.WorkGroupConfiguration{
+				EngineVersion: &athenatypes.EngineVersion{
 					EffectiveEngineVersion: aws.String(m.WorkgroupEngineVersion),
 					SelectedEngineVersion:  aws.String(m.WorkgroupEngineVersion),
 				},
@@ -91,10 +88,10 @@ const FAKE_SUCCESS = "FAKE_SUCCESS"
 const FAKE_INTERNAL_ERROR = "FAKE_INTERNAL_ERROR"
 const FAKE_USER_ERROR = "FAKE_USER_ERROR"
 
-var AthenaInternalServerErrorMock = &athena.InternalServerException{Message_: aws.String("Internal Server Error")}
-var AthenaUserErrorMock = &athena.InvalidRequestException{Message_: aws.String("Syntax error in SQL statement")}
+var AthenaInternalServerErrorMock = &athenatypes.InternalServerException{Message: aws.String("Internal Server Error")}
+var AthenaUserErrorMock = &athenatypes.InvalidRequestException{Message: aws.String("Syntax error in SQL statement")}
 
-func (m *MockAthenaClient) StartQueryExecutionWithContext(ctx aws.Context, input *athena.StartQueryExecutionInput, opts ...request.Option) (*athena.StartQueryExecutionOutput, error) {
+func (m *MockAthenaClient) StartQueryExecution(_ context.Context, input *athena.StartQueryExecutionInput, _ ...func(*athena.Options)) (*athena.StartQueryExecutionOutput, error) {
 	output := &athena.StartQueryExecutionOutput{
 		QueryExecutionId: input.QueryString,
 	}
@@ -111,110 +108,73 @@ func (m *MockAthenaClient) StartQueryExecutionWithContext(ctx aws.Context, input
 	return output, nil
 }
 
-const EMPTY_ROWS = "EMPTY_ROWS"
-const ROWS_WITH_NEXT = "RowsWithNext"
-
-func (m *MockAthenaClient) GetQueryResults(input *athena.GetQueryResultsInput) (*athena.GetQueryResultsOutput, error) {
+func (m *MockAthenaClient) GetQueryResults(_ context.Context, input *athena.GetQueryResultsInput, _ ...func(*athena.Options)) (*athena.GetQueryResultsOutput, error) {
 	if *input.QueryExecutionId == FAKE_ERROR {
 		return nil, errors.New(FAKE_ERROR)
 	}
 
 	output := &athena.GetQueryResultsOutput{
 		NextToken: input.NextToken,
-		ResultSet: &athena.ResultSet{
-			ResultSetMetadata: &athena.ResultSetMetadata{
-				ColumnInfo: []*athena.ColumnInfo{},
+		ResultSet: &athenatypes.ResultSet{
+			ResultSetMetadata: &athenatypes.ResultSetMetadata{
+				ColumnInfo: []athenatypes.ColumnInfo{},
 			},
-			Rows: []*athena.Row{},
+			Rows: []athenatypes.Row{},
 		},
-	}
-
-	if *input.QueryExecutionId == ROWS_WITH_NEXT {
-		next := "oneMorePage"
-		output.NextToken = &next
-		fakeVarChar := "someString"
-		fakeDatum := athena.Datum{
-			VarCharValue: &fakeVarChar,
-		}
-		fakeColumnName := "_col0"
-		fakeColumn := athena.Datum{
-			VarCharValue: &fakeColumnName,
-		}
-		output.ResultSet.Rows = append(output.ResultSet.Rows,
-			&athena.Row{
-				Data: []*athena.Datum{&fakeColumn},
-			},
-			&athena.Row{
-				Data: []*athena.Datum{&fakeDatum},
-			},
-		)
-		fakeNullable := "NULLABLE"
-		fakePrecision := int64(1)
-		fakeType := "varchar"
-		fakeName := "name"
-		fakeColumnInfo := athena.ColumnInfo{
-			Name:      &fakeName,
-			Nullable:  &fakeNullable,
-			Precision: &fakePrecision,
-			Type:      &fakeType,
-		}
-		output.ResultSet.ResultSetMetadata.ColumnInfo = []*athena.ColumnInfo{&fakeColumnInfo}
 	}
 
 	return output, nil
 }
 
-func (m *MockAthenaClient) GetQueryResultsWithContext(ctx context.Context, input *athena.GetQueryResultsInput, opts ...request.Option) (*athena.GetQueryResultsOutput, error) {
-	return &athena.GetQueryResultsOutput{
-		ResultSet: &athena.ResultSet{
-			ResultSetMetadata: &athena.ResultSetMetadata{},
-			Rows:              []*athena.Row{},
-		},
-	}, nil
-}
-
-func (m *MockAthenaClient) ListDataCatalogsWithContext(ctx aws.Context, input *athena.ListDataCatalogsInput, opts ...request.Option) (*athena.ListDataCatalogsOutput, error) {
+func (m *MockAthenaClient) ListDataCatalogs(_ context.Context, _ *athena.ListDataCatalogsInput, _ ...func(*athena.Options)) (*athena.ListDataCatalogsOutput, error) {
 	r := &athena.ListDataCatalogsOutput{}
 	for _, c := range m.Catalogs {
-		r.DataCatalogsSummary = append(r.DataCatalogsSummary, &athena.DataCatalogSummary{CatalogName: aws.String(c)})
+		r.DataCatalogsSummary = append(r.DataCatalogsSummary, athenatypes.DataCatalogSummary{CatalogName: aws.String(c)})
 	}
 	return r, nil
 }
 
-func (m *MockAthenaClient) ListDatabasesWithContext(ctx aws.Context, input *athena.ListDatabasesInput, opts ...request.Option) (*athena.ListDatabasesOutput, error) {
+func (m *MockAthenaClient) ListDatabases(_ context.Context, _ *athena.ListDatabasesInput, _ ...func(*athena.Options)) (*athena.ListDatabasesOutput, error) {
 	r := &athena.ListDatabasesOutput{}
 	for _, c := range m.Databases {
-		r.DatabaseList = append(r.DatabaseList, &athena.Database{Name: aws.String(c)})
+		r.DatabaseList = append(r.DatabaseList, athenatypes.Database{Name: aws.String(c)})
 	}
 	return r, nil
 }
 
-func (m *MockAthenaClient) ListWorkGroupsWithContext(ctx aws.Context, input *athena.ListWorkGroupsInput, opts ...request.Option) (*athena.ListWorkGroupsOutput, error) {
+func (m *MockAthenaClient) ListWorkGroups(_ context.Context, _ *athena.ListWorkGroupsInput, _ ...func(*athena.Options)) (*athena.ListWorkGroupsOutput, error) {
 	r := &athena.ListWorkGroupsOutput{}
 	for _, c := range m.Workgroups {
-		r.WorkGroups = append(r.WorkGroups, &athena.WorkGroupSummary{Name: aws.String(c)})
+		r.WorkGroups = append(r.WorkGroups, athenatypes.WorkGroupSummary{Name: aws.String(c)})
 	}
 	return r, nil
 }
 
-func (m *MockAthenaClient) ListTableMetadataWithContext(ctx aws.Context, input *athena.ListTableMetadataInput, opts ...request.Option) (*athena.ListTableMetadataOutput, error) {
+func (m *MockAthenaClient) ListTableMetadata(_ context.Context, _ *athena.ListTableMetadataInput, _ ...func(options *athena.Options)) (*athena.ListTableMetadataOutput, error) {
 	r := &athena.ListTableMetadataOutput{}
 	for _, c := range m.TableMetadataList {
-		r.TableMetadataList = append(r.TableMetadataList, &athena.TableMetadata{Name: aws.String(c)})
+		r.TableMetadataList = append(r.TableMetadataList, athenatypes.TableMetadata{Name: aws.String(c)})
 	}
 	return r, nil
 }
 
-func (m *MockAthenaClient) GetTableMetadataWithContext(ctx aws.Context, input *athena.GetTableMetadataInput, opts ...request.Option) (*athena.GetTableMetadataOutput, error) {
+func (m *MockAthenaClient) GetTableMetadata(_ context.Context, _ *athena.GetTableMetadataInput, _ ...func(options *athena.Options)) (*athena.GetTableMetadataOutput, error) {
 	r := &athena.GetTableMetadataOutput{}
-	r.TableMetadata = &athena.TableMetadata{Name: aws.String("fake table metadata")}
+	r.TableMetadata = &athenatypes.TableMetadata{Name: aws.String("fake table metadata")}
 	for _, c := range m.Columns {
-		r.TableMetadata.Columns = append(r.TableMetadata.Columns, &athena.Column{Name: aws.String(c)})
+		r.TableMetadata.Columns = append(r.TableMetadata.Columns, athenatypes.Column{Name: aws.String(c)})
 	}
 	return r, nil
 }
 
-func (m *MockAthenaClient) StopQueryExecution(input *athena.StopQueryExecutionInput) (*athena.StopQueryExecutionOutput, error) {
+func (m *MockAthenaClient) StopQueryExecution(_ context.Context, _ *athena.StopQueryExecutionInput, _ ...func(*athena.Options)) (*athena.StopQueryExecutionOutput, error) {
 	m.Cancelled = true
 	return &athena.StopQueryExecutionOutput{}, nil
+}
+
+// boilerplate to satisfy athenadriver.Client
+
+func (m *MockAthenaClient) CreateWorkGroup(_ context.Context, _ *athena.CreateWorkGroupInput, _ ...func(*athena.Options)) (*athena.CreateWorkGroupOutput, error) {
+	//TODO implement me
+	panic("implement me")
 }

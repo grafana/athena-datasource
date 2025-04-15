@@ -7,7 +7,6 @@ toolchain go1.23.6
 replace github.com/uber/athenadriver => github.com/grafana/athenadriver v0.0.0-20250110154747-907b6f45eba0
 
 require (
-	github.com/aws/aws-sdk-go v1.55.6
 	github.com/aws/aws-sdk-go-v2 v1.36.1
 	github.com/aws/aws-sdk-go-v2/service/athena v1.49.2
 	github.com/google/go-cmp v0.7.0
@@ -25,6 +24,7 @@ require (
 	github.com/BurntSushi/toml v1.4.0 // indirect
 	github.com/DATA-DOG/go-sqlmock v1.4.1 // indirect
 	github.com/apache/arrow-go/v18 v18.0.1-0.20241212180703-82be143d7c30 // indirect
+	github.com/aws/aws-sdk-go v1.55.6 // indirect
 	github.com/aws/aws-sdk-go-v2/config v1.29.4 // indirect
 	github.com/aws/aws-sdk-go-v2/credentials v1.17.57 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.16.27 // indirect

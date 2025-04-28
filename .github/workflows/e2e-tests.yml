@@ -17,10 +17,10 @@ jobs:
       matrix: ${{ steps.resolve-versions.outputs.matrix }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Resolve Grafana E2E versions
         id: resolve-versions
-        uses: grafana/plugin-actions/e2e-version@main
+        uses: grafana/plugin-actions/e2e-version@c233e9f6752186a9b256a2a451ec3067fbf712c2 # main
         with:
           version-resolver-type: plugin-grafana-dependency
 
@@ -34,10 +34,10 @@ jobs:
     name: e2e ${{ matrix.GRAFANA_IMAGE.name }}@${{ matrix.GRAFANA_IMAGE.VERSION }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version-file: .nvmrc
 
@@ -45,7 +45,7 @@ jobs:
         run: yarn install
 
       - name: Install Mage
-        uses: magefile/mage-action@v3
+        uses: magefile/mage-action@6f50bbb8ea47d56e62dee92392788acbc8192d0b # v3.1.0
         with:
           install-only: true
 
@@ -60,7 +60,7 @@ jobs:
 
       - name: Get secrets from vault
         id: get-secrets
-        uses: grafana/shared-workflows/actions/get-vault-secrets@main
+        uses: grafana/shared-workflows/actions/get-vault-secrets@fa48192dac470ae356b3f7007229f3ac28c48a25 # main
         with:
           repo_secrets: |
             ACCESS_KEY=e2e:accessKey
@@ -72,7 +72,7 @@ jobs:
           GRAFANA_VERSION=${{ matrix.GRAFANA_IMAGE.VERSION }} GRAFANA_IMAGE=${{ matrix.GRAFANA_IMAGE.NAME }} ACCESS_KEY=${{env.ACCESS_KEY}} SECRET_KEY=${{env.SECRET_KEY}} docker compose up -d
 
       - name: Wait for grafana server
-        uses: grafana/plugin-actions/wait-for-grafana@main
+        uses: grafana/plugin-actions/wait-for-grafana@c233e9f6752186a9b256a2a451ec3067fbf712c2 # main
 
       - name: Run Playwright tests
         id: run-tests

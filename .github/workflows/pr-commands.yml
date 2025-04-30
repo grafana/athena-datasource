@@ -6,6 +6,11 @@ on:
       - opened
 concurrency:
   group: pr-commands-${{ github.event.number }}
+
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   main:
     runs-on: ubuntu-latest
@@ -16,6 +21,7 @@ jobs:
           repository: 'grafana/grafana-github-actions'
           path: ./actions
           ref: main
+          persist-credentials: false
       - name: Install Actions
         run: npm install --production --prefix ./actions
       - name: 'Generate token'

@@ -1,11 +1,16 @@
 name: Compatibility check
 on: [push, pull_request]
 
+permissions:
+  contents: read
+
 jobs:
   compatibilitycheck:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
@@ -14,7 +19,7 @@ jobs:
       - name: Build plugin
         run: yarn build
       - name: Compatibility check
-        uses: grafana/plugin-actions/is-compatible@v1
+        uses: grafana/plugin-actions/is-compatible@8c65927553042c5cf701877636dd37344a8a0ce1 # v1
         with:
           module: './src/module.ts'
           comment-pr: 'no'

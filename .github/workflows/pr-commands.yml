@@ -24,12 +24,19 @@ jobs:
           persist-credentials: false
       - name: Install Actions
         run: npm install --production --prefix ./actions
+      - name: Get secrets from vault
+        id: get-secrets
+        uses: grafana/shared-workflows/actions/get-vault-secrets@fa48192dac470ae356b3f7007229f3ac28c48a25 # main
+        with:
+          repo_secrets: |
+            AWS_DS_TOKEN_CREATOR_ID=aws-ds-token-creator:app_id
+            AWS_DS_TOKEN_CREATOR_PEM=aws-ds-token-creator:pem
       - name: 'Generate token'
         id: generate_token
         uses: tibdex/github-app-token@3beb63f4bd073e61482598c45c71c1019b59b73a
         with:
-          app_id: ${{ secrets.AWS_DS_TOKEN_CREATOR_ID }}
-          private_key: ${{ secrets.AWS_DS_TOKEN_CREATOR_PEM }}
+          app_id: ${{ env.AWS_DS_TOKEN_CREATOR_ID }}
+          private_key: ${{ env.AWS_DS_TOKEN_CREATOR_PEM }}
       - name: Run Commands
         uses: ./actions/commands
         with:

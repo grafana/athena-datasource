@@ -68,7 +68,7 @@ jobs:
 
       - name: Get secrets from vault
         id: get-secrets
-        uses: grafana/shared-workflows/actions/get-vault-secrets@fa48192dac470ae356b3f7007229f3ac28c48a25 # main
+        uses: grafana/shared-workflows/actions/get-vault-secrets@0812cd018b3ecc7b4d912bc68106a0febe0b8eeb # main
         with:
           repo_secrets: |
             ACCESS_KEY=e2e:accessKey

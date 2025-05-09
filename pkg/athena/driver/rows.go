@@ -6,8 +6,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/aws/aws-sdk-go/service/athena"
-	"github.com/aws/aws-sdk-go/service/athena/athenaiface"
+	athenatypes "github.com/aws/aws-sdk-go-v2/service/athena/types"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	drv "github.com/uber/athenadriver/go"
 )
@@ -16,11 +15,11 @@ type Rows struct {
 	*drv.Rows
 }
 
-func NewRows(ctx context.Context, athenaAPI athenaiface.AthenaAPI, queryID string) (*Rows, error) {
+func NewRows(ctx context.Context, client drv.AthenaClient, queryID string) (*Rows, error) {
 	config := drv.NewNoOpsConfig()
 	config.SetMissingAsNil(true)
 	tracer := drv.NewNoOpsObservability()
-	rows, err := drv.NewRows(ctx, athenaAPI, queryID, config, tracer)
+	rows, err := drv.NewRows(ctx, client, queryID, config, tracer)
 	if err != nil {
 		return nil, err
 	}
@@ -30,7 +29,7 @@ func NewRows(ctx context.Context, athenaAPI athenaiface.AthenaAPI, queryID strin
 // ColumnTypeScanType returns the value type that can be used to scan types into.
 // For example, the database column type "bigint" this should return "reflect.TypeOf(int64(0))"
 func (r *Rows) ColumnTypeScanType(index int) reflect.Type {
-	col := *r.Rows.ResultOutput.ResultSet.ResultSetMetadata.ColumnInfo[index]
+	col := r.Rows.ResultOutput.ResultSet.ResultSetMetadata.ColumnInfo[index]
 	convertedAthenaData, err := r.athenaTypeOf(&col)
 	if err != nil {
 		log.DefaultLogger.Error(err.Error())
@@ -38,7 +37,7 @@ func (r *Rows) ColumnTypeScanType(index int) reflect.Type {
 	return convertedAthenaData
 }
 
-func (r *Rows) athenaTypeOf(columnInfo *athena.ColumnInfo) (reflect.Type, error) {
+func (r *Rows) athenaTypeOf(columnInfo *athenatypes.ColumnInfo) (reflect.Type, error) {
 	switch *columnInfo.Type {
 	case "tinyint", "smallint":
 		return reflect.TypeOf(sql.NullInt16{}), nil

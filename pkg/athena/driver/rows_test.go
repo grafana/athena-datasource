@@ -1,9 +1,10 @@
 package driver
 
 import (
+	athenatypes "github.com/aws/aws-sdk-go-v2/service/athena/types"
 	"testing"
 
-	"github.com/aws/aws-sdk-go/service/athena"
+	"github.com/aws/aws-sdk-go-v2/service/athena"
 	drv "github.com/uber/athenadriver/go"
 )
 
@@ -47,9 +48,9 @@ func TestColumnTypeScanType(t *testing.T) {
 			r := &Rows{
 				Rows: &drv.Rows{
 					ResultOutput: &athena.GetQueryResultsOutput{
-						ResultSet: &athena.ResultSet{
-							ResultSetMetadata: &athena.ResultSetMetadata{
-								ColumnInfo: []*athena.ColumnInfo{
+						ResultSet: &athenatypes.ResultSet{
+							ResultSetMetadata: &athenatypes.ResultSetMetadata{
+								ColumnInfo: []athenatypes.ColumnInfo{
 									{Type: &tt.inputType},
 								},
 							},

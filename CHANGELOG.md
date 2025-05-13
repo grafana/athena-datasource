@@ -1,5 +1,22 @@
 # Changelog
 
+## 3.1.2
+
+- Migrate to aws-sdk-go-v2 in [#491](https://github.com/grafana/athena-datasource/pull/491)
+- use vault instead of github secrets in [#534](https://github.com/grafana/athena-datasource/pull/534)
+- Github workflows: Don't use hash for grafana actions and add permissions for PRs in [#539](https://github.com/grafana/athena-datasource/pull/539)
+- Add zizmor config in [#537](https://github.com/grafana/athena-datasource/pull/537)
+- Cleanup github actions files in [#533](https://github.com/grafana/athena-datasource/pull/533)
+- Chore: add label to external contributions in [#499](https://github.com/grafana/athena-datasource/pull/499)
+- Bump the all-go-dependencies group across 1 directory with 5 updates in [#538](https://github.com/grafana/athena-datasource/pull/538)
+- Bump golang.org/x/net from 0.36.0 to 0.38.0 in the go_modules group in [#528](https://github.com/grafana/athena-datasource/pull/528)
+- Bump the all-node-dependencies group across 1 directory with 14 updates in [#523](https://github.com/grafana/athena-datasource/pull/523)
+- Bump the all-go-dependencies group with 2 updates in [#522](https://github.com/grafana/athena-datasource/pull/522)
+- Bump the all-node-dependencies group across 1 directory with 14 updates in [#519](https://github.com/grafana/athena-datasource/pull/519)
+- Bump @babel/runtime from 7.26.9 to 7.26.10 in the npm_and_yarn group in [#518](https://github.com/grafana/athena-datasource/pull/518)
+- Bump golang.org/x/net from 0.34.0 to 0.36.0 in the go_modules group in [#515](https://github.com/grafana/athena-datasource/pull/515)
+- Bump github.com/grafana/grafana-plugin-sdk-go from 0.266.0 to 0.269.0 in the all-go-dependencies group in [#512](https://github.com/grafana/athena-datasource/pull/512)
+
 ## 3.1.1
 
 - Bugfix: Make sure Athena error object is not nil in [#516](https://github.com/grafana/athena-datasource/pull/516)

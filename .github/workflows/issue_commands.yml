@@ -11,6 +11,9 @@ permissions:
 jobs:
   main:
     runs-on: ubuntu-latest
+    permissions:
+      # The "id-token: write" permission is required by "get-vault-secrets" action
+      id-token: write
     steps:
       - name: Checkout Actions
         uses: actions/checkout@v4
@@ -23,7 +26,7 @@ jobs:
         run: npm install --production --prefix ./actions
       - name: Get secrets from vault
         id: get-secrets
-        uses: grafana/shared-workflows/actions/get-vault-secrets@fa48192dac470ae356b3f7007229f3ac28c48a25 # main
+        uses: grafana/shared-workflows/actions/get-vault-secrets@main
         with:
           repo_secrets: |
             AWS_DS_TOKEN_CREATOR_ID=aws-ds-token-creator:app_id

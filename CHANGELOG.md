@@ -4,6 +4,7 @@
 
 - Migrate to aws-sdk-go-v2 in [#491](https://github.com/grafana/athena-datasource/pull/491)
 - use vault instead of github secrets in [#534](https://github.com/grafana/athena-datasource/pull/534)
+- Github workflows: Don't use hash for grafana actions and add permissions for PRs in [#539](https://github.com/grafana/athena-datasource/pull/539)
 - Add zizmor config in [#537](https://github.com/grafana/athena-datasource/pull/537)
 - Cleanup github actions files in [#533](https://github.com/grafana/athena-datasource/pull/533)
 - Chore: add label to external contributions in [#499](https://github.com/grafana/athena-datasource/pull/499)

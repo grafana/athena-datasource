@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.1.3
+- Bump grafana-aws-sdk to pick up v2 auth fix in [#544](https://github.com/grafana/athena-datasource/pull/544)
+
 ## 3.1.2
 
 - Migrate to aws-sdk-go-v2 in [#491](https://github.com/grafana/athena-datasource/pull/491)

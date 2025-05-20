@@ -1,3 +1,0 @@
-{
-  "extends": ["plugin:jsx-a11y/recommended", "./.config/.eslintrc"]
-}

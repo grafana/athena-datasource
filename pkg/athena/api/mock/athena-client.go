@@ -3,6 +3,7 @@ package mock
 import (
 	"context"
 	"errors"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/athena"
 	athenatypes "github.com/aws/aws-sdk-go-v2/service/athena/types"
@@ -33,7 +34,8 @@ func (m *MockAthenaClient) GetQueryExecution(_ context.Context, input *athena.Ge
 
 	output := &athena.GetQueryExecutionOutput{}
 	if m.CalledTimesCountDown == 0 {
-		if *input.QueryExecutionId == UNEXPECTED_ERROR {
+		switch *input.QueryExecutionId {
+		case UNEXPECTED_ERROR:
 			output.QueryExecution = &athenatypes.QueryExecution{
 				Status: &athenatypes.QueryExecutionStatus{
 					State:             athenatypes.QueryExecutionStateFailed,
@@ -41,7 +43,7 @@ func (m *MockAthenaClient) GetQueryExecution(_ context.Context, input *athena.Ge
 					AthenaError:       nil,
 				},
 			}
-		} else if *input.QueryExecutionId == DESCRIBE_STATEMENT_FAILED {
+		case DESCRIBE_STATEMENT_FAILED:
 			output.QueryExecution = &athenatypes.QueryExecution{
 				Status: &athenatypes.QueryExecutionStatus{
 					State:             athenatypes.QueryExecutionStateFailed,
@@ -52,7 +54,7 @@ func (m *MockAthenaClient) GetQueryExecution(_ context.Context, input *athena.Ge
 			if m.ErrorCategory != nil {
 				output.QueryExecution.Status.AthenaError.ErrorCategory = m.ErrorCategory
 			}
-		} else {
+		default:
 			output.QueryExecution = &athenatypes.QueryExecution{
 				Status: &athenatypes.QueryExecutionStatus{
 					State: athenatypes.QueryExecutionStateSucceeded,

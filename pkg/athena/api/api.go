@@ -56,6 +56,7 @@ func New(ctx context.Context, _ *awsds.SessionCache, settings sqlModels.Settings
 	if region == "" || region == "default" {
 		region = athenaSettings.DefaultRegion
 	}
+	authSettings, _ := awsds.ReadAuthSettingsFromContext(ctx)
 
 	cfg, err := awsauth.NewConfigProvider().GetConfig(ctx, awsauth.Settings{
 		LegacyAuthType:     athenaSettings.AuthType,
@@ -65,7 +66,7 @@ func New(ctx context.Context, _ *awsds.SessionCache, settings sqlModels.Settings
 		CredentialsProfile: athenaSettings.Profile,
 		AssumeRoleARN:      athenaSettings.AssumeRoleARN,
 		Endpoint:           athenaSettings.Endpoint,
-		ExternalID:         athenaSettings.ExternalID,
+		ExternalID:         authSettings.ExternalID,
 		HTTPClient:         httpClient,
 		UserAgent:          "athena",
 	})

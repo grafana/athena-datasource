@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.1.4
+- Fix externalId handling in [#547](https://github.com/grafana/athena-datasource/pull/547)
+
 ## 3.1.3
 - Bump grafana-aws-sdk to pick up v2 auth fix in [#544](https://github.com/grafana/athena-datasource/pull/544)
 

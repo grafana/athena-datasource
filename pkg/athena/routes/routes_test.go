@@ -2,6 +2,8 @@ package routes
 
 import (
 	"bytes"
+	"context"
+	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -165,8 +167,11 @@ func setupHandler() AthenaResourceHandler {
 	return rh
 }
 
-func hitRoute(rh AthenaResourceHandler, route string, reqBody []byte) (*http.Response, []byte, error) {
-	req := httptest.NewRequest("GET", route, bytes.NewReader(reqBody))
+func hitRoute(rh AthenaResourceHandler, route string, reqBody []byte, externalId string) (*http.Response, []byte, error) {
+	ctx := backend.WithGrafanaConfig(context.Background(), backend.NewGrafanaCfg(map[string]string{
+		awsds.GrafanaAssumeRoleExternalIdKeyName: externalId,
+	}))
+	req := httptest.NewRequestWithContext(ctx, "GET", route, bytes.NewReader(reqBody))
 	rw := httptest.NewRecorder()
 	rh.Routes()[route](rw, req)
 	resp := rw.Result()
@@ -176,10 +181,8 @@ func hitRoute(rh AthenaResourceHandler, route string, reqBody []byte) (*http.Res
 func TestRoutes_ExternalId(t *testing.T) {
 
 	t.Run("it returns an externalId if one is set in the env", func(t *testing.T) {
-		t.Setenv(awsds.GrafanaAssumeRoleExternalIdKeyName, "a fake external id")
-
 		rh := setupHandler()
-		resp, body, err := hitRoute(rh, "/externalId", []byte{})
+		resp, body, err := hitRoute(rh, "/externalId", []byte{}, "a fake external id")
 
 		require.NoError(t, err)
 		require.Equal(t, http.StatusOK, resp.StatusCode)
@@ -187,7 +190,7 @@ func TestRoutes_ExternalId(t *testing.T) {
 	})
 	t.Run("it returns an empty string if there is no external id set in the env", func(t *testing.T) {
 		rh := setupHandler()
-		resp, body, err := hitRoute(rh, "/externalId", []byte{})
+		resp, body, err := hitRoute(rh, "/externalId", []byte{}, "")
 
 		require.NoError(t, err)
 		require.Equal(t, http.StatusOK, resp.StatusCode)

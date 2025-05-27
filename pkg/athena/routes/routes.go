@@ -2,7 +2,6 @@ package routes
 
 import (
 	"net/http"
-	"os"
 
 	"github.com/grafana/athena-datasource/pkg/athena"
 	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
@@ -56,8 +55,9 @@ type ExternalIdResponse struct {
 }
 
 func (r *AthenaResourceHandler) externalId(rw http.ResponseWriter, req *http.Request) {
+	authSettings, _ := awsds.ReadAuthSettingsFromContext(req.Context())
 	res := ExternalIdResponse{
-		ExternalId: os.Getenv(awsds.GrafanaAssumeRoleExternalIdKeyName),
+		ExternalId: authSettings.ExternalID,
 	}
 	routes.SendResources(rw, res, nil)
 }

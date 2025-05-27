@@ -1,9 +1,15 @@
 # Changelog
 
+## 3.1.5
+
+- Fix: get externalId from grafana config in [#550](https://github.com/grafana/athena-datasource/pull/550)
+
 ## 3.1.4
+
 - Fix externalId handling in [#547](https://github.com/grafana/athena-datasource/pull/547)
 
 ## 3.1.3
+
 - Bump grafana-aws-sdk to pick up v2 auth fix in [#544](https://github.com/grafana/athena-datasource/pull/544)
 
 ## 3.1.2
@@ -30,7 +36,7 @@
 ## 3.1.0
 
 - Implement QueryExecutionError to log downstream error cause in the error response in [#506](https://github.com/grafana/athena-datasource/pull/506)
-- Dependabot: 
+- Dependabot:
   - Bump github.com/google/go-cmp from 0.6.0 to 0.7.0 in the all-go-dependencies group across 1 directory in [#510](https://github.com/grafana/athena-datasource/pull/510)
   - Bump the all-node-dependencies group with 8 updates in [#509](https://github.com/grafana/athena-datasource/pull/509)
   - Bump the all-node-dependencies group across 1 directory with 21 updates in [#507](https://github.com/grafana/athena-datasource/pull/507)

@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.6
+
+- Fix: use user external id if not using assume role in [#553](https://github.com/grafana/athena-datasource/pull/553)
+
 ## 3.1.5
 
 - Fix: get externalId from grafana config in [#550](https://github.com/grafana/athena-datasource/pull/550)

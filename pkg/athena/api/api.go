@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+
 	athenatypes "github.com/aws/aws-sdk-go-v2/service/athena/types"
 	"github.com/grafana/athena-datasource/pkg/athena/api/mock"
 	drv "github.com/uber/athenadriver/go"
@@ -56,7 +57,6 @@ func New(ctx context.Context, _ *awsds.SessionCache, settings sqlModels.Settings
 	if region == "" || region == "default" {
 		region = athenaSettings.DefaultRegion
 	}
-	authSettings, _ := awsds.ReadAuthSettingsFromContext(ctx)
 
 	cfg, err := awsauth.NewConfigProvider().GetConfig(ctx, awsauth.Settings{
 		LegacyAuthType:     athenaSettings.AuthType,
@@ -66,7 +66,7 @@ func New(ctx context.Context, _ *awsds.SessionCache, settings sqlModels.Settings
 		CredentialsProfile: athenaSettings.Profile,
 		AssumeRoleARN:      athenaSettings.AssumeRoleARN,
 		Endpoint:           athenaSettings.Endpoint,
-		ExternalID:         authSettings.ExternalID,
+		ExternalID:         athenaSettings.ExternalID,
 		HTTPClient:         httpClient,
 		UserAgent:          "athena",
 	})

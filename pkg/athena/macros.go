@@ -19,12 +19,14 @@ const (
 )
 
 func parseTime(target, format string) string {
-	if format == "" {
+	switch format {
+	case "":
 		return target
-	} else if format == timestampFormat {
+	case timestampFormat:
 		return fmt.Sprintf("TIMESTAMP %s", target)
+	default:
+		return fmt.Sprintf("parse_datetime(%s,%s)", target, format)
 	}
-	return fmt.Sprintf("parse_datetime(%s,%s)", target, format)
 }
 
 func parseTimeGroup(query *sqlutil.Query, args []string) (time.Duration, string, error) {

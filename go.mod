@@ -6,11 +6,11 @@ replace github.com/uber/athenadriver => github.com/grafana/athenadriver v0.0.0-2
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.36.3
-	github.com/aws/aws-sdk-go-v2/service/athena v1.50.5
+	github.com/aws/aws-sdk-go-v2/service/athena v1.51.0
 	github.com/google/go-cmp v0.7.0
 	github.com/grafana/grafana-aws-sdk v0.38.6
 	github.com/grafana/grafana-plugin-sdk-go v0.277.1
-	github.com/grafana/sqlds/v4 v4.2.2
+	github.com/grafana/sqlds/v4 v4.2.3
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.10.0
 	github.com/uber/athenadriver v1.1.15

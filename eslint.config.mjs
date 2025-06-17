@@ -24,12 +24,6 @@ export default defineConfig([
   },
   {
     files: ['src/**/*.{ts,tsx,js,jsx}'],
-    languageOptions: {
-      parserOptions: {
-        projectService: true,
-        tsconfigRootDir: import.meta.dirname,
-      },
-    },
     rules: {
       '@typescript-eslint/no-deprecated': 'warn',
     },

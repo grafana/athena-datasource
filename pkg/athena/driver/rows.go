@@ -29,7 +29,7 @@ func NewRows(ctx context.Context, client drv.AthenaClient, queryID string) (*Row
 // ColumnTypeScanType returns the value type that can be used to scan types into.
 // For example, the database column type "bigint" this should return "reflect.TypeOf(int64(0))"
 func (r *Rows) ColumnTypeScanType(index int) reflect.Type {
-	col := r.Rows.ResultOutput.ResultSet.ResultSetMetadata.ColumnInfo[index]
+	col := r.ResultOutput.ResultSet.ResultSetMetadata.ColumnInfo[index]
 	convertedAthenaData, err := r.athenaTypeOf(&col)
 	if err != nil {
 		log.DefaultLogger.Error(err.Error())

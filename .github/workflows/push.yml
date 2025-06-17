@@ -1,0 +1,22 @@
+name: Plugins - CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions: {}
+
+jobs:
+  ci:
+    name: CI
+    uses: grafana/plugin-ci-workflows/.github/workflows/ci.yml@main # zizmor: ignore[unpinned-uses]
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      plugin-version-suffix: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || '' }}
+      golangci-lint-version: '2.0.2'
+      # the shared workflow doesn't have a mechanism to specify custom Vault secrets in e2e tests, so we're using the workflow in e2e-tests.yml instead
+      run-playwright: false

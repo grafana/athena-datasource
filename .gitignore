@@ -42,3 +42,5 @@ __debug_bin
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+.eslintcache

@@ -23,20 +23,19 @@
     "@emotion/css": "11.13.5",
     "@grafana/async-query-data": "0.4.2",
     "@grafana/data": "^12.0.1",
-    "@eslint/eslintrc": "^3.3.1",
-    "@grafana/async-query-data": "0.4.1",
-    "@grafana/experimental": "2.1.6",
     "@grafana/plugin-ui": "^0.10.6",
     "@grafana/runtime": "^12.0.1",
     "@grafana/schema": "12.0.1",
     "@grafana/ui": "^12.0.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
+    "react-router-dom": "^6.22.0",
     "semver": "^7.7.2",
     "tslib": "2.8.1"
   },
   "devDependencies": {
     "@babel/core": "^7.27.4",
+    "@eslint/eslintrc": "^3.3.1",
     "@grafana/aws-sdk": "0.7.1",
     "@grafana/eslint-config": "^8.1.0",
     "@grafana/plugin-e2e": "^2.0.5",
@@ -52,8 +51,7 @@
     "@types/glob": "^8.0.0",
     "@types/jest": "^30.0.0",
     "@types/lodash": "^4.17.17",
-    "@types/node": "^24.0.3",
-    "@types/react-router-dom": "^5.2.0",
+    "@types/node": "^22.15.32",
     "@types/semver": "^7.7.0",
     "@typescript-eslint/eslint-plugin": "^8.32.1",
     "@typescript-eslint/parser": "^8.32.1",
@@ -77,7 +75,6 @@
     "jest-environment-jsdom": "^30.0.0",
     "lefthook": "^1.11.14",
     "prettier": "^3.5.3",
-    "react-router-dom": "7.6.2",
     "react-select-event": "^5.3.0",
     "replace-in-file-webpack-plugin": "^1.0.6",
     "sass": "1.89.2",
@@ -92,14 +89,6 @@
     "webpack-cli": "^6.0.1",
     "webpack-livereload-plugin": "^3.0.2",
     "webpack-virtual-modules": "^0.6.2"
-  },
-  "resolutions": {
-    "braces": "3.0.3",
-    "debug": "4.3.5",
-    "log4js": "6.9.1",
-    "tough-cookie": "4.1.4",
-    "underscore": "1.12.1",
-    "jackspeak": "2.1.1"
   },
   "engines": {
     "node": ">=20"

@@ -95,3 +95,19 @@ jobs:
       #     name: playwright-report-${{ matrix.GRAFANA_IMAGE.NAME }}-v${{ matrix.GRAFANA_IMAGE.VERSION }}-${{github.run_id}}
       #     path: playwright-report/
       #     retention-days: 30
+
+  check-playwright-status:
+    needs: playwright-tests
+    name: Check Playwright E2E matrix status
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Check matrix job status
+        # This step will fail if any of the matrix jobs failed
+        run: |
+          if [ "${{ contains(needs.playwright-tests.result, 'failure') }}" = "true" ]; then
+            echo "One or more jobs in the E2E testing matrix failed"
+            exit 1
+          else
+            echo "All E2E test jobs succeeded"
+          fi

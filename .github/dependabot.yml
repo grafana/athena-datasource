@@ -1,5 +1,4 @@
 version: 2
-enable-beta-ecosystems: true
 updates:
   - package-ecosystem: 'gomod'
     directory: '/'
@@ -13,6 +12,8 @@ updates:
     directory: '/'
     schedule:
       interval: 'daily'
+    cooldown:
+      default-days: 7
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:

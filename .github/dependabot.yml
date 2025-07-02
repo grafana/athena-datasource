@@ -1,37 +1,55 @@
-# To get started with Dependabot version updates, you'll need to specify which
-# package ecosystems to update and where the package manifests are located.
-# Please see the documentation for all configuration options:
-# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
-
 version: 2
 updates:
   - package-ecosystem: 'gomod'
     directory: '/'
     schedule:
-      interval: 'weekly'
-    groups:
-      all-go-dependencies:
-        patterns:
-          - '*'
+      interval: 'daily'
+    cooldown:
+      semver-major-days: 30
+      semver-minor-days: 14
+      semver-patch-days: 7
+      exclude:
+        - 'github.com/grafana/*'
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
-      interval: 'weekly'
-    groups:
-      all-github-action-dependencies:
-        patterns:
-          - '*'
+      interval: 'daily'
+    cooldown:
+      default-days: 7
+      exclude:
+        - 'grafana/*'
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
-      interval: 'weekly'
-    ignore:
-      - dependency-name: '@grafana/e2e*'
-      - dependency-name: 'react'
-        update-types: ["version-update:semver-major"]
-      - dependency-name: 'react-dom'
-        update-types: ["version-update:semver-major"]
+      interval: 'daily'
+    cooldown:
+      semver-major-days: 30
+      semver-minor-days: 14
+      semver-patch-days: 7
+      exclude:
+        - '@grafana/*'
     groups:
-      all-node-dependencies:
+      grafana-dependencies:
         patterns:
-          - '*'
+          - '@grafana/data'
+          - '@grafana/runtime'
+          - '@grafana/schema'
+          - '@grafana/ui'
+
+    # Ignore dependencies that need to be updated manually for compatibility reasons
+    ignore:
+      # Keep @types/node in sync with the node version in .nvmrc
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
+      # Keep react and react-dom on the same major version used by Grafana
+      - dependency-name: react
+        update-types: ['version-update:semver-major']
+      - dependency-name: react-dom
+        update-types: ['version-update:semver-major']
+      # Keep react-router-dom and react-router-dom-v5-compat on the same compatible major version used by Grafana
+      - dependency-name: react-router-dom
+        update-types: ['version-update:semver-major']
+      - dependency-name: react-router-dom-v5-compat
+        update-types: ['version-update:semver-major']
+      # Keep rxjs in sync with the version used by `@grafana/*` packages
+      - dependency-name: rxjs

@@ -37,7 +37,7 @@ func TestExecute_InternalServerErrorReturnsQueryFailedInternalStatus(t *testing.
 	c := NewFake(&athenaclientmock.MockAthenaClient{CalledTimesCountDown: 1}, &models.AthenaDataSourceSettings{})
 	_, err := c.Execute(context.Background(), &api.ExecuteQueryInput{Query: athenaclientmock.FAKE_INTERNAL_ERROR})
 	assert.NotNil(t, err)
-	expectedErr := &awsds.QueryExecutionError{Cause: awsds.QueryFailedInternal, Err: backend.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, athenaclientmock.AthenaInternalServerErrorMock))}
+	expectedErr := &awsds.QueryExecutionError{Cause: awsds.QueryFailedInternal, Err: backend.DownstreamError(fmt.Errorf("%w: %v", api.ErrorExecute, athenaclientmock.AthenaInternalServerErrorMock))}
 	assert.Equal(t, err, expectedErr)
 }
 
@@ -45,7 +45,7 @@ func TestExecute__UserErrorReturnsQueryFailedUserErrorStatus(t *testing.T) {
 	c := NewFake(&athenaclientmock.MockAthenaClient{CalledTimesCountDown: 1}, &models.AthenaDataSourceSettings{})
 	_, err := c.Execute(context.Background(), &api.ExecuteQueryInput{Query: athenaclientmock.FAKE_USER_ERROR})
 	assert.NotNil(t, err)
-	expectedErr := &awsds.QueryExecutionError{Cause: awsds.QueryFailedUser, Err: backend.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, athenaclientmock.AthenaUserErrorMock))}
+	expectedErr := &awsds.QueryExecutionError{Cause: awsds.QueryFailedUser, Err: backend.DownstreamError(fmt.Errorf("%w: %v", api.ErrorExecute, athenaclientmock.AthenaUserErrorMock))}
 	assert.Equal(t, err, expectedErr)
 }
 

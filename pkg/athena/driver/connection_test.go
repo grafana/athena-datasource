@@ -26,7 +26,7 @@ func TestConnection_QueryContext(t *testing.T) {
 	}
 
 	failedOutput, err := c.StartQuery(context.Background(), athenaclientmock.FAKE_ERROR, []driver.NamedValue{})
-	if !errors.Is(err, sqlAPI.ExecuteError) {
+	if !errors.Is(err, sqlAPI.ErrorExecute) {
 		t.Errorf("unexpected err %v", err)
 	}
 	assert.Equal(t, failedOutput, "")

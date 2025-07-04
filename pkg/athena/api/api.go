@@ -39,7 +39,7 @@ type API struct {
 	settings *models.AthenaDataSourceSettings
 }
 
-func New(ctx context.Context, _ *awsds.SessionCache, settings sqlModels.Settings) (api.AWSAPI, error) {
+func New(ctx context.Context, settings sqlModels.Settings) (api.AWSAPI, error) {
 	athenaSettings := settings.(*models.AthenaDataSourceSettings)
 
 	httpClientProvider := sdkhttpclient.NewProvider()
@@ -128,7 +128,7 @@ func (c *API) Status(ctx context.Context, output *api.ExecuteQueryOutput) (*api.
 		QueryExecutionId: aws.String(output.ID),
 	})
 	if err != nil {
-		return nil, backend.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err))
+		return nil, backend.DownstreamError(fmt.Errorf("%w: %v", api.ErrorExecute, err))
 	}
 
 	var finished bool
@@ -362,13 +362,13 @@ func workgroupEngineSupportsResultReuse(version string) bool {
 func getExecuteError(err error) error {
 	var invalidRequest *athenatypes.InvalidRequestException
 	if errors.As(err, &invalidRequest) {
-		return &awsds.QueryExecutionError{Cause: awsds.QueryFailedUser, Err: backend.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err))}
+		return &awsds.QueryExecutionError{Cause: awsds.QueryFailedUser, Err: backend.DownstreamError(fmt.Errorf("%w: %v", api.ErrorExecute, err))}
 	}
 	var internalError *athenatypes.InternalServerException
 	if errors.As(err, &internalError) {
-		return &awsds.QueryExecutionError{Cause: awsds.QueryFailedInternal, Err: backend.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err))}
+		return &awsds.QueryExecutionError{Cause: awsds.QueryFailedInternal, Err: backend.DownstreamError(fmt.Errorf("%w: %v", api.ErrorExecute, err))}
 	}
-	return backend.DownstreamError(fmt.Errorf("%w: %v", api.ExecuteError, err))
+	return backend.DownstreamError(fmt.Errorf("%w: %v", api.ErrorExecute, err))
 }
 
 func getErrorCategory(errorOutput *athena.GetQueryExecutionOutput) *int32 {

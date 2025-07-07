@@ -51,7 +51,7 @@
     "@types/glob": "^8.0.0",
     "@types/jest": "^30.0.0",
     "@types/lodash": "^4.17.19",
-    "@types/node": "^22.15.33",
+    "@types/node": "^22.15.34",
     "@types/semver": "^7.7.0",
     "@typescript-eslint/eslint-plugin": "^8.32.1",
     "@typescript-eslint/parser": "^8.34.1",

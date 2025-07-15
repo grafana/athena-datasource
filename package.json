@@ -42,7 +42,7 @@
     "@grafana/tsconfig": "^2.0.0",
     "@playwright/test": "1.53.2",
     "@stylistic/eslint-plugin-ts": "^4.2.0",
-    "@swc/core": "^1.12.9",
+    "@swc/core": "^1.12.11",
     "@swc/helpers": "^0.5.17",
     "@swc/jest": "^0.2.38",
     "@testing-library/jest-dom": "6.6.3",

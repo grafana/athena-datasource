@@ -73,7 +73,7 @@
     "imports-loader": "^5.0.0",
     "jest": "^30.0.4",
     "jest-environment-jsdom": "^30.0.4",
-    "lefthook": "^1.11.16",
+    "lefthook": "^1.12.2",
     "prettier": "^3.6.2",
     "react-select-event": "^5.3.0",
     "replace-in-file-webpack-plugin": "^1.0.6",

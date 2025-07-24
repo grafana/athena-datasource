@@ -35,8 +35,9 @@ jobs:
       environment: ${{ github.event.inputs.environment }}
       docs-only: ${{ fromJSON(github.event.inputs.docs-only) }}
       golangci-lint-version: '2.0.2'
-      # the shared workflow doesn't have a mechanism to specify custom Vault secrets in e2e tests, so we're using the workflow in e2e-tests.yml instead
-      run-playwright: false
+      playwright-secrets: |
+        ACCESS_KEY=e2e:accessKey
+        SECRET_KEY=e2e:secretKey
 
       # Scope for the plugin published to the catalog. Setting this to "grafana_cloud" will make it visible only in Grafana Cloud
       # (and hide it for on-prem). This is required for some provisioned plugins.

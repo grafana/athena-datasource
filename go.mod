@@ -5,7 +5,7 @@ go 1.24.4
 replace github.com/uber/athenadriver => github.com/grafana/athenadriver v0.0.0-20250616140009-9083f49e325c
 
 require (
-	github.com/aws/aws-sdk-go-v2 v1.36.5
+	github.com/aws/aws-sdk-go-v2 v1.36.6
 	github.com/aws/aws-sdk-go-v2/service/athena v1.51.3
 	github.com/google/go-cmp v0.7.0
 	github.com/grafana/grafana-aws-sdk v1.0.5

@@ -9,12 +9,6 @@ on:
 permissions: {}
 
 jobs:
-  log:
-    name: Log Environment Variable
-    runs-on: ubuntu-latest
-    steps:
-      - name: Log env variables
-        run: echo "Event name is '${{ github.event_name }}', repo name in CI is '${{ github.event.pull_request.head.repo.full_name }}', and GitHub repo is '${{ github.repository }}'"
   ci:
     name: CI
     uses: grafana/plugin-ci-workflows/.github/workflows/ci.yml@main # zizmor: ignore[unpinned-uses]

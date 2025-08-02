@@ -31,17 +31,6 @@ updates:
           - '@grafana/runtime'
           - '@grafana/schema'
           - '@grafana/ui'
-  - package-ecosystem: 'github-actions'
-    directory: '/'
-    schedule:
-      interval: 'daily'
-      time: '12:00'
-    open-pull-requests-limit: 3
-    cooldown:
-      default-days: 7
-      exclude:
-        - 'grafana/*'
-
     # Ignore dependencies that need to be updated manually for compatibility reasons
     ignore:
       # Keep @types/node in sync with the node version in .nvmrc
@@ -59,3 +48,13 @@ updates:
         update-types: ['version-update:semver-major']
       # Keep rxjs in sync with the version used by `@grafana/*` packages
       - dependency-name: rxjs
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'daily'
+      time: '12:00'
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      exclude:
+        - 'grafana/*'

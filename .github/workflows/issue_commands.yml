@@ -2,18 +2,14 @@ name: Run commands when issues are labeled
 on:
   issues:
     types: [labeled, unlabeled]
-
-permissions:
-  contents: read
-  issues: write
-  pull-requests: read
-
+permissions: {}
 jobs:
   main:
-    runs-on: ubuntu-latest
     permissions:
-      # The "id-token: write" permission is required by "get-vault-secrets" action
-      id-token: write
+      contents: read
+      id-token: write # The "id-token: write" permission is required by "get-vault-secrets" action
+      issues: write
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Actions
         uses: actions/checkout@v4
@@ -33,10 +29,10 @@ jobs:
             AWS_DS_TOKEN_CREATOR_PEM=aws-ds-token-creator:pem
       - name: 'Generate token'
         id: generate_token
-        uses: tibdex/github-app-token@3beb63f4bd073e61482598c45c71c1019b59b73a
+        uses: actions/create-github-app-token@v2
         with:
-          app_id: ${{ env.AWS_DS_TOKEN_CREATOR_ID }}
-          private_key: ${{ env.AWS_DS_TOKEN_CREATOR_PEM }}
+          app-id: ${{ env.AWS_DS_TOKEN_CREATOR_ID }}
+          private-key: ${{ env.AWS_DS_TOKEN_CREATOR_PEM }}
       - name: Run Commands
         uses: ./actions/commands
         with:

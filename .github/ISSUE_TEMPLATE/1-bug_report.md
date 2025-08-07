@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: Report a bug you found when using this plugin
-labels: ["datasource/Athena", "type/bug"]
+labels: ['datasource/Athena', 'type/bug']
 ---
 
 <!--
@@ -9,8 +9,8 @@ Please use this template to create your bug report. By providing as much info as
 
 PROTIP: record your screen and attach it as a gif to showcase the issue.
 
-- Use query inspector to troubleshoot issues: https://bit.ly/2XNF6YS
-- How to record and attach gif: https://bit.ly/2Mi8T6K
+- Use query inspector to troubleshoot issues: https://community.grafana.com/t/how-to-use-grafanas-query-inspector-to-troubleshoot-issues/2630
+- How to record and attach gif: https://community.grafana.com/t/proptip-record-gif-and-attach-to-bug-report-to-showcase-issue/31320
 -->
 
 **What happened**:
@@ -37,6 +37,7 @@ If applicable, add screenshots to help explain your problem.
 **Anything else we need to know?**:
 
 **Environment**:
+
 - Grafana version:
 - Plugin version:
 - OS Grafana is installed on:

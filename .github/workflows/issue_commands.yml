@@ -31,8 +31,8 @@ jobs:
         id: generate_token
         uses: actions/create-github-app-token@v2
         with:
-          app_id: ${{ env.AWS_DS_TOKEN_CREATOR_ID }}
-          private_key: ${{ env.AWS_DS_TOKEN_CREATOR_PEM }}
+          app-id: ${{ env.AWS_DS_TOKEN_CREATOR_ID }}
+          private-key: ${{ env.AWS_DS_TOKEN_CREATOR_PEM }}
       - name: Run Commands
         uses: ./actions/commands
         with:

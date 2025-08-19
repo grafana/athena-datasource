@@ -5,8 +5,8 @@ go 1.24.4
 replace github.com/uber/athenadriver => github.com/grafana/athenadriver v0.0.0-20250616140009-9083f49e325c
 
 require (
-	github.com/aws/aws-sdk-go-v2 v1.37.0
-	github.com/aws/aws-sdk-go-v2/service/athena v1.52.0
+	github.com/aws/aws-sdk-go-v2 v1.37.2
+	github.com/aws/aws-sdk-go-v2/service/athena v1.53.0
 	github.com/google/go-cmp v0.7.0
 	github.com/grafana/grafana-aws-sdk v1.1.0
 	github.com/grafana/grafana-plugin-sdk-go v0.278.0
@@ -25,8 +25,8 @@ require (
 	github.com/aws/aws-sdk-go-v2/config v1.29.17 // indirect
 	github.com/aws/aws-sdk-go-v2/credentials v1.17.70 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.16.32 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/configsources v1.4.0 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.7.0 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/configsources v1.4.2 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.7.2 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/ini v1.8.3 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.12.4 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.12.17 // indirect

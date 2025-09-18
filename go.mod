@@ -10,7 +10,7 @@ require (
 	github.com/google/go-cmp v0.7.0
 	github.com/grafana/grafana-aws-sdk v1.1.0
 	github.com/grafana/grafana-plugin-sdk-go v0.278.0
-	github.com/grafana/sqlds/v4 v4.2.6
+	github.com/grafana/sqlds/v4 v4.2.7
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.10.0
 	github.com/uber/athenadriver v1.1.15

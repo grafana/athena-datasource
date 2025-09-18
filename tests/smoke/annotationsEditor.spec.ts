@@ -10,5 +10,5 @@ test('should render annotations editor', async ({ annotationEditPage, page }) =>
   const codeEditor = await annotationEditPage.getByGrafanaSelector(
     selectors.components.QueryEditor.CodeEditor.container
   );
-  expect(codeEditor).toBeVisible();
+  await expect(codeEditor).toBeVisible();
 });

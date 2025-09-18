@@ -13,16 +13,16 @@ test('should render config editor', async ({ gotoDataSourceConfigPage, readProvi
   const regionSelector = await page.getByRole('combobox', {
     name: selectors.components.ConfigEditor.DefaultRegion.input,
   });
-  expect(regionSelector).toBeVisible();
+  await expect(regionSelector).toBeVisible();
   // Catalogs
   const catalogSelector = await page.getByRole('combobox', { name: selectors.components.ConfigEditor.catalog.input });
-  expect(catalogSelector).toBeVisible();
+  await expect(catalogSelector).toBeVisible();
   // Databases
   const databaseSelector = await page.getByRole('combobox', { name: selectors.components.ConfigEditor.database.input });
-  expect(databaseSelector).toBeVisible();
+  await expect(databaseSelector).toBeVisible();
   // Workgroups
   const workgroupSelector = await page.getByRole('combobox', {
     name: selectors.components.ConfigEditor.workgroup.input,
   });
-  expect(workgroupSelector).toBeVisible();
+  await expect(workgroupSelector).toBeVisible();
 });

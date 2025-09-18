@@ -9,12 +9,12 @@ test('should render query editor', async ({ page, panelEditPage, readProvisioned
 
   // Change database selection for query
   const databaseSelector = await page.getByRole('combobox', { name: selectors.components.ConfigEditor.database.input });
-  expect(databaseSelector).toBeVisible();
+  await expect(databaseSelector).toBeVisible();
 
   // Select a table from the explorer
   const tableSelector = await page.getByRole('combobox', { name: selectors.components.ConfigEditor.table.input });
-  expect(tableSelector).toBeVisible();
+  await expect(tableSelector).toBeVisible();
 
   const codeEditor = await panelEditPage.getByGrafanaSelector(selectors.components.QueryEditor.CodeEditor.container);
-  expect(codeEditor).toBeVisible();
+  await expect(codeEditor).toBeVisible();
 });

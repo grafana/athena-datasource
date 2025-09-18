@@ -1,6 +1,6 @@
 import { test, expect } from '@grafana/plugin-e2e';
-import { selectors } from '../src/tests/selectors';
-import { AthenaDataSourceOptions, AthenaDataSourceSecureJsonData } from '../src/types';
+import { selectors } from '../../src/tests/selectors';
+import { AthenaDataSourceOptions, AthenaDataSourceSecureJsonData } from '../../src/types';
 
 test('should render config editor', async ({ gotoDataSourceConfigPage, readProvisionedDataSource, page }) => {
   const datasource = await readProvisionedDataSource<AthenaDataSourceOptions, AthenaDataSourceSecureJsonData>({

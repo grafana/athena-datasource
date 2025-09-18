@@ -1,5 +1,5 @@
 import { test, expect } from '@grafana/plugin-e2e';
-import { selectors } from '../src/tests/selectors';
+import { selectors } from '../../src/tests/selectors';
 
 test('should render query editor', async ({ page, panelEditPage, readProvisionedDashboard, gotoPanelEditPage }) => {
   await panelEditPage.datasource.set('AWS Athena');

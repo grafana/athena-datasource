@@ -12,7 +12,7 @@ require (
 	github.com/grafana/grafana-plugin-sdk-go v0.278.0
 	github.com/grafana/sqlds/v4 v4.2.6
 	github.com/pkg/errors v0.9.1
-	github.com/stretchr/testify v1.10.0
+	github.com/stretchr/testify v1.11.1
 	github.com/uber/athenadriver v1.1.15
 	github.com/viant/toolbox v0.37.0
 	gotest.tools v2.2.0+incompatible

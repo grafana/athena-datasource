@@ -12,6 +12,10 @@ updates:
       semver-patch-days: 7
       exclude:
         - 'github.com/grafana/*'
+    groups:
+      aws-sdk-go-v2:
+        patterns:
+          - 'github.com/aws/aws-sdk-go-v2*'
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
@@ -31,6 +35,18 @@ updates:
           - '@grafana/runtime'
           - '@grafana/schema'
           - '@grafana/ui'
+      npm-patch-dev-dependencies:
+        dependency-type: 'development'
+        patterns:
+          - '*'
+        update-types:
+          - 'patch'
+      npm-minor-dev-dependencies:
+        dependency-type: 'development'
+        patterns:
+          - '*'
+        update-types:
+          - 'minor'
     # Ignore dependencies that need to be updated manually for compatibility reasons
     ignore:
       # Keep @types/node in sync with the node version in .nvmrc

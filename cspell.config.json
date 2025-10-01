@@ -1,9 +1,10 @@
 {
   "ignorePaths": [
     ".github/**",
+    ".yarn/**",
     "node_modules/**",
     "dist/**",
-    "cypress/**",
+    "playwright-report/**",
     "provisioning/**",
     "src/dashboards/**",
     "yarn.lock",
@@ -87,6 +88,7 @@
     "combobox",
     "jackspeak",
     "dompurify",
-    "zizmor"
+    "zizmor",
+    "npmPreapprovedPackages"
   ]
 }

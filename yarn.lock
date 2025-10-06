@@ -1149,10 +1149,10 @@
     uuid "^13.0.0"
     yaml "^2.3.4"
 
-"@grafana/plugin-ui@^0.10.1", "@grafana/plugin-ui@^0.10.7":
-  version "0.10.7"
-  resolved "https://registry.yarnpkg.com/@grafana/plugin-ui/-/plugin-ui-0.10.7.tgz#db0ed763a472d68cfda94055f52c095834465b5f"
-  integrity sha512-EUUCp2502h54S2I4D7Opwe+3TxtMMdkcnleG6V+T0txwFtsxNheDKD+S+8agjN0GiH2oMT4+gky6hBWWfkCJ0A==
+"@grafana/plugin-ui@^0.10.1", "@grafana/plugin-ui@^0.10.10":
+  version "0.10.10"
+  resolved "https://registry.yarnpkg.com/@grafana/plugin-ui/-/plugin-ui-0.10.10.tgz#14e8ff30323997719648add61ee53fe3d33e1fbf"
+  integrity sha512-escK3Dpm2eP4VimCRt+tQfjpOrH2cNJ8Ku1DouVxzH9+o8aPcLRP36629e+kv4RrYl1Fs8qgu9gbF8Nr8vKIww==
   dependencies:
     "@emotion/css" "^11.11.2"
     "@hello-pangea/dnd" "^17.0.0"

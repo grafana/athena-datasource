@@ -12,9 +12,9 @@ on:
         required: true
         type: choice
         options:
-          - "dev"
-          - "ops"
-          - "prod"
+          - 'dev'
+          - 'ops'
+          - 'prod'
       docs-only:
         description: Only publish docs, do not publish the plugin
         default: false
@@ -25,7 +25,7 @@ permissions: {}
 jobs:
   cd:
     name: CD
-    uses: grafana/plugin-ci-workflows/.github/workflows/cd.yml@main # zizmor: ignore[unpinned-uses]
+    uses: grafana/plugin-ci-workflows/.github/workflows/cd.yml@ci-cd-workflows/v3
     permissions:
       contents: write
       id-token: write

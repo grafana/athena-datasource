@@ -15,7 +15,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
       - name: Install dependencies
-        run: yarn install
+        run: yarn install --immutable
       - name: Build plugin
         run: yarn build
       - name: Compatibility check

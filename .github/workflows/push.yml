@@ -18,6 +18,7 @@ jobs:
     with:
       plugin-version-suffix: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || '' }}
       golangci-lint-version: '2.0.2'
+      playwright-config: ${{ github.event.pull_request.head.repo.fork == true || github.actor == 'dependabot[bot]' && 'playwright-fork.config.ts' || 'playwright.config.ts' }}
       playwright-secrets: |
         ACCESS_KEY=e2e:accessKey
         SECRET_KEY=e2e:secretKey

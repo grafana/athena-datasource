@@ -5,6 +5,7 @@
     "node_modules/**",
     "dist/**",
     "playwright-report/**",
+    "test-results/**",
     "provisioning/**",
     "src/dashboards/**",
     "yarn.lock",

@@ -7892,7 +7892,7 @@ __metadata:
     react-router-dom: "npm:^6.22.0"
     react-select-event: "npm:^5.3.0"
     replace-in-file-webpack-plugin: "npm:^1.0.6"
-    sass: "npm:1.89.2"
+    sass: "npm:1.93.2"
     sass-loader: "npm:16.0.5"
     semver: "npm:^7.7.2"
     style-loader: "npm:4.0.0"
@@ -12080,9 +12080,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:1.89.2":
-  version: 1.89.2
-  resolution: "sass@npm:1.89.2"
+"sass@npm:1.93.2":
+  version: 1.93.2
+  resolution: "sass@npm:1.93.2"
   dependencies:
     "@parcel/watcher": "npm:^2.4.1"
     chokidar: "npm:^4.0.0"
@@ -12093,7 +12093,7 @@ __metadata:
       optional: true
   bin:
     sass: sass.js
-  checksum: 10c0/752ccc7581b0c6395f63918116c20924e99943a86d79e94f5c4a0d41b1e981fe1f0ecd1ee82fff21496f81dbc91f68fb35a498166562ec8ec53e7aad7c3dbd9d
+  checksum: 10c0/5a19f12dbe8c142e40c1e0473d1e624898242b1c21010301e169b528be8c580df6356329c798522b525eb11eda4b04b9b77422badc55c47889600f8477201d2b
   languageName: node
   linkType: hard
 

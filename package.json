@@ -39,7 +39,7 @@
     "@grafana/aws-sdk": "0.7.2",
     "@grafana/eslint-config": "^8.2.0",
     "@grafana/plugin-e2e": "^2.1.14",
-    "@grafana/tsconfig": "^2.0.0",
+    "@grafana/tsconfig": "^2.0.1",
     "@playwright/test": "1.55.1",
     "@stylistic/eslint-plugin-ts": "^4.2.0",
     "@swc/core": "^1.13.5",

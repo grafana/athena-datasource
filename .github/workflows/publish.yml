@@ -8,13 +8,13 @@ on:
         description: Branch to publish from. Can be used to deploy PRs to dev
         default: main
       environment:
-        description: Environment to publish to
+        description: Environment will always publish to all waves (dev + ops + prod). Cloud will publish scoped only to Grafana Cloud, On Prem will publish with Universal scope. Please use Cloud unless emergency fix needed for On Prem customer.
         required: true
         type: choice
+        default: 'cloud (recommended)'
         options:
-          - 'dev'
-          - 'ops'
-          - 'prod'
+          - 'cloud (recommended)'
+          - 'on-prem (for emergencies fix to On Prem customers)'
       docs-only:
         description: Only publish docs, do not publish the plugin
         default: false
@@ -24,6 +24,10 @@ permissions: {}
 
 jobs:
   cd:
+    strategy:
+      fail-fast: false
+      matrix:
+        environment: [dev, ops, prod]
     name: CD
     uses: grafana/plugin-ci-workflows/.github/workflows/cd.yml@ci-cd-workflows/v3
     permissions:
@@ -32,14 +36,16 @@ jobs:
       attestations: write
     with:
       branch: ${{ github.event.inputs.branch }}
-      environment: ${{ github.event.inputs.environment }}
+      environment: ${{ matrix.environment }}
       docs-only: ${{ fromJSON(github.event.inputs.docs-only) }}
-      golangci-lint-version: '2.0.2'
+      scopes: ${{ github.event.inputs.environment == 'cloud (recommended)' && 'grafana_cloud' || github.event.inputs.environment == 'on-prem (for emergencies fix to On Prem customers)' && 'universal' }}
+      go-version: '1.24'
+      golangci-lint-version: '2.1.6'
       playwright-secrets: |
         ACCESS_KEY=e2e:accessKey
         SECRET_KEY=e2e:secretKey
       github-draft-release: false # publish the github release directly, skipping the draft step
-      
+
       # Scope for the plugin published to the catalog. Setting this to "grafana_cloud" will make it visible only in Grafana Cloud
       # (and hide it for on-prem). This is required for some provisioned plugins.
       # scopes: grafana_cloud

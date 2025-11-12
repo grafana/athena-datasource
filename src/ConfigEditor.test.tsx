@@ -112,7 +112,9 @@ describe('ConfigEditor', () => {
       />
     );
 
-    expect(screen.queryByText('Grafana Assume Role')).toBeInTheDocument();
+    // The selected option and the link to the docs both have the same text
+    expect(screen.queryAllByText('Grafana Assume Role').length).toBe(2);
+    expect(screen.getByRole('link', { name: 'Grafana Assume Role' })).toBeInTheDocument();
     const instructionsButton = await screen.findByRole('button', {
       name: /How to create an IAM role for grafana to assume/i,
     });
@@ -139,7 +141,9 @@ describe('ConfigEditor', () => {
       />
     );
 
-    expect(screen.queryByText('Grafana Assume Role')).toBeInTheDocument();
+    // The selected option and the link to the docs both have the same text
+    expect(screen.queryAllByText('Grafana Assume Role').length).toBe(2);
+    expect(screen.getByRole('link', { name: 'Grafana Assume Role' })).toBeInTheDocument();
     const instructionsButton = await screen.findByRole('button', {
       name: /How to create an IAM role for grafana to assume/i,
     });
@@ -166,7 +170,9 @@ describe('ConfigEditor', () => {
       />
     );
 
-    expect(screen.queryByText('Grafana Assume Role')).toBeInTheDocument();
+    // The selected option and the link to the docs both have the same text
+    expect(screen.queryAllByText('Grafana Assume Role').length).toBe(2);
+    expect(screen.getByRole('link', { name: 'Grafana Assume Role' })).toBeInTheDocument();
     const instructionsButton = await screen.findByRole('button', {
       name: /How to create an IAM role for grafana to assume/i,
     });

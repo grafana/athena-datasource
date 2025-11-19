@@ -36,7 +36,7 @@
   "devDependencies": {
     "@babel/core": "^7.28.5",
     "@eslint/eslintrc": "^3.3.1",
-    "@grafana/aws-sdk": "0.7.2",
+    "@grafana/aws-sdk": "0.8.3",
     "@grafana/eslint-config": "^8.2.0",
     "@grafana/plugin-e2e": "^2.1.14",
     "@grafana/tsconfig": "^2.0.1",

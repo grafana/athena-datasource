@@ -4,7 +4,7 @@ import { AthenaDataSourceOptions, AthenaDataSourceSecureJsonData, AthenaDataSour
 import { config, getBackendSrv } from '@grafana/runtime';
 import { AwsAuthType, ConfigSelect, ConnectionConfig, Divider } from '@grafana/aws-sdk';
 import { selectors } from 'tests/selectors';
-import { ConfigSection } from '@grafana/plugin-ui';
+import { ConfigSection, DataSourceDescription } from '@grafana/plugin-ui';
 import { Field, Input, SecureSocksProxySettings, useStyles2 } from '@grafana/ui';
 import { gte } from 'semver';
 import { css } from '@emotion/css';
@@ -104,6 +104,11 @@ export function ConfigEditor(props: Props) {
 
   return (
     <div className={styles.formStyles}>
+      <DataSourceDescription
+        dataSourceName="Amazon Athena"
+        docsLink="https://grafana.com/grafana/plugins/grafana-athena-datasource/"
+      />
+      <Divider />
       <ConnectionConfig {...props} onOptionsChange={onOptionsChange} externalId={externalId} />
       {config.secureSocksDSProxyEnabled && gte(config.buildInfo.version, '10.0.0') && (
         <SecureSocksProxySettings options={props.options} onOptionsChange={onOptionsChange} />

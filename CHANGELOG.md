@@ -1,6 +1,26 @@
 # Changelog
 
+## 3.1.8
+
+- ConfigEditor: add links to data source docs in [#753](https://github.com/grafana/athena-datasource/pull/753)
+- Bump github.com/grafana/grafana-plugin-sdk-go from 0.281.0 to 0.282.0 in [#758](https://github.com/grafana/athena-datasource/pull/758)
+- Bump github.com/aws/aws-sdk-go-v2/service/athena from 1.55.10 to 1.55.11 in the aws-sdk-go-v2 group in [#757](https://github.com/grafana/athena-datasource/pull/757)
+- Bump tar from 7.5.1 to 7.5.2 in [#755](https://github.com/grafana/athena-datasource/pull/755)
+- Bump the aws-sdk-go-v2 group with 2 updates in [#752](https://github.com/grafana/athena-datasource/pull/752)
+- Bump the aws-sdk-go-v2 group with 2 updates in [#751](https://github.com/grafana/athena-datasource/pull/751)
+- Publish to every environment on Cloud and Add On-Prem promotion in [#749](https://github.com/grafana/athena-datasource/pull/749)
+- Bump @typescript-eslint/eslint-plugin from 8.45.0 to 8.46.1 in [#747](https://github.com/grafana/athena-datasource/pull/747)
+- Bump the npm-patch-dev-dependencies group with 3 updates in [#745](https://github.com/grafana/athena-datasource/pull/745)
+- Bump eslint from 9.36.0 to 9.37.0 in [#746](https://github.com/grafana/athena-datasource/pull/746)
+- Bump the aws-sdk-go-v2 group with 2 updates in [#744](https://github.com/grafana/athena-datasource/pull/744)
+- Bump actions/setup-node from 5 to 6 in [#722](https://github.com/grafana/athena-datasource/pull/722)
+- Bump eslint-plugin-jsdoc from 51.4.1 to 60.5.0 in [#741](https://github.com/grafana/athena-datasource/pull/741)
+- Bump @swc/core from 1.13.5 to 1.13.20 in the npm-patch-dev-dependencies group in [#743](https://github.com/grafana/athena-datasource/pull/743)
+- Bump cspell from 9.2.1 to 9.2.2 in the npm-patch-dev-dependencies group in [#742](https://github.com/grafana/athena-datasource/pull/742)
+- Bump the npm-patch-dev-dependencies group with 2 updates in [#740](https://github.com/grafana/athena-datasource/pull/740)
+
 ## 3.1.7
+
 - Update gitignore for yarn files in [#701](https://github.com/grafana/athena-datasource/pull/701)
 - Upgrade yarn to v4.10.3 in [#691](https://github.com/grafana/athena-datasource/pull/691)
 - Run smoke tests only for dependabot and forks in [#683](https://github.com/grafana/athena-datasource/pull/683)
@@ -129,7 +149,7 @@
   - Bump the all-node-dependencies group across 1 directory with 19 updates in [#555](https://github.com/grafana/athena-datasource/pull/555)
   - Bump the all-go-dependencies group with 2 updates in [#556](https://github.com/grafana/athena-datasource/pull/556)
   - Bump the version of our athenadriver fork in [#557](https://github.com/grafana/athena-datasource/pull/557)
-  
+
 ## 3.1.6
 
 - Fix: use user external id if not using assume role in [#553](https://github.com/grafana/athena-datasource/pull/553)

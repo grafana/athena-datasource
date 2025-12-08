@@ -1708,9 +1708,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@grafana/plugin-e2e@npm:^2.1.14":
-  version: 2.1.14
-  resolution: "@grafana/plugin-e2e@npm:2.1.14"
+"@grafana/plugin-e2e@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "@grafana/plugin-e2e@npm:3.0.1"
   dependencies:
     "@grafana/e2e-selectors": "npm:^12.2.0-255920"
     semver: "npm:^7.5.4"
@@ -1718,7 +1718,7 @@ __metadata:
     yaml: "npm:^2.3.4"
   peerDependencies:
     "@playwright/test": ^1.52.0
-  checksum: 10c0/86d08b06583585e3a1e09cd404f2f7d59bccc480020718cf913989ae5051115fb41c6169d8e2e7b7d07e25c5a0748e77ce979b8aa16cd2f8f94c3ab18537f696
+  checksum: 10c0/0493b3f4d4ac7eed46b7c21c6b6c7117c635cb1c983c7b42074d2a396059cef890dc4ab8ea65f2b65f6c2dbbc4f39b8ed4c028658914238e96d801c8ee8c2b66
   languageName: node
   linkType: hard
 
@@ -7956,7 +7956,7 @@ __metadata:
     "@grafana/aws-sdk": "npm:0.8.3"
     "@grafana/data": "npm:^12.0.2"
     "@grafana/eslint-config": "npm:^8.2.0"
-    "@grafana/plugin-e2e": "npm:^2.1.14"
+    "@grafana/plugin-e2e": "npm:^3.0.1"
     "@grafana/plugin-ui": "npm:^0.11.1"
     "@grafana/runtime": "npm:^12.0.2"
     "@grafana/schema": "npm:12.0.2"

@@ -11,7 +11,7 @@ import (
 	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 	sqlAPI "github.com/grafana/grafana-aws-sdk/pkg/sql/api"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
-	"github.com/grafana/sqlds/v4"
+	"github.com/grafana/sqlds/v5"
 	"github.com/stretchr/testify/assert"
 )
 

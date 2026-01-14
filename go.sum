@@ -1090,8 +1090,8 @@ github.com/urfave/cli v1.22.17/go.mod h1:b0ht0aqgH/6pBYzzxURyrM4xXNgsoT/n2ZzwQiE
 github.com/viant/assertly v0.9.0 h1:uB3jO+qmWQcrSCHQRxA2kk88eXAdaklUUDxxCU5wBHQ=
 github.com/viant/assertly v0.9.0/go.mod h1:aGifi++jvCrUaklKEKT0BU95igDNaqkvz+49uaYMPRU=
 github.com/viant/toolbox v0.34.5/go.mod h1:OxMCG57V0PXuIP2HNQrtJf2CjqdmbrOx5EkMILuUhzM=
-github.com/viant/toolbox v0.37.0 h1:+zwSdbQh6I6ZEyxokQJr+1gQKbLEw6erc+Av5dwKtLU=
-github.com/viant/toolbox v0.37.0/go.mod h1:OxMCG57V0PXuIP2HNQrtJf2CjqdmbrOx5EkMILuUhzM=
+github.com/viant/toolbox v0.39.0 h1:za80N68bwfMNbdt9MbzegGY/4j6GWaMR2Pk/edl7jmI=
+github.com/viant/toolbox v0.39.0/go.mod h1:OxMCG57V0PXuIP2HNQrtJf2CjqdmbrOx5EkMILuUhzM=
 github.com/viant/xreflect v0.7.3 h1:Oi2ZzSYWvs3lFBNMHEwHm6pu+3sQRlklzllycZyOGHk=
 github.com/viant/xreflect v0.7.3/go.mod h1:BwI+lqFjhKv2Vn4E0Jt6nvbwcFOWrM6H+sOMOX3JiU4=
 github.com/viant/xunsafe v0.10.3 h1:Fi4N+b5PH7e2iwT1UquAe7wUlTn4Fnb2kBnFLBixX+M=

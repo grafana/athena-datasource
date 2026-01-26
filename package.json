@@ -40,7 +40,7 @@
     "@grafana/eslint-config": "^8.2.0",
     "@grafana/plugin-e2e": "^2.1.14",
     "@grafana/tsconfig": "^2.0.1",
-    "@playwright/test": "1.55.1",
+    "@playwright/test": "1.58.0",
     "@stylistic/eslint-plugin-ts": "^4.2.0",
     "@swc/core": "^1.14.0",
     "@swc/helpers": "^0.5.17",

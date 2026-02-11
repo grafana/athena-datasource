@@ -1,5 +1,17 @@
 # Changelog
 
+## 3.1.9
+
+- chore: support React 19 readiness in [#781](https://github.com/grafana/athena-datasource/pull/781)
+- chore(deps): update dependency webpack to v5.104.1 [security] in [#780](https://github.com/grafana/athena-datasource/pull/780)
+- chore(deps): update typescript-eslint monorepo to ^8.51.0 in [#770](https://github.com/grafana/athena-datasource/pull/770)
+- use prod environment for cd workflow in [#774](https://github.com/grafana/athena-datasource/pull/774)
+- Update grafana-aws-sdk to 1.4.2 in [#773](https://github.com/grafana/athena-datasource/pull/773)
+- Update to use self-hosted renovate and remove dependabot in [#772](https://github.com/grafana/athena-datasource/pull/772)
+- update ci-cd workflows to v4.3.0 in [#766](https://github.com/grafana/athena-datasource/pull/766)
+- Bump github.com/grafana/grafana-plugin-sdk-go from 0.282.0 to 0.283.0 in [#762](https://github.com/grafana/athena-datasource/pull/762)
+- Bump github.com/aws/aws-sdk-go-v2/service/athena from 1.55.11 to 1.55.12 in the aws-sdk-go-v2 group in [#761](https://github.com/grafana/athena-datasource/pull/761)
+
 ## 3.1.8
 
 - ConfigEditor: add links to data source docs in [#753](https://github.com/grafana/athena-datasource/pull/753)

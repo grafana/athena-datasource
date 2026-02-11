@@ -13,7 +13,7 @@ const compat = new FlatCompat({
 });
 
 export default defineConfig([
-  globalIgnores(['**/node_modules', '**/build', '**/dist']),
+  globalIgnores(['**/node_modules', '**/build', '**/dist', '**/playwright-report/**']),
   {
     extends: compat.extends('plugin:jsx-a11y/recommended',  './.config/.eslintrc'),
   },

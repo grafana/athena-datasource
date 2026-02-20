@@ -47,6 +47,7 @@ The following pages help you get started with the Amazon Athena data source.
 - [Amazon Athena query editor](https://grafana.com/docs/plugins/grafana-athena-datasource/latest/query-editor/)
 - [Template variables](https://grafana.com/docs/plugins/grafana-athena-datasource/latest/template-variables/)
 - [Annotations](https://grafana.com/docs/plugins/grafana-athena-datasource/latest/annotations/)
+- [Troubleshooting](https://grafana.com/docs/plugins/grafana-athena-datasource/latest/troubleshooting/)
 
 ## Additional features
 

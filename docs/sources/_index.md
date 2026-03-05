@@ -35,7 +35,8 @@ The following table lists the features available with this data source.
 | Feature | Supported |
 | ----------- | --------- |
 | Metrics | Yes |
-| Logs | Yes |
+| Logs | No |
+| Traces | No |
 | Alerting | Yes |
 | Annotations | Yes |
 

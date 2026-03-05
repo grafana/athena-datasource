@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.1.10
+
+- Update go version in [#786](https://github.com/grafana/athena-datasource/pull/786)
+- chore: Add pull-request: read permission for publish workflow in [#784](https://github.com/grafana/athena-datasource/pull/784)
+
 ## 3.1.9
 
 - chore: support React 19 readiness in [#781](https://github.com/grafana/athena-datasource/pull/781)

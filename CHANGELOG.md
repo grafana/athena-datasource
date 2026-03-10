@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.2.0
+
+- chore(deps): update actions/checkout action to v6 in [#794](https://github.com/grafana/athena-datasource/pull/794)
+- chore(deps): pin dependencies in [#726](https://github.com/grafana/athena-datasource/pull/726)
+- chore(deps): update module go.opentelemetry.io/otel/sdk to v1.40.0 [security] in [#792](https://github.com/grafana/athena-datasource/pull/792)
+- chore(deps): update grafana/plugin-ci-workflows/ci-cd-workflows action to v6.1.1 in [#793](https://github.com/grafana/athena-datasource/pull/793)
+- chore(deps): update dependency glob to v11.1.0 [security] in [#791](https://github.com/grafana/athena-datasource/pull/791)
+- Update renovate config to use data-sources base preset in [#789](https://github.com/grafana/athena-datasource/pull/789)
+
 ## 3.1.10
 
 - Update go version in [#786](https://github.com/grafana/athena-datasource/pull/786)

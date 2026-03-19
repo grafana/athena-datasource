@@ -1470,14 +1470,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@grafana/e2e-selectors@npm:^12.2.0-255920":
-  version: 12.2.0
-  resolution: "@grafana/e2e-selectors@npm:12.2.0"
+"@grafana/e2e-selectors@npm:13.0.0-23251034887":
+  version: 13.0.0-23251034887
+  resolution: "@grafana/e2e-selectors@npm:13.0.0-23251034887"
   dependencies:
     semver: "npm:^7.7.0"
     tslib: "npm:2.8.1"
     typescript: "npm:5.9.2"
-  checksum: 10c0/ab94a4dbb2299f439bc798e198b86291091958bfe858d3cdfbf7fbde9c3d5a03265e320158c12dd950a8fed07deb635d2f3636bdc00c14d1d802efd91010593d
+  checksum: 10c0/6f5f974fb1c030dae3fce42b7849d62b4ca78462a58842f14cf3087fb4c17f740fa32ab33221043d9e81a50ffcceeeaf89571e0d6ba9269ff04fd2723f22b0fb
   languageName: node
   linkType: hard
 
@@ -1519,17 +1519,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@grafana/plugin-e2e@npm:^2.1.14":
-  version: 2.1.14
-  resolution: "@grafana/plugin-e2e@npm:2.1.14"
+"@grafana/plugin-e2e@npm:^3.0.0":
+  version: 3.4.8
+  resolution: "@grafana/plugin-e2e@npm:3.4.8"
   dependencies:
-    "@grafana/e2e-selectors": "npm:^12.2.0-255920"
+    "@grafana/e2e-selectors": "npm:13.0.0-23251034887"
     semver: "npm:^7.5.4"
     uuid: "npm:^13.0.0"
     yaml: "npm:^2.3.4"
   peerDependencies:
+    "@axe-core/playwright": ^4.11.1
     "@playwright/test": ^1.52.0
-  checksum: 10c0/86d08b06583585e3a1e09cd404f2f7d59bccc480020718cf913989ae5051115fb41c6169d8e2e7b7d07e25c5a0748e77ce979b8aa16cd2f8f94c3ab18537f696
+  peerDependenciesMeta:
+    "@axe-core/playwright":
+      optional: true
+  checksum: 10c0/8e459733cff00c59d37cd57f78d1d14a2b35e24621010905aa2e452de0708e882291664d321b4e5d77af922664936e2b37f6703e4ecb883727ffa1e22106ceff
   languageName: node
   linkType: hard
 
@@ -7323,7 +7327,7 @@ __metadata:
     "@grafana/aws-sdk": "npm:0.10.2"
     "@grafana/data": "npm:^12.0.2"
     "@grafana/eslint-config": "npm:^8.2.0"
-    "@grafana/plugin-e2e": "npm:^2.1.14"
+    "@grafana/plugin-e2e": "npm:^3.0.0"
     "@grafana/plugin-ui": "npm:^0.13.0"
     "@grafana/runtime": "npm:^12.0.2"
     "@grafana/schema": "npm:12.0.2"

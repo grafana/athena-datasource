@@ -1,6 +1,6 @@
 module github.com/grafana/athena-datasource
 
-go 1.25.7
+go 1.26.1
 
 replace github.com/uber/athenadriver => github.com/grafana/athenadriver v0.0.0-20250616140009-9083f49e325c
 

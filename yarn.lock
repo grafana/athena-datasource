@@ -1470,14 +1470,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@grafana/e2e-selectors@npm:^12.2.0-255920":
-  version: 12.2.0
-  resolution: "@grafana/e2e-selectors@npm:12.2.0"
+"@grafana/e2e-selectors@npm:13.0.0-23624974663":
+  version: 13.0.0-23624974663
+  resolution: "@grafana/e2e-selectors@npm:13.0.0-23624974663"
   dependencies:
     semver: "npm:^7.7.0"
     tslib: "npm:2.8.1"
     typescript: "npm:5.9.2"
-  checksum: 10c0/ab94a4dbb2299f439bc798e198b86291091958bfe858d3cdfbf7fbde9c3d5a03265e320158c12dd950a8fed07deb635d2f3636bdc00c14d1d802efd91010593d
+  checksum: 10c0/714095fbf1932c49a923027e0d6d5e6d89f7dd06070e512716f58a7a2241eeac10b24ef9427b5ff5a21b2e4df43240ed2532676197e5daa75e7828b044e7bc54
   languageName: node
   linkType: hard
 
@@ -1519,17 +1519,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@grafana/plugin-e2e@npm:^2.1.14":
-  version: 2.1.14
-  resolution: "@grafana/plugin-e2e@npm:2.1.14"
+"@grafana/plugin-e2e@npm:^3.0.0":
+  version: 3.4.11
+  resolution: "@grafana/plugin-e2e@npm:3.4.11"
   dependencies:
-    "@grafana/e2e-selectors": "npm:^12.2.0-255920"
+    "@grafana/e2e-selectors": "npm:13.0.0-23624974663"
     semver: "npm:^7.5.4"
     uuid: "npm:^13.0.0"
     yaml: "npm:^2.3.4"
   peerDependencies:
+    "@axe-core/playwright": ^4.11.1
     "@playwright/test": ^1.52.0
-  checksum: 10c0/86d08b06583585e3a1e09cd404f2f7d59bccc480020718cf913989ae5051115fb41c6169d8e2e7b7d07e25c5a0748e77ce979b8aa16cd2f8f94c3ab18537f696
+  peerDependenciesMeta:
+    "@axe-core/playwright":
+      optional: true
+  checksum: 10c0/58e3b4060cf2cf76a0c0fa683cf0e6af9fcdb20dfff69f6efc2cd3d789f02ab46b54ec68055fd91da07a1998304f89934a89575de96dde84411baf6b1da541af
   languageName: node
   linkType: hard
 
@@ -7323,7 +7327,7 @@ __metadata:
     "@grafana/aws-sdk": "npm:0.10.2"
     "@grafana/data": "npm:^12.0.2"
     "@grafana/eslint-config": "npm:^8.2.0"
-    "@grafana/plugin-e2e": "npm:^2.1.14"
+    "@grafana/plugin-e2e": "npm:^3.0.0"
     "@grafana/plugin-ui": "npm:^0.13.0"
     "@grafana/runtime": "npm:^12.0.2"
     "@grafana/schema": "npm:12.0.2"

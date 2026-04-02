@@ -20,6 +20,8 @@ export default defineConfig([
   {
     rules: {
       'deprecation/deprecation': 'off',
+      'react-hooks/set-state-in-effect': 'warn',
+      'react-hooks/refs': 'warn',
     },
   },
   {

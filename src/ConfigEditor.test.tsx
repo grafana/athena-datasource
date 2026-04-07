@@ -8,11 +8,20 @@ import { AwsAuthType } from '@grafana/aws-sdk';
 import * as runtime from '@grafana/runtime';
 import userEvent from '@testing-library/user-event';
 
+jest.mock('@grafana/runtime', () => ({
+  ...jest.requireActual('@grafana/runtime'),
+  usePluginInteractionReporter: () => jest.fn(),
+  getAppEvents: () => ({
+    subscribe: () => ({ unsubscribe: jest.fn() }),
+  }),
+  getBackendSrv: jest.fn(),
+}));
+
 const resourceName = 'foo';
 const props = mockDatasourceOptions;
 
 const setUpMockBackendServer = (mockBackendSrv: { put: () => void; post: () => void }) => {
-  jest.spyOn(runtime, 'getBackendSrv').mockImplementation(() => mockBackendSrv as unknown as runtime.BackendSrv);
+  jest.mocked(runtime.getBackendSrv).mockReturnValue(mockBackendSrv as unknown as runtime.BackendSrv);
 };
 
 describe('ConfigEditor', () => {

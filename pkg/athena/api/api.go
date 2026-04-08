@@ -34,6 +34,8 @@ type Client interface {
 
 var _ Client = &mock.MockAthenaClient{}
 
+var newAWSConfigProvider = awsauth.NewConfigProvider
+
 type API struct {
 	Client   Client
 	settings *models.AthenaDataSourceSettings
@@ -58,10 +60,11 @@ func New(ctx context.Context, settings sqlModels.Settings) (api.AWSAPI, error) {
 		region = athenaSettings.DefaultRegion
 	}
 
-	cfg, err := awsauth.NewConfigProvider().GetConfig(ctx, awsauth.Settings{
+	cfg, err := newAWSConfigProvider().GetConfig(ctx, awsauth.Settings{
 		LegacyAuthType:     athenaSettings.AuthType,
 		AccessKey:          athenaSettings.AccessKey,
 		SecretKey:          athenaSettings.SecretKey,
+		SessionToken:       athenaSettings.SessionToken,
 		Region:             region,
 		CredentialsProfile: athenaSettings.Profile,
 		AssumeRoleARN:      athenaSettings.AssumeRoleARN,

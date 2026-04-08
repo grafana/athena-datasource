@@ -10,11 +10,13 @@ import (
 	"github.com/google/go-cmp/cmp"
 	athenaclientmock "github.com/grafana/athena-datasource/pkg/athena/api/mock"
 	"github.com/grafana/athena-datasource/pkg/athena/models"
+	"github.com/grafana/grafana-aws-sdk/pkg/awsauth"
 	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 	"github.com/grafana/grafana-aws-sdk/pkg/sql/api"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/sqlds/v5"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestConnection_Execute(t *testing.T) {
@@ -197,6 +199,37 @@ func TestConnection_ListColumnsForTable(t *testing.T) {
 	if !cmp.Equal(expected, res) {
 		t.Errorf("unexpected result: %v", cmp.Diff(expected, res))
 	}
+}
+
+type spyConfigProvider struct {
+	captured awsauth.Settings
+}
+
+func (s *spyConfigProvider) GetConfig(_ context.Context, settings awsauth.Settings) (aws.Config, error) {
+	s.captured = settings
+	return aws.Config{}, nil
+}
+
+func TestNew_passesSessionToken(t *testing.T) {
+	spy := &spyConfigProvider{}
+	origProvider := newAWSConfigProvider
+	newAWSConfigProvider = func() awsauth.ConfigProvider { return spy }
+	t.Cleanup(func() { newAWSConfigProvider = origProvider })
+
+	s := &models.AthenaDataSourceSettings{}
+	err := s.Load(backend.DataSourceInstanceSettings{
+		JSONData: []byte(`{"authType": "keys", "defaultRegion": "us-east-1"}`),
+		DecryptedSecureJSONData: map[string]string{
+			"accessKey":    "AKIAIOSFODNN7EXAMPLE",
+			"secretKey":    "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+			"sessionToken": "AQoDYXdzEJr//test-session-token",
+		},
+	})
+	require.NoError(t, err)
+
+	_, err = New(context.Background(), s)
+	require.NoError(t, err)
+	assert.Equal(t, "AQoDYXdzEJr//test-session-token", spy.captured.SessionToken)
 }
 
 func Test_WorkgroupEngineSupportsResultReuse(t *testing.T) {

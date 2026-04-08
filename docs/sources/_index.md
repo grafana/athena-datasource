@@ -22,7 +22,7 @@ last_reviewed: 2026-02-20
 
 # Amazon Athena data source
 
-The Amazon Athena data source plugin lets you query and visualize data stored in Amazon Athena directly in Grafana dashboards. Amazon Athena is an interactive query service that uses standard SQL to analyze data in Amazon S3.
+The Amazon Athena data source lets you query and visualize data stored in Amazon Athena directly in Grafana dashboards. Amazon Athena is an interactive query service that uses standard SQL to analyze data in Amazon S3.
 
 ## Supported features
 

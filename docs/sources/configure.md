@@ -80,7 +80,7 @@ Depending on the data you query with Amazon Athena, you may need different permi
 The following example shows a minimal IAM policy for querying Amazon Athena. It's based on the [`AmazonAthenaFullAccess`](https://docs.aws.amazon.com/athena/latest/ug/managed-policies.html#amazonathenafullaccess-managed-policy) managed policy, with write permissions removed where possible since Grafana should be used as read-only.
 
 {{< admonition type="note" >}}
-Update the ARN of the S3 bucket if you're using a custom one.
+Update the ARN of the S3 bucket if you're using a custom one. If your AWS account uses AWS Lake Formation to manage data access, you must also include the `lakeformation:GetDataAccess` permission. Refer to the [AWS Lake Formation permissions for Athena](https://docs.aws.amazon.com/athena/latest/ug/lf-athena.html) documentation.
 {{< /admonition >}}
 
 ```json
@@ -139,6 +139,14 @@ Update the ARN of the S3 bucket if you're using a custom one.
       "Effect": "Allow",
       "Action": ["s3:GetObject", "s3:ListBucket"],
       "Resource": ["arn:aws:s3:::athena-examples*"]
+    },
+    {
+      "Sid": "LakeFormationAccess",
+      "Effect": "Allow",
+      "Action": [
+        "lakeformation:GetDataAccess"
+      ],
+      "Resource": ["*"]
     }
   ]
 }

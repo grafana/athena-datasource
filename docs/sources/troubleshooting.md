@@ -48,6 +48,20 @@ These errors occur when AWS credentials are invalid, missing, or don't have the 
 | Wrong region | Verify the **Default Region** setting matches the region where your Athena resources are located. |
 | Assume role misconfiguration | Verify the **Assume Role ARN** is correct and that the trust policy on the target role allows the source identity to assume it. |
 | External ID mismatch | If the target role requires an external ID, verify the **External ID** field matches the value configured in the role's trust policy. |
+| Lake Formation permissions | If your data is managed by AWS Lake Formation, add `lakeformation:GetDataAccess` to your IAM policy. Refer to [Access denied with AWS Lake Formation](#access-denied-with-aws-lake-formation). |
+
+### Access denied with AWS Lake Formation
+
+**Symptoms:**
+
+- **Save & test** succeeds but queries return access denied errors.
+- Queries fail despite having valid Athena, Glue, and S3 permissions.
+- Errors occur only for tables managed by AWS Lake Formation.
+
+**Solutions:**
+
+1. Add the `lakeformation:GetDataAccess` permission to the IAM policy used by the data source. Refer to the [IAM policies](https://grafana.com/docs/plugins/grafana-athena-datasource/latest/configure/#iam-policies) section for the full policy example.
+1. Verify the IAM identity is registered as a data lake administrator or has been granted table-level permissions in Lake Formation. Refer to the [AWS Lake Formation permissions for Athena](https://docs.aws.amazon.com/athena/latest/ug/lf-athena.html) documentation.
 
 ### Invalid token errors in private clouds
 

@@ -6,8 +6,27 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
 	"github.com/grafana/grafana-aws-sdk/pkg/sql/models"
+	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/sqlds/v5"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
+
+func TestLoad_sessionToken(t *testing.T) {
+	s := &AthenaDataSourceSettings{}
+	config := backend.DataSourceInstanceSettings{
+		JSONData: []byte(`{"authType": "keys", "defaultRegion": "us-east-1"}`),
+		DecryptedSecureJSONData: map[string]string{
+			"accessKey":    "AKIAIOSFODNN7EXAMPLE",
+			"secretKey":    "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+			"sessionToken": "AQoDYXdzEJr//test-session-token",
+		},
+	}
+
+	err := s.Load(config)
+	require.NoError(t, err)
+	assert.Equal(t, "AQoDYXdzEJr//test-session-token", s.SessionToken)
+}
 
 func TestConnection_getRegionKey(t *testing.T) {
 	tests := []struct {

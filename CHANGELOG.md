@@ -2,6 +2,10 @@
 
 ## 3.2.0
 
+- Add support for Grafana Assume Role in [#812](https://github.com/grafana/athena-datasource/pull/812)
+- Update codeowners in [#811](https://github.com/grafana/athena-datasource/pull/811)
+- fix(deps): update backend dependencies in [#797](https://github.com/grafana/athena-datasource/pull/797)
+- chore(deps): pin grafana/grafana-enterprise docker tag to 8e8fc4c in [#795](https://github.com/grafana/athena-datasource/pull/795)
 - chore(deps): update actions/checkout action to v6 in [#794](https://github.com/grafana/athena-datasource/pull/794)
 - chore(deps): pin dependencies in [#726](https://github.com/grafana/athena-datasource/pull/726)
 - chore(deps): update module go.opentelemetry.io/otel/sdk to v1.40.0 [security] in [#792](https://github.com/grafana/athena-datasource/pull/792)

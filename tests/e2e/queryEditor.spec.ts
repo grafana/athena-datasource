@@ -43,6 +43,8 @@ ORDER BY 1`);
   const panel1 = await gotoPanelEditPage({ dashboard, id: '2' });
   // Wait for the initial auto-run to finish before forcing another refresh.
   const refreshButton = page.getByTestId('data-testid RefreshPicker run button').last();
-  await expect(refreshButton).toHaveText(/refresh/i);
-  await expect(panel1.refreshPanel()).toBeOK();
+  await expect(refreshButton).toHaveAccessibleName(/refresh/i);
+  const provisionedQuery = panel1.waitForQueryDataResponse();
+  await refreshButton.click();
+  await expect(provisionedQuery).toBeOK();
 });

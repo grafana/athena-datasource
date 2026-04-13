@@ -41,5 +41,8 @@ ORDER BY 1`);
   // test provisioned dashboards
   const dashboard = await readProvisionedDashboard({ fileName: 'testDashboard.json' });
   const panel1 = await gotoPanelEditPage({ dashboard, id: '2' });
+  // Wait for the initial auto-run to finish before forcing another refresh.
+  const refreshButton = page.getByTestId('data-testid RefreshPicker run button').last();
+  await expect(refreshButton).toHaveText(/refresh/i);
   await expect(panel1.refreshPanel()).toBeOK();
 });

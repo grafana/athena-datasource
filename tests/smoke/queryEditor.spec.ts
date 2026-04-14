@@ -1,7 +1,9 @@
 import { test, expect } from '@grafana/plugin-e2e';
 import { selectors } from '../../src/tests/selectors';
+import { openNewPanelEditPage } from '../utils/openNewPanelEditPage';
 
-test('should render query editor', async ({ page, panelEditPage, readProvisionedDashboard, gotoPanelEditPage }) => {
+test('should render query editor', async ({ page, dashboardPage, grafanaVersion, gotoPanelEditPage }) => {
+  const panelEditPage = await openNewPanelEditPage({ dashboardPage, gotoPanelEditPage, grafanaVersion });
   await panelEditPage.datasource.set('AWS Athena');
 
   // Wait for the monaco editor to finish lazy loading

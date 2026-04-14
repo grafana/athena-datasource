@@ -1,15 +1,7 @@
 import { test, expect } from '@grafana/plugin-e2e';
 import { selectors } from '../../src/tests/selectors';
-import { openNewPanelEditPage } from '../utils/openNewPanelEditPage';
 
-test('should render query editor', async ({
-  page,
-  dashboardPage,
-  grafanaVersion,
-  readProvisionedDashboard,
-  gotoPanelEditPage,
-}) => {
-  const panelEditPage = await openNewPanelEditPage({ dashboardPage, gotoPanelEditPage, grafanaVersion });
+test('should render query editor', async ({ page, panelEditPage, readProvisionedDashboard, gotoPanelEditPage }) => {
   await panelEditPage.datasource.set('AWS Athena');
 
   // Wait for the monaco editor to finish lazy loading
@@ -48,9 +40,11 @@ ORDER BY 1`);
 
   // test provisioned dashboards
   const dashboard = await readProvisionedDashboard({ fileName: 'testDashboard.json' });
-  const provisionedQuery = page.waitForResponse(
-    (response) => response.url().includes('/api/ds/query') && response.request().method() === 'POST'
-  );
-  await gotoPanelEditPage({ dashboard, id: '2' });
+  const panel1 = await gotoPanelEditPage({ dashboard, id: '2' });
+  // Wait for the initial auto-run to finish before forcing another refresh.
+  const refreshButton = page.getByTestId('data-testid RefreshPicker run button').last();
+  await expect(refreshButton).toHaveAccessibleName(/refresh/i);
+  const provisionedQuery = panel1.waitForQueryDataResponse();
+  await refreshButton.click();
   await expect(provisionedQuery).toBeOK();
 });

@@ -17,5 +17,3 @@ services:
     environment:
       ACCESS_KEY: ${ACCESS_KEY}
       SECRET_KEY: ${SECRET_KEY}
-      GF_FEATURE_TOGGLES_splashScreen: "false"
-      GF_FEATURE_TOGGLES_dashboardNewLayouts: "false"

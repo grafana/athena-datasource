@@ -29,7 +29,7 @@ jobs:
             AWS_DS_TOKEN_CREATOR_PEM=aws-ds-token-creator:pem
       - name: 'Generate token'
         id: generate_token
-        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2
         with:
           app-id: ${{ env.AWS_DS_TOKEN_CREATOR_ID }}
           private-key: ${{ env.AWS_DS_TOKEN_CREATOR_PEM }}

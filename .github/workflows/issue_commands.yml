@@ -22,7 +22,7 @@ jobs:
         run: npm install --production --prefix ./actions
       - name: Get secrets from vault
         id: get-secrets
-        uses: grafana/shared-workflows/actions/get-vault-secrets@3e31f3ccf58fe61e6869414a8afd0c78ccb84c99 # main
+        uses: grafana/shared-workflows/actions/get-vault-secrets@3f06e5ea575feea21335d788ba4a18473f434355 # main
         with:
           repo_secrets: |
             AWS_DS_TOKEN_CREATOR_ID=aws-ds-token-creator:app_id

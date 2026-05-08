@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.2.1
+
+- Updated frontend dependencies
+
 ## 3.2.0
 
 - Docs: Updated Athena data source docs in [#790](https://github.com/grafana/athena-datasource/pull/790)

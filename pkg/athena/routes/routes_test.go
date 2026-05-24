@@ -3,11 +3,12 @@ package routes
 import (
 	"bytes"
 	"context"
-	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/grafana/grafana-plugin-sdk-go/config"
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/grafana/athena-datasource/pkg/athena/fake"
@@ -168,7 +169,7 @@ func setupHandler() AthenaResourceHandler {
 }
 
 func hitRoute(rh AthenaResourceHandler, route string, reqBody []byte, externalId string) (*http.Response, []byte, error) {
-	ctx := backend.WithGrafanaConfig(context.Background(), backend.NewGrafanaCfg(map[string]string{
+	ctx := config.WithGrafanaConfig(context.Background(), config.NewGrafanaCfg(map[string]string{
 		awsds.GrafanaAssumeRoleExternalIdKeyName: externalId,
 	}))
 	req := httptest.NewRequestWithContext(ctx, "GET", route, bytes.NewReader(reqBody))

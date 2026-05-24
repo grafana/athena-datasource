@@ -28,4 +28,10 @@ export default defineConfig([
       '@typescript-eslint/no-deprecated': 'warn',
     },
   },
+  {
+    files: ['.config/types/webpack-plugins.d.ts'],
+    rules: {
+      'no-duplicate-imports': 'off',
+    },
+  },
 ]);

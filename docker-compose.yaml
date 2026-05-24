@@ -2,18 +2,15 @@ version: '3.0'
 
 services:
   grafana:
-    container_name: 'grafana-athena-datasource'
     platform: 'linux/amd64'
     build:
-      context: ./.config
       args:
-        grafana_image: ${GRAFANA_IMAGE:-grafana-enterprise}
         grafana_version: ${GRAFANA_VERSION:-10.3.6}
     ports:
       - 3000:3000/tcp
-    volumes:
-      - ./dist:/var/lib/grafana/plugins/grafana-athena-datasource
-      - ./provisioning:/etc/grafana/provisioning
     environment:
       ACCESS_KEY: ${ACCESS_KEY}
       SECRET_KEY: ${SECRET_KEY}
+    extends:
+      file: .config/docker-compose-base.yaml
+      service: grafana

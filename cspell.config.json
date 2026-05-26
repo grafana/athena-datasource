@@ -93,6 +93,7 @@
     "dompurify",
     "zizmor",
     "AKIAIOSFODNN",
-    "npmPreapprovedPackages"
+    "npmPreapprovedPackages",
+    "yarnrc"
   ]
 }

@@ -16,7 +16,8 @@ jobs:
         with:
           repository: 'grafana/grafana-github-actions'
           path: ./actions
-          ref: main
+          # Pinned on purpose — Renovate will not bump this ref; update manually when needed.
+          ref: 3c62d35c5a66e730186a338e45aeb8fa784e2d56
           persist-credentials: false
       - name: Install Actions
         run: npm install --production --ignore-scripts --prefix ./actions

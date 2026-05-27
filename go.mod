@@ -1,6 +1,6 @@
 module github.com/grafana/athena-datasource
 
-go 1.25.7
+go 1.26.3
 
 replace github.com/uber/athenadriver => github.com/grafana/athenadriver v0.0.0-20250616140009-9083f49e325c
 
@@ -15,7 +15,6 @@ require (
 	github.com/stretchr/testify v1.11.1
 	github.com/uber/athenadriver v1.1.15
 	github.com/viant/toolbox v0.39.0
-	gotest.tools v2.2.0+incompatible
 )
 
 require (

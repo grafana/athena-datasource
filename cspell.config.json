@@ -8,6 +8,7 @@
     "test-results/**",
     "provisioning/**",
     "src/dashboards/**",
+    "package.json",
     "yarn.lock",
     "go.sum",
     "mage_output_file.go",
@@ -29,7 +30,7 @@
     "errorsource",
     "eventtime",
     "fridgepoet",
-    "gotest",
+    "govulncheck",
     "grafana",
     "gtime",
     "httpclient",
@@ -71,6 +72,7 @@
     "typecheck",
     "UNIXTIME",
     "varbinary",
+    "vulncheck",
     "varchar",
     "viant",
     "Workgroups",
@@ -91,6 +93,7 @@
     "dompurify",
     "zizmor",
     "AKIAIOSFODNN",
-    "npmPreapprovedPackages"
+    "npmPreapprovedPackages",
+    "yarnrc"
   ]
 }

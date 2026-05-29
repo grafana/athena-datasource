@@ -42,6 +42,7 @@
     "@eslint/eslintrc": "^3.3.1",
     "@grafana/eslint-config": "^8.2.0",
     "@grafana/plugin-e2e": "^3.5.1",
+    "@grafana/sign-plugin": "^3.2.2",
     "@grafana/tsconfig": "^2.0.1",
     "@openfeature/web-sdk": "1.8.0",
     "@playwright/test": "1.55.1",

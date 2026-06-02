@@ -1,9 +1,9 @@
 import React from 'react';
-import { QueryEditorProps } from '@grafana/data';
-import { AthenaDataSourceOptions, AthenaQuery } from './types';
-import { DataSource } from './datasource';
-import { QueryEditorForm } from './QueryEditorForm';
+import { DataSource } from '@/datasource';
+import { QueryEditorForm } from '@/QueryEditorForm';
 import { QueryEditorHeader } from '@grafana/aws-sdk';
+import type { QueryEditorProps } from '@grafana/data';
+import type { AthenaDataSourceOptions, AthenaQuery } from '@/types';
 
 export function QueryEditor(props: QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions>) {
   return (

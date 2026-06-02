@@ -20,12 +20,29 @@ export default defineConfig([
   {
     rules: {
       'deprecation/deprecation': 'off',
+       'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['./*', './**/*', '../*', '../**/*'],
+              message: 'Relative imports are not allowed. Use @/ path aliases instead (e.g., @/components/..., @/utils/...).',
+            },
+          ],
+        },
+      ],
     },
   },
   {
     files: ['src/**/*.{ts,tsx,js,jsx}'],
     rules: {
       '@typescript-eslint/no-deprecated': 'warn',
+    },
+  },
+  {
+    files: ['jest-{setup,config}.js','test/**/*.spec.ts'],
+    rules: {
+      'no-restricted-imports': 'off',
     },
   },
 ]);

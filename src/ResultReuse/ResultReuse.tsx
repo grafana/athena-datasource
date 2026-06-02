@@ -1,6 +1,6 @@
 import React from 'react';
 import { Input, Switch } from '@grafana/ui';
-import { AthenaQuery, DEFAULT_RESULT_REUSE_ENABLED, DEFAULT_RESULT_REUSE_MAX_AGE_IN_MINUTES } from '../types';
+import { AthenaQuery, DEFAULT_RESULT_REUSE_ENABLED, DEFAULT_RESULT_REUSE_MAX_AGE_IN_MINUTES } from '@/types';
 import { EditorField } from '@grafana/plugin-ui';
 import { css } from '@emotion/css';
 

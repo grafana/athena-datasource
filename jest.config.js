@@ -2,7 +2,15 @@
 // generally used by snapshots, but can affect specific tests
 process.env.TZ = 'UTC';
 
+const originalConfig = require('./.config/jest.config');
+
 module.exports = {
   // Jest configuration provided by Grafana scaffolding
-  ...require('./.config/jest.config'),
+  ...originalConfig,
+  moduleNameMapper: {
+    ...originalConfig.moduleNameMapper,
+    // Mirror the `@/*` -> `./src/*` path alias defined in tsconfig.json
+    '^@/tests/(.*)$': '<rootDir>/tests/$1',
+    '^@/(.*)$': '<rootDir>/src/$1',
+  },
 };

@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
-import { QueryEditor } from 'QueryEditor';
+import { QueryEditor } from '@/QueryEditor';
 import React from 'react';
-import { mockDatasource, mockQuery } from './__mocks__/datasource';
+import { mockDatasource, mockQuery } from '@/__mocks__/datasource';
 import * as pluginUi from '@grafana/plugin-ui';
 
 const ds = mockDatasource;

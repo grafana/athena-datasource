@@ -1,9 +1,9 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { ConfigEditor } from './ConfigEditor';
-import { mockDatasourceOptions } from './__mocks__/datasource';
+import { ConfigEditor } from '@/ConfigEditor';
+import { mockDatasourceOptions } from '@/__mocks__/datasource';
 import { select } from 'react-select-event';
-import { selectors } from 'tests/selectors';
+import { selectors } from '@/selectors/selectors';
 import { AwsAuthType } from '@grafana/aws-sdk';
 import * as runtime from '@grafana/runtime';
 import userEvent from '@testing-library/user-event';

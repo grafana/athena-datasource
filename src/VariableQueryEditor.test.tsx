@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { VariableQueryCodeEditor } from './VariableQueryEditor';
-import { mockDatasource, mockQuery } from './__mocks__/datasource';
+import { VariableQueryCodeEditor } from '@/VariableQueryEditor';
+import { mockDatasource, mockQuery } from '@/__mocks__/datasource';
 import '@testing-library/jest-dom';
 import * as runtime from '@grafana/runtime';
 import * as pluginUi from '@grafana/plugin-ui';

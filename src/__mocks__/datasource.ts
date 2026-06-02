@@ -6,8 +6,8 @@ import {
   defaultKey,
   DEFAULT_RESULT_REUSE_ENABLED,
   DEFAULT_RESULT_REUSE_MAX_AGE_IN_MINUTES,
-} from '../types';
-import { DataSource } from '../datasource';
+} from '@/types';
+import { DataSource } from '@/datasource';
 
 export const mockDatasourceOptions: DataSourcePluginOptionsEditorProps<
   AthenaDataSourceOptions,

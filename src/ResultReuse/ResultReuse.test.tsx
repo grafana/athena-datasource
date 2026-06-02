@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { ResultReuse } from './ResultReuse';
-import { mockQuery } from '__mocks__/datasource';
+import { ResultReuse } from '@/ResultReuse/ResultReuse';
+import { mockQuery } from '@/__mocks__/datasource';
 
 describe('ResultReuse', () => {
   it('options should be enabled if `enabled=true`', () => {

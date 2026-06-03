@@ -26,7 +26,15 @@
       "name": "Grafana Labs",
       "url": "https://grafana.com"
     },
-    "keywords": ["datasource", "athena", "aws", "amazon", "cloud provider", "logs", "sql"],
+    "keywords": [
+      "datasource",
+      "athena",
+      "aws",
+      "amazon",
+      "cloud provider",
+      "logs",
+      "sql"
+    ],
     "logos": {
       "small": "img/logo.svg",
       "large": "img/logo.svg"
@@ -46,7 +54,7 @@
     "updated": "%TODAY%"
   },
   "dependencies": {
-    "grafanaDependency": ">=10.4.0",
+    "grafanaDependency": ">=12.4.3",
     "plugins": []
   }
 }

@@ -1,9 +1,9 @@
 import { Observable } from 'rxjs';
 import { CustomVariableSupport, DataQueryRequest, DataQueryResponse } from '@grafana/data';
-import { VariableQueryCodeEditor } from './VariableQueryEditor';
+import { VariableQueryCodeEditor } from '@/VariableQueryEditor';
 import { assign } from 'lodash';
-import { DataSource } from './datasource';
-import { AthenaQuery, defaultQuery } from './types';
+import { DataSource } from '@/datasource';
+import { AthenaQuery, defaultQuery } from '@/types';
 
 export class AthenaVariableSupport extends CustomVariableSupport<DataSource, AthenaQuery, AthenaQuery> {
   constructor(private readonly datasource: DataSource) {

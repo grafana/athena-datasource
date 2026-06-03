@@ -1,9 +1,9 @@
 import React, { FormEvent, useCallback, useEffect, useState } from 'react';
 import { DataSourcePluginOptionsEditorProps, DataSourceSettings, GrafanaTheme2, SelectableValue } from '@grafana/data';
-import { AthenaDataSourceOptions, AthenaDataSourceSecureJsonData, AthenaDataSourceSettings, defaultKey } from './types';
+import { AthenaDataSourceOptions, AthenaDataSourceSecureJsonData, AthenaDataSourceSettings, defaultKey } from '@/types';
 import { config, getBackendSrv } from '@grafana/runtime';
 import { AwsAuthType, ConfigSelect, ConnectionConfig, Divider } from '@grafana/aws-sdk';
-import { selectors } from 'tests/selectors';
+import { selectors } from '@/selectors/selectors';
 import { ConfigSection, DataSourceDescription } from '@grafana/plugin-ui';
 import { Field, Input, SecureSocksProxySettings, useStyles2 } from '@grafana/ui';
 import { gte } from 'semver';

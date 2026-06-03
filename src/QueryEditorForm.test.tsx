@@ -1,13 +1,13 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { QueryEditorForm } from './QueryEditorForm';
-import { mockDatasource, mockQuery } from './__mocks__/datasource';
-import '@testing-library/jest-dom';
 import { select } from 'react-select-event';
-import { selectors } from 'tests/selectors';
-import { defaultKey, defaultQuery, QueryEditorFieldType } from 'types';
+import { render, screen, act, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import '@testing-library/jest-dom';
 import * as pluginUi from '@grafana/plugin-ui';
+import { QueryEditorForm } from '@/QueryEditorForm';
+import { mockDatasource, mockQuery } from '@/__mocks__/datasource';
+import { selectors } from '@/selectors/selectors';
+import { defaultKey, defaultQuery, QueryEditorFieldType } from '@/types';
 
 const ds = mockDatasource;
 const q = mockQuery;
@@ -46,12 +46,14 @@ describe('QueryEditor', () => {
     expect(selectEl).toBeInTheDocument();
     await userEvent.click(selectEl);
 
-    await select(selectEl, 'foo', { container: document.body });
+    await act(async () => await select(selectEl, 'foo', { container: document.body }));
 
-    expect(ds.getResource).toHaveBeenCalledWith(QueryEditorFieldType.Regions);
-    expect(onChange).toHaveBeenCalledWith({
-      ...q,
-      connectionArgs: { ...q.connectionArgs, region: 'foo' },
+    await waitFor(() => {
+      expect(ds.getResource).toHaveBeenCalledWith(QueryEditorFieldType.Regions);
+      expect(onChange).toHaveBeenCalledWith({
+        ...q,
+        connectionArgs: { ...q.connectionArgs, region: 'foo' },
+      });
     });
   });
 
@@ -67,12 +69,14 @@ describe('QueryEditor', () => {
     expect(selectEl).toBeInTheDocument();
     await userEvent.click(selectEl);
 
-    await select(selectEl, 'foo', { container: document.body });
+    await act(async () => await select(selectEl, 'foo', { container: document.body }));
 
-    expect(ds.postResource).toHaveBeenCalledWith(QueryEditorFieldType.Catalogs, { region: defaultKey });
-    expect(onChange).toHaveBeenCalledWith({
-      ...q,
-      connectionArgs: { ...q.connectionArgs, catalog: 'foo' },
+    await waitFor(() => {
+      expect(ds.postResource).toHaveBeenCalledWith(QueryEditorFieldType.Catalogs, { region: defaultKey });
+      expect(onChange).toHaveBeenCalledWith({
+        ...q,
+        connectionArgs: { ...q.connectionArgs, catalog: 'foo' },
+      });
     });
   });
 
@@ -92,15 +96,17 @@ describe('QueryEditor', () => {
     expect(selectEl).toBeInTheDocument();
     await userEvent.click(selectEl);
 
-    await select(selectEl, 'foo', { container: document.body });
+    await act(async () => await select(selectEl, 'foo', { container: document.body }));
 
-    expect(ds.postResource).toHaveBeenCalledWith(QueryEditorFieldType.Databases, {
-      region: defaultKey,
-      catalog: defaultKey,
-    });
-    expect(onChange).toHaveBeenCalledWith({
-      ...q,
-      connectionArgs: { ...q.connectionArgs, database: 'foo' },
+    await waitFor(() => {
+      expect(ds.postResource).toHaveBeenCalledWith(QueryEditorFieldType.Databases, {
+        region: defaultKey,
+        catalog: defaultKey,
+      });
+      expect(onChange).toHaveBeenCalledWith({
+        ...q,
+        connectionArgs: { ...q.connectionArgs, database: 'foo' },
+      });
     });
     expect(onRunQuery).not.toHaveBeenCalled();
   });
@@ -120,16 +126,19 @@ describe('QueryEditor', () => {
 
     const selectEl = screen.getByLabelText('Table');
     expect(selectEl).toBeInTheDocument();
+    await userEvent.click(selectEl);
 
-    await select(selectEl, 'foo', { container: document.body });
+    await act(async () => await select(selectEl, 'foo', { container: document.body }));
 
-    expect(ds.postResource).toHaveBeenCalledWith(
-      QueryEditorFieldType.Tables,
-      expect.objectContaining({ region: defaultKey, catalog: defaultKey, database: defaultKey })
-    );
-    expect(onChange).toHaveBeenCalledWith({
-      ...q,
-      table: 'foo',
+    await waitFor(() => {
+      expect(ds.postResource).toHaveBeenCalledWith(
+        QueryEditorFieldType.Tables,
+        expect.objectContaining({ region: defaultKey, catalog: defaultKey, database: defaultKey })
+      );
+      expect(onChange).toHaveBeenCalledWith({
+        ...q,
+        table: 'foo',
+      });
     });
     expect(onRunQuery).not.toHaveBeenCalled();
   });
@@ -157,17 +166,20 @@ describe('QueryEditor', () => {
 
     const selectEl = screen.getByLabelText('Column');
     expect(selectEl).toBeInTheDocument();
+    await userEvent.click(selectEl);
 
-    await select(selectEl, 'columnName', { container: document.body });
+    await act(async () => await select(selectEl, 'columnName', { container: document.body }));
 
-    expect(ds.postResource).toHaveBeenCalledWith(
-      QueryEditorFieldType.Columns,
-      expect.objectContaining({ region: defaultKey, catalog: defaultKey, database: defaultKey, table: 'tableName' })
-    );
-    expect(onChange).toHaveBeenCalledWith({
-      ...q,
-      column: 'columnName',
-      table: 'tableName',
+    await waitFor(() => {
+      expect(ds.postResource).toHaveBeenCalledWith(
+        QueryEditorFieldType.Columns,
+        expect.objectContaining({ region: defaultKey, catalog: defaultKey, database: defaultKey, table: 'tableName' })
+      );
+      expect(onChange).toHaveBeenCalledWith({
+        ...q,
+        column: 'columnName',
+        table: 'tableName',
+      });
     });
     expect(onRunQuery).not.toHaveBeenCalled();
   });

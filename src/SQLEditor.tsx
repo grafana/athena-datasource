@@ -1,9 +1,9 @@
-import { SQLEditor as SQLCodeEditor } from '@grafana/plugin-ui';
-import { DataSource } from 'datasource';
-import { getAthenaCompletionProvider } from 'language/completionItemProvider';
-import { TABLE_MACRO } from 'language/macros';
 import React, { useRef, useMemo, useCallback, useEffect } from 'react';
-import { AthenaQuery } from 'types';
+import { SQLEditor as SQLCodeEditor } from '@grafana/plugin-ui';
+import { DataSource } from '@/datasource';
+import { getAthenaCompletionProvider } from '@/language/completionItemProvider';
+import { TABLE_MACRO } from '@/language/macros';
+import { type AthenaQuery } from '@/types';
 
 interface RawEditorProps {
   query: AthenaQuery;

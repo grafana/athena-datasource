@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { css } from '@emotion/css';
 import { GrafanaTheme2, QueryEditorProps, SelectableValue } from '@grafana/data';
-import { DataSource } from './datasource';
+import { DataSource } from '@/datasource';
 import {
   AthenaDataSourceOptions,
   AthenaQuery,
   defaultQuery,
   QueryEditorFieldType,
   SelectableFormatOptions,
-} from './types';
+} from '@/types';
 import { CollapsableSection, useStyles2 } from '@grafana/ui';
 import { FormatSelect, ResourceSelector } from '@grafana/aws-sdk';
-import { selectors } from 'tests/selectors';
-import { appendTemplateVariables } from 'utils';
-import SQLEditor from 'SQLEditor';
-import { ResultReuse } from 'ResultReuse/ResultReuse';
+import { selectors } from '@/selectors/selectors';
+import { appendTemplateVariables } from '@/utils';
+import SQLEditor from '@/SQLEditor';
+import { ResultReuse } from '@/ResultReuse/ResultReuse';
 import { EditorField, EditorFieldGroup, EditorRow, EditorRows } from '@grafana/plugin-ui';
 
 type Props = QueryEditorProps<DataSource, AthenaQuery, AthenaDataSourceOptions> & {

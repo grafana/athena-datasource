@@ -1,10 +1,9 @@
 import { DataQueryRequest, DataSourceInstanceSettings, dateTime } from '@grafana/data';
 import * as runtime from '@grafana/runtime';
 import { DatasourceWithAsyncBackend } from '@grafana/async-query-data';
-import { AthenaDataSourceOptions, AthenaQuery, FormatOptions } from 'types';
+import { AthenaDataSourceOptions, AthenaQuery, FormatOptions } from '@/types';
 import { of } from 'rxjs';
-
-import { DataSource } from './datasource';
+import { DataSource } from '@/datasource';
 
 interface TestContext {
   instanceSettings: DataSourceInstanceSettings<AthenaDataSourceOptions>;

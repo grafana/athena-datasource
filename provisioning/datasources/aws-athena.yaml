@@ -1,0 +1,41 @@
+# config file version
+apiVersion: 1
+
+deleteDatasources:
+  - name: AWS Athena
+    orgId: 1
+  - name: AWS Athena assume role
+    orgId: 1
+
+datasources:
+  - name: AWS Athena
+    type: grafana-athena-datasource
+    uid: P7DC3E4760CFAC4ACE
+    editable: true
+    jsonData:
+      defaultRegion: us-east-2
+      authType: keys
+      catalog: AwsDataCatalog
+      database: cloud-datasources-db
+      workgroup: cloud-datasources
+    secureJsonData:
+      accessKey: $ACCESS_KEY
+      secretKey: $SECRET_KEY
+    version: 1
+
+  - name: AWS Athena assume role
+    type: grafana-athena-datasource
+    uid: P7DC3E4760CFAC4AF
+    editable: true
+    enabled: true
+    jsonData:
+      authType: keys
+      defaultRegion: us-east-2
+      catalog: AwsDataCatalog
+      database: some-db
+      workgroup: some-workgroup
+      assumeRoleArn: arn:aws:iam::123:role/some-role
+    secureJsonData:
+      accessKey: $ACCESS_KEY
+      secretKey: $SECRET_KEY
+    version: 1

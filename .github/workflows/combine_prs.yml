@@ -1,0 +1,21 @@
+name: Combine PRs
+
+on:
+  workflow_dispatch: # manual activation, for now
+
+jobs:
+  combine-prs:
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: read
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: combine-prs
+        id: combine-prs
+        uses: github/combine-prs@2909f404763c3177a456e052bdb7f2e85d3a7cb3 # v5.2.0
+        with:
+          labels: combined-pr
+          pr_title: 'Dependabot updates'
+          branch_prefix: dependabot # the default, just for clarity

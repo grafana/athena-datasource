@@ -1,0 +1,458 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 5,
+      "options": {
+        "content": "# ![logo](https://www.vectorlogo.zone/logos/grafana/grafana-icon.svg) Amazon VPC Flow Logs Monitoring with Grafana\n\nWelcome to the Athena data source for Grafana! In order to be able to use this dashboard, first create an Athena database and populate it with your VPC Flow Logs data. For that, check [the AWS documentation](https://docs.aws.amazon.com/athena/latest/ug/vpc-flow-logs.html).\n\nOnce the data catalog is ready:\n\n - The database can then be changed using the database selector at the top.\n - The dashboard will automatically use the first table of the database. If that is not the table with the data, select the correct one in the `VPC_Flow_Logs_Table` selector at the top.\n\nHaving trouble using this dashboard? Open an issue in the [Athena repository for Grafana](https://github.com/grafana/athena-datasource/issues/new/choose)!",
+        "mode": "markdown"
+      },
+      "pluginVersion": "9.0.0-pre",
+      "title": " ",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "grafana-athena-datasource",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "action"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 113
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "protocol"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 89
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bytes"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 99
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "srcaddr"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 182
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "dstaddr"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 157
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "account_id"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 173
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "log_status"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 106
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 7,
+        "x": 0,
+        "y": 9
+      },
+      "id": 2,
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": ["sum"],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "9.0.0-pre",
+      "targets": [
+        {
+          "connectionArgs": {
+            "catalog": "__default",
+            "database": "__default",
+            "region": "__default"
+          },
+          "datasource": {
+            "type": "grafana-athena-datasource",
+            "uid": "${datasource}"
+          },
+          "format": 1,
+          "hide": false,
+          "rawSQL": "SELECT\n  srcaddr, dstaddr, account_id, action, protocol, bytes, log_status\nFROM $VPC_Flow_Logs_Table\nWHERE\n  srcport = CAST(\n    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE('$Port',\n      'HTTPS', '443'),\n      'HTTP', '80'),\n      'RDP', '3389'),\n      'SSH', '22'),\n      'DNS', '53')\n  AS INT) \nOR\n  dstport = CAST(\n    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE('$Port',\n      'HTTPS', '443'),\n      'HTTP', '80'),\n      'RDP', '3389'),\n      'SSH', '22'),\n      'DNS', '53')\n  AS INT) \nAND\n  $__unixEpochFilter(start)\nORDER BY start ASC;\n",
+          "refId": "A"
+        }
+      ],
+      "title": "$Port traffic",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-athena-datasource",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "_col1 REJECT"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "semi-dark-red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "REJECT"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "_col1 ACCEPT"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "ACCEPT"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 17,
+        "x": 7,
+        "y": 9
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.2.2",
+      "targets": [
+        {
+          "connectionArgs": {
+            "catalog": "__default",
+            "database": "__default",
+            "region": "__default"
+          },
+          "datasource": {
+            "type": "grafana-athena-datasource",
+            "uid": "${datasource}"
+          },
+          "format": 0,
+          "hide": false,
+          "rawSQL": "SELECT\n  $__unixEpochGroup(start, '1m'), sum(bytes), action\nFROM $VPC_Flow_Logs_Table\nWHERE\n  srcport = CAST(\n    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE('$Port',\n      'HTTPS', '443'),\n      'HTTP', '80'),\n      'RDP', '3389'),\n      'SSH', '22'),\n      'DNS', '53')\n  AS INT) \nOR\n  dstport = CAST(\n    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE('$Port',\n      'HTTPS', '443'),\n      'HTTP', '80'),\n      'RDP', '3389'),\n      'SSH', '22'),\n      'DNS', '53')\n  AS INT)\nAND\n  $__unixEpochFilter(start)\nGROUP BY start, action\nORDER BY start ASC;",
+          "refId": "A"
+        }
+      ],
+      "title": "$Port traffic bytes",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 36,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "Amazon Athena",
+          "value": "Amazon Athena"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "datasource",
+        "options": [],
+        "query": "grafana-athena-datasource",
+        "queryValue": "",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "vpc_flow_logs",
+          "value": "vpc_flow_logs"
+        },
+        "datasource": {
+          "type": "grafana-athena-datasource",
+          "uid": "${datasource}"
+        },
+        "definition": "",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "Database",
+        "options": [],
+        "query": {
+          "rawSQL": "SHOW DATABASES"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "vpc_flow_logs",
+          "value": "vpc_flow_logs"
+        },
+        "datasource": {
+          "type": "grafana-athena-datasource",
+          "uid": "${datasource}"
+        },
+        "definition": "",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "VPC_Flow_Logs_Table",
+        "options": [],
+        "query": {
+          "rawSQL": "show tables from $Database"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "HTTPS",
+          "value": "HTTPS"
+        },
+        "description": "HTTP - 80 ",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Port",
+        "multi": false,
+        "name": "Port",
+        "options": [
+          {
+            "selected": false,
+            "text": "DNS",
+            "value": "DNS"
+          },
+          {
+            "selected": false,
+            "text": "HTTP",
+            "value": "HTTP"
+          },
+          {
+            "selected": true,
+            "text": "HTTPS",
+            "value": "HTTPS"
+          },
+          {
+            "selected": false,
+            "text": "RDP",
+            "value": "RDP"
+          },
+          {
+            "selected": false,
+            "text": "SSH",
+            "value": "SSH"
+          }
+        ],
+        "query": "DNS, HTTP, HTTPS, RDP, SSH",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "utc",
+  "title": "Amazon VPC Flow Logs",
+  "uid": "",
+  "version": 9,
+  "weekStart": ""
+}

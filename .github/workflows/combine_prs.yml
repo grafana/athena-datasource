@@ -3,13 +3,12 @@ name: Combine PRs
 on:
   workflow_dispatch: # manual activation, for now
 
-permissions:
-  contents: write
-  pull-requests: write
-  checks: read
-
 jobs:
   combine-prs:
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: read
     runs-on: ubuntu-latest
 
     steps:

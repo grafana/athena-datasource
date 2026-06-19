@@ -16,6 +16,9 @@
     ".gitignore"
   ],
   "words": [
+    "dsconfig",
+    "dsschema",
+    "pluginschema",
     "athenaclientmock",
     "athenadriver",
     "athenaiface",

@@ -920,6 +920,8 @@ github.com/grafana/dataplane/sdata v0.0.9 h1:AGL1LZnCUG4MnQtnWpBPbQ8ZpptaZs14w6k
 github.com/grafana/dataplane/sdata v0.0.9/go.mod h1:Jvs5ddpGmn6vcxT7tCTWAZ1mgi4sbcdFt9utQx5uMAU=
 github.com/grafana/dsconfig/dsconfig v0.0.2 h1:fog9H74gVMhn5x1oavoEyBhek5SIsoYlQ8cb6VYTWjQ=
 github.com/grafana/dsconfig/dsconfig v0.0.2/go.mod h1:snIIxl//Dxgym/8+Qqre5rQkaGTPoiQYavuZNTQ0NXs=
+github.com/grafana/dsconfig/schema v0.0.2 h1:CFA4uvurL4GOKRYdi1mubCeKPwMYUD1hNRhjNnKc0gk=
+github.com/grafana/dsconfig/schema v0.0.2/go.mod h1:QS54g2BnTfjDmvQf5DSBBU6YPsNOlEv4DzsolvzZKxw=
 github.com/grafana/grafana-aws-sdk v1.4.3 h1:Gwm7f2zyVTfVRmYS0GuZPe46aoQxVejb2/9c/woYgEw=
 github.com/grafana/grafana-aws-sdk v1.4.3/go.mod h1:tFJTBtW+0kmPqnPUaWch48aUSeZgnOCx+Lrf2/fiBP8=
 github.com/grafana/grafana-plugin-sdk-go v0.292.1 h1:8wvKUqIOtbHC43WIr6kheIGdV6q4SMyWU9+jxcUA6mE=

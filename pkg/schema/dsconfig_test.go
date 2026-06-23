@@ -1,49 +1,22 @@
 package schema_test
 
 import (
-	"flag"
+	_ "embed"
 	"testing"
 
 	"github.com/grafana/athena-datasource/pkg/athena/models"
-	pluginSchema "github.com/grafana/athena-datasource/pkg/schema"
-	dsconfigSchema "github.com/grafana/dsconfig/schema"
-	"github.com/stretchr/testify/require"
+	"github.com/grafana/dsconfig/schema"
 )
 
-// generateArtifacts is set by `go generate ./pkg/schema`, which runs this test package
-// with the -generateArtifacts flag to (re)write the committed schema artifacts. When the
-// flag is not set, TestGenerateArtifacts is skipped during normal test runs.
-var generateArtifacts = flag.Bool("generateArtifacts", false, "write the schema artifacts to disk instead of running tests")
+//go:embed dsconfig.json
+var configSchemaJSON []byte
 
-//go:generate go test -run TestGenerateArtifacts -generateArtifacts
-func TestGenerateArtifacts(t *testing.T) {
-	t.Helper()
-	if !*generateArtifacts {
-		t.Skip("run via `go generate ./...` to write schema artifacts")
-	}
-	err := dsconfigSchema.WriteArtifacts(pluginSchema.NewSDKSchema())
-	if err != nil {
-		t.Error("failed to generate schema artifacts")
-	}
-	require.NoError(t, err)
-	t.Log("schema artifacts generated")
-}
-
-// TestSchemaConformance runs the plugin-agnostic schema guard rails defined in
-// the dsconfig SDK against this plugin's schema. The invariants live in
-// github.com/grafana/dsconfig/schema/conformance so they can be reused by any
-// plugin built on the dsconfig single source of truth.
-func TestSchemaConformance(t *testing.T) {
-	model := models.AthenaDataSourceSettings{}
-	cfg, err := pluginSchema.DSConfigSchema()
-	require.NoError(t, err)
-	dsconfigSchema.RunConformanceTests(t, dsconfigSchema.Params{
-		PluginID:          "grafana-athena-datasource",
-		DSConfigSchema:    cfg,
-		PluginSchema:      pluginSchema.NewSDKSchema(),
-		SettingsJSONModel: model,
-		SecureKeys: []string{
-			"accessKey", "secretKey", "sessionToken", "proxyPassword",
-		},
+//go:generate go test -run TestPlugin -generateArtifacts
+func TestPlugin(t *testing.T) {
+	schema.RunPluginTests(t, schema.PluginUnderTest{
+		ID:                "grafana-athena-datasource",
+		ConfigSchemaJSON:  configSchemaJSON,
+		SettingsJSONModel: models.AthenaDataSourceSettings{},
+		SecureKeys:        []string{"accessKey", "secretKey", "sessionToken", "proxyPassword"},
 	})
 }

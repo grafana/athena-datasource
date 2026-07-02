@@ -1,3 +1,10 @@
+# Contributing
+
+## Signed commits are required
+
+> [!IMPORTANT]
+> All commits must be [signed](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits) (GPG, SSH, or S/MIME) to be merged into this repository. Pull requests with unsigned commits will need to be re-committed with signatures before they can be merged.
+
 # Building and releasing
 
 ## How to build the Athena data source plugin locally
@@ -51,8 +58,9 @@ Make sure you have the following dependencies installed first:
 Setting up go workspace can be helpful when making changes across modules like `grafana-aws-sdk` and `sqlds` and wanting to see those changes reflected in the Athena data source.
 
 From https://go.dev/blog/get-familiar-with-workspaces:
+
 > Workspaces in Go 1.18 let you work on multiple modules simultaneously without having to edit go.mod files for each module. Each module within a workspace is treated as a main module when resolving dependencies.
-> 
+>
 > Previously, to add a feature to one module and use it in another module, you needed to either publish the changes to the first module, or edit the go.mod file of the dependent module with a replace directive for your local, unpublished module changes. In order to publish without errors, you had to remove the replace directive from the dependent module’s go.mod file after you published the local changes to the first module.
 
 1. Make a new directory somewhere, for example `athena_workspace`
@@ -73,4 +81,3 @@ You need to have commit rights to the GitHub repository to publish a release.
 2. Update the `CHANGELOG.md` with the changes contained in the release.
 3. Commit the changes to master and push to GitHub.
 4. Follow the release process that you can find [here](https://enghub.grafana-ops.net/docs/default/component/grafana-plugins-platform/plugins-ci-github-actions/010-plugins-ci-github-actions/#cd_1)
-

@@ -44,7 +44,12 @@ export default function SQLEditor({ query, datasource, onRunQuery, onChange }: R
   return (
     <SQLCodeEditor
       query={query.rawSQL}
-      onChange={(rawSQL) => onChange({ ...queryRef.current, rawSQL })}
+      onChange={(rawSQL, processQuery) => {
+        onChange({ ...queryRef.current, rawSQL });
+        if (processQuery && onRunQuery) {
+          onRunQuery();
+        }
+      }}
       language={{
         id: 'sql',
         completionProvider,

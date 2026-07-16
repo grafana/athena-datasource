@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.2.1
+
+- Chore: Added plugin schema and artifacts
+
 ## 3.2.0
 
 - Docs: Updated Athena data source docs in [#790](https://github.com/grafana/athena-datasource/pull/790)

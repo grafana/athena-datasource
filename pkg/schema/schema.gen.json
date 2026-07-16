@@ -1,0 +1,105 @@
+{
+  "targetApiVersion": "v0alpha1",
+  "settings": {
+    "spec": {
+      "type": "object",
+      "properties": {
+        "jsonData": {
+          "type": "object",
+          "properties": {
+            "assumeRoleARN": {
+              "description": "ARN of the IAM role to assume.",
+              "type": "string"
+            },
+            "authType": {
+              "description": "AWS authentication method.",
+              "type": "string",
+              "default": "default"
+            },
+            "catalog": {
+              "description": "Athena data catalog name.",
+              "type": "string"
+            },
+            "database": {
+              "description": "Athena database name.",
+              "type": "string"
+            },
+            "defaultRegion": {
+              "description": "AWS region for Athena queries.",
+              "type": "string",
+              "default": ""
+            },
+            "endpoint": {
+              "description": "Optional custom endpoint for Athena.",
+              "type": "string"
+            },
+            "externalId": {
+              "description": "External ID for cross-account role assumption.",
+              "type": "string"
+            },
+            "outputLocation": {
+              "description": "S3 output location for query results (e.g. s3://bucket/path).",
+              "type": "string"
+            },
+            "profile": {
+              "description": "AWS credentials profile name.",
+              "type": "string"
+            },
+            "proxyType": {
+              "description": "Specify the type of proxy to use. This should not be set if Secure Socks Proxy is enabled.",
+              "type": "string",
+              "default": "env",
+              "enum": [
+                "env",
+                "none",
+                "url"
+              ]
+            },
+            "proxyUrl": {
+              "description": "Proxy URL. Don't set the username or password here",
+              "type": "string"
+            },
+            "proxyUsername": {
+              "description": "Optional: Proxy Username.",
+              "type": "string"
+            },
+            "region": {
+              "description": "Specify the region, such as for US West (Oregon) use ` us-west-2 ` as the region",
+              "type": "string"
+            },
+            "resultReuseEnabled": {
+              "description": "Reuse Result",
+              "type": "boolean"
+            },
+            "resultReuseMaxAgeInMinutes": {
+              "description": "Result reuse max age in minutes",
+              "type": "number"
+            },
+            "workgroup": {
+              "description": "Athena workgroup name.",
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "secureValues": [
+      {
+        "key": "proxyPassword",
+        "description": "Proxy password"
+      },
+      {
+        "key": "accessKey",
+        "description": "AWS access key ID."
+      },
+      {
+        "key": "secretKey",
+        "description": "AWS secret access key."
+      },
+      {
+        "key": "sessionToken",
+        "description": "AWS temporary session token."
+      }
+    ]
+  }
+}

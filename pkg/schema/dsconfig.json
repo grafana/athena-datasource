@@ -1,0 +1,223 @@
+{
+    "$schema": "https://raw.githubusercontent.com/grafana/dsconfig/refs/heads/main/dsconfig/schema.json",
+    "schemaVersion": "v1",
+    "pluginType": "grafana-athena-datasource",
+    "pluginName": "Amazon Athena",
+    "docURL": "https://grafana.com/docs/plugins/grafana-athena-datasource/latest/",
+    "fields": [
+        {
+            "id": "jsonData.authType",
+            "key": "authType",
+            "label": "Authentication Provider",
+            "description": "AWS authentication method.",
+            "valueType": "string",
+            "target": "jsonData",
+            "defaultValue": "default"
+        },
+        {
+            "id": "jsonData.region",
+            "key": "region",
+            "label": "Region",
+            "description": "Specify the region, such as for US West (Oregon) use ` us-west-2 ` as the region",
+            "valueType": "string",
+            "target": "jsonData"
+        },
+        {
+            "id": "jsonData.defaultRegion",
+            "key": "defaultRegion",
+            "label": "Default Region",
+            "description": "AWS region for Athena queries.",
+            "valueType": "string",
+            "defaultValue": "",
+            "target": "jsonData"
+        },
+        {
+            "id": "jsonData.assumeRoleARN",
+            "key": "assumeRoleARN",
+            "label": "Assume Role ARN",
+            "description": "ARN of the IAM role to assume.",
+            "valueType": "string",
+            "target": "jsonData"
+        },
+        {
+            "id": "jsonData.externalId",
+            "key": "externalId",
+            "label": "External ID",
+            "description": "External ID for cross-account role assumption.",
+            "valueType": "string",
+            "target": "jsonData"
+        },
+        {
+            "id": "jsonData.profile",
+            "key": "profile",
+            "label": "Credentials Profile Name",
+            "description": "AWS credentials profile name.",
+            "valueType": "string",
+            "target": "jsonData"
+        },
+        {
+            "id": "jsonData.endpoint",
+            "key": "endpoint",
+            "label": "Endpoint",
+            "description": "Optional custom endpoint for Athena.",
+            "valueType": "string",
+            "target": "jsonData"
+        },
+        {
+            "id": "jsonData.catalog",
+            "key": "catalog",
+            "label": "Catalog",
+            "description": "Athena data catalog name.",
+            "valueType": "string",
+            "target": "jsonData"
+        },
+        {
+            "id": "jsonData.database",
+            "key": "database",
+            "label": "Database",
+            "description": "Athena database name.",
+            "valueType": "string",
+            "target": "jsonData"
+        },
+        {
+            "id": "jsonData.workgroup",
+            "key": "workgroup",
+            "label": "Workgroup",
+            "description": "Athena workgroup name.",
+            "valueType": "string",
+            "target": "jsonData"
+        },
+        {
+            "id": "jsonData.proxyType",
+            "key": "proxyType",
+            "label": "Proxy Type",
+            "description": "Specify the type of proxy to use. This should not be set if Secure Socks Proxy is enabled.",
+            "valueType": "string",
+            "target": "jsonData",
+            "defaultValue": "env",
+            "validations": [
+                {
+                    "type": "allowedValues",
+                    "values": [
+                        "env",
+                        "none",
+                        "url"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "jsonData.proxyUrl",
+            "key": "proxyUrl",
+            "label": "Proxy URL",
+            "description": "Proxy URL. Don't set the username or password here",
+            "valueType": "string",
+            "target": "jsonData"
+        },
+        {
+            "id": "jsonData.proxyUsername",
+            "key": "proxyUsername",
+            "label": "Proxy user name",
+            "description": "Optional: Proxy Username.",
+            "valueType": "string",
+            "target": "jsonData"
+        },
+        {
+            "id": "secureJsonData.proxyPassword",
+            "key": "proxyPassword",
+            "label": "Proxy password",
+            "description": "Proxy password",
+            "valueType": "string",
+            "target": "secureJsonData"
+        },
+        {
+            "id": "jsonData.outputLocation",
+            "key": "outputLocation",
+            "label": "Output Location",
+            "description": "S3 output location for query results (e.g. s3://bucket/path).",
+            "valueType": "string",
+            "target": "jsonData",
+            "ui": {
+                "component": "input",
+                "placeholder": "s3://bucket/path"
+            }
+        },
+        {
+            "id": "jsonData.resultReuseEnabled",
+            "key": "resultReuseEnabled",
+            "label": "Reuse result",
+            "description": "Reuse Result",
+            "valueType": "boolean",
+            "target": "jsonData"
+        },
+        {
+            "id": "jsonData.resultReuseMaxAgeInMinutes",
+            "key": "resultReuseMaxAgeInMinutes",
+            "label": "Result reuse max age",
+            "description": "Result reuse max age in minutes",
+            "valueType": "number",
+            "target": "jsonData"
+        },
+        {
+            "id": "secureJsonData.accessKey",
+            "key": "accessKey",
+            "label": "Access Key ID",
+            "description": "AWS access key ID.",
+            "valueType": "string",
+            "target": "secureJsonData"
+        },
+        {
+            "id": "secureJsonData.secretKey",
+            "key": "secretKey",
+            "label": "Secret Access Key",
+            "description": "AWS secret access key.",
+            "valueType": "string",
+            "target": "secureJsonData"
+        },
+        {
+            "id": "secureJsonData.sessionToken",
+            "key": "sessionToken",
+            "label": "Session Token",
+            "description": "AWS temporary session token.",
+            "valueType": "string",
+            "target": "secureJsonData"
+        }
+    ],
+    "groups": [
+        {
+            "id": "auth",
+            "title": "Authentication",
+            "fieldRefs": [
+                "jsonData.authType",
+                "jsonData.defaultRegion",
+                "jsonData.profile",
+                "jsonData.assumeRoleARN",
+                "jsonData.externalId",
+                "jsonData.endpoint",
+                "secureJsonData.accessKey",
+                "secureJsonData.secretKey",
+                "secureJsonData.sessionToken"
+            ]
+        },
+        {
+            "id": "athena-details",
+            "title": "Athena details",
+            "fieldRefs": [
+                "jsonData.catalog",
+                "jsonData.database",
+                "jsonData.workgroup",
+                "jsonData.outputLocation"
+            ]
+        },
+        {
+            "id": "advanced",
+            "title": "Advanced Configuration",
+            "fieldRefs": [
+                "jsonData.proxyType",
+                "jsonData.proxyUrl",
+                "jsonData.proxyUsername",
+                "secureJsonData.proxyPassword"
+            ]
+        }
+    ]
+}

@@ -17,32 +17,32 @@ Make sure you have the following dependencies installed first:
 - [Go](https://golang.org/dl/) (see [go.mod](../go.mod#L3) for minimum required version)
 - [Mage](https://magefile.org/)
 - [Node.js (Long Term Support)](https://nodejs.org)
-- [Yarn](https://yarnpkg.com)
+- [npm](https://www.npmjs.com)
 
 ## Frontend
 
 1. Install dependencies
 
    ```bash
-   yarn install --pure-lockfile
+   npm ci
    ```
 
 2. Build plugin in development mode or run in watch mode
 
    ```bash
-   yarn dev
+   npm run dev
    ```
 
    or
 
    ```bash
-   yarn watch
+   npm run watch
    ```
 
 3. Build plugin in production mode
 
    ```bash
-   yarn build
+   npm run build
    ```
 
 ## Backend

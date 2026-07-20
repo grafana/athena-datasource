@@ -1,7 +1,6 @@
 {
   "ignorePaths": [
     ".github/**",
-    ".yarn/**",
     "node_modules/**",
     "dist/**",
     "playwright-report/**",
@@ -9,7 +8,7 @@
     "provisioning/**",
     "src/dashboards/**",
     "package.json",
-    "yarn.lock",
+    "package-lock.json",
     "go.sum",
     "mage_output_file.go",
     "go.mod",
@@ -93,7 +92,6 @@
     "dompurify",
     "zizmor",
     "AKIAIOSFODNN",
-    "npmPreapprovedPackages",
-    "yarnrc"
+    "npmPreapprovedPackages"
   ]
 }

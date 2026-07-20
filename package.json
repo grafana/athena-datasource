@@ -11,7 +11,7 @@
     "server": "docker compose up --build",
     "sign": "npx --yes --package=@grafana/sign-plugin@3.2.2 sign-plugin",
     "spellcheck": "cspell -c cspell.config.json \"**/*.{ts,tsx,js,go,md,mdx,yml,yaml,json,scss,css}\"",
-    "start": "yarn watch",
+    "start": "npm run watch",
     "test": "jest --watch --onlyChanged",
     "test:ci": "jest --passWithNoTests --maxWorkers 4",
     "typecheck": "tsc --noEmit",
@@ -98,12 +98,12 @@
     "webpack-subresource-integrity": "^5.1.0",
     "webpack-virtual-modules": "^0.6.2"
   },
-  "resolutions": {
+  "overrides": {
     "i18next": "26.2.0"
   },
   "engines": {
     "node": ">=24",
-    "yarn": ">=4.14.0"
+    "npm": ">=11.12.1"
   },
-  "packageManager": "yarn@4.15.0"
+  "packageManager": "npm@11.18.0"
 }

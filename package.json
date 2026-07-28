@@ -33,7 +33,7 @@
     "@grafana/ui": "13.1.1",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-router-dom": "^6.22.0",
+    "react-router-dom": "^6.30.4",
     "semver": "^7.7.2",
     "tslib": "2.8.1"
   },
@@ -97,9 +97,6 @@
     "webpack-livereload-plugin": "^3.0.2",
     "webpack-subresource-integrity": "^5.1.0",
     "webpack-virtual-modules": "^0.6.2"
-  },
-  "resolutions": {
-    "i18next": "26.2.0"
   },
   "engines": {
     "node": ">=24",

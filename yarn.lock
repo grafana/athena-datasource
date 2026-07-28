@@ -3565,17 +3565,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@remix-run/router@npm:1.22.0":
-  version: 1.22.0
-  resolution: "@remix-run/router@npm:1.22.0"
-  checksum: 10c0/6fbfbdddb485af6bc24635272436fc9884b40d2517581b5cc66ab866279d238ccb11b6f8f67ad99d43ff21c0ea8bc088c96d510a42dcc0cc05a716760fe5a633
-  languageName: node
-  linkType: hard
-
-"@remix-run/router@npm:1.23.0":
-  version: 1.23.0
-  resolution: "@remix-run/router@npm:1.23.0"
-  checksum: 10c0/eaef5cb46a1e413f7d1019a75990808307e08e53a39d4cf69c339432ddc03143d725decef3d6b9b5071b898da07f72a4a57c4e73f787005fcf10162973d8d7d7
+"@remix-run/router@npm:1.23.3":
+  version: 1.23.3
+  resolution: "@remix-run/router@npm:1.23.3"
+  checksum: 10c0/73622465dd9e9a2c5a7ced7d1151ea6e9195a8a979c99b4f70a67093eeff7f339daf03a7c6304709a9c27deb2081a8fff6737663aacb33529c1a12a0a0827a17
   languageName: node
   linkType: hard
 
@@ -5453,11 +5446,11 @@ __metadata:
   linkType: hard
 
 "brace-expansion@npm:^5.0.5":
-  version: 5.0.7
-  resolution: "brace-expansion@npm:5.0.7"
+  version: 5.0.8
+  resolution: "brace-expansion@npm:5.0.8"
   dependencies:
     balanced-match: "npm:^4.0.2"
-  checksum: 10c0/4769109c3c082de178e449a371bcad50d51ab468f644bce2dd9188efe0cf0a080ed102105d7fc8577382cedc45bad7e6443a91bf3d8102264ee8cf927dbaf205
+  checksum: 10c0/73304caafd00fdc5b0168e693ac15bf25b6357dec76d1195fcd628fe2cf99c46f9c889a7ecfa3cfe236dbd2d5ce3e27a6ccc4370b46d475d0d19081e11f86019
   languageName: node
   linkType: hard
 
@@ -7325,9 +7318,9 @@ __metadata:
   linkType: hard
 
 "flatted@npm:^3.2.9, flatted@npm:^3.3.3":
-  version: 3.4.2
-  resolution: "flatted@npm:3.4.2"
-  checksum: 10c0/a65b67aae7172d6cdf63691be7de6c5cd5adbdfdfe2e9da1a09b617c9512ed794037741ee53d93114276bff3f93cd3b0d97d54f9b316e1e4885dde6e9ffdf7ed
+  version: 3.4.3
+  resolution: "flatted@npm:3.4.3"
+  checksum: 10c0/0b36eba483a68dda5a2c4dda9cab61dc1c57a3bd9bd6942d1c6fac9c94c86fb6295c7167f33f94f72b5a79ccf95bf5c2a0cf99f73888ef858252439e149bf24b
   languageName: node
   linkType: hard
 
@@ -7764,7 +7757,7 @@ __metadata:
     prettier: "npm:^3.6.2"
     react: "npm:18.3.1"
     react-dom: "npm:18.3.1"
-    react-router-dom: "npm:^6.22.0"
+    react-router-dom: "npm:^6.30.4"
     react-select-event: "npm:^5.3.0"
     replace-in-file-webpack-plugin: "npm:^1.0.6"
     sass: "npm:1.93.2"
@@ -8006,15 +7999,35 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18next@npm:26.2.0":
-  version: 26.2.0
-  resolution: "i18next@npm:26.2.0"
+"i18next@npm:^19.1.0":
+  version: 19.9.2
+  resolution: "i18next@npm:19.9.2"
+  dependencies:
+    "@babel/runtime": "npm:^7.12.0"
+  checksum: 10c0/ee4991039a9acfff3ff4d5872ba183fce6ddc7017b689095d3d3df98ca16c0563f7d1333b4a4d3d4de65af5a521661bed36d677a5dd712c62095683e33f33a66
+  languageName: node
+  linkType: hard
+
+"i18next@npm:^23.11.5":
+  version: 23.16.8
+  resolution: "i18next@npm:23.16.8"
+  dependencies:
+    "@babel/runtime": "npm:^7.23.2"
+  checksum: 10c0/57d249191e8a39bbbbe190cfa2e2bb651d0198e14444fe80453d3df8d02927de3c147c77724e9ae6c72fa241898cd761e3fdcd55d053db373471f1ac084bf345
+  languageName: node
+  linkType: hard
+
+"i18next@npm:^25.10.9":
+  version: 25.10.10
+  resolution: "i18next@npm:25.10.10"
+  dependencies:
+    "@babel/runtime": "npm:^7.29.2"
   peerDependencies:
     typescript: ^5 || ^6
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 10c0/8ce453de86422503141ece62785089236894173d50c269d1b4ea1da5f362bc9a3023c1af25c90979decbddb007b35812726cd90de973c445785609ae3c775e75
+  checksum: 10c0/6ff601b52363c9c974ef293af4a6de04d9f76b4bf2ad9a56c8546235aaf19ff1a7c2109ddba3a73922d418e208ec5b688e5afb323eba6e27c75d629e93827ae1
   languageName: node
   linkType: hard
 
@@ -10624,13 +10637,13 @@ __metadata:
   linkType: hard
 
 "postcss@npm:^8.4.33":
-  version: 8.5.21
-  resolution: "postcss@npm:8.5.21"
+  version: 8.5.23
+  resolution: "postcss@npm:8.5.23"
   dependencies:
     nanoid: "npm:^3.3.16"
     picocolors: "npm:^1.1.1"
     source-map-js: "npm:^1.2.1"
-  checksum: 10c0/89bf8860bba456eafcbc6c8addc3f5d3010529069ec67adb1a26b79b098d1b2afa49cc1abf80c5b01867980db6eae0c02fd0350e17a84c5f12d07aaec704aa50
+  checksum: 10c0/ed714e635b330bb42666ecdd0c0b4f30224ded15b0b0052d6bc2b92832f2cf17d1c1141359453f96f0a84f8fbf4c405a74df187f559163b8f31131b2535455aa
   languageName: node
   linkType: hard
 
@@ -11182,17 +11195,17 @@ __metadata:
   linkType: hard
 
 "react-router-dom-v5-compat@npm:^6.26.1":
-  version: 6.29.0
-  resolution: "react-router-dom-v5-compat@npm:6.29.0"
+  version: 6.30.4
+  resolution: "react-router-dom-v5-compat@npm:6.30.4"
   dependencies:
-    "@remix-run/router": "npm:1.22.0"
+    "@remix-run/router": "npm:1.23.3"
     history: "npm:^5.3.0"
-    react-router: "npm:6.29.0"
+    react-router: "npm:6.30.4"
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
     react-router-dom: 4 || 5
-  checksum: 10c0/f17c92960b6b2a048562c7f323cc75223e27edd7f75f5c1b037316fa42fec82378043c843ea46e3e805bfd5dfd9d3f449edb8f43d63d853937f84f1b2016f361
+  checksum: 10c0/59d8b099c2b58e3c2b10a307ef6e8fdfce1c3e7e8b531872c80192f5ca823898714f0d2d1d96220e3849690eeacb327783d9758e243e09e7100f38d9b2ac997f
   languageName: node
   linkType: hard
 
@@ -11213,16 +11226,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router-dom@npm:^6.22.0":
-  version: 6.30.1
-  resolution: "react-router-dom@npm:6.30.1"
+"react-router-dom@npm:^6.30.4":
+  version: 6.30.4
+  resolution: "react-router-dom@npm:6.30.4"
   dependencies:
-    "@remix-run/router": "npm:1.23.0"
-    react-router: "npm:6.30.1"
+    "@remix-run/router": "npm:1.23.3"
+    react-router: "npm:6.30.4"
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: 10c0/e9e1297236b0faa864424ad7d51c392fc6e118595d4dad4cd542fd217c479a81601a81c6266d5801f04f9e154de02d3b094fc22ccb544e755c2eb448fab4ec6b
+  checksum: 10c0/1b25ab26a288da852f7b58eec5c14b3f37919e6773a557cd846d3a05d7a7d890c8d49bda93c0a7f497f240df1df8b0ad50635f990aafb55f2fc545ad8269a822
   languageName: node
   linkType: hard
 
@@ -11245,25 +11258,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router@npm:6.29.0":
-  version: 6.29.0
-  resolution: "react-router@npm:6.29.0"
+"react-router@npm:6.30.4":
+  version: 6.30.4
+  resolution: "react-router@npm:6.30.4"
   dependencies:
-    "@remix-run/router": "npm:1.22.0"
+    "@remix-run/router": "npm:1.23.3"
   peerDependencies:
     react: ">=16.8"
-  checksum: 10c0/0ad27b34e2ccb6db68ef124cd4492ba86b5422ea3e2af01c9de95e372eb3a36fb4727b40488ebc90e5e0cea41bc655c53569a754713554a465ca9423aa233df8
-  languageName: node
-  linkType: hard
-
-"react-router@npm:6.30.1":
-  version: 6.30.1
-  resolution: "react-router@npm:6.30.1"
-  dependencies:
-    "@remix-run/router": "npm:1.23.0"
-  peerDependencies:
-    react: ">=16.8"
-  checksum: 10c0/0414326f2d8e0c107fb4603cf4066dacba6a1f6f025c6e273f003e177b2f18888aca3de06d9b5522908f0e41de93be1754c37e82aa97b3a269c4742c08e82539
+  checksum: 10c0/fb6de7d1002bcab9ea12c4072d93792eca494f1e4f30cfec334ccb6523756d23ce3e093c7c1241399296cebed94789a3fb89f96ee76004e0e746458a8f6bab33
   languageName: node
   linkType: hard
 
@@ -11796,11 +11798,11 @@ __metadata:
   linkType: hard
 
 "semver@npm:^7.3.5, semver@npm:^7.5.3, semver@npm:^7.5.4, semver@npm:^7.6.0, semver@npm:^7.6.3, semver@npm:^7.7.0, semver@npm:^7.7.2, semver@npm:^7.7.3":
-  version: 7.7.3
-  resolution: "semver@npm:7.7.3"
+  version: 7.8.5
+  resolution: "semver@npm:7.8.5"
   bin:
     semver: bin/semver.js
-  checksum: 10c0/4afe5c986567db82f44c8c6faef8fe9df2a9b1d98098fc1721f57c696c4c21cebd572f297fc21002f81889492345b8470473bc6f4aff5fb032a6ea59ea2bc45e
+  checksum: 10c0/b1f3127a5be8125a94f37188b361c212466c292c6910adce3ec106cff5dc211ccaedc4739c11bb70fda59d6fc1f040a9bca289f4e093451521a2372e5231fe0c
   languageName: node
   linkType: hard
 
@@ -12588,15 +12590,15 @@ __metadata:
   linkType: hard
 
 "tar@npm:^7.4.3":
-  version: 7.5.20
-  resolution: "tar@npm:7.5.20"
+  version: 7.5.22
+  resolution: "tar@npm:7.5.22"
   dependencies:
     "@isaacs/fs-minipass": "npm:^4.0.0"
     chownr: "npm:^3.0.0"
     minipass: "npm:^7.1.2"
     minizlib: "npm:^3.1.0"
     yallist: "npm:^5.0.0"
-  checksum: 10c0/4df4335c6d958b76adf1eaced55889dec3ca1c51f450658a074af80694bb0d9c154a8e93fdf4da617372d1575b121295379993961bbe4cd4b0867c0e5689846a
+  checksum: 10c0/1311f6be85a8157ac4c9147bae43e13923d2a1aae15e4aa1bd5239e4e03d2cf53cfe103dde7f35832fbb4c938b042856bc8e9a0afd29abd05e2d1608788c4fea
   languageName: node
   linkType: hard
 

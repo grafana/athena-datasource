@@ -7,5 +7,7 @@ const { grafanaESModules, nodeModulesToTransform } = require('./.config/jest/uti
 module.exports = {
   // Jest configuration provided by Grafana scaffolding
   ...require('./.config/jest.config'),
-  transformIgnorePatterns: [nodeModulesToTransform([...grafanaESModules, '@marcbachmann/cel-js'])],
+  transformIgnorePatterns: [nodeModulesToTransform([...grafanaESModules,
+      '@grafana/plugin-ui',
+      '@marcbachmann/cel-js', '@marcbachmann/cel-js'])],
 };

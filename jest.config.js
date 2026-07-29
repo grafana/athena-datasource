@@ -9,5 +9,5 @@ module.exports = {
   ...require('./.config/jest.config'),
   transformIgnorePatterns: [nodeModulesToTransform([...grafanaESModules,
       '@grafana/plugin-ui',
-      '@marcbachmann/cel-js', '@marcbachmann/cel-js'])],
+      '@marcbachmann/cel-js'])],
 };

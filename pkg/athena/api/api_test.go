@@ -232,6 +232,28 @@ func TestNew_passesSessionToken(t *testing.T) {
 	assert.Equal(t, "AQoDYXdzEJr//test-session-token", spy.captured.SessionToken)
 }
 
+func TestNew_passesGrafanaExternalIDFields(t *testing.T) {
+	spy := &spyConfigProvider{}
+	origProvider := newAWSConfigProvider
+	newAWSConfigProvider = func() awsauth.ConfigProvider { return spy }
+	t.Cleanup(func() { newAWSConfigProvider = origProvider })
+
+	usePerDS := true
+	s := &models.AthenaDataSourceSettings{}
+	err := s.Load(backend.DataSourceInstanceSettings{
+		JSONData: []byte(`{"authType": "grafana_assume_role", "defaultRegion": "us-east-1", "assumeRoleArn": "arn:aws:iam::123456789012:role/test", "grafanaExternalId": "stackABC-dsUid1", "usePerDatasourceExternalId": true}`),
+	})
+	require.NoError(t, err)
+	s.UsePerDatasourceExternalID = &usePerDS
+	s.GrafanaExternalID = "stackABC-dsUid1"
+
+	_, err = New(context.Background(), s)
+	require.NoError(t, err)
+	assert.Equal(t, "stackABC-dsUid1", spy.captured.GrafanaExternalID)
+	require.NotNil(t, spy.captured.UsePerDatasourceExternalID)
+	assert.True(t, *spy.captured.UsePerDatasourceExternalID)
+}
+
 func Test_WorkgroupEngineSupportsResultReuse(t *testing.T) {
 	assert.True(t, workgroupEngineSupportsResultReuse("Athena engine version 3"))
 	assert.False(t, workgroupEngineSupportsResultReuse("Athena engine version 2"))

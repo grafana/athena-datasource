@@ -1,5 +1,34 @@
 # Changelog
 
+## 3.3.0
+
+- Forward per-datasource grafanaExternalId for Assume Role in [#880](https://github.com/grafana/athena-datasource/pull/880)
+- Bump @grafana/* to 13.1.1 and update dependencies in [#877](https://github.com/grafana/athena-datasource/pull/877)
+- Update dependencies in [#879](https://github.com/grafana/athena-datasource/pull/879)
+- Bump dependencies in [#876](https://github.com/grafana/athena-datasource/pull/876)
+- Bump grafana/* dependencies in [#874](https://github.com/grafana/athena-datasource/pull/874)
+- fix(deps): update backend dependencies in [#873](https://github.com/grafana/athena-datasource/pull/873) and [#869](https://github.com/grafana/athena-datasource/pull/869)
+- Security: supply-chain hardening for Yarn and Go in [#833](https://github.com/grafana/athena-datasource/pull/833)
+- chore: make grafanaDependency prerelease-inclusive in [#854](https://github.com/grafana/athena-datasource/pull/854)
+- chore: auto-audit follow-up (deps, go mod tidy, create-plugin 7.7.0, workflow permissions) in [#847](https://github.com/grafana/athena-datasource/pull/847)
+- chore: auto-audit hygiene fixes in [#846](https://github.com/grafana/athena-datasource/pull/846)
+- chore: @grafana/create-plugin update in [#832](https://github.com/grafana/athena-datasource/pull/832)
+- Use GitHub App Token Broker in GitHub workflows in [#829](https://github.com/grafana/athena-datasource/pull/829)
+- set enable scripts false in .yarnrc.yml in [#824](https://github.com/grafana/athena-datasource/pull/824)
+- Updating plugin-ci-workflows in [#857](https://github.com/grafana/athena-datasource/pull/857)
+- ci: use shared reusable add-to-project and stale workflows in [#872](https://github.com/grafana/athena-datasource/pull/872) and [#871](https://github.com/grafana/athena-datasource/pull/871)
+- ci: add stale issue and PR workflow in [#866](https://github.com/grafana/athena-datasource/pull/866)
+- fix(ci): correct playwright-config selection for fork PRs in [#865](https://github.com/grafana/athena-datasource/pull/865)
+- Add add-to-project workflow and remove issue_commands in [#861](https://github.com/grafana/athena-datasource/pull/861)
+- docs: add signed commits requirement to CONTRIBUTING.md in [#858](https://github.com/grafana/athena-datasource/pull/858)
+- chore: use shared data-sources Renovate base preset in [#862](https://github.com/grafana/athena-datasource/pull/862)
+- chore(deps): update github actions dependencies in [#864](https://github.com/grafana/athena-datasource/pull/864)
+- chore(deps): update actions/setup-node digest to 48b55a0 in [#817](https://github.com/grafana/athena-datasource/pull/817)
+- chore(deps): update module go.opentelemetry.io/otel to v1.41.0 [security] in [#818](https://github.com/grafana/athena-datasource/pull/818)
+- chore(deps): update grafana/shared-workflows/ action in [#813](https://github.com/grafana/athena-datasource/pull/813)
+- chore(deps): update dependency glob to v13 in [#809](https://github.com/grafana/athena-datasource/pull/809)
+- chore(deps): update module google.golang.org/grpc to v1.79.3 [security] in [#805](https://github.com/grafana/athena-datasource/pull/805)
+
 ## 3.2.0
 
 - Docs: Updated Athena data source docs in [#790](https://github.com/grafana/athena-datasource/pull/790)

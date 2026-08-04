@@ -1736,12 +1736,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@grafana/aws-sdk@npm:0.12.0":
-  version: 0.12.0
-  resolution: "@grafana/aws-sdk@npm:0.12.0"
+"@grafana/aws-sdk@npm:0.12.1":
+  version: 0.12.1
+  resolution: "@grafana/aws-sdk@npm:0.12.1"
   peerDependencies:
     "@grafana/plugin-ui": ">=0.14.0"
-  checksum: 10c0/ddaebf62d9f49d89bc5e1d4eba85c7131c92583ad1e382a0e836fcb93e363de2c76929ecb2ccd7ee37518b5b5a3263415988b840affea6b0af510f0294a7a306
+  checksum: 10c0/bda7becad21c72ac27d3308b3d4cd069b84cb3bcede8ce7d13746d7e9e06f8eb92a171c21d6cbeb372caac13e89144a2b2658b2f34bc1df13436d568249e1894
   languageName: node
   linkType: hard
 
@@ -7683,7 +7683,7 @@ __metadata:
     "@emotion/css": "npm:11.13.5"
     "@eslint/eslintrc": "npm:^3.3.1"
     "@grafana/async-query-data": "npm:0.4.3"
-    "@grafana/aws-sdk": "npm:0.12.0"
+    "@grafana/aws-sdk": "npm:0.12.1"
     "@grafana/data": "npm:13.1.1"
     "@grafana/e2e-selectors": "npm:13.2.0-30594044109"
     "@grafana/eslint-config": "npm:^8.2.0"

@@ -188,4 +188,40 @@ describe('ConfigEditor', () => {
     await userEvent.click(instructionsButton);
     expect(screen.queryByText('External Id is currently unavailable')).toBeInTheDocument();
   });
+
+  it('shows stack external ID from config.namespace when /externalId returns empty', async () => {
+    // @grafana/aws-sdk 0.12.1+ falls back to Cloud-style config.namespace when the
+    // plugin's /externalId fetch has nothing yet — so instructions are not "unavailable".
+    runtime.config.featureToggles.awsDatasourcesTempCredentials = true;
+    // @ts-expect-error not yet on published FeatureToggles
+    runtime.config.featureToggles.awsAssumeRolePerDatasourceExternalId = true;
+    runtime.config.awsAllowedAuthProviders = [AwsAuthType.GrafanaAssumeRole, AwsAuthType.Credentials];
+    runtime.config.namespace = 'stacks-12345';
+
+    setUpMockBackendServer({
+      put: jest.fn().mockResolvedValue({ datasource: {} }),
+      post: jest.fn().mockResolvedValue({ externalId: '' }),
+    });
+
+    render(
+      <ConfigEditor
+        {...props}
+        options={{
+          ...props.options,
+          type: 'grafana-athena-datasource',
+          jsonData: {
+            ...props.options.jsonData,
+            authType: AwsAuthType.GrafanaAssumeRole,
+          },
+        }}
+      />
+    );
+
+    const instructionsButton = await screen.findByRole('button', {
+      name: /How to create an IAM role for grafana to assume/i,
+    });
+    await userEvent.click(instructionsButton);
+    expect(screen.getByText('12345')).toBeInTheDocument();
+    expect(screen.queryByText('External Id is currently unavailable')).not.toBeInTheDocument();
+  });
 });

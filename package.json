@@ -1,6 +1,6 @@
 {
   "name": "grafana-athena-datasource",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "description": "Use Amazon Athena with Grafana",
   "scripts": {
     "build": "webpack -c ./.config/webpack/webpack.config.ts --env production",
@@ -23,7 +23,7 @@
   "dependencies": {
     "@emotion/css": "11.13.5",
     "@grafana/async-query-data": "0.4.3",
-    "@grafana/aws-sdk": "0.12.0",
+    "@grafana/aws-sdk": "0.12.1",
     "@grafana/data": "13.1.1",
     "@grafana/e2e-selectors": "13.2.0-30594044109",
     "@grafana/i18n": "13.1.1",

@@ -188,4 +188,61 @@ describe('ConfigEditor', () => {
     await userEvent.click(instructionsButton);
     expect(screen.queryByText('External Id is currently unavailable')).toBeInTheDocument();
   });
+
+  it('mints per-datasource external ID from config.namespace when /externalId returns empty', async () => {
+    // @grafana/aws-sdk 0.12.1+ uses Cloud-style config.namespace as the stack ID when the
+    // plugin's /externalId fetch is empty, then mints {stack}-{uid} for per-DS mode.
+    runtime.config.featureToggles.awsDatasourcesTempCredentials = true;
+    // @ts-expect-error not yet on published FeatureToggles
+    runtime.config.featureToggles.awsAssumeRolePerDatasourceExternalId = true;
+    runtime.config.awsAllowedAuthProviders = [AwsAuthType.GrafanaAssumeRole, AwsAuthType.Credentials];
+    runtime.config.namespace = 'stacks-12345';
+
+    setUpMockBackendServer({
+      put: jest.fn().mockResolvedValue({ datasource: {} }),
+      post: jest.fn().mockResolvedValue({ externalId: '' }),
+    });
+
+    const onOptionsChange = jest.fn();
+    const initialOptions = {
+      ...props.options,
+      type: 'grafana-athena-datasource',
+      uid: 'athena-id',
+      // No authType yet — ConnectionConfig defaults to GAR and mints the per-DS ID.
+      jsonData: {
+        ...props.options.jsonData,
+        authType: undefined,
+      },
+    };
+
+    const { rerender } = render(<ConfigEditor {...props} options={initialOptions} onOptionsChange={onOptionsChange} />);
+
+    await waitFor(() =>
+      expect(onOptionsChange).toHaveBeenCalledWith(
+        expect.objectContaining({
+          uid: 'athena-id',
+          jsonData: expect.objectContaining({
+            authType: AwsAuthType.GrafanaAssumeRole,
+            usePerDatasourceExternalId: true,
+            grafanaExternalId: '12345-athena-id',
+          }),
+        })
+      )
+    );
+
+    const mintedOptions = onOptionsChange.mock.calls.find(
+      (call) => call[0]?.jsonData?.grafanaExternalId === '12345-athena-id'
+    )?.[0];
+    rerender(<ConfigEditor {...props} options={mintedOptions} onOptionsChange={onOptionsChange} />);
+
+    const instructionsButton = await screen.findByRole('button', {
+      name: /How to create an IAM role for grafana to assume/i,
+    });
+    await userEvent.click(instructionsButton);
+    expect(screen.getByText('12345-athena-id')).toBeInTheDocument();
+    expect(screen.getByText(/unique to this data source/i)).toBeInTheDocument();
+    expect(screen.queryByText('External Id is currently unavailable')).not.toBeInTheDocument();
+    // Stack-only fallback must not win once the per-DS ID is minted.
+    expect(screen.queryByText('12345', { exact: true })).not.toBeInTheDocument();
+  });
 });

@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.3.2
+
+- Fix CVEs by bumping `copy-webpack-plugin` to 14, updating the transitive `serialize-javascript` dependency to 7.x in [#883](https://github.com/grafana/athena-datasource/pull/883)
+
 ## 3.3.1
 
 - Bump `@grafana/aws-sdk` to 0.12.1 so Grafana Assume Role external IDs display before save on Cloud in [#882](https://github.com/grafana/athena-datasource/pull/882)

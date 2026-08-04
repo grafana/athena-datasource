@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.3.1
+
+- Bump `@grafana/aws-sdk` to 0.12.1 so Grafana Assume Role external IDs display before save on Cloud in [#882](https://github.com/grafana/athena-datasource/pull/882)
+
 ## 3.3.0
 
 - Forward per-datasource grafanaExternalId for Assume Role in [#880](https://github.com/grafana/athena-datasource/pull/880)

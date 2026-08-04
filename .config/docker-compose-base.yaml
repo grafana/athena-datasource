@@ -29,3 +29,9 @@ services:
       GF_LOG_LEVEL: debug
       GF_DATAPROXY_LOGGING: 1
       GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: grafana-athena-datasource
+      # Cloud-like AWS auth allowlist (no "default") reproduces incomplete
+      # datasource initialization behavior locally.
+      GF_AWS_ALLOWED_AUTH_PROVIDERS: ${GF_AWS_ALLOWED_AUTH_PROVIDERS:-keys,credentials,grafana_assume_role}
+      GF_AWS_ASSUME_ROLE_ENABLED: ${GF_AWS_ASSUME_ROLE_ENABLED:-true}
+      GF_AWS_EXTERNAL_ID: ${GF_AWS_EXTERNAL_ID:-local-dev-stack}
+      GF_FEATURE_TOGGLES_ENABLE: ${GF_FEATURE_TOGGLES_ENABLE:-awsDatasourcesTempCredentials,awsAssumeRolePerDatasourceExternalId}

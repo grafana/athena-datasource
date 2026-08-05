@@ -8,9 +8,9 @@ require (
 	github.com/aws/aws-sdk-go-v2 v1.43.0
 	github.com/aws/aws-sdk-go-v2/service/athena v1.59.1
 	github.com/google/go-cmp v0.7.0
-	github.com/grafana/grafana-aws-sdk v1.5.3-0.20260804221239-b910aad8d48e
+	github.com/grafana/grafana-aws-sdk v1.5.3-0.20260805161645-e5b0a7ec228b
 	github.com/grafana/grafana-plugin-sdk-go v0.294.0
-	github.com/grafana/sqlds/v5 v5.3.1-0.20260804205142-6b3756b42c1c
+	github.com/grafana/sqlds/v5 v5.3.1
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.11.1
 	github.com/uber/athenadriver v1.1.15

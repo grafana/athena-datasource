@@ -8,7 +8,7 @@ require (
 	github.com/aws/aws-sdk-go-v2 v1.43.0
 	github.com/aws/aws-sdk-go-v2/service/athena v1.59.1
 	github.com/google/go-cmp v0.7.0
-	github.com/grafana/grafana-aws-sdk v1.5.3-0.20260805161645-e5b0a7ec228b
+	github.com/grafana/grafana-aws-sdk v1.5.3
 	github.com/grafana/grafana-plugin-sdk-go v0.294.0
 	github.com/grafana/sqlds/v5 v5.3.1
 	github.com/pkg/errors v0.9.1

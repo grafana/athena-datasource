@@ -11,13 +11,6 @@ services:
     environment:
       ACCESS_KEY: ${ACCESS_KEY}
       SECRET_KEY: ${SECRET_KEY}
-      # Match Grafana Cloud: disallow AWS SDK "default" so incomplete datasource
-      # initialization exercises the same authentication path as Cloud.
-      # See docs/dev/lazy-connect-callresource-sketch.md
-      GF_AWS_ALLOWED_AUTH_PROVIDERS: keys,credentials,grafana_assume_role
-      GF_AWS_ASSUME_ROLE_ENABLED: 'true'
-      GF_AWS_EXTERNAL_ID: local-dev-stack
-      GF_FEATURE_TOGGLES_ENABLE: awsDatasourcesTempCredentials,awsAssumeRolePerDatasourceExternalId
     extends:
       file: .config/docker-compose-base.yaml
       service: grafana

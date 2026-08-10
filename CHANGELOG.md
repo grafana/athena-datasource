@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.3.2
+
+- Bump `grafana-aws-sdk` to 1.5.3 and `sqlds` to 5.3.1 so CallResource (including `/externalId`) registers when AWS auth is not ready at datasource init in [#885](https://github.com/grafana/athena-datasource/pull/885)
+
 ## 3.3.1
 
 - Bump `@grafana/aws-sdk` to 0.12.1 so Grafana Assume Role external IDs display before save on Cloud in [#882](https://github.com/grafana/athena-datasource/pull/882)

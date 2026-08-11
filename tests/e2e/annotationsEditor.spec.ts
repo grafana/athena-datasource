@@ -9,7 +9,13 @@ test('should render annotations editor', async ({ annotationEditPage, page }) =>
 
   await annotationEditPage.getByGrafanaSelector(selectors.components.QueryEditor.CodeEditor.container).click();
   await page.keyboard.insertText(`select * from cloudfront_logs where bytes < 100 limit 10`);
-  await expect(annotationEditPage.runQuery()).toBeOK();
+
+  // Athena's GetWorkGroup API is occasionally throttled (ThrottlingException: Rate exceeded) under
+  // concurrent CI load against the shared e2e AWS account. The query itself succeeds within seconds
+  // on retry, so retry the test-query action rather than failing on a single throttled response.
+  await expect(async () => {
+    await expect(annotationEditPage.runQuery()).toBeOK();
+  }).toPass({ timeout: 30_000 });
   const timeDropdown = page.getByText('time, or the first time field', { exact: true });
   await timeDropdown.click({ force: true });
   await expect(page.getByText('date (time)', { exact: true })).toBeVisible();

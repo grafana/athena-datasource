@@ -39,9 +39,11 @@ ORDER BY 1`);
   // Athena's GetWorkGroup API is occasionally throttled (ThrottlingException: Rate exceeded) under
   // concurrent CI load against the shared e2e AWS account. The query itself succeeds within seconds
   // on retry, so retry the refresh action rather than failing on a single throttled response.
+  // Use a slower backoff than toPass()'s default (100ms) so retries don't add to the rate-limit
+  // pressure that caused the throttling in the first place.
   await expect(async () => {
     await expect(panelEditPage.refreshPanel()).toBeOK();
-  }).toPass({ timeout: 30_000 });
+  }).toPass({ timeout: 30_000, intervals: [1_000, 2_000, 5_000] });
 
   // test provisioned dashboards
   const dashboard = await readProvisionedDashboard({ fileName: 'testDashboard.json' });
@@ -53,5 +55,5 @@ ORDER BY 1`);
     const provisionedQuery = panel1.waitForQueryDataResponse();
     await refreshButton.click();
     await expect(provisionedQuery).toBeOK();
-  }).toPass({ timeout: 30_000 });
+  }).toPass({ timeout: 30_000, intervals: [1_000, 2_000, 5_000] });
 });

@@ -1,25 +1,21 @@
-name: Scheduled Cloud end-to-end tests
+name: Nightly E2E
 
 on:
   schedule:
     - cron: '0 6 * * *'
   workflow_dispatch:
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
-  playwright-cloud:
+  e2e:
+    name: E2E
+    uses: grafana/plugin-ci-workflows/.github/workflows/ci.yml@ci-cd-workflows/v10.1.0
     permissions:
       contents: read
       id-token: write
-    uses: grafana/data-sources-ci-workflows/.github/workflows/playwright-cloud.yml@main
-    secrets: inherit
     with:
-      repo-secrets: |
-        DS_INSTANCE_ACCESS_KEY=ci/data/data-sources/athena-datasource/<instance>:secure_accessKey
-        DS_INSTANCE_SECRET_KEY=ci/data/data-sources/athena-datasource/<instance>:secure_secretKey
-        DS_INSTANCE_DEFAULT_REGION=ci/data/data-sources/athena-datasource/<instance>:json_defaultRegion
-        DS_INSTANCE_CATALOG=ci/data/data-sources/athena-datasource/<instance>:json_catalog
-        DS_INSTANCE_DATABASE=ci/data/data-sources/athena-datasource/<instance>:json_database
-        DS_INSTANCE_WORKGROUP=ci/data/data-sources/athena-datasource/<instance>:json_workgroup
+      playwright-config: playwright.config.ts
+      playwright-secrets: |
+        ACCESS_KEY=e2e:accessKey
+        SECRET_KEY=e2e:secretKey

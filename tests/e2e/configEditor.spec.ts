@@ -39,12 +39,19 @@ test(
     // Match both `Save & test` (editable: true) and `Test` (editable: false) — provisioned
     // datasources render either depending on `editable`, and `configPage.saveAndTest()` times
     // out on the `editable: false` case.
-    await page.getByRole('button', { name: /^(Save & test|Test)$/ }).click();
+    //
+    // Athena's GetWorkGroup API (called by the health check) is occasionally throttled
+    // (ThrottlingException: Rate exceeded) under concurrent CI load against the shared e2e AWS
+    // account. Retry the health check rather than failing on a single throttled response.
+    //
     // Assert on the specific success text, not a generic success-severity alert — each dropdown
     // reselection above triggers its own "datasource settings saved" toast via ConfigSelect's
     // auto-save, which is also success-severity and would otherwise produce a false positive
     // regardless of whether the health check itself actually passed.
-    await expect(page.getByText('Data source is working')).toBeVisible();
+    await expect(async () => {
+      await page.getByRole('button', { name: /^(Save & test|Test)$/ }).click();
+      await expect(page.getByText('Data source is working')).toBeVisible({ timeout: 5_000 });
+    }).toPass({ timeout: 30_000 });
   }
 );
 

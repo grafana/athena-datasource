@@ -2,6 +2,11 @@ import { expect, test } from '@grafana/plugin-e2e';
 import { selectors } from '../../src/tests/selectors';
 
 test('should render annotations editor', async ({ annotationEditPage, page }) => {
+  // The toPass() blocks below can take up to 30s + 15s if Athena's GetWorkGroup API is throttled,
+  // which would exceed Playwright's default 30s per-test timeout on its own — extend the test
+  // timeout so a slow-but-successful retry isn't cut off by the outer test deadline.
+  test.setTimeout(90_000);
+
   await annotationEditPage.datasource.set('AWS Athena');
 
   // Wait for the monaco editor to finish lazy loading

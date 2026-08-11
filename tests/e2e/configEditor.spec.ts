@@ -14,20 +14,33 @@ test(
     });
     const configPage = await gotoDataSourceConfigPage(datasource.uid);
 
+    // Assert against whatever the provisioned datasource actually contains, rather than
+    // hardcoded literals, so this test also works against a Cloud-provisioned instance
+    // whose region/catalog/database/workgroup differ from the local dev values.
+    const { defaultRegion, catalog, database, workgroup } = datasource.jsonData;
+
     // Default region
     await page.getByRole('combobox', { name: selectors.components.ConfigEditor.DefaultRegion.input }).click();
-    await page.getByLabel('Select options menu').getByText('us-east-2').click();
+    await page.getByLabel('Select options menu').getByText(defaultRegion!).click();
     // Catalogs
     await page.getByRole('combobox', { name: selectors.components.ConfigEditor.catalog.input }).click();
-    await page.getByLabel('Select options menu').getByText('AwsDataCatalog').click();
+    await page.getByLabel('Select options menu').getByText(catalog!).click();
     // Databases
     await page.getByRole('combobox', { name: selectors.components.ConfigEditor.database.input }).click();
-    await page.getByLabel('Select options menu').getByText('cloud-datasources-db').click();
+    await page.getByLabel('Select options menu').getByText(database!).click();
     // Workgroups
     await page.getByRole('combobox', { name: selectors.components.ConfigEditor.workgroup.input }).click();
-    await page.getByLabel('Select options menu').getByText('cloud-datasources').click();
+    await page.getByLabel('Select options menu').getByText(workgroup!).click();
 
-    await expect(configPage.saveAndTest()).toBeOK();
+    // Match both `Save & test` (editable: true) and `Test` (editable: false) — provisioned
+    // datasources render either depending on `editable`, and `configPage.saveAndTest()` times
+    // out on the `editable: false` case.
+    await page.getByRole('button', { name: /^(Save & test|Test)$/ }).click();
+    // Assert on the specific success text, not a generic success-severity alert — each dropdown
+    // reselection above triggers its own "datasource settings saved" toast via ConfigSelect's
+    // auto-save, which is also success-severity and would otherwise produce a false positive
+    // regardless of whether the health check itself actually passed.
+    await expect(page.getByText('Data source is working')).toBeVisible();
   }
 );
 

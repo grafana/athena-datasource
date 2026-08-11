@@ -43,10 +43,7 @@ export default defineConfig<PluginOptions>({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        // Storage state file uses the Grafana admin username so the Cloud
-        // workflow (which provisions a non-admin user) can reuse the same
-        // auth setup. Falls back to `admin` for local runs.
-        storageState: `playwright/.auth/${process.env.GRAFANA_ADMIN_USER || 'admin'}.json`,
+        storageState: 'playwright/.auth/admin.json',
       },
       dependencies: ['auth'],
     },

@@ -16,7 +16,12 @@ test('should render annotations editor', async ({ annotationEditPage, page }) =>
   await expect(async () => {
     await expect(annotationEditPage.runQuery()).toBeOK();
   }).toPass({ timeout: 30_000 });
+  // The dropdown's option list depends on the query result's field names, which can still be
+  // settling right after the query above resolves. Retry the click rather than assuming the
+  // forced click lands on an already-interactive combobox.
   const timeDropdown = page.getByText('time, or the first time field', { exact: true });
-  await timeDropdown.click({ force: true });
-  await expect(page.getByText('date (time)', { exact: true })).toBeVisible();
+  await expect(async () => {
+    await timeDropdown.click({ force: true });
+    await expect(page.getByText('date (time)', { exact: true })).toBeVisible({ timeout: 5_000 });
+  }).toPass({ timeout: 15_000 });
 });

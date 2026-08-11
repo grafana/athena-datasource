@@ -12,12 +12,16 @@ test(
       fileName: 'aws-athena.yaml',
       name: 'AWS Athena',
     });
-    const configPage = await gotoDataSourceConfigPage(datasource.uid);
+    await gotoDataSourceConfigPage(datasource.uid);
 
     // Assert against whatever the provisioned datasource actually contains, rather than
-    // hardcoded literals, so this test also works against a Cloud-provisioned instance
-    // whose region/catalog/database/workgroup differ from the local dev values.
+    // hardcoded literals, so this test keeps working if the provisioned region/catalog/
+    // database/workgroup values ever change without needing an update here too.
     const { defaultRegion, catalog, database, workgroup } = datasource.jsonData;
+    expect(defaultRegion).toBeTruthy();
+    expect(catalog).toBeTruthy();
+    expect(database).toBeTruthy();
+    expect(workgroup).toBeTruthy();
 
     // Default region
     await page.getByRole('combobox', { name: selectors.components.ConfigEditor.DefaultRegion.input }).click();
@@ -62,4 +66,5 @@ test('should show error alert when backend is unreachable', async ({ createDataS
   );
 
   await expect(configPage.saveAndTest()).not.toBeOK();
+  await expect(page.getByText('connect: connection refused')).toBeVisible();
 });

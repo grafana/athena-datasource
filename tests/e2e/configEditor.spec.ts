@@ -42,9 +42,7 @@ test(
     //
     // Athena's GetWorkGroup API (called by the health check) is occasionally throttled
     // (ThrottlingException: Rate exceeded) under concurrent CI load against the shared e2e AWS
-    // account. Retry the health check rather than failing on a single throttled response, using a
-    // slower backoff than toPass()'s default (100ms) so retries don't add to the rate-limit
-    // pressure that caused the throttling in the first place.
+    // account. Retry the health check rather than failing on a single throttled response.
     //
     // Assert on the specific success text, not a generic success-severity alert — each dropdown
     // reselection above triggers its own "datasource settings saved" toast via ConfigSelect's
@@ -53,7 +51,7 @@ test(
     await expect(async () => {
       await page.getByRole('button', { name: /^(Save & test|Test)$/ }).click();
       await expect(page.getByText('Data source is working')).toBeVisible({ timeout: 5_000 });
-    }).toPass({ timeout: 30_000, intervals: [1_000, 2_000, 5_000] });
+    }).toPass({ timeout: 30_000 });
   }
 );
 

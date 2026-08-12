@@ -1,0 +1,17 @@
+name: Scheduled Cloud end-to-end tests
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  playwright-cloud:
+    uses: grafana/data-sources-ci-workflows/.github/workflows/playwright-cloud.yml@main
+    secrets: inherit
+    with:
+      # The "Athena (PDC)" data source used by tests-cloud/queryEditor.spec.ts is already
+      # provisioned in DSE2EDEV by Pulumi (infra/data-sources/aws/athena.ts), with AWS
+      # credentials and PDC routing baked in server-side, so no repo-secrets are needed here --
+      # the test just looks the data source up by name.
+      bench-execute-cmd: npm run e2e:cloud

@@ -24,6 +24,7 @@ jobs:
 
   publish-and-deploy:
     name: Publish to Dev Catalog and Deploy
+    needs: ci
     if: github.ref == 'refs/heads/main'
     uses: grafana/data-sources-ci-workflows/.github/workflows/cd-dev.yml@main
     permissions:

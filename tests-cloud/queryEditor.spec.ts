@@ -6,8 +6,7 @@ import { selectors } from '../src/tests/selectors';
 const ATHENA_DATASOURCE_NAME = 'Athena (PDC)';
 
 test('should run a real query against Athena in DSE2EDEV', async ({ explorePage, page }) => {
-  // A throttled retry below can take up to 30s; extend past Playwright's default test timeout.
-  test.setTimeout(90_000);
+  test.setTimeout(60_000);
 
   await explorePage.goto();
   // goto() doesn't guarantee the page is interactive yet on a real, remote Cloud instance;
@@ -25,10 +24,13 @@ test('should run a real query against Athena in DSE2EDEV', async ({ explorePage,
 
   // runQuery()'s internal click has only a 1s timeout; make sure the button has settled first
   // (same class of issue as the datasource picker above -- remote Cloud pages load slower).
-  await expect(page.getByTestId('data-testid RefreshPicker run button').first()).toBeVisible({ timeout: 30_000 });
+  const runButton = page.getByTestId('data-testid RefreshPicker run button').first();
+  await expect(runButton).toBeVisible({ timeout: 30_000 });
+  await runButton.click();
 
-  // GetWorkGroup is occasionally throttled under concurrent CI load; retry with backoff.
-  await expect(async () => {
-    await expect(explorePage.runQuery()).toBeOK();
-  }).toPass({ timeout: 30_000, intervals: [1_000, 2_000, 5_000] });
+  // This instance routes queries through Grafana's newer query-service API
+  // (apis/query.grafana.app/.../query), not the legacy /api/ds/query path plugin-e2e's
+  // runQuery() waits on, and returns the result after several polling requests -- assert on
+  // the rendered table instead of a specific network response.
+  await expect(explorePage.tablePanel.data.first()).toBeVisible({ timeout: 30_000 });
 });

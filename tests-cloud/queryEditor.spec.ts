@@ -10,6 +10,9 @@ test('should run a real query against Athena in DSE2EDEV', async ({ explorePage,
   test.setTimeout(90_000);
 
   await explorePage.goto();
+  // goto() doesn't guarantee the page is interactive yet on a real, remote Cloud instance;
+  // give the picker more room than DataSourcePicker.set()'s internal 5s default.
+  await expect(page.getByTestId('data-testid Select a data source')).toBeVisible({ timeout: 30_000 });
   await explorePage.datasource.set(ATHENA_DATASOURCE_NAME);
 
   // Wait for the monaco editor to finish lazy loading

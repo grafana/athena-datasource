@@ -3,10 +3,11 @@ import { selectors } from '../src/tests/selectors';
 
 // Runs against the shared DSE2EDEV Grafana Cloud stack (see docs/testing/cloud-e2e-testing.md
 // in the data-sources repo), using the "Athena (PDC)" data source that's already provisioned
-// there by Pulumi (infra/data-sources/aws/athena.ts). That data source points at `idatest`, a
-// stable, pre-existing database backed by the standard AWS Athena examples dataset
-// (cloudfront_logs) -- there's no local docker provisioning file to read here, so the data
-// source is looked up by name via the Grafana UI instead of readProvisionedDataSource.
+// there by Pulumi (infra/data-sources/aws/athena.ts). That data source's default database
+// (datasourcesathenadb) has an `access_logs` table continuously seeded by the Athena data
+// generator on a ~15-minute cadence (see grafana/data-sources#1625) -- there's no local docker
+// provisioning file to read here, so the data source is looked up by name via the Grafana UI
+// instead of readProvisionedDataSource.
 const ATHENA_DATASOURCE_NAME = 'Athena (PDC)';
 
 test('should run a real query against Athena in DSE2EDEV', async ({ explorePage, page }) => {
@@ -23,7 +24,7 @@ test('should run a real query against Athena in DSE2EDEV', async ({ explorePage,
 
   await explorePage.getByGrafanaSelector(selectors.components.QueryEditor.CodeEditor.container).click();
   await page.keyboard.insertText(
-    `select date, sum(bytes) as bytes from cloudfront_logs group by 1 order by 1 limit 10`
+    `select date, sum(received_bytes) as bytes from access_logs group by 1 order by 1 limit 10`
   );
 
   // Athena's GetWorkGroup API is occasionally throttled (ThrottlingException: Rate exceeded) under

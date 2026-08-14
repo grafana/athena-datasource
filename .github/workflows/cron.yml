@@ -24,7 +24,9 @@ jobs:
       contents: read
       id-token: write
     with:
+      # Default bench-prepare-cmd assumes npm (package-lock.json); this repo is yarn-only.
+      bench-prepare-cmd: yarn install --immutable; npx playwright install
       # Datasource is pre-provisioned in DSE2EDEV with creds baked in; no repo-secrets needed.
-      bench-execute-cmd: npm run e2e:cloud
+      bench-execute-cmd: yarn e2e:cloud
       # 'ci' isn't in playwright-cloud.yml's GHA vocabulary (pr/main/nightly); default to 'main'.
       run-stage: ${{ github.event_name == 'schedule' && 'nightly' || github.event_name == 'pull_request' && 'pr' || 'main' }}

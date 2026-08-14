@@ -23,6 +23,10 @@ test('should run a real query against Athena in DSE2EDEV', async ({ explorePage,
     `select date, sum(received_bytes) as bytes from access_logs group by 1 order by 1 limit 10`
   );
 
+  // runQuery()'s internal click has only a 1s timeout; make sure the button has settled first
+  // (same class of issue as the datasource picker above -- remote Cloud pages load slower).
+  await expect(page.getByTestId('data-testid RefreshPicker run button').first()).toBeVisible({ timeout: 30_000 });
+
   // GetWorkGroup is occasionally throttled under concurrent CI load; retry with backoff.
   await expect(async () => {
     await expect(explorePage.runQuery()).toBeOK();

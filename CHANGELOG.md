@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.3.3
+
+- Bump `grafana-aws-sdk` to 1.5.3 and `sqlds` to 5.3.1 so CallResource (including `/externalId`) registers when AWS auth is not ready at datasource init in [#885](https://github.com/grafana/athena-datasource/pull/885)
+
 ## 3.3.2
 
 - Fix CVEs by bumping `copy-webpack-plugin` to 14, updating the transitive `serialize-javascript` dependency to 7.x in [#883](https://github.com/grafana/athena-datasource/pull/883)

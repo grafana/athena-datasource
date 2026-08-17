@@ -2,6 +2,11 @@ import { test, expect } from '@grafana/plugin-e2e';
 import { selectors } from '../../src/tests/selectors';
 
 test('should render query editor', async ({ page, panelEditPage, readProvisionedDashboard, gotoPanelEditPage }) => {
+  // The two toPass() blocks below can each take up to 30s if Athena's GetWorkGroup API is
+  // throttled, which would exceed Playwright's default 30s per-test timeout on its own — extend
+  // the test timeout so a slow-but-successful retry isn't cut off by the outer test deadline.
+  test.setTimeout(120_000);
+
   await panelEditPage.datasource.set('AWS Athena');
 
   // Wait for the monaco editor to finish lazy loading
@@ -36,7 +41,14 @@ test('should render query editor', async ({ page, panelEditPage, readProvisioned
 FROM $__table WHERE additionaleventdata IS NOT NULL AND json_extract_scalar(additionaleventdata, '$.bytesTransferredOut') IS NOT NULL AND  $__timeFilter(eventtime, 'yyyy-MM-dd''T''HH:mm:ss''Z') 
 GROUP BY 1 
 ORDER BY 1`);
-  await expect(panelEditPage.refreshPanel()).toBeOK();
+  // Athena's GetWorkGroup API is occasionally throttled (ThrottlingException: Rate exceeded) under
+  // concurrent CI load against the shared e2e AWS account. The query itself succeeds within seconds
+  // on retry, so retry the refresh action rather than failing on a single throttled response.
+  // Use a slower backoff than toPass()'s default (100ms) so retries don't add to the rate-limit
+  // pressure that caused the throttling in the first place.
+  await expect(async () => {
+    await expect(panelEditPage.refreshPanel()).toBeOK();
+  }).toPass({ timeout: 30_000, intervals: [1_000, 2_000, 5_000] });
 
   // test provisioned dashboards
   const dashboard = await readProvisionedDashboard({ fileName: 'testDashboard.json' });
@@ -44,7 +56,9 @@ ORDER BY 1`);
   // Wait for the initial auto-run to finish before forcing another refresh.
   const refreshButton = page.getByTestId('data-testid RefreshPicker run button').last();
   await expect(refreshButton).toHaveAccessibleName(/refresh/i);
-  const provisionedQuery = panel1.waitForQueryDataResponse();
-  await refreshButton.click();
-  await expect(provisionedQuery).toBeOK();
+  await expect(async () => {
+    const provisionedQuery = panel1.waitForQueryDataResponse();
+    await refreshButton.click();
+    await expect(provisionedQuery).toBeOK();
+  }).toPass({ timeout: 30_000, intervals: [1_000, 2_000, 5_000] });
 });

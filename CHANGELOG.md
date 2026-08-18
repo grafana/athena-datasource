@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.3.3
+
+- Updated grafana-plugin-sdk-go version to fix boolean bug in [#897](https://github.com/grafana/athena-datasource/pull/897)
+- E2E: retry query assertions on transient Athena throttling in [#893](https://github.com/grafana/athena-datasource/pull/893)
+- fix: bump local dev Grafana version to match plugin dependencies in [#890](https://github.com/grafana/athena-datasource/pull/890)
+
 ## 3.3.2
 
 - Fix CVEs by bumping `copy-webpack-plugin` to 14, updating the transitive `serialize-javascript` dependency to 7.x in [#883](https://github.com/grafana/athena-datasource/pull/883)

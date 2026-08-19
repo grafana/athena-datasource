@@ -189,9 +189,59 @@ describe('ConfigEditor', () => {
     expect(screen.queryByText('External Id is currently unavailable')).toBeInTheDocument();
   });
 
-  it('mints per-datasource external ID from config.namespace when /externalId returns empty', async () => {
-    // @grafana/aws-sdk 0.12.1+ uses Cloud-style config.namespace as the stack ID when the
-    // plugin's /externalId fetch is empty, then mints {stack}-{uid} for per-DS mode.
+  it('merges grafanaExternalId from save response into options', async () => {
+    const mintedExternalId = 'stack-uid-abcdef0123456789';
+    const putMock = jest.fn().mockResolvedValue({
+      datasource: {
+        version: 2,
+        jsonData: {
+          grafanaExternalId: mintedExternalId,
+          usePerDatasourceExternalId: true,
+        },
+      },
+    });
+
+    setUpMockBackendServer({
+      put: putMock,
+      post: jest.fn().mockResolvedValue([resourceName]),
+    });
+
+    const onChange = jest.fn();
+    render(
+      <ConfigEditor
+        {...props}
+        options={{
+          ...props.options,
+          jsonData: {
+            ...props.options.jsonData,
+            authType: AwsAuthType.GrafanaAssumeRole,
+          },
+        }}
+        onOptionsChange={onChange}
+      />
+    );
+
+    // Changing region resets saved=false via ConnectionConfig onOptionsChange wrapper.
+    const regionSelect = document.getElementById('defaultRegion');
+    expect(regionSelect).toBeInTheDocument();
+    await select(regionSelect!, 'us-west-2', { container: document.body });
+
+    const selectEl = screen.getByLabelText(selectors.components.ConfigEditor.catalog.input);
+    await waitFor(() => select(selectEl, resourceName, { container: document.body }));
+
+    expect(putMock).toHaveBeenCalled();
+    expect(onChange).toHaveBeenCalledWith(
+      expect.objectContaining({
+        version: 2,
+        jsonData: expect.objectContaining({
+          grafanaExternalId: mintedExternalId,
+          usePerDatasourceExternalId: true,
+        }),
+      })
+    );
+  });
+
+  it('enables per-datasource external ID without client-minting grafanaExternalId when /externalId returns empty', async () => {
     runtime.config.featureToggles.awsDatasourcesTempCredentials = true;
     // @ts-expect-error not yet on published FeatureToggles
     runtime.config.featureToggles.awsAssumeRolePerDatasourceExternalId = true;
@@ -208,7 +258,6 @@ describe('ConfigEditor', () => {
       ...props.options,
       type: 'grafana-athena-datasource',
       uid: 'athena-id',
-      // No authType yet — ConnectionConfig defaults to GAR and mints the per-DS ID.
       jsonData: {
         ...props.options.jsonData,
         authType: undefined,
@@ -224,25 +273,23 @@ describe('ConfigEditor', () => {
           jsonData: expect.objectContaining({
             authType: AwsAuthType.GrafanaAssumeRole,
             usePerDatasourceExternalId: true,
-            grafanaExternalId: '12345-athena-id',
           }),
         })
       )
     );
 
-    const mintedOptions = onOptionsChange.mock.calls.find(
-      (call) => call[0]?.jsonData?.grafanaExternalId === '12345-athena-id'
+    const perDsOptions = onOptionsChange.mock.calls.find(
+      (call) => call[0]?.jsonData?.usePerDatasourceExternalId === true
     )?.[0];
-    rerender(<ConfigEditor {...props} options={mintedOptions} onOptionsChange={onOptionsChange} />);
+    expect(perDsOptions?.jsonData?.grafanaExternalId).toBeUndefined();
+
+    rerender(<ConfigEditor {...props} options={perDsOptions} onOptionsChange={onOptionsChange} />);
 
     const instructionsButton = await screen.findByRole('button', {
       name: /How to create an IAM role for grafana to assume/i,
     });
     await userEvent.click(instructionsButton);
-    expect(screen.getByText('12345-athena-id')).toBeInTheDocument();
-    expect(screen.getByText(/unique to this data source/i)).toBeInTheDocument();
-    expect(screen.queryByText('External Id is currently unavailable')).not.toBeInTheDocument();
-    // Stack-only fallback must not win once the per-DS ID is minted.
-    expect(screen.queryByText('12345', { exact: true })).not.toBeInTheDocument();
+    expect(screen.getByText('External Id is currently unavailable')).toBeInTheDocument();
+    expect(screen.queryByText('12345-athena-id')).not.toBeInTheDocument();
   });
 });

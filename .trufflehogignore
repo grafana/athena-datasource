@@ -1,8 +1,1 @@
 # https://github.com/grafana/security-docs/blob/main/docs/appsec/security-tools/trufflehog.md#per-repo-exclusions-trufflehogignore
-
-# Vendored Yarn 4 release binary — minified JS containing config option names
-# like `npmPublishProvenance` that trip TruffleHog's GitLab token detector.
-# Integrity is enforced by the pinned release in .yarnrc.yml (`yarnPath`) and
-# `checksumBehavior: throw` in .yarnrc.yml; version is pinned in package.json
-# `packageManager`.
-.yarn/releases/.*\.cjs$

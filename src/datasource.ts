@@ -52,8 +52,17 @@ export class DataSource extends DatasourceWithAsyncBackend<AthenaQuery, AthenaDa
     return target.hide !== true && filterSQLQuery(target);
   }
 
-  applyTemplateVariables = (query: AthenaQuery, scopedVars: ScopedVars) =>
-    applySQLTemplateVariables(query, scopedVars, getTemplateSrv);
+  applyTemplateVariables = (query: AthenaQuery, scopedVars: ScopedVars): AthenaQuery => ({
+    ...applySQLTemplateVariables(query, scopedVars, () => this.templateSrv),
+    connectionArgs: {
+      ...query.connectionArgs,
+      region: this.templateSrv.replace(query.connectionArgs?.region, scopedVars),
+      catalog: this.templateSrv.replace(query.connectionArgs?.catalog, scopedVars),
+      database: this.templateSrv.replace(query.connectionArgs?.database, scopedVars),
+    },
+    table: query.table ? this.templateSrv.replace(query.table, scopedVars) : undefined,
+    column: query.column ? this.templateSrv.replace(query.column, scopedVars) : undefined,
+  });
 
   getVariables = () => this.templateSrv.getVariables().map((v) => `$${v.name}`);
 
@@ -87,25 +96,10 @@ export class DataSource extends DatasourceWithAsyncBackend<AthenaQuery, AthenaDa
 
   getWorkgroupEngineVersion = () => this.postResource<string>('workgroupEngineVersion', { workgroup: this.workgroup });
 
-  buildQuery(options: DataQueryRequest<AthenaQuery>, queries: AthenaQuery[]): AthenaQuery[] {
-    const updatedQueries = queries.map((query) => {
-      query.connectionArgs.region = this.templateSrv.replace(query.connectionArgs.region, options.scopedVars);
-      query.connectionArgs.catalog = this.templateSrv.replace(query.connectionArgs.catalog, options.scopedVars);
-      query.connectionArgs.database = this.templateSrv.replace(query.connectionArgs.database, options.scopedVars);
-      query.table = query.table ? this.templateSrv.replace(query.table, options.scopedVars) : undefined;
-      query.column = query.column ? this.templateSrv.replace(query.column, options.scopedVars) : undefined;
-      return query;
-    });
-
-    return updatedQueries;
-  }
-
   query(options: DataQueryRequest<AthenaQuery>): Observable<DataQueryResponse> {
     options = cloneDeep(options);
 
-    const queries = options.targets.filter((item) => item.hide !== true && item.rawSQL);
-
-    options.targets = this.buildQuery(options, queries);
+    options.targets = options.targets.filter((item) => item.hide !== true && item.rawSQL);
 
     return super.query(options);
   }

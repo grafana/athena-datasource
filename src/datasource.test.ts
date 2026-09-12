@@ -14,10 +14,11 @@ interface TestContext {
 describe('AthenaDatasource', () => {
   const ctx: TestContext = {} as TestContext;
   const mockGetVariables = jest.fn().mockReturnValue([]);
+  const mockReplace = jest.fn((target: string) => target.replace('$testVar', 'replaced'));
 
   jest.spyOn(runtime, 'getTemplateSrv').mockImplementation(() => ({
     getVariables: mockGetVariables,
-    replace: jest.fn(),
+    replace: mockReplace,
     containsTemplate: jest.fn(),
     updateTimeRange: jest.fn(),
   }));
@@ -152,42 +153,66 @@ describe('AthenaDatasource', () => {
     });
   });
 
-  describe('When building queries', () => {
-    jest.spyOn(runtime, 'getTemplateSrv').mockImplementation(() => ({
-      getVariables: mockGetVariables,
-      replace: (target: string) => target.replace('$testVar', 'replaced'),
-      containsTemplate: jest.fn(),
-      updateTimeRange: jest.fn(),
-    }));
-
-    it('should return query unchanged if there are no template variables', async () => {
-      const queries = ctx.ds.buildQuery(queryRequest, queryRequest.targets);
+  describe('When interpolating variables in queries', () => {
+    it('should return the query unchanged if there are no template variables', () => {
+      const queries = ctx.ds.interpolateVariablesInQueries([defaultQuery], {});
 
       expect(queries).toHaveLength(1);
-      expect(queries[0]).toBe(defaultQuery);
+      expect(queries[0]).toEqual(defaultQuery);
     });
 
-    it('should not add additional properties to the query', async () => {
-      const request = { ...queryRequest, targets: [{ ...defaultQuery, column: undefined }] };
-      const queries = ctx.ds.buildQuery(request, request.targets);
+    it('should not add additional properties to the query', () => {
+      const query = { ...defaultQuery, table: undefined, column: undefined };
+      const queries = ctx.ds.interpolateVariablesInQueries([query], {});
 
       expect(queries).toHaveLength(1);
-      expect(queries[0]).toEqual({ ...defaultQuery, column: undefined });
+      expect(queries[0]).toStrictEqual(query);
     });
 
-    it('should return query with template variables replaced', async () => {
-      queryRequest.targets = [
-        {
-          ...defaultQuery,
-          connectionArgs: {
-            ...defaultQuery.connectionArgs,
-            region: '$testVar',
+    it('should replace template variables in the connection args, table and column', () => {
+      const queries = ctx.ds.interpolateVariablesInQueries(
+        [
+          {
+            ...defaultQuery,
+            connectionArgs: {
+              region: '$testVar',
+              catalog: '$testVar',
+              database: '$testVar',
+            },
+            table: '$testVar',
+            column: '$testVar',
           },
-        },
-      ];
-      const queries = ctx.ds.buildQuery(queryRequest, queryRequest.targets);
+        ],
+        {}
+      );
+
       expect(queries).toHaveLength(1);
-      expect(queries[0].connectionArgs.region).toEqual('replaced');
+      expect(queries[0].connectionArgs).toEqual({
+        region: 'replaced',
+        catalog: 'replaced',
+        database: 'replaced',
+      });
+      expect(queries[0].table).toEqual('replaced');
+      expect(queries[0].column).toEqual('replaced');
+    });
+
+    it('should not mutate the original query', () => {
+      const query: AthenaQuery = {
+        ...defaultQuery,
+        connectionArgs: { region: '$testVar', catalog: '$testVar', database: '$testVar' },
+        table: '$testVar',
+        column: '$testVar',
+      };
+
+      ctx.ds.interpolateVariablesInQueries([query], {});
+
+      expect(query.connectionArgs).toEqual({
+        region: '$testVar',
+        catalog: '$testVar',
+        database: '$testVar',
+      });
+      expect(query.table).toEqual('$testVar');
+      expect(query.column).toEqual('$testVar');
     });
   });
 

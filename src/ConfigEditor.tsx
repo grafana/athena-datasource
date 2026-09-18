@@ -144,6 +144,7 @@ export function ConfigEditor(props: Props) {
             label={selectors.components.ConfigEditor.database.input}
             dependencies={[props.options.jsonData.catalog || '']}
             saveOptions={saveOptions}
+            allowCustomValue
           />
         </Field>
         <Field
@@ -159,6 +160,7 @@ export function ConfigEditor(props: Props) {
             fetch={fetchWorkgroups}
             label={selectors.components.ConfigEditor.workgroup.input}
             saveOptions={saveOptions}
+            allowCustomValue
           />
         </Field>
         <Field

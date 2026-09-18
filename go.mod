@@ -53,7 +53,7 @@ require (
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/flatbuffers v25.12.19+incompatible // indirect
 	github.com/google/uuid v1.6.0 // indirect
-	github.com/gopherjs/gopherjs v0.0.0-20190430165422-3e4dfb77656c // indirect
+	github.com/gopherjs/gopherjs v1.21.0 // indirect
 	github.com/grafana/dataplane/sdata v0.0.9 // indirect
 	github.com/grafana/otel-profiling-go v0.6.0 // indirect
 	github.com/grafana/pyroscope-go/godeltaprof v0.1.12 // indirect

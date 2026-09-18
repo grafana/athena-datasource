@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.3.5
+
+- Merge saved jsonData so per-DS grafanaExternalId appears after save, and bump `@grafana/aws-sdk` to 0.12.2, in [#895](https://github.com/grafana/athena-datasource/pull/895)
+
 ## 3.3.4
 
 - Fix CVEs by bumping backend dependencies (grpc, golang.org/x/crypto, AWS SDK) in [#902](https://github.com/grafana/athena-datasource/pull/902)

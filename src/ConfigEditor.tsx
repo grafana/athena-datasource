@@ -27,9 +27,16 @@ export function ConfigEditor(props: Props) {
     await getBackendSrv()
       .put(baseURL, props.options)
       .then((result: { datasource: AthenaDataSourceSettings }) => {
+        const ds = result.datasource;
         props.onOptionsChange({
           ...props.options,
-          version: result.datasource.version,
+          ...ds,
+          version: ds.version,
+          jsonData: {
+            ...props.options.jsonData,
+            ...ds.jsonData,
+          },
+          secureJsonFields: ds.secureJsonFields ?? props.options.secureJsonFields,
         });
       });
     setSaved(true);

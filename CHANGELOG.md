@@ -1,5 +1,21 @@
 # Changelog
 
+## 3.3.5
+
+- Merge saved jsonData so per-DS grafanaExternalId appears after save, and bump `@grafana/aws-sdk` to 0.12.2, in [#895](https://github.com/grafana/athena-datasource/pull/895)
+
+## 3.3.4
+
+- Fix CVEs by bumping backend dependencies (grpc, golang.org/x/crypto, AWS SDK) in [#902](https://github.com/grafana/athena-datasource/pull/902)
+- Fix CVEs by bumping transitive `fast-uri` to 3.1.7 in [#903](https://github.com/grafana/athena-datasource/pull/903)
+- Chore: Use npm as package manager in [#899](https://github.com/grafana/athena-datasource/pull/899)
+
+## 3.3.3
+
+- Updated grafana-plugin-sdk-go version to fix boolean bug in [#897](https://github.com/grafana/athena-datasource/pull/897)
+- E2E: retry query assertions on transient Athena throttling in [#893](https://github.com/grafana/athena-datasource/pull/893)
+- fix: bump local dev Grafana version to match plugin dependencies in [#890](https://github.com/grafana/athena-datasource/pull/890)
+
 ## 3.3.2
 
 - Fix CVEs by bumping `copy-webpack-plugin` to 14, updating the transitive `serialize-javascript` dependency to 7.x in [#883](https://github.com/grafana/athena-datasource/pull/883)

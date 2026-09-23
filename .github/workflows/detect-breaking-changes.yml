@@ -15,9 +15,9 @@ jobs:
         with:
           node-version-file: '.nvmrc'
       - name: Install dependencies
-        run: yarn install --immutable
+        run: npm ci
       - name: Build plugin
-        run: yarn build
+        run: npm run build
       - name: Compatibility check
         uses: grafana/plugin-actions/is-compatible@8c65927553042c5cf701877636dd37344a8a0ce1 # v1
         with:

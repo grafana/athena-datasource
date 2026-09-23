@@ -28,8 +28,8 @@ jobs:
       # provisioned datasource itself -- only its name is needed, and it's instance-specific.
       repo-secrets: |
         DS_INSTANCE_NAME=athena:name
-      # Default bench-prepare-cmd assumes npm (package-lock.json); this repo is yarn-only.
-      bench-prepare-cmd: yarn install --immutable; npx playwright install
-      bench-execute-cmd: yarn e2e:cloud
+      # Default bench-prepare-cmd already matches this repo (npm ci + playwright install).
+      # Default bench-execute-cmd is 'npm run e2e', which uses the local-Grafana config.
+      bench-execute-cmd: npm run e2e:cloud
       # 'ci' isn't in playwright-cloud.yml's GHA vocabulary (pr/main/nightly); default to 'main'.
       run-stage: ${{ github.event_name == 'schedule' && 'nightly' || github.event_name == 'pull_request' && 'pr' || 'main' }}

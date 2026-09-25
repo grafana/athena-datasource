@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.3.6
+
+- Fix security vulnerabilities (CVE-2026-53668, CVE-2026-84375)
+
 ## 3.3.5
 
 - Merge saved jsonData so per-DS grafanaExternalId appears after save, and bump `@grafana/aws-sdk` to 0.12.2, in [#895](https://github.com/grafana/athena-datasource/pull/895)

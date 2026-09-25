@@ -148,3 +148,61 @@ func TestConnection_getRegionKey(t *testing.T) {
 		})
 	}
 }
+
+func TestAthenaDataSourceSettings_Load(t *testing.T) {
+	tests := []struct {
+		name    string
+		config  backend.DataSourceInstanceSettings
+		want    AthenaDataSourceSettings
+		wantErr bool
+	}{
+		{
+			name: "database with lower case",
+			config: backend.DataSourceInstanceSettings{
+				JSONData: []byte(`{ 
+					"database" : "my-lower-db", 
+					"OutputLocation": "output-location",
+					"workgroup" : "my-wg"
+				}`),
+			},
+			want: AthenaDataSourceSettings{
+				Database:       "my-lower-db",
+				OutputLocation: "output-location",
+				WorkGroup:      "my-wg",
+			},
+		},
+		{
+			name: "database field with pascal case",
+			config: backend.DataSourceInstanceSettings{
+				JSONData: []byte(`{ 
+					"Database" : "my-pascal-db", 
+					"outputLocation": "output-location",
+					"WorkGroup" : "my-wg"
+				}`),
+			},
+			want: AthenaDataSourceSettings{
+				Database:       "my-pascal-db",
+				OutputLocation: "output-location",
+				WorkGroup:      "my-wg",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var s AthenaDataSourceSettings
+			gotErr := s.Load(tt.config)
+			if gotErr != nil {
+				if !tt.wantErr {
+					t.Errorf("Load() failed: %v", gotErr)
+				}
+				return
+			}
+			if tt.wantErr {
+				t.Fatal("Load() succeeded unexpectedly")
+			}
+			require.Equal(t, tt.want.Database, s.Database)
+			require.Equal(t, tt.want.WorkGroup, s.WorkGroup)
+			require.Equal(t, tt.want.OutputLocation, s.OutputLocation)
+		})
+	}
+}

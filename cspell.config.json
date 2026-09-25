@@ -16,6 +16,9 @@
     "package-lock.json"
   ],
   "words": [
+    "dsconfig",
+    "dsschema",
+    "pluginschema",
     "athenaclientmock",
     "athenadriver",
     "athenaiface",

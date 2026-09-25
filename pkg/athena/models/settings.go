@@ -23,12 +23,12 @@ const (
 type AthenaDataSourceSettings struct {
 	awsds.AWSDatasourceSettings
 	Config                     backend.DataSourceInstanceSettings
-	Database                   string `json:"Database"`
-	Catalog                    string `json:"Catalog"`
-	WorkGroup                  string `json:"WorkGroup"`
-	OutputLocation             string `json:"OutputLocation"`
-	ResultReuseEnabled         bool   `json:"ResultReuseEnabled"`
-	ResultReuseMaxAgeInMinutes int32  `json:"ResultReuseMaxAgeInMinutes"`
+	Database                   string `json:"database"`
+	Catalog                    string `json:"catalog"`
+	WorkGroup                  string `json:"workgroup"`
+	OutputLocation             string `json:"outputLocation"`
+	ResultReuseEnabled         bool   `json:"resultReuseEnabled"`
+	ResultReuseMaxAgeInMinutes int32  `json:"resultReuseMaxAgeInMinutes"`
 }
 
 func New(_ context.Context) models.Settings {

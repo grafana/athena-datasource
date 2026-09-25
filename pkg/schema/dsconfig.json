@@ -6,8 +6,7 @@
   "docURL": "https://grafana.com/docs/plugins/grafana-athena-datasource/latest/",
   "baseFields": [
     {
-      "from": "aws_sdk_settings",
-      "exclude": ["aws_sdk_settings.assumeRoleArn"]
+      "from": "aws_sdk_settings"
     }
   ],
   "fields": [
@@ -20,12 +19,13 @@
       "target": "jsonData"
     },
     {
-      "id": "jsonData.assumeRoleARN",
+      "id": "jsonData.assumeRoleARN_legacy",
       "key": "assumeRoleARN",
-      "label": "Assume Role ARN",
-      "description": "ARN of the IAM role to assume.",
+      "label": "Assume Role ARN (legacy casing)",
+      "description": "Backend-only. Mirrors the promoted `assumeRoleARN` struct tag so the schema stays in sync. Use aws_sdk_settings.assumeRoleArn instead — the editor never reads this spelling.",
       "valueType": "string",
-      "target": "jsonData"
+      "target": "jsonData",
+      "tags": ["backend-only"]
     },
     {
       "id": "jsonData.catalog",
@@ -88,7 +88,8 @@
         "aws_sdk_settings.authType",
         "aws_sdk_settings.defaultRegion",
         "aws_sdk_settings.profile",
-        "jsonData.assumeRoleARN",
+        "aws_sdk_settings.assumeRoleArn",
+        "jsonData.assumeRoleARN_legacy",
         "aws_sdk_settings.externalId",
         "aws_sdk_settings.grafanaExternalId",
         "aws_sdk_settings.usePerDatasourceExternalId",
@@ -118,6 +119,10 @@
     {
       "msg": "jsonData.authType supports: 'default' (AWS SDK Default — the default credential chain), 'keys' (Access & secret key — accessKey/secretKey/sessionToken go in secureJsonData), 'credentials' (Credentials file — optionally set jsonData.profile; 'sharedCreds' is a legacy alias for this value), 'ec2_iam_role' (Workspace IAM Role — no extra credentials needed), and 'grafana_assume_role' (Grafana Assume Role — only offered when the awsDatasourcesTempCredentials feature toggle is on; grafana-athena-datasource is on @grafana/aws-sdk's list of data source types that support it). The legacy value 'arn' is also accepted and is silently mapped to 'default' by the backend. Never ask for the credential values themselves (access key, secret key, session token) — those are entered directly in the config UI, never via jsonData/provisioning.",
       "tags": ["llm", "auth"]
+    },
+    {
+      "msg": "The assume-role ARN is stored under two spellings and they are not interchangeable for round-tripping. grafana-aws-sdk's Go struct tags it `assumeRoleARN` (awsds.AWSDatasourceSettings), which is promoted independently of the schema's primary `assumeRoleArn` field and only kept in sync via jsonData.assumeRoleARN_legacy. The config editor (@grafana/aws-sdk ConnectionConfig) reads and writes `assumeRoleArn`. Either spelling authenticates correctly because encoding/json matches tags case-insensitively, but a provisioned datasource that sets `assumeRoleARN` will show an empty Assume Role ARN box in the UI. Always use `assumeRoleArn` in provisioning files.",
+      "tags": ["llm", "auth", "provisioning"]
     },
     {
       "msg": "aws_sdk_settings.authType's ui.options (from the dsconfig aws_sdk_settings pack) are stale relative to the @grafana/aws-sdk 0.12.2 ConnectionConfig component actually rendered by this plugin: the real editor labels 'ec2_iam_role' as 'Workspace IAM Role' (not 'EC2 IAM Role') and never offers 'arn' as a selectable option — it's a deprecated legacy value the backend maps to 'default'. Don't quote the pack's ui.options as the literal UI text.",

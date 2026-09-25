@@ -8,8 +8,13 @@
           "type": "object",
           "properties": {
             "assumeRoleARN": {
-              "description": "ARN of the IAM role to assume.",
+              "description": "Backend-only. Mirrors the promoted `assumeRoleARN` struct tag so the schema stays in sync. Use aws_sdk_settings.assumeRoleArn instead — the editor never reads this spelling.",
               "type": "string"
+            },
+            "assumeRoleArn": {
+              "description": "Optional. Specifying the ARN of a role will ensure that the selected authentication provider is used to assume the role rather than the credentials directly.",
+              "type": "string",
+              "pattern": "^(arn:aws[a-zA-Z-]*:iam::[0-9]{12}:role/.+)?$"
             },
             "authType": {
               "description": "Specify which AWS credentials chain to use.",

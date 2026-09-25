@@ -43,7 +43,7 @@ export default defineConfig<PluginOptions>({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        storageState: 'playwright/.auth/admin.json',
+        storageState: `playwright/.auth/${process.env.GRAFANA_ADMIN_USER || 'admin'}.json`,
       },
       dependencies: ['auth'],
     },

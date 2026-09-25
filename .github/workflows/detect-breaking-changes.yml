@@ -8,16 +8,16 @@ jobs:
       contents: read
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
           persist-credentials: false
-      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version-file: '.nvmrc'
       - name: Install dependencies
-        run: yarn install --immutable
+        run: npm ci
       - name: Build plugin
-        run: yarn build
+        run: npm run build
       - name: Compatibility check
         uses: grafana/plugin-actions/is-compatible@8c65927553042c5cf701877636dd37344a8a0ce1 # v1
         with:

@@ -61,17 +61,19 @@ func New(ctx context.Context, settings sqlModels.Settings) (api.AWSAPI, error) {
 	}
 
 	cfg, err := newAWSConfigProvider().GetConfig(ctx, awsauth.Settings{
-		LegacyAuthType:     athenaSettings.AuthType,
-		AccessKey:          athenaSettings.AccessKey,
-		SecretKey:          athenaSettings.SecretKey,
-		SessionToken:       athenaSettings.SessionToken,
-		Region:             region,
-		CredentialsProfile: athenaSettings.Profile,
-		AssumeRoleARN:      athenaSettings.AssumeRoleARN,
-		Endpoint:           athenaSettings.Endpoint,
-		ExternalID:         athenaSettings.ExternalID,
-		HTTPClient:         httpClient,
-		UserAgent:          "athena",
+		LegacyAuthType:             athenaSettings.AuthType,
+		AccessKey:                  athenaSettings.AccessKey,
+		SecretKey:                  athenaSettings.SecretKey,
+		SessionToken:               athenaSettings.SessionToken,
+		Region:                     region,
+		CredentialsProfile:         athenaSettings.Profile,
+		AssumeRoleARN:              athenaSettings.AssumeRoleARN,
+		Endpoint:                   athenaSettings.Endpoint,
+		ExternalID:                 athenaSettings.ExternalID,
+		GrafanaExternalID:          athenaSettings.GrafanaExternalID,
+		UsePerDatasourceExternalID: athenaSettings.UsePerDatasourceExternalID,
+		HTTPClient:                 httpClient,
+		UserAgent:                  "athena",
 	})
 	if err != nil {
 		return nil, err

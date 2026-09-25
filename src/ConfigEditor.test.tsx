@@ -188,4 +188,56 @@ describe('ConfigEditor', () => {
     await userEvent.click(instructionsButton);
     expect(screen.queryByText('External Id is currently unavailable')).toBeInTheDocument();
   });
+
+  it('merges grafanaExternalId from save response into options', async () => {
+    const mintedExternalId = 'stack-uid-abcdef0123456789';
+    const putMock = jest.fn().mockResolvedValue({
+      datasource: {
+        version: 2,
+        jsonData: {
+          grafanaExternalId: mintedExternalId,
+          usePerDatasourceExternalId: true,
+        },
+      },
+    });
+
+    setUpMockBackendServer({
+      put: putMock,
+      post: jest.fn().mockResolvedValue([resourceName]),
+    });
+
+    const onChange = jest.fn();
+    render(
+      <ConfigEditor
+        {...props}
+        options={{
+          ...props.options,
+          jsonData: {
+            ...props.options.jsonData,
+            authType: AwsAuthType.GrafanaAssumeRole,
+          },
+        }}
+        onOptionsChange={onChange}
+      />
+    );
+
+    // Changing region resets saved=false via ConnectionConfig onOptionsChange wrapper.
+    const regionSelect = document.getElementById('defaultRegion');
+    expect(regionSelect).toBeInTheDocument();
+    await select(regionSelect!, 'us-west-2', { container: document.body });
+
+    const selectEl = screen.getByLabelText(selectors.components.ConfigEditor.catalog.input);
+    await waitFor(() => select(selectEl, resourceName, { container: document.body }));
+
+    expect(putMock).toHaveBeenCalled();
+    expect(onChange).toHaveBeenCalledWith(
+      expect.objectContaining({
+        version: 2,
+        jsonData: expect.objectContaining({
+          grafanaExternalId: mintedExternalId,
+          usePerDatasourceExternalId: true,
+        }),
+      })
+    );
+  });
 });

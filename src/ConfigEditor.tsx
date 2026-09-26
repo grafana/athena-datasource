@@ -14,7 +14,7 @@ type Props = DataSourcePluginOptionsEditorProps<AthenaDataSourceOptions, AthenaD
 export type ResourceType = 'catalog' | 'database' | 'workgroup';
 
 export function ConfigEditor(props: Props) {
-  const baseURL = `/api/datasources/${props.options.id}`;
+  const baseURL = `/api/datasources/uid/${props.options.uid}`;
   const resourcesURL = `${baseURL}/resources`;
   const [saved, setSaved] = useState(!!props.options.jsonData.defaultRegion);
   const [externalId, setExternalId] = useState('');

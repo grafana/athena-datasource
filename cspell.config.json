@@ -99,6 +99,8 @@
     "dompurify",
     "zizmor",
     "AKIAIOSFODNN",
-    "npmPreapprovedPackages"
+    "npmPreapprovedPackages",
+    "Creds",
+    "struct"
   ]
 }

@@ -3,8 +3,8 @@
   "version": "3.3.6",
   "description": "Use Amazon Athena with Grafana",
   "scripts": {
-    "build": "webpack -c ./.config/webpack/webpack.config.ts --env production",
-    "dev": "webpack -w -c ./.config/webpack/webpack.config.ts --env development",
+    "build": "webpack -c ./webpack.config.ts --env production",
+    "dev": "webpack -w -c ./webpack.config.ts --env development",
     "e2e": "playwright test",
     "e2e:cloud": "playwright test --config=playwright.cloud.config.ts",
     "lint": "eslint --cache .",

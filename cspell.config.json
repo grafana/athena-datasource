@@ -16,6 +16,9 @@
     "package-lock.json"
   ],
   "words": [
+    "dsconfig",
+    "dsschema",
+    "pluginschema",
     "athenaclientmock",
     "athenadriver",
     "athenaiface",
@@ -96,6 +99,8 @@
     "dompurify",
     "zizmor",
     "AKIAIOSFODNN",
-    "npmPreapprovedPackages"
+    "npmPreapprovedPackages",
+    "Creds",
+    "struct"
   ]
 }

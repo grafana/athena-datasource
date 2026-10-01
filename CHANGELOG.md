@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.3.7
+
+- Add dsconfig base schema in [#855](https://github.com/grafana/athena-datasource/pull/855)
+
 ## 3.3.6
 
 - Fix security vulnerabilities (CVE-2026-53668, CVE-2026-84375)

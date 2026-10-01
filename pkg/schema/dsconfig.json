@@ -103,16 +103,6 @@
       "id": "athena-details",
       "title": "Athena details",
       "fieldRefs": ["jsonData.catalog", "jsonData.database", "jsonData.workgroup", "jsonData.outputLocation"]
-    },
-    {
-      "id": "advanced",
-      "title": "Advanced Configuration",
-      "fieldRefs": [
-        "aws_sdk_settings.proxyType",
-        "aws_sdk_settings.proxyUrl",
-        "aws_sdk_settings.proxyUsername",
-        "aws_sdk_settings.proxyPassword"
-      ]
     }
   ],
   "instructions": [

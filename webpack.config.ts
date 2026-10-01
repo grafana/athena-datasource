@@ -9,13 +9,8 @@ const config = async (env: Env): Promise<Configuration> => {
         plugins: [new CopyWebpackPlugin({
             patterns: [
                 {
-                    from: '../skills/**/*',
-                    to: './skills',
-                    noErrorOnMissing: true
-                },
-                {
                     from: '../pkg/schema/dsconfig.json',
-                    to: './schema/settings.schema.json',
+                    to: './schema/dsconfig.json',
                     noErrorOnMissing: true
                 },
                 {

@@ -28,4 +28,8 @@ export default defineConfig([
       '@typescript-eslint/no-deprecated': 'warn',
     },
   },
+  {
+    extends: compat.extends('./.config/.eslintrc'),
+    files: ['tests-cloud/**/*.{ts,tsx}'],
+  },
 ]);

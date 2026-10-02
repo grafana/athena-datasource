@@ -1,5 +1,23 @@
 # Changelog
 
+## 3.3.7
+
+- Add dsconfig base schema in [#855](https://github.com/grafana/athena-datasource/pull/855)
+
+## 3.3.6
+
+- Fix security vulnerabilities (CVE-2026-53668, CVE-2026-84375)
+
+## 3.3.5
+
+- Merge saved jsonData so per-DS grafanaExternalId appears after save, and bump `@grafana/aws-sdk` to 0.12.2, in [#895](https://github.com/grafana/athena-datasource/pull/895)
+
+## 3.3.4
+
+- Fix CVEs by bumping backend dependencies (grpc, golang.org/x/crypto, AWS SDK) in [#902](https://github.com/grafana/athena-datasource/pull/902)
+- Fix CVEs by bumping transitive `fast-uri` to 3.1.7 in [#903](https://github.com/grafana/athena-datasource/pull/903)
+- Chore: Use npm as package manager in [#899](https://github.com/grafana/athena-datasource/pull/899)
+
 ## 3.3.3
 
 - Updated grafana-plugin-sdk-go version to fix boolean bug in [#897](https://github.com/grafana/athena-datasource/pull/897)

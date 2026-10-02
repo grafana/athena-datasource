@@ -16,6 +16,9 @@
     "package-lock.json"
   ],
   "words": [
+    "dsconfig",
+    "dsschema",
+    "pluginschema",
     "athenaclientmock",
     "athenadriver",
     "athenaiface",
@@ -26,7 +29,9 @@
     "Codeowners",
     "datasource",
     "datasources",
+    "datasourcesathenadb",
     "datetime",
+    "DSE2EDEV",
     "errorsource",
     "eventtime",
     "fridgepoet",
@@ -40,6 +45,7 @@
     "Joda's",
     "Messagef",
     "njvrzm",
+    "Pulumi",
     "onloadcatalog",
     "onloadcolumn",
     "onloaddatabase",
@@ -93,6 +99,8 @@
     "dompurify",
     "zizmor",
     "AKIAIOSFODNN",
-    "npmPreapprovedPackages"
+    "npmPreapprovedPackages",
+    "Creds",
+    "struct"
   ]
 }

@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.3.8
+
+- Use UID data source API in [#830](https://github.com/grafana/athena-datasource/pull/830)
+
 ## 3.3.7
 
 - Add dsconfig base schema in [#855](https://github.com/grafana/athena-datasource/pull/855)

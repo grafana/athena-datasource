@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.3.9
+
+- Fix security vulnerabilities (CVE-2026-102278, CVE-2026-102276, CVE-2026-102990)
+
 ## 3.3.8
 
 - Use UID data source API in [#830](https://github.com/grafana/athena-datasource/pull/830)

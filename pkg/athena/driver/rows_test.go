@@ -1,10 +1,13 @@
 package driver
 
 import (
-	athenatypes "github.com/aws/aws-sdk-go-v2/service/athena/types"
+	"context"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/service/athena"
+	athenatypes "github.com/aws/aws-sdk-go-v2/service/athena/types"
+	"github.com/grafana/athena-datasource/pkg/athena/api/mock"
+	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	drv "github.com/uber/athenadriver/go"
 )
 
@@ -63,5 +66,12 @@ func TestColumnTypeScanType(t *testing.T) {
 				t.Errorf("unexpected type %s expecting %s", res.String(), tt.expected)
 			}
 		})
+	}
+}
+
+func TestNewRowsReturnsDownstreamError(t *testing.T) {
+	_, err := NewRows(context.Background(), &mock.MockAthenaClient{}, mock.FAKE_ERROR)
+	if !backend.IsDownstreamError(err) {
+		t.Errorf("NewRows() error = %v, want a downstream error", err)
 	}
 }

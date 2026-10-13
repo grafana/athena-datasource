@@ -254,6 +254,31 @@ func TestNew_passesGrafanaExternalIDFields(t *testing.T) {
 	assert.True(t, *spy.captured.UsePerDatasourceExternalID)
 }
 
+type failingConfigProvider struct{ err error }
+
+func (f *failingConfigProvider) GetConfig(context.Context, awsauth.Settings) (aws.Config, error) {
+	return aws.Config{}, f.err
+}
+
+func TestNew_configErrorIsDownstream(t *testing.T) {
+	origProvider := newAWSConfigProvider
+	newAWSConfigProvider = func() awsauth.ConfigProvider {
+		return &failingConfigProvider{err: errors.New("failed to refresh cached credentials, operation error STS: AssumeRole, https response error StatusCode: 403, api error AccessDenied")}
+	}
+	t.Cleanup(func() { newAWSConfigProvider = origProvider })
+
+	s := &models.AthenaDataSourceSettings{}
+	err := s.Load(backend.DataSourceInstanceSettings{
+		JSONData: []byte(`{"authType": "grafana_assume_role", "defaultRegion": "us-east-1", "assumeRoleArn": "arn:aws:iam::123456789012:role/test"}`),
+	})
+	require.NoError(t, err)
+
+	_, err = New(context.Background(), s)
+	require.Error(t, err)
+	assert.True(t, backend.IsDownstreamError(err))
+	assert.Contains(t, err.Error(), "AccessDenied")
+}
+
 func Test_WorkgroupEngineSupportsResultReuse(t *testing.T) {
 	assert.True(t, workgroupEngineSupportsResultReuse("Athena engine version 3"))
 	assert.False(t, workgroupEngineSupportsResultReuse("Athena engine version 2"))

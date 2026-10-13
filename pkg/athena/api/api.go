@@ -76,7 +76,7 @@ func New(ctx context.Context, settings sqlModels.Settings) (api.AWSAPI, error) {
 		UserAgent:                  "athena",
 	})
 	if err != nil {
-		return nil, err
+		return nil, backend.DownstreamError(err)
 	}
 
 	return &API{Client: athena.NewFromConfig(cfg), settings: athenaSettings}, nil

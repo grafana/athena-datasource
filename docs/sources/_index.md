@@ -17,7 +17,7 @@ labels:
 menuTitle: Amazon Athena
 title: Amazon Athena data source
 weight: 100
-last_reviewed: 2026-02-20
+review_date: 2026-10-01
 ---
 
 # Amazon Athena data source
@@ -70,6 +70,30 @@ Always ensure that your plugin version is up-to-date so you have access to all c
 {{< admonition type="note" >}}
 Plugins are automatically updated in Grafana Cloud.
 {{< /admonition >}}
+
+{{< docs/shared source="grafana" lookup="datasources/query-with-gcx.md" version="<GRAFANA_VERSION>" >}}
+
+For example, to run a SQL query against your Amazon Athena data source, use `gcx datasources athena query`:
+
+```sh
+gcx datasources athena query -d <DATASOURCE_UID> 'SELECT * FROM logs WHERE $__timeFilter(event_time)' --since 1h
+```
+
+Replace _`<DATASOURCE_UID>`_ with the UID of your Amazon Athena data source. The query takes a SQL statement, optional server-side macros such as `$__timeFilter`, and a time range (`--since`).
+
+To explore your data before you write a query, use the `list` and `describe-table` subcommands to navigate from catalogs down to table columns:
+
+```sh
+# List the available data catalogs, databases, and tables
+gcx datasources athena list-catalogs -d <DATASOURCE_UID>
+gcx datasources athena list-databases -d <DATASOURCE_UID> --catalog AwsDataCatalog
+gcx datasources athena list-tables -d <DATASOURCE_UID> --database <DATABASE>
+
+# List the column names for a table
+gcx datasources athena describe-table <TABLE> -d <DATASOURCE_UID> --database <DATABASE>
+```
+
+Replace _`<DATABASE>`_ and _`<TABLE>`_ with your Athena database and table names. Use `--catalog` to target a data catalog other than the default `AwsDataCatalog`, and `--region` to override the AWS region.
 
 ## Related resources
 

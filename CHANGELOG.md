@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.3.10
+
+- Mark auth failures as downstream error
+
+## 3.3.9
+
+- Fix security vulnerabilities (CVE-2026-102278, CVE-2026-102276, CVE-2026-102990)
+
 ## 3.3.8
 
 - Use UID data source API in [#830](https://github.com/grafana/athena-datasource/pull/830)
@@ -39,10 +47,10 @@
 ## 3.3.0
 
 - Forward per-datasource grafanaExternalId for Assume Role in [#880](https://github.com/grafana/athena-datasource/pull/880)
-- Bump @grafana/* to 13.1.1 and update dependencies in [#877](https://github.com/grafana/athena-datasource/pull/877)
+- Bump @grafana/\* to 13.1.1 and update dependencies in [#877](https://github.com/grafana/athena-datasource/pull/877)
 - Update dependencies in [#879](https://github.com/grafana/athena-datasource/pull/879)
 - Bump dependencies in [#876](https://github.com/grafana/athena-datasource/pull/876)
-- Bump grafana/* dependencies in [#874](https://github.com/grafana/athena-datasource/pull/874)
+- Bump grafana/\* dependencies in [#874](https://github.com/grafana/athena-datasource/pull/874)
 - fix(deps): update backend dependencies in [#873](https://github.com/grafana/athena-datasource/pull/873) and [#869](https://github.com/grafana/athena-datasource/pull/869)
 - Security: supply-chain hardening for Yarn and Go in [#833](https://github.com/grafana/athena-datasource/pull/833)
 - chore: make grafanaDependency prerelease-inclusive in [#854](https://github.com/grafana/athena-datasource/pull/854)

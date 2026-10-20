@@ -125,6 +125,37 @@ func Test_Status(t *testing.T) {
 	}
 }
 
+func Test_Status_WithoutStateChangeReason(t *testing.T) {
+	tests := []struct {
+		id            string
+		state         string
+		expectedError error
+	}{
+		{
+			id:            athenaclientmock.CANCELLED_WITHOUT_REASON,
+			state:         "CANCELLED",
+			expectedError: backend.DownstreamError(errors.New("query execution CANCELLED")),
+		},
+		{
+			id:            athenaclientmock.FAILED_WITHOUT_REASON,
+			state:         "FAILED",
+			expectedError: backend.DownstreamError(errors.New("query execution FAILED")),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.state, func(t *testing.T) {
+			c := &API{
+				settings: &models.AthenaDataSourceSettings{},
+				Client:   &athenaclientmock.MockAthenaClient{CalledTimesCountDown: 1},
+			}
+			status, err := c.Status(context.Background(), &api.ExecuteQueryOutput{ID: tt.id})
+			assert.Equal(t, tt.expectedError, err)
+			assert.True(t, status.Finished)
+			assert.Equal(t, tt.state, status.State)
+		})
+	}
+}
+
 func TestConnection_ListDataCatalogs(t *testing.T) {
 	expectedCatalogs := []string{"foo"}
 	c := &API{Client: &athenaclientmock.MockAthenaClient{Catalogs: expectedCatalogs}}

@@ -12,6 +12,8 @@ import (
 const DESCRIBE_STATEMENT_FAILED = "DESCRIBE_STATEMENT_FAILED"
 const DESCRIBE_STATEMENT_SUCCEEDED = "DESCRIBE_STATEMENT_FINISHED"
 const UNEXPECTED_ERROR = "UNEXPECTED_ERROR"
+const CANCELLED_WITHOUT_REASON = "CANCELLED_WITHOUT_REASON"
+const FAILED_WITHOUT_REASON = "FAILED_WITHOUT_REASON"
 
 // Define a mock struct to be used in your unit tests of myFunc.
 type MockAthenaClient struct {
@@ -53,6 +55,14 @@ func (m *MockAthenaClient) GetQueryExecution(_ context.Context, input *athena.Ge
 			}
 			if m.ErrorCategory != nil {
 				output.QueryExecution.Status.AthenaError.ErrorCategory = m.ErrorCategory
+			}
+		case CANCELLED_WITHOUT_REASON:
+			output.QueryExecution = &athenatypes.QueryExecution{
+				Status: &athenatypes.QueryExecutionStatus{State: athenatypes.QueryExecutionStateCancelled},
+			}
+		case FAILED_WITHOUT_REASON:
+			output.QueryExecution = &athenatypes.QueryExecution{
+				Status: &athenatypes.QueryExecutionStatus{State: athenatypes.QueryExecutionStateFailed},
 			}
 		default:
 			output.QueryExecution = &athenatypes.QueryExecution{

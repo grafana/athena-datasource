@@ -141,8 +141,11 @@ func (c *API) Status(ctx context.Context, output *api.ExecuteQueryOutput) (*api.
 	switch state {
 	case athenatypes.QueryExecutionStateFailed, athenatypes.QueryExecutionStateCancelled:
 		finished = true
-		err = backend.DownstreamError(
-			errors.New(*statusResp.QueryExecution.Status.StateChangeReason))
+		reason := aws.ToString(statusResp.QueryExecution.Status.StateChangeReason)
+		if reason == "" {
+			reason = fmt.Sprintf("query execution %s", state)
+		}
+		err = backend.DownstreamError(errors.New(reason))
 
 		// if internal athena error (error category 1), return an error with cause FailedInternal
 		// which will be converted to response.error.status 500 in grafana/aws-sdk/awsds

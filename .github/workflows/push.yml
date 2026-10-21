@@ -16,6 +16,7 @@ jobs:
       contents: read
       id-token: write
     with:
+      golangci-lint-version: '2.14.0'
       plugin-version-suffix: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || '' }}
       playwright-config: ${{ (github.event.pull_request.head.repo.fork == true || github.actor == 'dependabot[bot]') && 'playwright-fork.config.ts' || 'playwright.config.ts' }}
       playwright-secrets: |
@@ -33,5 +34,5 @@ jobs:
       id-token: write
       pull-requests: read
     with:
-      go-version: "1.26.5"
-      golangci-lint-version: "2.12.2"
+      go-version: "1.27.3"
+      golangci-lint-version: "2.14.0"

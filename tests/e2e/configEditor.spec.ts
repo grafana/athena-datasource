@@ -3,6 +3,8 @@ import { selectors } from '../../src/tests/selectors';
 import { AthenaDataSourceOptions, AthenaDataSourceSecureJsonData } from '../../src/types';
 
 test('should render config editor', async ({ gotoDataSourceConfigPage, readProvisionedDataSource, page }) => {
+  test.setTimeout(90_000);
+
   const datasource = await readProvisionedDataSource<AthenaDataSourceOptions, AthenaDataSourceSecureJsonData>({
     fileName: 'aws-athena.yaml',
     name: 'AWS Athena',
@@ -22,5 +24,8 @@ test('should render config editor', async ({ gotoDataSourceConfigPage, readProvi
   await page.getByRole('combobox', { name: selectors.components.ConfigEditor.workgroup.input }).click();
   await page.getByLabel('Select options menu').getByText('cloud-datasources').click();
 
-  await expect(configPage.saveAndTest()).toBeOK();
+  // The health check calls GetWorkGroup, which AWS throttles under concurrent CI load.
+  await expect(async () => {
+    await expect(configPage.saveAndTest()).toBeOK();
+  }).toPass({ timeout: 30_000, intervals: [1_000, 2_000, 5_000] });
 });

@@ -7,6 +7,7 @@ import (
 	"reflect"
 
 	athenatypes "github.com/aws/aws-sdk-go-v2/service/athena/types"
+	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	drv "github.com/uber/athenadriver/go"
 )
@@ -21,7 +22,7 @@ func NewRows(ctx context.Context, client drv.AthenaClient, queryID string) (*Row
 	tracer := drv.NewNoOpsObservability()
 	rows, err := drv.NewRows(ctx, client, queryID, config, tracer)
 	if err != nil {
-		return nil, err
+		return nil, backend.DownstreamError(err)
 	}
 	return &Rows{rows}, nil
 }

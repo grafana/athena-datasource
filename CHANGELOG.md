@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.4.0
+
+- Fix crash when polling a cancelled query with no state change reason in [#913](https://github.com/grafana/athena-datasource/pull/913)
+- Docs: add gcx CLI query note in [#907](https://github.com/grafana/athena-datasource/pull/907)
+- Update Go to 1.27.3 in [#916](https://github.com/grafana/athena-datasource/pull/916)
+
 ## 3.3.10
 
 - Mark auth failures as downstream error

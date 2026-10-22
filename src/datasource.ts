@@ -3,7 +3,7 @@ import { getTemplateSrv, TemplateSrv } from '@grafana/runtime';
 import { AthenaDataSourceOptions, AthenaQuery } from './types';
 import { AthenaVariableSupport } from './variables';
 import { filterSQLQuery, applySQLTemplateVariables } from '@grafana/aws-sdk';
-import { DatasourceWithAsyncBackend } from '@grafana/async-query-data';
+import { DatasourceWithAsyncBackend } from '@grafana/plugin-ui';
 import { Observable } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { annotationSupport } from './annotationSupport';

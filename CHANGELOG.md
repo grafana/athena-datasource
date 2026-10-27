@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.4.1
+
+- Report GetQueryResults errors as downstream errors
+- Use the shared async query runner from @grafana/plugin-ui
+- Bump backend dependency
+
 ## 3.4.0
 
 - Fix crash when polling a cancelled query with no state change reason in [#913](https://github.com/grafana/athena-datasource/pull/913)

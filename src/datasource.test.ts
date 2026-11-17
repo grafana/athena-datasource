@@ -191,6 +191,49 @@ describe('AthenaDatasource', () => {
     });
   });
 
+  describe('When applying template variables', () => {
+    beforeEach(() => {
+      jest.spyOn(runtime, 'getTemplateSrv').mockImplementation(() => ({
+        getVariables: mockGetVariables,
+        replace: (target: string) => (target ? target.replace('$testVar', 'replaced') : target),
+        containsTemplate: jest.fn(),
+        updateTimeRange: jest.fn(),
+      }));
+      ctx.ds = new DataSource(ctx.instanceSettings);
+    });
+
+    it('should interpolate connection arguments, table and column in addition to the SQL', () => {
+      const query: AthenaQuery = {
+        ...defaultQuery,
+        connectionArgs: { region: '$testVar', catalog: '$testVar', database: '$testVar' },
+        table: '$testVar',
+        column: '$testVar',
+        rawSQL: 'select $testVar',
+      };
+      const result = ctx.ds.applyTemplateVariables(query, {});
+      expect(result.connectionArgs).toEqual({ region: 'replaced', catalog: 'replaced', database: 'replaced' });
+      expect(result.table).toEqual('replaced');
+      expect(result.column).toEqual('replaced');
+      expect(result.rawSQL).toEqual('select replaced');
+    });
+
+    it('should be used when interpolating queries for Explore', () => {
+      const query: AthenaQuery = {
+        ...defaultQuery,
+        connectionArgs: { ...defaultQuery.connectionArgs, region: '$testVar' },
+      };
+      const [result] = ctx.ds.interpolateVariablesInQueries([query], {});
+      expect(result.connectionArgs.region).toEqual('replaced');
+    });
+
+    it('should leave unset table and column untouched', () => {
+      const query: AthenaQuery = { ...defaultQuery, table: undefined, column: undefined };
+      const result = ctx.ds.applyTemplateVariables(query, {});
+      expect(result.table).toBeUndefined();
+      expect(result.column).toBeUndefined();
+    });
+  });
+
   it('should not run query if query is empty', async () => {
     const mockedSuperQuery = jest
       .spyOn(DatasourceWithAsyncBackend.prototype, 'query')

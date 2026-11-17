@@ -52,8 +52,21 @@ export class DataSource extends DatasourceWithAsyncBackend<AthenaQuery, AthenaDa
     return target.hide !== true && filterSQLQuery(target);
   }
 
-  applyTemplateVariables = (query: AthenaQuery, scopedVars: ScopedVars) =>
-    applySQLTemplateVariables(query, scopedVars, getTemplateSrv);
+  applyTemplateVariables = (query: AthenaQuery, scopedVars: ScopedVars): AthenaQuery => {
+    const interpolated = applySQLTemplateVariables(query, scopedVars, getTemplateSrv);
+    const replace = (value?: string) => this.templateSrv.replace(value, scopedVars);
+    return {
+      ...interpolated,
+      connectionArgs: {
+        ...interpolated.connectionArgs,
+        region: replace(interpolated.connectionArgs.region),
+        catalog: replace(interpolated.connectionArgs.catalog),
+        database: replace(interpolated.connectionArgs.database),
+      },
+      table: interpolated.table ? replace(interpolated.table) : interpolated.table,
+      column: interpolated.column ? replace(interpolated.column) : interpolated.column,
+    };
+  };
 
   getVariables = () => this.templateSrv.getVariables().map((v) => `$${v.name}`);
 

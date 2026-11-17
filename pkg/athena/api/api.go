@@ -60,7 +60,7 @@ func New(ctx context.Context, settings sqlModels.Settings) (api.AWSAPI, error) {
 		region = athenaSettings.DefaultRegion
 	}
 
-	cfg, err := newAWSConfigProvider().GetConfig(ctx, awsauth.Settings{
+	authSettings := awsauth.Settings{
 		LegacyAuthType:             athenaSettings.AuthType,
 		AccessKey:                  athenaSettings.AccessKey,
 		SecretKey:                  athenaSettings.SecretKey,
@@ -72,11 +72,26 @@ func New(ctx context.Context, settings sqlModels.Settings) (api.AWSAPI, error) {
 		ExternalID:                 athenaSettings.ExternalID,
 		GrafanaExternalID:          athenaSettings.GrafanaExternalID,
 		UsePerDatasourceExternalID: athenaSettings.UsePerDatasourceExternalID,
+		SourceIdentityFromUser:     athenaSettings.SourceIdentityFromUser,
 		HTTPClient:                 httpClient,
 		UserAgent:                  "athena",
-	})
+	}
+
+	cfg, err := newAWSConfigProvider().GetConfig(ctx, authSettings)
 	if err != nil {
 		return nil, backend.DownstreamError(err)
+	}
+
+	if authSettings.SourceIdentityFromUser {
+		// The API and DB are cached per datasource, so the client must pick the
+		// user up on each call instead of being fixed to the first caller.
+		return &API{Client: &perUserClient{resolve: func(ctx context.Context) (Client, error) {
+			cfg, err := newAWSConfigProvider().GetConfig(ctx, authSettings)
+			if err != nil {
+				return nil, backend.DownstreamError(err)
+			}
+			return athena.NewFromConfig(cfg), nil
+		}}, settings: athenaSettings}, nil
 	}
 
 	return &API{Client: athena.NewFromConfig(cfg), settings: athenaSettings}, nil
@@ -174,12 +189,16 @@ func (c *API) Status(ctx context.Context, output *api.ExecuteQueryOutput) (*api.
 }
 
 func (c *API) CancelQuery(ctx context.Context, options sqlds.Options, queryID string) error {
-	return c.Stop(&api.ExecuteQueryOutput{ID: queryID})
+	return c.stop(ctx, queryID)
 }
 
 func (c *API) Stop(output *api.ExecuteQueryOutput) error {
-	_, err := c.Client.StopQueryExecution(context.TODO(), &athena.StopQueryExecutionInput{
-		QueryExecutionId: &output.ID,
+	return c.stop(context.TODO(), output.ID)
+}
+
+func (c *API) stop(ctx context.Context, queryID string) error {
+	_, err := c.Client.StopQueryExecution(ctx, &athena.StopQueryExecutionInput{
+		QueryExecutionId: &queryID,
 	})
 	if err != nil {
 		return backend.DownstreamError(fmt.Errorf("%w: unable to stop query", err))

@@ -6,6 +6,7 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/aws/aws-sdk-go-v2/service/athena"
 	"github.com/grafana/athena-datasource/pkg/athena/api"
 	athenaclientmock "github.com/grafana/athena-datasource/pkg/athena/api/mock"
 	"github.com/grafana/athena-datasource/pkg/athena/models"
@@ -33,4 +34,28 @@ func TestConnection_QueryContext(t *testing.T) {
 
 	_, err = c.StartQuery(context.Background(), athenaclientmock.FAKE_SUCCESS, []driver.NamedValue{})
 	assert.NoError(t, err)
+}
+
+type ctxKey struct{}
+
+// ctxSpyClient records the context StopQueryExecution is called with.
+type ctxSpyClient struct {
+	athenaclientmock.MockAthenaClient
+	stopCtx context.Context
+}
+
+func (c *ctxSpyClient) StopQueryExecution(ctx context.Context, in *athena.StopQueryExecutionInput, _ ...func(*athena.Options)) (*athena.StopQueryExecutionOutput, error) {
+	c.stopCtx = ctx
+	return &athena.StopQueryExecutionOutput{}, nil
+}
+
+func TestConnection_CancelQueryUsesRequestContext(t *testing.T) {
+	spy := &ctxSpyClient{}
+	c := &conn{api: api.NewFake(spy, &models.AthenaDataSourceSettings{})}
+
+	ctx := context.WithValue(context.Background(), ctxKey{}, "request")
+	assert.NoError(t, c.CancelQuery(ctx, "q-1"))
+	if assert.NotNil(t, spy.stopCtx) {
+		assert.Equal(t, "request", spy.stopCtx.Value(ctxKey{}), "cancel must carry the request context (and its user)")
+	}
 }

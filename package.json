@@ -23,7 +23,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@emotion/css": "11.13.5",
-    "@grafana/aws-sdk": "0.12.2",
+    "@grafana/aws-sdk": "0.13.1",
     "@grafana/data": "13.1.9",
     "@grafana/e2e-selectors": "13.2.0-30594044109",
     "@grafana/i18n": "13.1.9",

@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.4.3
+
+- Bump `@grafana/aws-sdk` to 0.13.1 in [#933](https://github.com/grafana/athena-datasource/pull/933)
+- Fix a security vulnerability in glob in [#926](https://github.com/grafana/athena-datasource/pull/926)
+- Fix CVEs in moment, ip-address and fast-uri in [#927](https://github.com/grafana/athena-datasource/pull/927)
+- Update backend dependencies in [#922](https://github.com/grafana/athena-datasource/pull/922) and [#928](https://github.com/grafana/athena-datasource/pull/928)
+
 ## 3.4.2
 
 - Fix a connection freeze between Grafana and the plugin under heavy query load by updating google.golang.org/grpc to v1.85.0 ([grpc/grpc-go#9330](https://github.com/grpc/grpc-go/issues/9330))

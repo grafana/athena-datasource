@@ -226,6 +226,12 @@ describe('AthenaDatasource', () => {
       expect(result.connectionArgs.region).toEqual('replaced');
     });
 
+    it('should not throw for a query without connectionArgs', () => {
+      const query = { ...defaultQuery, connectionArgs: undefined } as unknown as AthenaQuery;
+      const result = ctx.ds.applyTemplateVariables(query, {});
+      expect(result.connectionArgs).toEqual({ region: undefined, catalog: undefined, database: undefined });
+    });
+
     it('should leave unset table and column untouched', () => {
       const query: AthenaQuery = { ...defaultQuery, table: undefined, column: undefined };
       const result = ctx.ds.applyTemplateVariables(query, {});

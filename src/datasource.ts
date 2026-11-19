@@ -59,9 +59,9 @@ export class DataSource extends DatasourceWithAsyncBackend<AthenaQuery, AthenaDa
       ...interpolated,
       connectionArgs: {
         ...interpolated.connectionArgs,
-        region: replace(interpolated.connectionArgs.region),
-        catalog: replace(interpolated.connectionArgs.catalog),
-        database: replace(interpolated.connectionArgs.database),
+        region: replace(interpolated.connectionArgs?.region),
+        catalog: replace(interpolated.connectionArgs?.catalog),
+        database: replace(interpolated.connectionArgs?.database),
       },
       table: interpolated.table ? replace(interpolated.table) : interpolated.table,
       column: interpolated.column ? replace(interpolated.column) : interpolated.column,

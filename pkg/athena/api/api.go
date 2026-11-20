@@ -314,7 +314,13 @@ func (c *API) WorkgroupEngineVersion(ctx context.Context, options sqlds.Options)
 		return "", err
 	}
 
-	return *out.WorkGroup.Configuration.EngineVersion.EffectiveEngineVersion, nil
+	// Configuration, EngineVersion and EffectiveEngineVersion are all optional in the
+	// GetWorkGroup response. An unknown version is returned as "".
+	if out == nil || out.WorkGroup == nil || out.WorkGroup.Configuration == nil || out.WorkGroup.Configuration.EngineVersion == nil {
+		return "", nil
+	}
+
+	return aws.ToString(out.WorkGroup.Configuration.EngineVersion.EffectiveEngineVersion), nil
 }
 
 func (c *API) Tables(ctx context.Context, options sqlds.Options) ([]string, error) {

@@ -7,6 +7,8 @@ import (
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/athena"
+	athenatypes "github.com/aws/aws-sdk-go-v2/service/athena/types"
 	"github.com/google/go-cmp/cmp"
 	athenaclientmock "github.com/grafana/athena-datasource/pkg/athena/api/mock"
 	"github.com/grafana/athena-datasource/pkg/athena/models"
@@ -313,4 +315,30 @@ func TestNew_configErrorIsDownstream(t *testing.T) {
 func Test_WorkgroupEngineSupportsResultReuse(t *testing.T) {
 	assert.True(t, workgroupEngineSupportsResultReuse("Athena engine version 3"))
 	assert.False(t, workgroupEngineSupportsResultReuse("Athena engine version 2"))
+}
+
+type workGroupClient struct {
+	*athenaclientmock.MockAthenaClient
+	workGroup *athenatypes.WorkGroup
+}
+
+func (c workGroupClient) GetWorkGroup(_ context.Context, _ *athena.GetWorkGroupInput, _ ...func(*athena.Options)) (*athena.GetWorkGroupOutput, error) {
+	return &athena.GetWorkGroupOutput{WorkGroup: c.workGroup}, nil
+}
+
+func TestConnection_GetWorkgroupVersion_MissingConfiguration(t *testing.T) {
+	tests := map[string]*athenatypes.WorkGroup{
+		"no workgroup":         nil,
+		"no configuration":     {},
+		"no engine version":    {Configuration: &athenatypes.WorkGroupConfiguration{}},
+		"no effective version": {Configuration: &athenatypes.WorkGroupConfiguration{EngineVersion: &athenatypes.EngineVersion{}}},
+	}
+	for name, workGroup := range tests {
+		t.Run(name, func(t *testing.T) {
+			c := &API{Client: workGroupClient{MockAthenaClient: &athenaclientmock.MockAthenaClient{}, workGroup: workGroup}}
+			res, err := c.WorkgroupEngineVersion(context.Background(), sqlds.Options{"workgroup": "workgroup"})
+			require.NoError(t, err)
+			assert.Equal(t, "", res)
+		})
+	}
 }

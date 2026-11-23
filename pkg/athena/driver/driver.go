@@ -6,7 +6,6 @@ import (
 	"database/sql/driver"
 	"fmt"
 	"reflect"
-	"sync"
 
 	"github.com/grafana/athena-datasource/pkg/athena/api"
 	"github.com/grafana/grafana-aws-sdk/pkg/awsds"
@@ -16,14 +15,8 @@ import (
 
 const DriverName string = "athena"
 
-var (
-	openFromSessionMutex sync.Mutex
-	openFromSessionCount int
-)
-
 // Driver is a sql.Driver
 type Driver struct {
-	name       string
 	api        *api.API
 	asyncDB    *conn
 	connection *asyncSQLDriver.Conn
@@ -38,27 +31,33 @@ func (d *Driver) Closed() bool {
 	return d.connection == nil || d.asyncDB.closed
 }
 
+// OpenDB keeps d out of the sql driver registry, which never releases a registered driver.
 func (d *Driver) OpenDB() (*sql.DB, error) {
-	return sql.Open(d.name, "")
+	return sql.OpenDB(d), nil
+}
+
+// Connect returns the same connection as Open.
+func (d *Driver) Connect(_ context.Context) (driver.Conn, error) {
+	return d.connection, nil
+}
+
+// Driver returns d.
+func (d *Driver) Driver() driver.Driver {
+	return d
 }
 
 func (d *Driver) GetAsyncDB() (awsds.AsyncDB, error) {
 	return d.asyncDB, nil
 }
 
-// New registers a new driver with a unique name
+// New returns a Driver that uses dsAPI.
 func New(_ context.Context, dsAPI sqlAPI.AWSAPI) (asyncSQLDriver.Driver, error) {
 	// The API is stored as a generic object but we need to parse it as a Athena API
 	if reflect.TypeOf(dsAPI) != reflect.TypeOf(&api.API{}) {
 		return nil, fmt.Errorf("wrong API type")
 	}
-	openFromSessionMutex.Lock()
-	openFromSessionCount++
-	name := fmt.Sprintf("%s-%d", DriverName, openFromSessionCount)
-	openFromSessionMutex.Unlock()
-	d := &Driver{api: dsAPI.(*api.API), name: name}
+	d := &Driver{api: dsAPI.(*api.API)}
 	d.asyncDB = newConnection(d.api)
 	d.connection = asyncSQLDriver.NewConnection(d.asyncDB)
-	sql.Register(name, d)
 	return d, nil
 }

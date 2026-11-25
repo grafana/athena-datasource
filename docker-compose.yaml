@@ -11,6 +11,10 @@ services:
     environment:
       ACCESS_KEY: ${ACCESS_KEY}
       SECRET_KEY: ${SECRET_KEY}
+      # Grafana 13.0.x exits if data source provisioning still gets SQLITE_BUSY after 5 retries (about 15ms apart).
+      # WAL reduces lock contention, and more retries cover the rest on a busy CI runner.
+      GF_DATABASE_WAL: 'true'
+      GF_DATABASE_TRANSACTION_RETRIES: '30'
     extends:
       file: .config/docker-compose-base.yaml
       service: grafana

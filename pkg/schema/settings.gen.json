@@ -96,6 +96,11 @@
             "description": "Result reuse max age in minutes",
             "type": "number"
           },
+          "sourceIdentityFromUser": {
+            "description": "Assume Role only. When enabled, the signed-in Grafana user's login is set as the STS SourceIdentity on the assumed role session so CloudTrail attributes Athena queries to that user. The role's trust policy must allow sts:SetSourceIdentity. Set in provisioning or the API; there is no editor toggle yet.",
+            "type": "boolean",
+            "default": false
+          },
           "usePerDatasourceExternalId": {
             "description": "Grafana Assume Role only. When enabled, this datasource uses its own external ID (below) instead of the stack-wide external ID.",
             "type": "boolean",

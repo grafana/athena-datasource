@@ -60,8 +60,8 @@ func (c *conn) QueryStatus(ctx context.Context, queryID string) (awsds.QueryStat
 }
 
 func (c *conn) CancelQuery(ctx context.Context, queryID string) error {
-	return c.api.Stop(&sqlAPI.ExecuteQueryOutput{ID: queryID})
-
+	// use the request context so the cancel is made as the same user as the query
+	return c.api.CancelQuery(ctx, nil, queryID)
 }
 
 func (c *conn) GetRows(ctx context.Context, queryID string) (driver.Rows, error) {

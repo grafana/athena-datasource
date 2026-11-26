@@ -99,11 +99,13 @@ func (c *API) Execute(ctx context.Context, input *api.ExecuteQueryInput) (*api.E
 	}
 
 	if workgroupEngineSupportsResultReuse(version) {
+		byAge := &athenatypes.ResultReuseByAgeConfiguration{Enabled: c.settings.ResultReuseEnabled}
+		// Athena only accepts 1-10080 and defaults to 60 when unset, so don't send an unconfigured 0
+		if c.settings.ResultReuseMaxAgeInMinutes > 0 {
+			byAge.MaxAgeInMinutes = aws.Int32(c.settings.ResultReuseMaxAgeInMinutes)
+		}
 		athenaInput.ResultReuseConfiguration = &athenatypes.ResultReuseConfiguration{
-			ResultReuseByAgeConfiguration: &athenatypes.ResultReuseByAgeConfiguration{
-				Enabled:         c.settings.ResultReuseEnabled,
-				MaxAgeInMinutes: aws.Int32(c.settings.ResultReuseMaxAgeInMinutes),
-			},
+			ResultReuseByAgeConfiguration: byAge,
 		}
 	}
 

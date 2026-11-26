@@ -72,6 +72,19 @@ func Test_macros(t *testing.T) {
 			nil,
 		},
 		{
+			"time filter converts non-UTC time range to UTC",
+			"timeFilter",
+			&sqlutil.Query{
+				TimeRange: backend.TimeRange{
+					From: time.Date(2021, 6, 23, 2, 0, 0, 0, time.FixedZone("UTC+2", 2*60*60)),
+					To:   time.Date(2021, 6, 23, 3, 0, 0, 0, time.FixedZone("UTC+2", 2*60*60)),
+				},
+			},
+			[]string{"starttime"},
+			`starttime BETWEEN TIMESTAMP '2021-06-23 00:00:00' AND TIMESTAMP '2021-06-23 01:00:00'`,
+			nil,
+		},
+		{
 			"time filter with default format",
 			"timeFilter",
 			&sqlutil.Query{

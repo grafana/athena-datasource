@@ -88,8 +88,8 @@ func macroTimeFilter(query *sqlutil.Query, args []string) (string, error) {
 	var (
 		column     = args[0]
 		timeFormat = ""
-		from       = query.TimeRange.From.Format(goTimestampFormat)
-		to         = query.TimeRange.To.Format(goTimestampFormat)
+		from       = query.TimeRange.From.UTC().Format(goTimestampFormat)
+		to         = query.TimeRange.To.UTC().Format(goTimestampFormat)
 	)
 
 	if len(args) > 1 {

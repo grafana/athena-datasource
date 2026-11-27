@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Fix a memory leak where each new connection kept a driver and its AWS client in memory until the plugin restarted
+
 ## 3.4.3
 
 - Bump `@grafana/aws-sdk` to 0.13.1 in [#933](https://github.com/grafana/athena-datasource/pull/933)
